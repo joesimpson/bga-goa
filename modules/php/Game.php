@@ -211,15 +211,8 @@ class Game extends \Bga\GameFramework\Table
     /**
      * Another example of debug function, to easily test the zombie code.
      */
-    public function debug_playAutomatically(int $moves = 50) {
-        $count = 0;
-        while (intval($this->gamestate->getCurrentMainStateId()) < 99 && $count < $moves) {
-            $count++;
-            foreach($this->gamestate->getActivePlayerList() as $playerId) {
-                $playerId = (int)$playerId;
-                $this->gamestate->runStateClassZombie($this->gamestate->getCurrentState($playerId), $playerId);
-            }
-        }
+    public function debug_playOneMove() {
+        $this->debug->playUntil(fn(int $count) => $count == 1);
     }
 
     /*
