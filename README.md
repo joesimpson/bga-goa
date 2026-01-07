@@ -11,7 +11,7 @@ Link : https://boardgamegeek.com/boardgame/9216/goa
 Game Designer : Rüdiger Dorn
 
 # Images
-Artists : Xavier Gueniffey Durin, Oliver Freudenreich ?
+Artists : Naïade (for 2026 version).
 
 All rights remain reserved to publisher Quined Games.
 
