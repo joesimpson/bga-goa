@@ -1,7 +1,7 @@
 /**
  *------
  * BGA framework: Gregory Isabelli & Emmanuel Colin & BoardGameArena
- * Goa implementation : © <Your name here> <Your email address here>
+ * Goa implementation : © joesimpson <1324811+joesimpson@users.noreply.github.com>
  *
  * This code has been produced on the BGA studio platform for use on http://boardgamearena.com.
  * See http://en.boardgamearena.com/#!doc/Studio for more information.
@@ -45,7 +45,24 @@ export class Game {
 
         // Example to add a div on the game area
         this.bga.gameArea.getElement().insertAdjacentHTML('beforeend', `
-            <div id="player-tables"></div>
+            <div id="goa_game_container">
+                <div id="goa_overall_background"></div>
+                <div id="goa_main_zone">                    
+                    <div id="goa_board_container">
+                        <div id="goa_board_background"></div> 
+                    </div> 
+                    <div id='goa_resizable_board'>
+                        <div id='goa_board_container'>
+                            <div id="goa_board">
+                                <div id="goa_board_background"></div>
+                                <div id="goa_board_tiles"></div>
+                                <div id="goa_board_filler">&nbsp;<br/></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="goa_players_table"></div>
+                </div>
+            </div>
         `);
         
         // Setting up player boards
@@ -62,8 +79,8 @@ export class Game {
             });
 
             // example of adding a div for each player
-            document.getElementById('player-tables').insertAdjacentHTML('beforeend', `
-                <div id="player-table-${player.id}">
+            document.getElementById('goa_players_table').insertAdjacentHTML('beforeend', `
+                <div id="goa_player_table-${player.id}">
                     <strong>${player.name}</strong>
                     <div>Player zone content goes here</div>
                 </div>

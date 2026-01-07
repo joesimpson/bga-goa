@@ -1,0 +1,46 @@
+
+$board_img_width: calc(1 * 1000px);
+$board_img_height: calc(1 * 1429px);
+
+#goa_resizable_board {
+    width: calc(var(--goa_board_display_scale) * $board_img_width);
+    height: calc(var(--goa_board_display_scale) * $board_img_height);
+    
+    #goa_board_container{
+        /* prevents vertical invisible overflow on BGA bottom elements*/
+        height: inherit;
+        
+        #goa_board{
+            width: $board_img_width;
+            height: $board_img_height;
+            transform: scale(var(--goa_board_display_scale));
+            transform-origin: top left;
+            border-radius: 10px;
+            border: 2px solid black;
+            box-shadow: 1px 1px 10px black;
+            position: relative;
+
+            display: flex;
+            flex-wrap: wrap;
+
+            #goa_board_background{
+                position: absolute;
+                width: $board_img_width;
+                height: $board_img_height;
+                background-image: url('img/board.jpg');
+                background-size: 100% auto;
+                background-repeat: no-repeat;
+            }
+            #goa_board_filler{
+                // Mobile issue on Brave and maybe Chrome : 
+                //No specific display here, but this "text" div make the browser make better computation of parent width/height ?
+                font-size: 0.1em;
+            }
+
+            #goa_board_tiles{
+                //TODO
+            }
+
+        }
+    }
+}

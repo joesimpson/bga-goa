@@ -1,0 +1,38 @@
+/**
+ *------
+ * BGA framework: Gregory Isabelli & Emmanuel Colin & BoardGameArena
+ * Goa implementation : © joesimpson <1324811+joesimpson@users.noreply.github.com>
+ *
+ * This code has been produced on the BGA studio platform for use on http://boardgamearena.com.
+ * See http://en.boardgamearena.com/#!doc/Studio for more information.
+ * -----
+ *
+ * goa.scss
+ *
+ * Goa stylesheet
+ *
+ */ 
+
+@use "sass:math";
+@use "modules/css/variables.scss";
+@use "modules/css/board.scss";
+
+
+#goa_main_zone{
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    flex-flow: row;
+    column-gap: 5px;
+    opacity: 1;
+ 
+    #goa_board_container{
+        //width: 80%;
+        //max-width: 80%;
+        //align-self: start;
+    }
+}
+
+

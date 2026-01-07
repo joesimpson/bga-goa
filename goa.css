@@ -1,72 +1,60 @@
+@charset "UTF-8";
 /**
  *------
  * BGA framework: Gregory Isabelli & Emmanuel Colin & BoardGameArena
- * Goa implementation : © <Your name here> <Your email address here>
+ * Goa implementation : © joesimpson <1324811+joesimpson@users.noreply.github.com>
  *
  * This code has been produced on the BGA studio platform for use on http://boardgamearena.com.
  * See http://en.boardgamearena.com/#!doc/Studio for more information.
  * -----
  *
- * goa.css
+ * goa.scss
  *
  * Goa stylesheet
  *
  */
+:root {
+  --goa_board_display_scale: 0.5;
+}
 
-/*
-    This is the CSS stylesheet of your game User Interface.
-    
-    Styles defined on this file will be applied to the HTML elements you define in your
-    HTML template (goa_goa.tpl), and to HTML elements you create dynamically
-    (in goa.js).
-    
-    Usually, you are using CSS to:
-    
-    1°) define the overall layout of your game
-        (ex: place the board on the top left, place player's hand beside, place the deck on the right, ...).
-
-    2°) create your CSS-sprites:
-        All images of your games should be gathered into a small number of image files. Then, using
-        background-image and background-position CSS properties, you create HTML blocks that can 
-        display these images correctly (see example below).
-    
-    3°) ... anything else:
-        It is really easy to add and remove CSS classes dynamically from your Javascript with
-        dojo.addClass and dojo.removeClass. It is also easy to check if an element has a class
-        (dojo.hasClass) or to get all elements with a specific class (dojo.query). This is why,
-        very often, using CSS classes for the logic of your user interface allow you to do complex
-        thing easily.
-        
-        
-     Note: on the production platform, this file will be compressed and comments will be removed.
-           Consequently, don't hesitate to put as many comments as necessary.
-*/
-
-
-/* Note: you must not use any @import directive */
-
-
-/********* You can start writing your CSS below this line: **********/
-
-
-/*
-    Example of CSS sprites (a black token and a white token, 20x20px each, embedded in the same "tokens.png" 40x20px image):
-
-    .white_token {
-        background-image: url('img/tokens.png');
-        background-position: 0px 0px;
-    }
-    .black_token {
-        background-image: url('img/tokens.png');
-        background-position: -20px 0px;
-    }
-    .token {
-        width: 20px;
-        height: 20px;
-        background-repeat: none;
-    }
-*/
-
-
-
-
+#goa_resizable_board {
+  width: calc(var(--goa_board_display_scale) * 1000px);
+  height: calc(var(--goa_board_display_scale) * 1429px);
+}
+#goa_resizable_board #goa_board_container {
+  /* prevents vertical invisible overflow on BGA bottom elements*/
+  height: inherit;
+}
+#goa_resizable_board #goa_board_container #goa_board {
+  width: 1000px;
+  height: 1429px;
+  transform: scale(var(--goa_board_display_scale));
+  transform-origin: top left;
+  border-radius: 10px;
+  border: 2px solid black;
+  box-shadow: 1px 1px 10px black;
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_background {
+  position: absolute;
+  width: 1000px;
+  height: 1429px;
+  background-image: url("img/board.jpg");
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_filler {
+  font-size: 0.1em;
+}
+#goa_main_zone {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  flex-flow: row;
+  -moz-column-gap: 5px;
+       column-gap: 5px;
+  opacity: 1;
+}
