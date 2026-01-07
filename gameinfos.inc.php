@@ -96,7 +96,7 @@ $gameinfos = [
         //  minimum possible value: 320 (the lowest value you specify, the better the display is on mobile)
 
         //1650 = 900 for board + 730 for player board but that leads to a very tiny text for side panel / status bar
-        'min' => 740,
+        'min' => 900,
     ],
 
     // Flag to enable 3D mode (adds a 3D button to the menu)

@@ -92,6 +92,20 @@
   background-image: url("img/boards/player_4.jpg");
 }
 
+.player_board_inner > .player-name {
+  /** Add a BLACK shadow behind player name in case of bright colors like yellow*/
+  /** Add a WHITE shadow*/
+}
+.player_board_inner > .player-name > a[style*="color: #84cba2"],
+.player_board_inner > .player-name > a[style*="color: #0090ba"],
+.player_board_inner > .player-name > a[style*="color: #feb713"],
+.player_board_inner > .player-name > a[style*="color: #e14a9b"] {
+  text-shadow: 2px 0px 2px black, 0px 2px 2px black, -2px 0px 2px black, 0px -2px 2px black;
+}
+.player_board_inner > .player-name > a[style*="color: #84cba2"] {
+  text-shadow: 2px 0px 2px white, 0px 2px 2px white, -2px 0px 2px white, 0px -2px 2px white;
+}
+
 #goa_main_zone {
   display: flex;
   justify-content: center;
@@ -100,4 +114,20 @@
   -moz-column-gap: 5px;
        column-gap: 5px;
   opacity: 1;
+}
+#goa_main_zone .goa_player_table_title_name {
+  text-align: center;
+  margin: 5px;
+}
+
+.playername_wrapper_84cba2 .playername, .playername_wrapper_84cba2.playername {
+  text-shadow: 2px 0px 2px white, 0px 2px 2px white, -2px 0px 2px white, 0px -2px 2px white;
+}
+
+.playername_wrapper_0090ba .playername, .playername_wrapper_0090ba.playername,
+.playername_wrapper_feb713 .playername,
+.playername_wrapper_feb713.playername,
+.playername_wrapper_e14a9b .playername,
+.playername_wrapper_e14a9b.playername {
+  text-shadow: 2px 0px 2px black, 0px 2px 2px black, -2px 0px 2px black, 0px -2px 2px black;
 }

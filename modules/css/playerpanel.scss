@@ -1,0 +1,25 @@
+
+.player_board_inner{
+    >.player-name{
+        /** Add a BLACK shadow behind player name in case of bright colors like yellow*/
+        >a[style*='color: #84cba2'],
+        >a[style*='color: #0090ba'],
+        >a[style*='color: #feb713'],
+        >a[style*='color: #e14a9b']
+        {
+            text-shadow: 2px 0px 2px black, 
+                         0px 2px 2px black,
+                        -2px 0px 2px black,
+                        0px -2px 2px black; 
+        }
+        /** Add a WHITE shadow*/
+        >a[style*='color: #84cba2']
+        {
+            text-shadow: 2px 0px 2px white, 
+                         0px 2px 2px white,
+                        -2px 0px 2px white,
+                        0px -2px 2px white; 
+        }
+    }
+
+}

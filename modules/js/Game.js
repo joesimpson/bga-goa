@@ -187,6 +187,22 @@ export class Game {
       const color_bg = player.color_back ? 'background-color:#' + player.color_back + ';' : '';
       return `<!--PNS--><span class="playername playername_wrapper_${color}" style="color:#${color};${color_bg}">${name}</span><!--PNE-->`;
     }
+    
+    bgaFormatText(log, args) {
+      try {
+        if (log && args) {
+          let playernames_keys = Object.keys(args).filter((key) => key.startsWith( 'player_name'));
+          for(let k=0; k<playernames_keys.length; k++){
+            let key = playernames_keys[k];
+            args[key] = this.coloredPlayerName(args[key]);
+          }
+        }
+      } catch (e) {
+        console.error(log, args, 'Exception thrown', e.stack);
+      }
+
+      return { log, args };
+    }
 
     ///////////////////////////////////////////////////
     //// Player's action

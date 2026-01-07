@@ -16,6 +16,7 @@
 @use "sass:math";
 @use "modules/css/variables.scss";
 @use "modules/css/board.scss";
+@use "modules/css/playerpanel.scss";
 
 
 #goa_main_zone{
@@ -33,6 +34,36 @@
         //max-width: 80%;
         //align-self: start;
     }
+
+    .goa_player_table_title_name{
+        text-align: center;
+        margin: 5px;
+    }
 }
+
+// ------------------------------------------------------------------------------
+// Override BGA style for log player_name
+.playername_wrapper_84cba2{
+    .playername, // Different in replay ?
+    &.playername {
+        text-shadow: 2px 0px 2px white, 
+                     0px 2px 2px white,
+                    -2px 0px 2px white,
+                    0px -2px 2px white; 
+    }
+}
+.playername_wrapper_0090ba,
+.playername_wrapper_feb713,
+.playername_wrapper_e14a9b{
+    .playername, // Different in replay ?
+    &.playername {
+        text-shadow: 2px 0px 2px black, 
+                     0px 2px 2px black,
+                    -2px 0px 2px black,
+                    0px -2px 2px black; 
+    }
+}
+// ------------------------------------------------------------------------------
+
 
 
