@@ -225,4 +225,9 @@ export class Game {
         // TODO: play the card in the user interface.
     }
     */
+
+    //For debugging :
+    notif_reloadPage(notif) {
+        window.location.reload(true);
+    }
 }

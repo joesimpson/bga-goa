@@ -23,6 +23,8 @@ use Bga\GameFramework\Components\Counters\PlayerCounter;
 
 class Game extends \Bga\GameFramework\Table
 {
+    use DebugTrait;
+
     public static array $CARD_TYPES;
 
     public PlayerCounter $playerEnergy;
@@ -144,6 +146,42 @@ class Game extends \Bga\GameFramework\Table
     }
 
     /**
+     * Returns an array of user preference colors to game colors.
+     * Game colors must be among those which are passed to `Table::reattributeColorsBasedOnPreferences()`.
+     *
+     * Each game color can be an array of suitable colors, or a single color:
+     *
+     * ```
+     * [
+     *    // The first available color chosen:
+     *    'ff0000' => ['990000', 'aa1122'],
+     *    // This color is chosen, if available
+     *    '0000ff' => '000099',
+     * ]
+     * ```
+     *
+     * If no color can be matched from this array, then the default implementation is used.
+     *
+     * @return array<string, ?string>
+     */
+    function getSpecificColorPairings(): array {
+        return array(
+            "ff0000" /* Red */         => 'e14a9b',
+            "008000" /* Green */       => '84cba2',
+            "0000ff" /* Blue */        => '0090ba',
+            "ffa500" /* Yellow */      => 'feb713',
+            "e94190" /* Pink */        => 'e14a9b',
+            "982fff" /* Purple */      => 'e14a9b',
+            "72c3b1" /* Cyan */        => '84cba2',
+            "f07f16" /* Orange */      => 'feb713',
+            "bdd002" /* Khaki green */ => 'feb713',
+            "7b7b7b" /* Gray */        => ['84cba2', '0090ba','feb713', 'e14a9b'],
+            "000000" /* Black */       => ['84cba2', '0090ba','feb713', 'e14a9b'],
+            "ffffff" /* White */       => ['84cba2', '0090ba','feb713', 'e14a9b'],
+        );
+    }
+
+    /**
      * This method is called only once, when a new game is launched. In this method, you must setup the game
      *  according to the game rules, so that the game is ready to be played.
      */
@@ -194,34 +232,15 @@ class Game extends \Bga\GameFramework\Table
         // TODO: Setup the initial game situation here.
 
         // Activate first player once everything has been initialized and ready.
-        $this->activeNextPlayer();
+        if(!array_key_exists("DEBUG_SETUP",$options)){
+            $first_player = $this->activeNextPlayer();
+        }
+        else {//In debug, we cannot change active player
+            $first_player = $this->getActivePlayerId();
+        }
+        
 
         return PlayerTurn::class;
     }
 
-    /**
-     * Example of debug function.
-     * Here, jump to a state you want to test (by default, jump to next player state)
-     * You can trigger it on Studio using the Debug button on the right of the top bar.
-     */
-    public function debug_goToState(int $state = 3) {
-        $this->gamestate->jumpToState($state);
-    }
-
-    /**
-     * Another example of debug function, to easily test the zombie code.
-     */
-    public function debug_playOneMove() {
-        $this->debug->playUntil(fn(int $count) => $count == 1);
-    }
-
-    /*
-    Another example of debug function, to easily create situations you want to test.
-    Here, put a card you want to test in your hand (assuming you use the Deck component).
-
-    public function debug_setCardInHand(int $cardType, int $playerId) {
-        $card = array_values($this->cards->getCardsOfType($cardType))[0];
-        $this->cards->moveCard($card['id'], 'hand', $playerId);
-    }
-    */
 }
