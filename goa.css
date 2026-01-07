@@ -14,7 +14,8 @@
  *
  */
 :root {
-  --goa_board_display_scale: 0.5;
+  --goa_board_display_scale: 0.90;
+  --goa_playerboard_display_scale: 0.90;
 }
 
 #goa_resizable_board {
@@ -44,16 +45,58 @@
   background-image: url("img/board.jpg");
   background-size: 100% auto;
   background-repeat: no-repeat;
+  border-radius: 10px;
 }
-#goa_resizable_board #goa_board_container #goa_board #goa_board_filler {
+.goa_board_filler {
   font-size: 0.1em;
 }
+
+.goa_resizable_playerboard {
+  width: calc(var(--goa_playerboard_display_scale) * 810px);
+  height: calc(var(--goa_playerboard_display_scale) * 796px);
+}
+.goa_resizable_playerboard .goa_playerboard_container {
+  /* prevents vertical invisible overflow on BGA bottom elements*/
+  height: inherit;
+}
+.goa_resizable_playerboard .goa_playerboard_container .goa_playerboard {
+  width: 810px;
+  height: 796px;
+  transform: scale(var(--goa_playerboard_display_scale));
+  transform-origin: top left;
+  border-radius: 10px;
+  border: 2px solid black;
+  box-shadow: 1px 1px 10px black;
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+}
+.goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_playerboard_background {
+  position: absolute;
+  width: 810px;
+  height: 796px;
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  border-radius: 10px;
+}
+.goa_player_table[data-color="0090ba"] .goa_playerboard_background {
+  background-image: url("img/boards/player_1.jpg");
+}
+.goa_player_table[data-color="84cba2"] .goa_playerboard_background {
+  background-image: url("img/boards/player_2.jpg");
+}
+.goa_player_table[data-color=e14a9b] .goa_playerboard_background {
+  background-image: url("img/boards/player_3.jpg");
+}
+.goa_player_table[data-color=feb713] .goa_playerboard_background {
+  background-image: url("img/boards/player_4.jpg");
+}
+
 #goa_main_zone {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  flex-flow: row;
   -moz-column-gap: 5px;
        column-gap: 5px;
   opacity: 1;

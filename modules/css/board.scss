@@ -30,17 +30,85 @@ $board_img_height: calc(1 * 1429px);
                 background-image: url('img/board.jpg');
                 background-size: 100% auto;
                 background-repeat: no-repeat;
-            }
-            #goa_board_filler{
-                // Mobile issue on Brave and maybe Chrome : 
-                //No specific display here, but this "text" div make the browser make better computation of parent width/height ?
-                font-size: 0.1em;
+                border-radius: 10px;
             }
 
             #goa_board_tiles{
                 //TODO
             }
 
+        }
+    }
+}
+
+.goa_board_filler{
+    // Mobile issue on Brave and maybe Chrome : 
+    //No specific display here, but this "text" div make the browser make better computation of parent width/height ?
+    font-size: 0.1em;
+}
+
+// --------------------------------------------------------------------
+// PLAYER BOARDS
+// --------------------------------------------------------------------
+$playerboard_img_width: calc(1 * 810px);
+$playerboard_img_height: calc(1 * 796px);
+.goa_resizable_playerboard {
+    width: calc(var(--goa_playerboard_display_scale) * $playerboard_img_width);
+    height: calc(var(--goa_playerboard_display_scale) * $playerboard_img_height);
+    
+    .goa_playerboard_container{
+        /* prevents vertical invisible overflow on BGA bottom elements*/
+        height: inherit;
+        
+        .goa_playerboard{
+            width: $playerboard_img_width;
+            height: $playerboard_img_height;
+            transform: scale(var(--goa_playerboard_display_scale));
+            transform-origin: top left;
+            border-radius: 10px;
+            border: 2px solid black;
+            box-shadow: 1px 1px 10px black;
+            position: relative;
+
+            display: flex;
+            flex-wrap: wrap;
+
+            .goa_playerboard_background{
+                position: absolute;
+                width: $playerboard_img_width;
+                height: $playerboard_img_height;
+                background-size: 100% auto;
+                background-repeat: no-repeat;
+                border-radius: 10px;
+            }
+
+            .goa_player_tiles{
+                //TODO
+            }
+
+        }
+    }
+}
+
+.goa_player_table{
+    &[data-color="0090ba"]{//Blue
+        .goa_playerboard_background{
+            background-image: url('img/boards/player_1.jpg');
+        }
+    }
+    &[data-color="84cba2"]{//Green
+        .goa_playerboard_background{
+            background-image: url('img/boards/player_2.jpg');
+        }
+    }
+    &[data-color="e14a9b"]{//Purple
+        .goa_playerboard_background{
+            background-image: url('img/boards/player_3.jpg');
+        }
+    }
+    &[data-color="feb713"]{//Yellow
+        .goa_playerboard_background{
+            background-image: url('img/boards/player_4.jpg');
         }
     }
 }

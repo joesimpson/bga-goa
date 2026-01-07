@@ -47,20 +47,16 @@ export class Game {
         this.bga.gameArea.getElement().insertAdjacentHTML('beforeend', `
             <div id="goa_game_container">
                 <div id="goa_overall_background"></div>
-                <div id="goa_main_zone">                    
-                    <div id="goa_board_container">
-                        <div id="goa_board_background"></div> 
-                    </div> 
+                <div id="goa_main_zone">
                     <div id='goa_resizable_board'>
                         <div id='goa_board_container'>
                             <div id="goa_board">
                                 <div id="goa_board_background"></div>
                                 <div id="goa_board_tiles"></div>
-                                <div id="goa_board_filler">&nbsp;<br/></div>
+                                <div class="goa_board_filler">&nbsp;<br/></div>
                             </div>
                         </div>
                     </div>
-                    <div id="goa_players_table"></div>
                 </div>
             </div>
         `);
@@ -79,10 +75,19 @@ export class Game {
             });
 
             // example of adding a div for each player
-            document.getElementById('goa_players_table').insertAdjacentHTML('beforeend', `
-                <div id="goa_player_table-${player.id}">
-                    <strong>${player.name}</strong>
-                    <div>Player zone content goes here</div>
+            document.getElementById('goa_main_zone').insertAdjacentHTML('beforeend', `
+                <div id="goa_player_table-${player.id}" class="goa_player_table" data-pid=${player.id} data-color='${player.color}'>
+                    <div class='goa_player_table_title_name' >${this.bga.gameui.format_string(('${player_name}'), { player_name:this.coloredPlayerName(player.name)}) }</div>
+                    <div class='goa_resizable_playerboard'>
+                        <div class='goa_playerboard_container'>
+                            <div class="goa_playerboard">
+                                <div class="goa_playerboard_background"></div>
+                                <div id="goa_player_tiles-${player.id}" class="goa_player_tiles"></div>
+                                <div id="goa_player_tokens-${player.id}" class="goa_player_tokens"></div>
+                                <div class="goa_board_filler">&nbsp;<br/></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             `);
         });
@@ -173,14 +178,15 @@ export class Game {
 
     ///////////////////////////////////////////////////
     //// Utility methods
-    
-    /*
-    
-        Here, you can defines some utility methods that you can use everywhere in your javascript
-        script.
-    
-    */
 
+    coloredPlayerName(name, specifiedColor = null) {
+      const player = Object.values(this.gamedatas.players).find((player) => player.name == name);
+      if (player == undefined) return `<!--PNS--><span class="playername playername_wrapper_${specifiedColor}">${name}</span><!--PNE-->`;
+
+      const color = specifiedColor ? specifiedColor : player.color;
+      const color_bg = player.color_back ? 'background-color:#' + player.color_back + ';' : '';
+      return `<!--PNS--><span class="playername playername_wrapper_${color}" style="color:#${color};${color_bg}">${name}</span><!--PNE-->`;
+    }
 
     ///////////////////////////////////////////////////
     //// Player's action
