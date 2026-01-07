@@ -61,6 +61,9 @@ export class Game {
             </div>
         `);
         
+        let currentPlayerNo = 1;
+        let nPlayers = 0;
+        let currentPlayer = this.bga.players.getCurrentPlayer();
         // Setting up player boards
         Object.values(gamedatas.players).forEach(player => {
             // example of setting up players boards
@@ -90,6 +93,20 @@ export class Game {
                     </div>
                 </div>
             `);
+            
+            nPlayers++;
+            if (currentPlayer && player.id == currentPlayer.id) currentPlayerNo = player.no;
+        });
+        // Order players
+        Object.values(gamedatas.players).forEach(player => {
+            //let 2 spaces for other boards
+            let order = 1;
+            if (currentPlayer && player.id == currentPlayer.id) order = 2;
+            else {
+                //order = 3;
+                order = ((player.no - currentPlayerNo + nPlayers) % nPlayers) + 2;
+            }
+            $(`goa_player_table-${player.id}`).style.order = order;
         });
         
         // TODO: Set up your game interface here, according to "gamedatas"
