@@ -86,7 +86,13 @@ export class Game {
                             <div class="goa_playerboard">
                                 <div class="goa_playerboard_background"></div>
                                 <div id="goa_player_tiles-${player.id}" class="goa_player_tiles"></div>
-                                <div id="goa_player_tokens-${player.id}" class="goa_player_tokens"></div>
+                                <div id="goa_player_auction_markers-${player.id}" class="goa_player_auction_markers">
+                                    <div id="goa_auction_marker-${player.id}-1" class="goa_auction_marker" data-value='1' data-color='${player.color}' data-pid='${player.id}'></div>
+                                    <div id="goa_auction_marker-${player.id}-2" class="goa_auction_marker" data-value='2' data-color='${player.color}' data-pid='${player.id}'></div>
+                                    <div id="goa_auction_marker-${player.id}-3" class="goa_auction_marker" data-value='3' data-color='${player.color}' data-pid='${player.id}'></div>
+                                    <div id="goa_auction_marker-${player.id}-4" class="goa_auction_marker" data-value='4' data-color='${player.color}' data-pid='${player.id}'></div>
+                                    <div id="goa_auction_marker-${player.id}-5" class="goa_auction_marker" data-value='5' data-color='${player.color}' data-pid='${player.id}'></div>
+                                </div>
                                 <div class="goa_board_filler">&nbsp;<br/></div>
                             </div>
                         </div>

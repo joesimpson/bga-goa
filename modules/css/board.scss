@@ -67,7 +67,7 @@ $playerboard_img_height: calc(1 * 796px);
             transform-origin: top left;
             border-radius: 10px;
             border: 2px solid black;
-            box-shadow: 1px 1px 10px black;
+            //box-shadow: 1px 1px 10px black;
             position: relative;
 
             display: flex;
@@ -80,6 +80,29 @@ $playerboard_img_height: calc(1 * 796px);
                 background-size: 100% auto;
                 background-repeat: no-repeat;
                 border-radius: 10px;
+            }
+
+            .goa_player_auction_markers{
+                position: absolute;
+                top: 106px;
+                left: 706px;
+                width: 58px;
+                height: 304px;
+
+                //for debug only
+                //outline: 10px solid BLACK;
+
+                .goa_auction_marker{
+                    width: 60px;
+                    height: 60px;
+                    position: absolute;
+
+                    @for $i from 1 through 5 {
+                        &[data-value="#{$i}"] {
+                            top: calc($i - 1) * 60px;
+                        } 
+                    }
+                }
             }
 
             .goa_player_tiles{

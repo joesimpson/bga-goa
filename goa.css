@@ -66,7 +66,6 @@
   transform-origin: top left;
   border-radius: 10px;
   border: 2px solid black;
-  box-shadow: 1px 1px 10px black;
   position: relative;
   display: flex;
   flex-wrap: wrap;
@@ -79,6 +78,33 @@
   background-repeat: no-repeat;
   border-radius: 10px;
 }
+.goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_auction_markers {
+  position: absolute;
+  top: 106px;
+  left: 706px;
+  width: 58px;
+  height: 304px;
+}
+.goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_auction_markers .goa_auction_marker {
+  width: 60px;
+  height: 60px;
+  position: absolute;
+}
+.goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_auction_markers .goa_auction_marker[data-value="1"] {
+  top: 0px;
+}
+.goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_auction_markers .goa_auction_marker[data-value="2"] {
+  top: 60px;
+}
+.goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_auction_markers .goa_auction_marker[data-value="3"] {
+  top: 120px;
+}
+.goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_auction_markers .goa_auction_marker[data-value="4"] {
+  top: 180px;
+}
+.goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_auction_markers .goa_auction_marker[data-value="5"] {
+  top: 240px;
+}
 .goa_player_table[data-color="0090ba"] .goa_playerboard_background {
   background-image: url("img/boards/player_1.jpg");
 }
@@ -90,6 +116,43 @@
 }
 .goa_player_table[data-color=feb713] .goa_playerboard_background {
   background-image: url("img/boards/player_4.jpg");
+}
+
+.goa_auction_marker {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  background-size: 400% 500%;
+  background-image: url("img/auction_markers.png");
+  background-position-x: 0;
+  background-position-y: 0;
+}
+.goa_auction_marker[data-value="1"] {
+  background-position-y: 0%;
+}
+.goa_auction_marker[data-value="2"] {
+  background-position-y: 25%;
+}
+.goa_auction_marker[data-value="3"] {
+  background-position-y: 50%;
+}
+.goa_auction_marker[data-value="4"] {
+  background-position-y: 75%;
+}
+.goa_auction_marker[data-value="5"] {
+  background-position-y: 100%;
+}
+.goa_auction_marker[data-color="0090ba"] {
+  background-position-x: 0%;
+}
+.goa_auction_marker[data-color="84cba2"] {
+  background-position-x: 33.33%;
+}
+.goa_auction_marker[data-color=e14a9b] {
+  background-position-x: 66.66%;
+}
+.goa_auction_marker[data-color=feb713] {
+  background-position-x: 100%;
 }
 
 .player_board_inner > .player-name {

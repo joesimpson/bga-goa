@@ -1,0 +1,34 @@
+
+@use "sass:math";
+
+.goa_auction_marker {
+    position: relative; 
+
+    width: 50px;
+    height: 50px;
+
+    //sprite positions
+    background-size: 400% 500%;
+    background-image: url("img/auction_markers.png");
+    background-position-x: 0;
+    background-position-y: 0;
+
+    @for $i from 1 through 5 {
+        &[data-value="#{$i}"] {
+            background-position-y: calc($i - 1) * 25%;
+        } 
+    }
+    &[data-color="0090ba"] {//Blue
+        background-position-x: 0%;
+    } 
+    &[data-color="84cba2"] {//Green
+        background-position-x: 33.33%;
+    } 
+    &[data-color="e14a9b"]{//Purple
+        background-position-x: 66.66%;
+    } 
+    &[data-color="feb713"]{//Yellow
+        background-position-x: 100%;
+    } 
+
+}
