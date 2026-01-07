@@ -11,33 +11,33 @@
 
 $gameinfos = [
     // Name of the game in English (will serve as the basis for translation)
-    'game_name' => "My Great Game",
+    'game_name' => "Goa",
 
     // Game publisher (use empty string if there is no publisher)
-    'publisher' => 'My Publishing Company',
+    'publisher' => 'Quined Games',
 
     // Url of game publisher website
-    'publisher_website' => 'http://www.mypublishingcompany.com/',
+    'publisher_website' => 'https://www.quined.nl/',
 
     // Board Game Geek ID of the publisher
-    'publisher_bgg_id' => 1234,
+    'publisher_bgg_id' => 10663,
 
     // Board game geek ID of the game
     'bgg_id' => 9216,
 
     // Players configuration that can be played (ex: 2 to 4 players)
-    'players' => [2, 3, 4],
+    'players' => [1, 2, 3, 4],
 
     // Suggest players to play with this number of players. Must be null if there is no such advice, or if there is only one possible player configuration.
     // NB: the automatic lobby will try first the lowest number of players if this is not specified. So you _have to_ specify this parameter if the lowest player number is not compatible with the default options.
-    'suggest_player_number' => null,
+    'suggest_player_number' => 4,
 
     // Discourage players to play with these numbers of players. Must be null if there is no such advice.
-    'not_recommend_player_number' => null,
+    'not_recommend_player_number' => [1, ],
     // 'not_recommend_player_number' => array( 2, 3 ),      // <= example: this is not recommended to play this game with 2 or 3 players
 
     // Estimated game duration, in minutes (used only for the launch, afterward the real duration is computed)
-    'estimated_duration' => 30,
+    'estimated_duration' => 60,
 
     // Time in second add to a player when "giveExtraTime" is called (speed profile = fast)
     'fast_additional_time' => 30,
@@ -72,7 +72,12 @@ $gameinfos = [
     'language_dependency' => false,
 
     // Colors attributed to players
-    'player_colors' => ['ff0000', '008000', '0000ff', 'ffa500', 'e94190', '982fff', '72c3b1', 'f07f16', 'bdd002', '7b7b7b', '000000', 'ffffff'],                       
+    'player_colors' => [
+        '84cba2', 
+        '0090ba', 
+        'feb713',
+        'e14a9b',
+    ],
 
     // Favorite colors support : if set to "true", support attribution of favorite colors based on player's preferences (see reattributeColorsBasedOnPreferences PHP method)
     // NB: this parameter is used only to flag games supporting this feature; you must use (or not use) reattributeColorsBasedOnPreferences PHP method to actually enable or disable the feature.
