@@ -4,6 +4,7 @@ namespace Bga\Games\Goa\Managers;
 
 use Bga\Games\Goa\Helpers\Collection;
 use Bga\Games\Goa\Models\AuctionMarker;
+use Bga\Games\Goa\Models\ProgressMarker;
 use Bga\Games\Goa\Models\Token;
 
 /* Class to manage all the tokens */
@@ -23,7 +24,8 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
     $subtype = isset($row['subtype']) ? $row['subtype'] : null;
     switch ($subtype) {
       case TOKEN_SUBTTYPE_PROGRESS_MARKER:
-        //TODO JSA
+        $data = self::getTokensTypes()[$type];
+        return new ProgressMarker($row, $data);
       case TOKEN_SUBTTYPE_AUCTION_MARKER:
         $data = self::getTokensTypes()[$type];
         return new AuctionMarker($row, $data);
@@ -105,6 +107,17 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
           'nbr' => 1,
         ];
       } 
+
+      for($k = 0; $k < count(TOKEN_TYPE_PROGRESS_MARKERS); $k++){
+        $tokens[] = [
+          'location' => TOKEN_LOCATION_PLAYER_BOARD,
+          'type' => TOKEN_TYPE_PROGRESS_MARKERS[$k],
+          'subtype' => TOKEN_SUBTTYPE_PROGRESS_MARKER,
+          'player_id' => $pId,
+          'nbr' => 1,
+          'state' =>1,//row 1
+        ];
+      }
     }
 
     self::create($tokens);
@@ -117,15 +130,20 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
   {
     $f = function ($t) {
       return [
-        'nbr' => $t[0],
+        //'nbr' => $t[0],
       ];
     };
     return [
-      TOKEN_TYPE_AUCTION_MARKER_1 => $f([ 1, ]), 
-      TOKEN_TYPE_AUCTION_MARKER_2 => $f([ 1, ]), 
-      TOKEN_TYPE_AUCTION_MARKER_3 => $f([ 1, ]), 
-      TOKEN_TYPE_AUCTION_MARKER_4 => $f([ 1, ]), 
-      TOKEN_TYPE_AUCTION_MARKER_5 => $f([ 1, ]), 
+      TOKEN_TYPE_PROGRESS_MARKER_SHIPS   => $f([  ]), 
+      TOKEN_TYPE_PROGRESS_MARKER_HARVEST => $f([  ]), 
+      TOKEN_TYPE_PROGRESS_MARKER_TAXES   => $f([  ]), 
+      TOKEN_TYPE_PROGRESS_MARKER_EXP     => $f([  ]), 
+      TOKEN_TYPE_PROGRESS_MARKER_OUTPOST => $f([  ]), 
+      TOKEN_TYPE_AUCTION_MARKER_1 => $f([  ]), 
+      TOKEN_TYPE_AUCTION_MARKER_2 => $f([  ]), 
+      TOKEN_TYPE_AUCTION_MARKER_3 => $f([  ]), 
+      TOKEN_TYPE_AUCTION_MARKER_4 => $f([  ]), 
+      TOKEN_TYPE_AUCTION_MARKER_5 => $f([  ]), 
     ];
   }
 }
