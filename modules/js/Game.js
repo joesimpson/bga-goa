@@ -95,6 +95,8 @@ export class Game {
                                 <div id="goa_player_tiles-${player.id}" class="goa_player_tiles"></div>
                                 <div id="goa_player_auction_markers-${player.id}" class="goa_player_auction_markers">
                                 </div>
+                                <div id="goa_player_progress_tracks-${player.id}" class="goa_player_progress_tracks">
+                                </div>
                                 <div class="goa_board_filler">&nbsp;<br/></div>
                             </div>
                         </div>
@@ -341,6 +343,19 @@ export class Game {
         document.querySelectorAll('.goa_token[id^="goa_token-"]').forEach((oToken) => {
             this.destroy(oToken);
         });
+
+        Object.values(this.gamedatas.players).forEach(player => {
+            for(let track=1;track<=5;track++){
+                let progress_track = `goa_progress_track_${track}_${player.id}`;
+                if(!$(progress_track)) document.getElementById(`goa_player_progress_tracks-${player.id}`).insertAdjacentHTML('beforeend', this.tplProgressTrack({'track':track, 'pId':player.id}));
+                for(let k=1;k<=5;k++){
+                    let progress_track_space = `goa_progress_track_space_${track}_${k}_${player.id}`;
+                    if(!$(progress_track_space)) document.getElementById(progress_track).insertAdjacentHTML('beforeend', this.tplProgressTrackSpace({'track':track, 'space':k, 'pId':player.id}));
+                    this.empty(progress_track_space);
+                }
+            }
+        });
+
         let tokenIds = this.gamedatas.tokens.map((token) => {
             this.addToken(token);
             return token.id;
@@ -348,6 +363,9 @@ export class Game {
     }
     getTokenContainer(token) { 
         if( TOKEN_LOCATION_PLAYER_BOARD == token.location) {
+            if(token.subtype == TOKEN_SUBTTYPE_PROGRESS_MARKER){
+                return `goa_progress_track_space_${token.track}_${token.state}_${token.pId}`;
+            }
             if(token.subtype == TOKEN_SUBTTYPE_AUCTION_MARKER){
                 return `goa_player_auction_markers-${token.pId}`;
             }
@@ -366,9 +384,17 @@ export class Game {
         return $(`goa_token-${token.id}`);
     }
     
-    tplToken(token, prefix ='') { 
+    tplToken(token, prefix ='') {
+        if(token.subtype == TOKEN_SUBTTYPE_PROGRESS_MARKER) 
+            return `<div id="goa_token-${token.id}" class="goa_token goa_progress_marker" data-track='${token.track}' data-row='${token.state}' data-color='${this.gamedatas.players[token.pId].color}' data-pid='${token.pId}'></div>`;
         if(token.subtype == TOKEN_SUBTTYPE_AUCTION_MARKER) 
             return `<div id="goa_token-${token.id}" class="goa_token goa_auction_marker" data-value='${token.auctionOrder}' data-color='${this.gamedatas.players[token.pId].color}' data-pid='${token.pId}'></div>`;
         return '';
+    }
+    tplProgressTrack(datas) {
+        return `<div class="goa_progress_track" id="goa_progress_track_${datas.track}_${datas.pId}" data-track='${datas.track}'></div>`;
+    }
+    tplProgressTrackSpace(datas) {
+        return `<div class="goa_progress_track_space" id="goa_progress_track_space_${datas.track}_${datas.space}_${datas.pId}" data-track='${datas.track}' data-pos='${datas.space}'></div>`;
     }
 }

@@ -104,7 +104,74 @@ $playerboard_img_height: calc(1 * 796px);
                     }
                 }
             }
+            .goa_player_progress_tracks{
+                position: absolute;
+                top: 460px;
+                left: 135px;
+                width: 545px;
+                height: 310px;
+                
+                //for debug only
+                //outline: 10px solid BLACK;
 
+                grid-template-columns: repeat(5, 1fr);
+                display: grid;
+
+                .goa_progress_track{
+                    position: relative;
+                    grid-template-rows: repeat(5, 1fr);
+                    display: grid;
+
+
+                    .goa_progress_track_space{
+                        position: relative;
+                        //margin-right: 16px;
+                        //margin-left: 6px;
+                        width: 100px;
+                        height: 50px;
+                        @for $i from 1 through 5 {
+                            &[data-track="#{$i - 1}"]{
+                                grid-column-start: $i;
+                            }
+                        }
+                        @for $i from 1 through 5 {
+                            &[data-pos="#{$i}"]{
+                                grid-row-start: $i;
+                            }
+                        }
+                        //some offset :
+                        &[data-track="3"]{
+                            left: -3px;
+                        }
+                        &[data-track="4"]{
+                            left: -3px;
+                        }
+                        &[data-track="5"]{
+                            left: 5px;
+                        }
+                        &[data-pos="2"]{
+                            top: 8px;
+                        }
+                        &[data-pos="3"]{
+                            top: 12px;
+                        }
+                        &[data-pos="4"]{
+                            top: 15px;
+                        }
+                        &[data-pos="5"]{
+                            top: 20px;
+                        }
+
+                        .goa_progress_marker{
+                            width: 30px;
+                            height: 30px;
+                            position: absolute;
+                            top: 8px;
+                            left: 8px;
+                        }
+                    }
+                }
+            }
             .goa_player_tiles{
                 //TODO
             }

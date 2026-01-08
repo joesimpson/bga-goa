@@ -32,3 +32,30 @@
     } 
 
 }
+
+.goa_progress_marker {
+    position: relative; 
+
+    width: 25px;
+    height: 25px;
+
+    //sprite positions
+    background-size: 400% 100%;
+    background-image: url("img/progress_markers.png");
+    background-position-x: 0;
+    background-position-y: 100%;
+
+    &[data-color="0090ba"] {//Blue
+        background-position-x: 0%;
+    } 
+    &[data-color="84cba2"] {//Green
+        background-position-x: 33.33%;
+    } 
+    &[data-color="e14a9b"]{//Purple
+        background-position-x: 66.66%;
+    } 
+    &[data-color="feb713"]{//Yellow
+        background-position-x: 100%;
+    } 
+
+}
