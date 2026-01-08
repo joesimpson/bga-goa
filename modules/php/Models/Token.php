@@ -30,15 +30,8 @@ class Token extends \Bga\Games\Goa\Helpers\DB_Model
   public function getUiData()
   {
     $data = parent::getUiData();
-    $data['pos'] = $this->getPosition();
     return $data;
   }
 
-  
-  public function setPosition($value){
-    $this->setState($value);
-  }
-  public function getPosition(){
-    return $this->getState();
-  }
+   
 }

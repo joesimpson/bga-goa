@@ -20,8 +20,23 @@ const CARD_LOCATION_HAND = 'hand';
 /////////////////////////////////////////////////////////
 const TOKEN_LOCATION_DECK = 'deck';
 const TOKEN_LOCATION_BOARD = 'board';
-const TOKEN_LOCATION_HAND = 'hand';
+const TOKEN_LOCATION_PLAYER_BOARD = 'p_board';
 
+const TOKEN_SUBTTYPE_PROGRESS_MARKER = 1;
+const TOKEN_SUBTTYPE_AUCTION_MARKER = 2;
+const TOKEN_TYPE_AUCTION_MARKER_1 = 11;
+const TOKEN_TYPE_AUCTION_MARKER_2 = 12;
+const TOKEN_TYPE_AUCTION_MARKER_3 = 13;
+const TOKEN_TYPE_AUCTION_MARKER_4 = 14;
+const TOKEN_TYPE_AUCTION_MARKER_5 = 15;
+
+const TOKEN_TYPE_AUCTION_MARKERS = [
+   TOKEN_TYPE_AUCTION_MARKER_1,
+   TOKEN_TYPE_AUCTION_MARKER_2,
+   TOKEN_TYPE_AUCTION_MARKER_3,
+   TOKEN_TYPE_AUCTION_MARKER_4,
+   TOKEN_TYPE_AUCTION_MARKER_5,
+];
 
 /////////////////////////////////////////////////////////
 //          Game options

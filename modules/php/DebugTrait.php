@@ -62,7 +62,7 @@ trait DebugTrait
         Log::enable();
 
         $players = self::loadPlayersBasicInfos(); 
-        Game::get()->gamestate->jumpToState(10);//first state (playerTurn)
+        Game::get()->gamestate->jumpToState(ST_NEXT_TURN);//first state 
         
         //$this->notify->all('reloadPage', "/!\ : Refresh page to see game has restarted...", []);
         Game::get()->notify->player($player->getId(),'reloadPage', "/!\ : Refresh page to see game has restarted...", []);

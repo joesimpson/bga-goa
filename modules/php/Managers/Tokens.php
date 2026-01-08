@@ -3,6 +3,7 @@
 namespace Bga\Games\Goa\Managers;
 
 use Bga\Games\Goa\Helpers\Collection;
+use Bga\Games\Goa\Models\AuctionMarker;
 use Bga\Games\Goa\Models\Token;
 
 /* Class to manage all the tokens */
@@ -13,12 +14,21 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
   protected static $prefix = 'token_';
   protected static $autoIncrement = true;
   protected static $autoremovePrefix = false;
-  protected static $customFields = ['player_id', 'type'];
+  protected static $customFields = ['player_id', 'type', 'subtype'];
   protected static $autoreshuffle = false;
 
   protected static function cast($row)
   {
     $type = isset($row['type']) ? $row['type'] : null;
+    $subtype = isset($row['subtype']) ? $row['subtype'] : null;
+    switch ($subtype) {
+      case TOKEN_SUBTTYPE_PROGRESS_MARKER:
+        //TODO JSA
+      case TOKEN_SUBTTYPE_AUCTION_MARKER:
+        $data = self::getTokensTypes()[$type];
+        return new AuctionMarker($row, $data);
+    }
+
     $data = self::getTokensTypes()[$type];
     return new Token($row, $data);
   }
@@ -32,7 +42,7 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
 
     return 
       self::getInLocation(TOKEN_LOCATION_BOARD)
-      //->merge(self::getInLocation(TOKEN_LOCATION_HAND))
+      ->merge(self::getInLocation(TOKEN_LOCATION_PLAYER_BOARD))
       ->map(function ($token) {
         return $token->getUiData();
       })
@@ -61,13 +71,13 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
   }
   
   /**
-   * Return all HAND tokens of this player
+   * Return all Board tokens of this player
    * @param int $pId
    * @return Collection
    */
-  public static function getPlayerHand($pId)
+  public static function getPlayerBoard($pId)
   {
-    return self::getFilteredQuery($pId, TOKEN_LOCATION_HAND)->get();
+    return self::getFilteredQuery($pId, TOKEN_LOCATION_PLAYER_BOARD)->get();
   }
 
   ///////////////////////////////////////////////////////////////////////////////
@@ -76,14 +86,26 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
   public static function setupNewGame($players, $options)
   {
     $tokens = [];
+    
+    //foreach (self::getTokensTypes() as $type => $token) {
+    //  $tokens[] = [
+    //    'location' => TOKEN_LOCATION_DECK,
+    //    'type' => $type,
+    //    'nbr' => $token['nbr'],
+    //  ];
+    //} 
 
-    foreach (self::getTokensTypes() as $type => $token) {
-      $tokens[] = [
-        'location' => TOKEN_LOCATION_DECK,
-        'type' => $type,
-        'nbr' => $token['nbr'],
-      ];
-    } 
+    foreach ($players as $pId => $player) {
+      for($k = 0; $k < count($players) +1; $k++){
+        $tokens[] = [
+          'location' => TOKEN_LOCATION_PLAYER_BOARD,
+          'type' => TOKEN_TYPE_AUCTION_MARKERS[$k],
+          'subtype' => TOKEN_SUBTTYPE_AUCTION_MARKER,
+          'player_id' => $pId,
+          'nbr' => 1,
+        ];
+      } 
+    }
 
     self::create($tokens);
   }
@@ -99,8 +121,11 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
       ];
     };
     return [
-      1 => $f([ 10, ]), 
-      2 => $f([ 10, ]), 
+      TOKEN_TYPE_AUCTION_MARKER_1 => $f([ 1, ]), 
+      TOKEN_TYPE_AUCTION_MARKER_2 => $f([ 1, ]), 
+      TOKEN_TYPE_AUCTION_MARKER_3 => $f([ 1, ]), 
+      TOKEN_TYPE_AUCTION_MARKER_4 => $f([ 1, ]), 
+      TOKEN_TYPE_AUCTION_MARKER_5 => $f([ 1, ]), 
     ];
   }
 }

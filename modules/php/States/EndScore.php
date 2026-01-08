@@ -26,6 +26,7 @@ class EndScore extends \Bga\GameFramework\States\GameState
      */
     public function onEnteringState() {
         // Here, we would compute scores if they are not updated live, and compute average statistics
+        $this->game->trace("EndScore.onEnteringState()");
 
         return ST_END_GAME;
     }
