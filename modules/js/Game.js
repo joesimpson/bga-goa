@@ -15,7 +15,14 @@
  *
  */
 
+//Used Constants copied from PHP file
+const TOKEN_LOCATION_PLAYER_BOARD = 'p_board';
+
+const TOKEN_SUBTTYPE_PROGRESS_MARKER = 1;
+const TOKEN_SUBTTYPE_AUCTION_MARKER = 2;
+
 export class Game {
+    
     constructor(bga) {
         console.log('goa constructor');
         this.bga = bga;
@@ -87,11 +94,6 @@ export class Game {
                                 <div class="goa_playerboard_background"></div>
                                 <div id="goa_player_tiles-${player.id}" class="goa_player_tiles"></div>
                                 <div id="goa_player_auction_markers-${player.id}" class="goa_player_auction_markers">
-                                    <div id="goa_auction_marker-${player.id}-1" class="goa_auction_marker" data-value='1' data-color='${player.color}' data-pid='${player.id}'></div>
-                                    <div id="goa_auction_marker-${player.id}-2" class="goa_auction_marker" data-value='2' data-color='${player.color}' data-pid='${player.id}'></div>
-                                    <div id="goa_auction_marker-${player.id}-3" class="goa_auction_marker" data-value='3' data-color='${player.color}' data-pid='${player.id}'></div>
-                                    <div id="goa_auction_marker-${player.id}-4" class="goa_auction_marker" data-value='4' data-color='${player.color}' data-pid='${player.id}'></div>
-                                    <div id="goa_auction_marker-${player.id}-5" class="goa_auction_marker" data-value='5' data-color='${player.color}' data-pid='${player.id}'></div>
                                 </div>
                                 <div class="goa_board_filler">&nbsp;<br/></div>
                             </div>
@@ -116,7 +118,7 @@ export class Game {
         });
         
         // TODO: Set up your game interface here, according to "gamedatas"
-        
+        this.setupTokens();
 
         // Setup game notifications to handle (see "setupNotifications" method below)
         this.setupNotifications();
@@ -226,6 +228,37 @@ export class Game {
 
       return { log, args };
     }
+    
+    destroyTooltip(elem) {
+        /*TODO JSA destroyTooltip ?
+        if (this.tooltips[elem.id]) {
+            clearTimeout(this.tooltips[elem.id].showTimeout);
+            this.tooltips[elem.id].close();
+            this.tooltips[elem.id].destroy();
+            delete this.tooltips[elem.id];
+        }
+        */
+    }
+
+    destroy(elem, delayRemove = false) {
+        //debug(`destroy ${elem.id}`,elem);
+        this.destroyTooltip(elem);
+        this.empty(elem);
+        if(!delayRemove) elem.remove();
+    }
+    
+    empty(container) {
+        //debug("empty",container);
+        container = $(container);
+        container.childNodes.forEach((node) => {
+            //!! destroy node makes gap in LOOP because of removing them
+            this.destroy(node,true);
+        });
+        container.childNodes.forEach((node) => {
+            node.remove();
+        });
+        container.innerHTML = '';
+    }
 
     ///////////////////////////////////////////////////
     //// Player's action
@@ -291,5 +324,51 @@ export class Game {
     //For debugging :
     notif_reloadPage(notif) {
         window.location.reload(true);
+    }
+
+
+    ////////////////////////////////////////
+    //  _______    _                   
+    // |__   __|  | |                  
+    //    | | ___ | | _____ _ __  ___  
+    //    | |/ _ \| |/ / _ \ '_ \/ __| 
+    //    | | (_) |   <  __/ | | \__ \ 
+    //    |_|\___/|_|\_\___|_| |_|___/ 
+    //                                
+    ////////////////////////////////////////
+    setupTokens(){
+        console.log('setupTokens');
+        document.querySelectorAll('.goa_token[id^="goa_token-"]').forEach((oToken) => {
+            this.destroy(oToken);
+        });
+        let tokenIds = this.gamedatas.tokens.map((token) => {
+            this.addToken(token);
+            return token.id;
+        });
+    }
+    getTokenContainer(token) { 
+        if( TOKEN_LOCATION_PLAYER_BOARD == token.location) {
+            if(token.subtype == TOKEN_SUBTTYPE_AUCTION_MARKER){
+                return `goa_player_auction_markers-${token.pId}`;
+            }
+        } 
+        
+        console.error('Trying to get container of a token', token);
+        return 'goa_game_container';
+    }
+    
+    addToken(token, location = null) { 
+        console.log("addToken",token,location); 
+        if (!$(`goa_token-${token.id}`)){
+            let container = location == null ? this.getTokenContainer(token) : location;
+            document.getElementById(container).insertAdjacentHTML('beforeend', this.tplToken(token));
+        }
+        return $(`goa_token-${token.id}`);
+    }
+    
+    tplToken(token, prefix ='') { 
+        if(token.subtype == TOKEN_SUBTTYPE_AUCTION_MARKER) 
+            return `<div id="goa_token-${token.id}" class="goa_token goa_auction_marker" data-value='${token.auctionOrder}' data-color='${this.gamedatas.players[token.pId].color}' data-pid='${token.pId}'></div>`;
+        return '';
     }
 }
