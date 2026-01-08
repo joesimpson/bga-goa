@@ -8,7 +8,9 @@ use Bga\GameFramework\StateType;
 use Bga\GameFramework\States\GameState;
 use Bga\GameFramework\States\PossibleAction;
 use Bga\GameFramework\UserException;
+use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Game;
+use Bga\Games\Goa\Helpers\Log;
 
 class PlayerTurn extends GameState
 {
@@ -16,7 +18,7 @@ class PlayerTurn extends GameState
         protected Game $game,
     ) {
         parent::__construct($game,
-            id: 10,
+            id: ST_PLAYER_TURN,
             type: StateType::ACTIVE_PLAYER,
             description: clienttranslate('${actplayer} must play a card or pass'),
             descriptionMyTurn: clienttranslate('${you} must play a card or pass'),
@@ -53,18 +55,18 @@ class PlayerTurn extends GameState
         if (!in_array($card_id, $playableCardsIds)) {
             throw new UserException('Invalid card choice');
         }
+        
+        Log::addStep();
 
         // Add your game logic to play a card here.
         $card_name = Game::$CARD_TYPES[$card_id]['card_name'];
 
         // Notify all players about the card played.
-        $this->notify->all("cardPlayed", clienttranslate('${player_name} plays ${card_name}'), [
-            "player_id" => $activePlayerId,
-            "player_name" => $this->game->getPlayerNameById($activePlayerId), // remove this line if you uncomment notification decorator
-            "card_name" => $card_name, // remove this line if you uncomment notification decorator
-            "card_id" => $card_id,
-            "i18n" => ['card_name'], // remove this line if you uncomment notification decorator
-        ]);
+        Notifications::cardPlayed(
+            $activePlayerId,
+            $card_name,
+            $card_id,
+        );
 
         // in this example, the player gains 1 points each time he plays a card
         $this->playerScore->inc($activePlayerId, 1);

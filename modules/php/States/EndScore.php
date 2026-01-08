@@ -7,8 +7,6 @@ namespace Bga\Games\Goa\States;
 use Bga\GameFramework\StateType;
 use Bga\Games\Goa\Game;
 
-const ST_END_GAME = 99;
-
 class EndScore extends \Bga\GameFramework\States\GameState
 {
 
@@ -16,7 +14,7 @@ class EndScore extends \Bga\GameFramework\States\GameState
         protected Game $game,
     ) {
         parent::__construct($game,
-            id: 98,
+            id: ST_END_SCORING,
             type: StateType::GAME,
         );
     }

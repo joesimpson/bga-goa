@@ -18,12 +18,21 @@ declare(strict_types=1);
 
 namespace Bga\Games\Goa;
 
+require_once 'constants.inc.php';
+
 use Bga\Games\Goa\States\PlayerTurn;
 use Bga\GameFramework\Components\Counters\PlayerCounter;
+use Bga\Games\Goa\Core\Globals;
+use Bga\Games\Goa\Core\Stats;
+use Bga\Games\Goa\Managers\Cards;
+use Bga\Games\Goa\Managers\Players;
+use Bga\Games\Goa\Managers\Tokens;
 
 class Game extends \Bga\GameFramework\Table
 {
     use DebugTrait;
+    
+    public static $instance = null;
 
     public static array $CARD_TYPES;
 
@@ -41,7 +50,10 @@ class Game extends \Bga\GameFramework\Table
     public function __construct()
     {
         parent::__construct();
-        $this->initGameStateLabels([]); // mandatory, even if the array is empty
+        self::$instance = $this;
+        $this->initGameStateLabels([
+            'logging' => 10,
+        ]);
 
         $this->playerEnergy = $this->counterFactory->createPlayerCounter('energy');
 
@@ -71,6 +83,9 @@ class Game extends \Bga\GameFramework\Table
         });*/
     }
 
+    public static function get() : Game{
+        return self::$instance;
+    }
     /**
      * Compute and return the current game progression.
      *
@@ -133,11 +148,8 @@ class Game extends \Bga\GameFramework\Table
         // WARNING: We must only return information visible by the current player.
         $current_player_id = (int) $this->getCurrentPlayerId();
 
-        // Get information about players.
-        // NOTE: you can retrieve some extra field you added for "player" table in `dbmodel.sql` if you need it.
-        $result["players"] = $this->getCollectionFromDb(
-            "SELECT `player_id` `id`, `player_score` `score`, `player_no` `no` FROM `player`"
-        );
+        $result["players"] = Players::getUiData($current_player_id);
+
         $this->playerEnergy->fillResult($result);
 
         // TODO: Gather all information about current game situation (visible by player $current_player_id).
@@ -189,58 +201,26 @@ class Game extends \Bga\GameFramework\Table
     {
         $this->playerEnergy->initDb(array_keys($players), initialValue: 2);
 
-        // Set the colors of the players with HTML color code. The default below is red/green/blue/orange/brown. The
-        // number of colors defined here must correspond to the maximum number of players allowed for the gams.
-        $gameinfos = $this->getGameinfos();
-        $default_colors = $gameinfos['player_colors'];
-
-        foreach ($players as $player_id => $player) {
-            // Now you can access both $player_id and $player array
-            $query_values[] = vsprintf("('%s', '%s', '%s', '%s', '%s')", [
-                $player_id,
-                array_shift($default_colors),
-                $player["player_canal"],
-                addslashes($player["player_name"]),
-                addslashes($player["player_avatar"]),
-            ]);
-        }
-
-        // Create players based on generic information.
-        //
-        // NOTE: You can add extra field on player table in the database (see dbmodel.sql) and initialize
-        // additional fields directly here.
-        static::DbQuery(
-            sprintf(
-                "INSERT INTO player (player_id, player_color, player_canal, player_name, player_avatar) VALUES %s",
-                implode(",", $query_values)
-            )
-        );
-
-        $this->reattributeColorsBasedOnPreferences($players, $gameinfos["player_colors"]);
-        $this->reloadPlayersBasicInfos();
+        Globals::setupNewGame($players, $options);
+        $playersDatas = Players::setupNewGame($players, $options);
+        Stats::setupNewGame($playersDatas);
+        Cards::setupNewGame($playersDatas,$options);
+        Tokens::setupNewGame($players,$options);
 
         // Init global values with their initial values.
-
-        // Init game statistics.
-        //
-        // NOTE: statistics used in this file must be defined in your `stats.inc.php` file.
-
-        // Dummy content.
-        // $this->tableStats->init('table_teststat1', 0);
-        // $this->playerStats->init('player_teststat1', 0);
-
-        // TODO: Setup the initial game situation here.
-
-        // Activate first player once everything has been initialized and ready.
-        if(!array_key_exists("DEBUG_SETUP",$options)){
-            $first_player = $this->activeNextPlayer();
-        }
-        else {//In debug, we cannot change active player
-            $first_player = $this->getActivePlayerId();
-        }
-        
+        $this->setGameStateInitialValue('logging', 1); 
 
         return PlayerTurn::class;
+    }
+
+    /////////////////////////////////////////////////////////////
+    // Exposing protected methods, please use at your own risk //
+    /////////////////////////////////////////////////////////////
+
+    // Exposing protected method getCurrentPlayerId
+    public function getCurrentPId($bReturnNullIfNotLogged = false)
+    {
+        return $this->getCurrentPlayerId($bReturnNullIfNotLogged);
     }
 
 }
