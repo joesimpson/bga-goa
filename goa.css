@@ -47,6 +47,24 @@
   background-repeat: no-repeat;
   border-radius: 10px;
 }
+#goa_resizable_board #goa_board_container #goa_board .goa_board_outposts_stock {
+  position: absolute;
+  width: 108px;
+  height: 108px;
+  top: 250px;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_outposts_1 {
+  left: 215px;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_outposts_2 {
+  left: 380px;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_outposts_3 {
+  left: 545px;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_outposts_4 {
+  left: 709px;
+}
 .goa_board_filler {
   font-size: 0.1em;
 }
@@ -259,85 +277,109 @@
   width: 108px;
   height: 108px;
 }
-.goa_tile.goa_outpost {
+
+.goa_tile.goa_outpost,
+.goa_outpost-front, .goa_outpost-back {
   background-size: 500% 400%;
   background-image: url("img/outposts.jpg");
+}
+.goa_tile.goa_outpost.goa_outpost-back,
+.goa_outpost-front.goa_outpost-back, .goa_outpost-back.goa_outpost-back {
   background-position-x: 100%;
   background-position-y: 66%;
 }
-.goa_tile.goa_outpost[data-type="1"] {
+.goa_tile.goa_outpost[data-type="1"],
+.goa_outpost-front[data-type="1"], .goa_outpost-back[data-type="1"] {
   background-position-x: 0%;
   background-position-y: 0%;
 }
-.goa_tile.goa_outpost[data-type="2"] {
+.goa_tile.goa_outpost[data-type="2"],
+.goa_outpost-front[data-type="2"], .goa_outpost-back[data-type="2"] {
   background-position-x: 25%;
   background-position-y: 0%;
 }
-.goa_tile.goa_outpost[data-type="3"] {
+.goa_tile.goa_outpost[data-type="3"],
+.goa_outpost-front[data-type="3"], .goa_outpost-back[data-type="3"] {
   background-position-x: 50%;
   background-position-y: 0%;
 }
-.goa_tile.goa_outpost[data-type="4"] {
+.goa_tile.goa_outpost[data-type="4"],
+.goa_outpost-front[data-type="4"], .goa_outpost-back[data-type="4"] {
   background-position-x: 75%;
   background-position-y: 0%;
 }
-.goa_tile.goa_outpost[data-type="5"] {
+.goa_tile.goa_outpost[data-type="5"],
+.goa_outpost-front[data-type="5"], .goa_outpost-back[data-type="5"] {
   background-position-x: 100%;
   background-position-y: 0%;
 }
-.goa_tile.goa_outpost[data-type="6"] {
+.goa_tile.goa_outpost[data-type="6"],
+.goa_outpost-front[data-type="6"], .goa_outpost-back[data-type="6"] {
   background-position-x: 0%;
   background-position-y: 33.3333333333%;
 }
-.goa_tile.goa_outpost[data-type="7"] {
+.goa_tile.goa_outpost[data-type="7"],
+.goa_outpost-front[data-type="7"], .goa_outpost-back[data-type="7"] {
   background-position-x: 25%;
   background-position-y: 33.3333333333%;
 }
-.goa_tile.goa_outpost[data-type="8"] {
+.goa_tile.goa_outpost[data-type="8"],
+.goa_outpost-front[data-type="8"], .goa_outpost-back[data-type="8"] {
   background-position-x: 50%;
   background-position-y: 33.3333333333%;
 }
-.goa_tile.goa_outpost[data-type="9"] {
+.goa_tile.goa_outpost[data-type="9"],
+.goa_outpost-front[data-type="9"], .goa_outpost-back[data-type="9"] {
   background-position-x: 75%;
   background-position-y: 33.3333333333%;
 }
-.goa_tile.goa_outpost[data-type="10"] {
+.goa_tile.goa_outpost[data-type="10"],
+.goa_outpost-front[data-type="10"], .goa_outpost-back[data-type="10"] {
   background-position-x: 100%;
   background-position-y: 33.3333333333%;
 }
-.goa_tile.goa_outpost[data-type="11"] {
+.goa_tile.goa_outpost[data-type="11"],
+.goa_outpost-front[data-type="11"], .goa_outpost-back[data-type="11"] {
   background-position-x: 0%;
   background-position-y: 66.6666666667%;
 }
-.goa_tile.goa_outpost[data-type="12"] {
+.goa_tile.goa_outpost[data-type="12"],
+.goa_outpost-front[data-type="12"], .goa_outpost-back[data-type="12"] {
   background-position-x: 25%;
   background-position-y: 66.6666666667%;
 }
-.goa_tile.goa_outpost[data-type="13"] {
+.goa_tile.goa_outpost[data-type="13"],
+.goa_outpost-front[data-type="13"], .goa_outpost-back[data-type="13"] {
   background-position-x: 50%;
   background-position-y: 66.6666666667%;
 }
-.goa_tile.goa_outpost[data-type="14"] {
+.goa_tile.goa_outpost[data-type="14"],
+.goa_outpost-front[data-type="14"], .goa_outpost-back[data-type="14"] {
   background-position-x: 75%;
   background-position-y: 66.6666666667%;
 }
-.goa_tile.goa_outpost[data-type="15"] {
+.goa_tile.goa_outpost[data-type="15"],
+.goa_outpost-front[data-type="15"], .goa_outpost-back[data-type="15"] {
   background-position-x: 100%;
   background-position-y: 66.6666666667%;
 }
-.goa_tile.goa_outpost[data-type="16"] {
+.goa_tile.goa_outpost[data-type="16"],
+.goa_outpost-front[data-type="16"], .goa_outpost-back[data-type="16"] {
   background-position-x: 0%;
   background-position-y: 100%;
 }
-.goa_tile.goa_outpost[data-type="17"] {
+.goa_tile.goa_outpost[data-type="17"],
+.goa_outpost-front[data-type="17"], .goa_outpost-back[data-type="17"] {
   background-position-x: 25%;
   background-position-y: 100%;
 }
-.goa_tile.goa_outpost[data-type="18"] {
+.goa_tile.goa_outpost[data-type="18"],
+.goa_outpost-front[data-type="18"], .goa_outpost-back[data-type="18"] {
   background-position-x: 50%;
   background-position-y: 100%;
 }
-.goa_tile.goa_outpost[data-type="19"] {
+.goa_tile.goa_outpost[data-type="19"],
+.goa_outpost-front[data-type="19"], .goa_outpost-back[data-type="19"] {
   background-position-x: 75%;
   background-position-y: 100%;
 }

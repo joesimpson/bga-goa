@@ -33,6 +33,26 @@ $board_img_height: calc(1 * 1429px);
                 border-radius: 10px;
             }
 
+            .goa_board_outposts_stock{
+                position: absolute;
+                width: 108px;
+                height: 108px;
+                //top: 258px;
+                top: 250px;//for AllVisibleDeck
+            }
+            #goa_board_outposts_1{
+                left: 215px;
+            }
+            #goa_board_outposts_2{
+                left: 380px;
+            }
+            #goa_board_outposts_3{
+                left: 545px;
+            }
+            #goa_board_outposts_4{
+                left: 709px;
+            }
+
             #goa_board_tiles{
                 //TODO
             }

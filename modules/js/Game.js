@@ -15,6 +15,9 @@
  *
  */
 
+const BgaAnimations = await importEsmLib('bga-animations', '1.x');
+const BgaCards = await importEsmLib('bga-cards', '1.x');
+
 //Used Constants copied from PHP file
 
 const TILE_SUBTTYPE_OUTPOST = 1;
@@ -56,7 +59,11 @@ export class Game {
         console.log( "Starting game setup" );
         this.gamedatas = gamedatas;
 
-        // Example to add a div on the game area
+        this.animationManager = new BgaAnimations.Manager({
+            animationsActive: () => this.bga.gameui.bgaAnimationsActive(),
+        });
+
+        // add a div on the game area
         this.bga.gameArea.getElement().insertAdjacentHTML('beforeend', `
             <div id="goa_game_container">
                 <div id="goa_overall_background"></div>
@@ -67,10 +74,10 @@ export class Game {
                                 <div id="goa_board_background"></div>
                                 <div id="goa_board_tiles">
                                     <div id="goa_board_outposts">
-                                        <div id="goa_board_outposts_1"></div>
-                                        <div id="goa_board_outposts_2"></div>
-                                        <div id="goa_board_outposts_3"></div>
-                                        <div id="goa_board_outposts_4"></div>
+                                        <div id="goa_board_outposts_1" class="goa_board_outposts_stock"></div>
+                                        <div id="goa_board_outposts_2" class="goa_board_outposts_stock"></div>
+                                        <div id="goa_board_outposts_3" class="goa_board_outposts_stock"></div>
+                                        <div id="goa_board_outposts_4" class="goa_board_outposts_stock"></div>
                                     </div>
                                     <div id="goa_board_market"></div>
                                 </div>
@@ -134,6 +141,40 @@ export class Game {
         });
         
         // TODO: Set up your game interface here, according to "gamedatas"
+        
+        // create a card manager
+        this.outpostsTilesManager = new BgaCards.Manager({
+            animationManager: this.animationManager,
+            type: 'goa_outpost',
+            getId: (card) => card.id,
+            setupFrontDiv: (card, div) => {
+                div.dataset.type = card.type; 
+                this.bga.gameui.addTooltipHtml(div.id, `TODO JSA tooltip of ${card.type}`);
+            },
+            cardWidth: 108,
+            cardHeight: 108,
+        });
+        this.outpostsTilesStocks = [];
+        this.outpostsTilesStocks[1] = new BgaCards.AllVisibleDeck(
+            this.outpostsTilesManager, 
+            document.getElementById('goa_board_outposts_1'),
+            { direction:"vertical", },
+        );
+        this.outpostsTilesStocks[2] = new BgaCards.AllVisibleDeck(
+            this.outpostsTilesManager, 
+            document.getElementById('goa_board_outposts_2'),
+            { direction:"vertical", },
+        );
+        this.outpostsTilesStocks[3] = new BgaCards.AllVisibleDeck(
+            this.outpostsTilesManager, 
+            document.getElementById('goa_board_outposts_3'),
+            { direction:"vertical", },
+        );
+        this.outpostsTilesStocks[4] = new BgaCards.AllVisibleDeck(
+            this.outpostsTilesManager, 
+            document.getElementById('goa_board_outposts_4'),
+            { direction:"vertical", },
+        );
         this.setupTiles();
         this.setupTokens();
 
@@ -378,7 +419,15 @@ export class Game {
         console.log('addTile',tile,location);
         if (!$(`goa_tile-${tile.id}`)){
             let container = location == null ? this.getTileContainer(tile) : location;
-            document.getElementById(container).insertAdjacentHTML('beforeend', this.tplTile(tile));
+            
+            if(container == `goa_board_outposts_${tile.colony}`){
+                //use bga-cards stock
+                this.outpostsTilesStocks[tile.colony].addCard(tile);
+            }
+            else {//manual add
+                document.getElementById(container).insertAdjacentHTML('beforeend', this.tplTile(tile));
+            }
+
         }
         return $(`goa_tile-${tile.id}`);
     }

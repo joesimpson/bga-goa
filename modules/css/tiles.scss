@@ -7,15 +7,21 @@
     width: 108px;
     height: 108px;
 
-    &.goa_outpost{ 
+}
+
+    .goa_tile.goa_outpost,
+    .goa_outpost-front, .goa_outpost-back //for bga-cards manager 
+    { 
 
         //sprite positions
         background-size: 500% 400%;
         background-image: url("img/outposts.jpg");
-
-        //back tile
-        background-position-x: 100%;
-        background-position-y: 66%;
+        
+        &.goa_outpost-back{
+            //back tile
+            background-position-x: 100%;
+            background-position-y: 66%;
+        }
 
         @for $i from 0 through 18 {
             &[data-type="#{$i + 1}"] {
@@ -24,4 +30,4 @@
             }
         }
     }
-}
+    
