@@ -1,0 +1,27 @@
+
+@use "sass:math";
+
+.goa_tile{
+    position: relative; 
+
+    width: 108px;
+    height: 108px;
+
+    &.goa_outpost{ 
+
+        //sprite positions
+        background-size: 500% 400%;
+        background-image: url("img/outposts.jpg");
+
+        //back tile
+        background-position-x: 100%;
+        background-position-y: 66%;
+
+        @for $i from 0 through 18 {
+            &[data-type="#{$i + 1}"] {
+                background-position-x: math.div(($i % 5) * 100%, 4);//5 columns
+                background-position-y: math.div(math.div($i - ($i % 5), 5) * 100%, 3);//5 columns , 4 rows
+            }
+        }
+    }
+}

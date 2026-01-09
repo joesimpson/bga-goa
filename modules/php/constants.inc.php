@@ -46,11 +46,12 @@ const TILE_LOCATION_DECK = 'deck';
 const TILE_LOCATION_BOARD = 'board';
 const TILE_LOCATION_PLAYER_BOARD = 'p_board';
 
+const TILE_LOCATION_BOARD_OUTPOST = 'board_c';
 const TILE_LOCATION_BOARD_OUTPOSTS = [
-   COLONY_KOLLAM    => 'board_c1',
-   COLONY_KOCHI     => 'board_c2',
-   COLONY_MADRAS    => 'board_c3',
-   COLONY_KOZHIKODE => 'board_c4',
+   COLONY_KOLLAM    => TILE_LOCATION_BOARD_OUTPOST.'1',
+   COLONY_KOCHI     => TILE_LOCATION_BOARD_OUTPOST.'2',
+   COLONY_MADRAS    => TILE_LOCATION_BOARD_OUTPOST.'3',
+   COLONY_KOZHIKODE => TILE_LOCATION_BOARD_OUTPOST.'4',
 ];
 
 /////////////////////////////////////////////////////////

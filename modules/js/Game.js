@@ -16,6 +16,12 @@
  */
 
 //Used Constants copied from PHP file
+
+const TILE_SUBTTYPE_OUTPOST = 1;
+const TILE_SUBTTYPE_MARKET = 2;
+
+const TILE_LOCATION_BOARD_OUTPOST = 'board_c';
+
 const TOKEN_LOCATION_PLAYER_BOARD = 'p_board';
 
 const TOKEN_SUBTTYPE_PROGRESS_MARKER = 1;
@@ -59,7 +65,15 @@ export class Game {
                         <div id='goa_board_container'>
                             <div id="goa_board">
                                 <div id="goa_board_background"></div>
-                                <div id="goa_board_tiles"></div>
+                                <div id="goa_board_tiles">
+                                    <div id="goa_board_outposts">
+                                        <div id="goa_board_outposts_1"></div>
+                                        <div id="goa_board_outposts_2"></div>
+                                        <div id="goa_board_outposts_3"></div>
+                                        <div id="goa_board_outposts_4"></div>
+                                    </div>
+                                    <div id="goa_board_market"></div>
+                                </div>
                                 <div class="goa_board_filler">&nbsp;<br/></div>
                             </div>
                         </div>
@@ -120,6 +134,7 @@ export class Game {
         });
         
         // TODO: Set up your game interface here, according to "gamedatas"
+        this.setupTiles();
         this.setupTokens();
 
         // Setup game notifications to handle (see "setupNotifications" method below)
@@ -328,6 +343,63 @@ export class Game {
         window.location.reload(true);
     }
 
+    ////////////////////////////////////////////////////////
+    //  _____ _ _
+    // |_   _(_) | ___  ___
+    //   | | | | |/ _ \/ __|
+    //   | | | | |  __/\__ \
+    //   |_| |_|_|\___||___/
+    //////////////////////////////////////////////////////////
+ 
+    setupTiles() {
+        console.log("setupTiles"); 
+        //Destroy previous tiles
+        document.querySelectorAll('.goa_tile[id^="goa_tile-"]').forEach((oCard) => {
+            this.destroy(oCard);
+        });
+
+        let cardIds = this.gamedatas.tiles.map((card) => {
+            this.addTile(card);
+            return card.id;
+        });
+    }
+    getTileContainer(tile) {
+        if(tile.subtype == TILE_SUBTTYPE_OUTPOST){
+            if (tile.location.startsWith(TILE_LOCATION_BOARD_OUTPOST) ) {
+                return `goa_board_outposts_${tile.colony}`;
+            }
+        }
+        
+        console.error('Trying to get container of a tile', tile);
+        return 'goa_game_container';
+    }
+    
+    addTile(tile, location = null) {
+        console.log('addTile',tile,location);
+        if (!$(`goa_tile-${tile.id}`)){
+            let container = location == null ? this.getTileContainer(tile) : location;
+            document.getElementById(container).insertAdjacentHTML('beforeend', this.tplTile(tile));
+        }
+        return $(`goa_tile-${tile.id}`);
+    }
+    getTileTooltip(tile) {
+        let cardDatas = tile;
+        let title = "";
+        let div = this.tplTile(cardDatas,'_tmp'); 
+        return [`<div class='goa_tile_tooltip'>
+                <div class="goa_h1">${title}</div>
+                <hr/>
+                ${div}
+            </div>`];
+
+    }
+    tplTile(tile, prefix ='') {
+        if(tile.subtype == TILE_SUBTTYPE_OUTPOST) 
+            return `<div class="goa_tile goa_tile${prefix} goa_outpost" id="goa_tile${prefix}-${tile.id}" data-id="${tile.id}" data-type="${tile.type}"
+                data-colony="${tile.colony}" >
+            </div>`;
+        return '';
+    }
 
     ////////////////////////////////////////
     //  _______    _                   
