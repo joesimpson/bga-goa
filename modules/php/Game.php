@@ -218,14 +218,4 @@ class Game extends \Bga\GameFramework\Table
         return NextPlayer::class;
     }
 
-    /////////////////////////////////////////////////////////////
-    // Exposing protected methods, please use at your own risk //
-    /////////////////////////////////////////////////////////////
-
-    // Exposing protected method getCurrentPlayerId
-    public function getCurrentPId($bReturnNullIfNotLogged = false)
-    {
-        return $this->getCurrentPlayerId($bReturnNullIfNotLogged);
-    }
-
 }

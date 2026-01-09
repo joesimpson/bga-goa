@@ -99,7 +99,7 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
 
   public static function getCurrentId($bReturnNullIfNotLogged = false)
   {
-    return (int) Game::get()->getCurrentPId($bReturnNullIfNotLogged);
+    return (int) Game::get()->getCurrentPlayerId($bReturnNullIfNotLogged);
   }
 
   public static function getAll()
