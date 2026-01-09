@@ -5,7 +5,27 @@ const BGA_GAMESTATE_GAMEVERSION = 300;
 /*
  * Game Constants
  */
-  
+
+
+const SPICE_WHITE     = 1;
+const SPICE_BLACK     = 2;
+const SPICE_YELLOW    = 3;
+const SPICE_PINK      = 4;
+const SPICE_GREEN     = 5;
+
+const ALL_SPICES     = [
+   SPICE_WHITE ,
+   SPICE_BLACK ,
+   SPICE_YELLOW,
+   SPICE_PINK  ,
+   SPICE_GREEN ,
+ ];
+
+const COLONY_KOLLAM    = 1;
+const COLONY_KOCHI     = 2;
+const COLONY_MADRAS    = 3;
+const COLONY_KOZHIKODE = 4;
+ 
 /////////////////////////////////////////////////////////
 //          CARDS
 /////////////////////////////////////////////////////////
@@ -14,6 +34,24 @@ const CARD_LOCATION_DISCARD = 'discard';
 const CARD_LOCATION_DECK = 'deck';
 const CARD_LOCATION_BOARD = 'board';
 const CARD_LOCATION_HAND = 'hand';
+
+/////////////////////////////////////////////////////////
+//          TILES
+/////////////////////////////////////////////////////////
+
+const TILE_SUBTTYPE_OUTPOST = 1;
+const TILE_SUBTTYPE_MARKET = 2;
+
+const TILE_LOCATION_DECK = 'deck';
+const TILE_LOCATION_BOARD = 'board';
+const TILE_LOCATION_PLAYER_BOARD = 'p_board';
+
+const TILE_LOCATION_BOARD_OUTPOSTS = [
+   COLONY_KOLLAM    => 'board_c1',
+   COLONY_KOCHI     => 'board_c2',
+   COLONY_MADRAS    => 'board_c3',
+   COLONY_KOZHIKODE => 'board_c4',
+];
 
 /////////////////////////////////////////////////////////
 //          MEEPLES

@@ -26,6 +26,7 @@ use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Core\Stats;
 use Bga\Games\Goa\Managers\Cards;
 use Bga\Games\Goa\Managers\Players;
+use Bga\Games\Goa\Managers\Tiles;
 use Bga\Games\Goa\Managers\Tokens;
 use Bga\Games\Goa\States\NextPlayer;
 
@@ -153,6 +154,7 @@ class Game extends \Bga\GameFramework\Table
         $result["round"] = Globals::getRound();
         $result["players"] = Players::getUiData($current_player_id);
         $result["cards"] = Cards::getUiData($current_player_id);
+        $result["tiles"] = Tiles::getUiData($current_player_id);
         $result["tokens"] = Tokens::getUiData($current_player_id);
 
         $this->playerEnergy->fillResult($result);
@@ -210,6 +212,7 @@ class Game extends \Bga\GameFramework\Table
         $playersDatas = Players::setupNewGame($players, $options);
         Stats::setupNewGame($playersDatas);
         Cards::setupNewGame($playersDatas,$options);
+        Tiles::setupNewGame($playersDatas,$options);
         Tokens::setupNewGame($playersDatas,$options);
 
         // Init global values with their initial values.
