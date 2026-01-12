@@ -38,6 +38,8 @@ const COLONY_KOLLAM    = 1;
 const COLONY_KOCHI     = 2;
 const COLONY_MADRAS    = 3;
 const COLONY_KOZHIKODE = 4;
+
+const MARKET_GRID_SIZE = 5;
  
 /////////////////////////////////////////////////////////
 //          CARDS
@@ -57,8 +59,10 @@ const TILE_SUBTTYPE_MARKET = 2;
 
 const TILE_LOCATION_DECK_A = 'deck_a';
 const TILE_LOCATION_DECK_B = 'deck_b';
-const TILE_LOCATION_BOARD = 'board';
+const TILE_LOCATION_BOARD_MARKET = 'market';
 const TILE_LOCATION_PLAYER_BOARD = 'p_board';
+/** For tiles we return to the game box (not the tiles we play and discard) */
+const TILE_LOCATION_BOX = 'box';
 
 const TILE_LOCATION_BOARD_OUTPOST = 'board_c';
 const TILE_LOCATION_BOARD_OUTPOSTS = [

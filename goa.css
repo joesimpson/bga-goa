@@ -33,7 +33,6 @@
   transform-origin: top left;
   border-radius: 10px;
   border: 2px solid black;
-  box-shadow: 1px 1px 10px black;
   position: relative;
   display: flex;
   flex-wrap: wrap;
@@ -81,6 +80,36 @@
   display: grid;
   grid-template-columns: repeat(5, 124px);
   grid-template-rows: repeat(5, 124px);
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_tiles #goa_board_market #goa_board_market_grid .goa_grid_space[data-col="1"] {
+  grid-column-start: 1;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_tiles #goa_board_market #goa_board_market_grid .goa_grid_space[data-col="2"] {
+  grid-column-start: 2;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_tiles #goa_board_market #goa_board_market_grid .goa_grid_space[data-col="3"] {
+  grid-column-start: 3;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_tiles #goa_board_market #goa_board_market_grid .goa_grid_space[data-col="4"] {
+  grid-column-start: 4;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_tiles #goa_board_market #goa_board_market_grid .goa_grid_space[data-col="5"] {
+  grid-column-start: 5;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_tiles #goa_board_market #goa_board_market_grid .goa_grid_space[data-row="1"] {
+  grid-row-start: 1;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_tiles #goa_board_market #goa_board_market_grid .goa_grid_space[data-row="2"] {
+  grid-row-start: 2;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_tiles #goa_board_market #goa_board_market_grid .goa_grid_space[data-row="3"] {
+  grid-row-start: 3;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_tiles #goa_board_market #goa_board_market_grid .goa_grid_space[data-row="4"] {
+  grid-row-start: 4;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_tiles #goa_board_market #goa_board_market_grid .goa_grid_space[data-row="5"] {
+  grid-row-start: 5;
 }
 #goa_resizable_board #goa_board_container #goa_board #goa_board_tiles #goa_board_market #goa_board_market_grid .goa_tile {
   left: 8px;
@@ -298,10 +327,12 @@
   position: relative;
   width: 108px;
   height: 108px;
+  border-radius: 6px;
 }
 
 .goa_tile.goa_outpost,
 .goa_outpost-front, .goa_outpost-back {
+  --bga-cards_card-border-radius: 6px;
   background-size: 500% 400%;
   background-image: url("img/outposts.jpg");
 }

@@ -18,6 +18,8 @@ class OutpostTile extends Tile
     {
         $data = parent::getUiData();
         $data['subtype'] = TILE_SUBTTYPE_OUTPOST;
+        unset($data['row']);
+        unset($data['col']);
         return $data;
     }
  

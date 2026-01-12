@@ -23,6 +23,9 @@ const BgaCards = await importEsmLib('bga-cards', '1.x');
 const TILE_SUBTTYPE_OUTPOST = 1;
 const TILE_SUBTTYPE_MARKET = 2;
 
+const MARKET_GRID_SIZE = 5;
+
+const TILE_LOCATION_BOARD_MARKET = 'market';
 const TILE_LOCATION_BOARD_OUTPOST = 'board_c';
 
 const TOKEN_LOCATION_PLAYER_BOARD = 'p_board';
@@ -402,6 +405,15 @@ export class Game {
             this.destroy(oCard);
         });
 
+        //market Grid cells
+        for(let row=1;row<=MARKET_GRID_SIZE;row++){
+            for(let col=1;col<=MARKET_GRID_SIZE;col++){
+                let grid_cell = `goa_market_grid_cell_${row}_${col}`;
+                if(!$(grid_cell)) document.getElementById(`goa_board_market_grid`).insertAdjacentHTML('beforeend', this.tplMarketGridSpace({'row':row, 'col':col}));
+                //this.empty(grid_cell);
+            }
+        }
+
         let cardIds = this.gamedatas.tiles.map((card) => {
             this.addTile(card);
             return card.id;
@@ -415,8 +427,10 @@ export class Game {
         }
         
         if(tile.subtype == TILE_SUBTTYPE_MARKET){
-            if (tile.location.startsWith('deck') ) {//TODO JSA CLEAN FOR DEBUG
-                return `goa_board_market_grid`;
+            if (tile.location == TILE_LOCATION_BOARD_MARKET ) {
+                if(tile.row>0 && tile.col>0 && tile.row<=MARKET_GRID_SIZE && tile.col<=MARKET_GRID_SIZE ){
+                    return `goa_market_grid_space-${tile.row}-${tile.col}`;
+                }
             }
         }
         console.error('Trying to get container of a tile', tile);
@@ -460,6 +474,12 @@ export class Game {
                 data-play_type="${tile.play_type}" >
             </div>`;
         return '';
+    }
+
+    tplMarketGridSpace(datas){
+        return `<div class="goa_grid_space" id="goa_market_grid_space-${datas.row}-${datas.col}"
+            data-row="${datas.row}" data-col="${datas.col}">
+        </div>`;
     }
 
     ////////////////////////////////////////

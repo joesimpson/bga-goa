@@ -16,7 +16,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
   protected static $prefix = 'tile_';
   protected static $autoIncrement = true;
   protected static $autoremovePrefix = false;
-  protected static $customFields = ['player_id', 'type', 'subtype'];
+  protected static $customFields = ['player_id', 'type', 'subtype', 'row', 'col'];
   protected static $autoreshuffle = false;
 
   protected static function cast($row)
@@ -43,7 +43,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
   {
 
     return 
-      self::getInLocation(TILE_LOCATION_BOARD)
+      self::getInLocation(TILE_LOCATION_BOARD_MARKET)
       ->merge(self::getInLocation(TILE_LOCATION_PLAYER_BOARD))
       ->merge(self::getInLocation(TILE_LOCATION_BOARD_OUTPOSTS[COLONY_KOLLAM    ]))
       ->merge(self::getInLocation(TILE_LOCATION_BOARD_OUTPOSTS[COLONY_KOCHI     ]))
@@ -67,7 +67,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
    */
   public static function getBoardTiles($player_id = null)
   {
-    return self::getFilteredQuery($player_id,TILE_LOCATION_BOARD)->get();
+    return self::getFilteredQuery($player_id,TILE_LOCATION_BOARD_MARKET)->get();
   }
 
   /**
@@ -122,6 +122,22 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
     self::create($tiles);
     self::shuffle(TILE_LOCATION_DECK_A);
     self::shuffle(TILE_LOCATION_DECK_B);
+
+    //TODO JSA move it in other state for each round / phase:
+    $tiles = self::pickForLocation(4,TILE_LOCATION_DECK_A,TILE_LOCATION_BOX);
+    //TODO JSA if more than 2 plantations, pick and replace ...
+
+    $deckPhase = self::getInLocationOrdered(TILE_LOCATION_DECK_A);
+    $counter = 0;
+    foreach($deckPhase as $tile_id => $tile){
+      $tile->setLocation(TILE_LOCATION_BOARD_MARKET);
+      $tile->setRow(1 + intval($counter / MARKET_GRID_SIZE) );
+      $tile->setCol(1 + $counter - ($tile->getRow()-1)*MARKET_GRID_SIZE );
+      $counter++;
+    }
+
+
+
   }
    
   /**

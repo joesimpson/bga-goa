@@ -18,6 +18,9 @@ class Tile extends DB_Model
     'location' => 'tile_location',
     'pId' => ['player_id', 'int'],
     'type' => ['type', 'int'],
+
+    'row' => ['row', 'int'],
+    'col' => ['col', 'int'],
   ];
    
   public function __construct($row, $datas)

@@ -17,7 +17,7 @@ $board_img_height: calc(1 * 1429px);
             transform-origin: top left;
             border-radius: 10px;
             border: 2px solid black;
-            box-shadow: 1px 1px 10px black;
+            //box-shadow: 1px 1px 10px black;
             position: relative;
 
             display: flex;
@@ -74,6 +74,20 @@ $board_img_height: calc(1 * 1429px);
                         //grid-template-rows: repeat(5, 1fr);
                         grid-template-columns: repeat(5, 124px);
                         grid-template-rows: repeat(5, 124px);
+
+                        
+                        .goa_grid_space{
+                            @for $i from 1 through 5 {
+                                &[data-col="#{$i}"]{
+                                    grid-column-start: $i;
+                                }
+                            }
+                            @for $i from 1 through 5 {
+                                &[data-row="#{$i}"]{
+                                    grid-row-start: $i;
+                                }
+                            }
+                        }
 
                         .goa_tile{
                             left: 8px;

@@ -6,12 +6,14 @@
 
     width: 108px;
     height: 108px;
+    border-radius: 6px;
 
 }
 
     .goa_tile.goa_outpost,
     .goa_outpost-front, .goa_outpost-back //for bga-cards manager 
     { 
+        --bga-cards_card-border-radius: 6px;
 
         //sprite positions
         background-size: 500% 400%;
