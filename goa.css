@@ -65,6 +65,11 @@
 #goa_resizable_board #goa_board_container #goa_board #goa_board_outposts_4 {
   left: 709px;
 }
+#goa_resizable_board #goa_board_container #goa_board #goa_board_tiles #goa_board_market {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .goa_board_filler {
   font-size: 0.1em;
 }
@@ -381,6 +386,177 @@
 .goa_tile.goa_outpost[data-type="19"],
 .goa_outpost-front[data-type="19"], .goa_outpost-back[data-type="19"] {
   background-position-x: 75%;
+  background-position-y: 100%;
+}
+
+.goa_tile.goa_market {
+  background-size: 700% 600%;
+  background-image: url("img/market.jpg");
+  background-position-x: 0%;
+  background-position-y: 0%;
+}
+.goa_tile.goa_market[data-type="1"] {
+  background-position-x: 0%;
+  background-position-y: 0%;
+}
+.goa_tile.goa_market[data-type="2"] {
+  background-position-x: 16.6666666667%;
+  background-position-y: 0%;
+}
+.goa_tile.goa_market[data-type="3"] {
+  background-position-x: 33.3333333333%;
+  background-position-y: 0%;
+}
+.goa_tile.goa_market[data-type="4"] {
+  background-position-x: 50%;
+  background-position-y: 0%;
+}
+.goa_tile.goa_market[data-type="5"] {
+  background-position-x: 66.6666666667%;
+  background-position-y: 0%;
+}
+.goa_tile.goa_market[data-type="6"] {
+  background-position-x: 83.3333333333%;
+  background-position-y: 0%;
+}
+.goa_tile.goa_market[data-type="7"] {
+  background-position-x: 100%;
+  background-position-y: 0%;
+}
+.goa_tile.goa_market[data-type="8"] {
+  background-position-x: 0%;
+  background-position-y: 20%;
+}
+.goa_tile.goa_market[data-type="9"] {
+  background-position-x: 16.6666666667%;
+  background-position-y: 20%;
+}
+.goa_tile.goa_market[data-type="10"] {
+  background-position-x: 33.3333333333%;
+  background-position-y: 20%;
+}
+.goa_tile.goa_market[data-type="11"] {
+  background-position-x: 50%;
+  background-position-y: 20%;
+}
+.goa_tile.goa_market[data-type="12"] {
+  background-position-x: 66.6666666667%;
+  background-position-y: 20%;
+}
+.goa_tile.goa_market[data-type="13"] {
+  background-position-x: 83.3333333333%;
+  background-position-y: 20%;
+}
+.goa_tile.goa_market[data-type="14"] {
+  background-position-x: 100%;
+  background-position-y: 20%;
+}
+.goa_tile.goa_market[data-type="15"] {
+  background-position-x: 0%;
+  background-position-y: 40%;
+}
+.goa_tile.goa_market[data-type="16"] {
+  background-position-x: 16.6666666667%;
+  background-position-y: 40%;
+}
+.goa_tile.goa_market[data-type="17"] {
+  background-position-x: 33.3333333333%;
+  background-position-y: 40%;
+}
+.goa_tile.goa_market[data-type="18"] {
+  background-position-x: 50%;
+  background-position-y: 40%;
+}
+.goa_tile.goa_market[data-type="19"] {
+  background-position-x: 66.6666666667%;
+  background-position-y: 40%;
+}
+.goa_tile.goa_market[data-type="20"] {
+  background-position-x: 83.3333333333%;
+  background-position-y: 40%;
+}
+.goa_tile.goa_market[data-type="21"] {
+  background-position-x: 100%;
+  background-position-y: 40%;
+}
+.goa_tile.goa_market[data-type="22"] {
+  background-position-x: 0%;
+  background-position-y: 60%;
+}
+.goa_tile.goa_market[data-type="23"] {
+  background-position-x: 16.6666666667%;
+  background-position-y: 60%;
+}
+.goa_tile.goa_market[data-type="24"] {
+  background-position-x: 33.3333333333%;
+  background-position-y: 60%;
+}
+.goa_tile.goa_market[data-type="25"] {
+  background-position-x: 50%;
+  background-position-y: 60%;
+}
+.goa_tile.goa_market[data-type="26"] {
+  background-position-x: 66.6666666667%;
+  background-position-y: 60%;
+}
+.goa_tile.goa_market[data-type="27"] {
+  background-position-x: 83.3333333333%;
+  background-position-y: 60%;
+}
+.goa_tile.goa_market[data-type="28"] {
+  background-position-x: 100%;
+  background-position-y: 60%;
+}
+.goa_tile.goa_market[data-type="29"] {
+  background-position-x: 0%;
+  background-position-y: 80%;
+}
+.goa_tile.goa_market[data-type="30"] {
+  background-position-x: 16.6666666667%;
+  background-position-y: 80%;
+}
+.goa_tile.goa_market[data-type="31"] {
+  background-position-x: 33.3333333333%;
+  background-position-y: 80%;
+}
+.goa_tile.goa_market[data-type="32"] {
+  background-position-x: 50%;
+  background-position-y: 80%;
+}
+.goa_tile.goa_market[data-type="33"] {
+  background-position-x: 66.6666666667%;
+  background-position-y: 80%;
+}
+.goa_tile.goa_market[data-type="34"] {
+  background-position-x: 83.3333333333%;
+  background-position-y: 80%;
+}
+.goa_tile.goa_market[data-type="35"] {
+  background-position-x: 100%;
+  background-position-y: 80%;
+}
+.goa_tile.goa_market[data-type="36"] {
+  background-position-x: 0%;
+  background-position-y: 100%;
+}
+.goa_tile.goa_market[data-type="37"] {
+  background-position-x: 16.6666666667%;
+  background-position-y: 100%;
+}
+.goa_tile.goa_market[data-type="38"] {
+  background-position-x: 33.3333333333%;
+  background-position-y: 100%;
+}
+.goa_tile.goa_market[data-type="39"] {
+  background-position-x: 50%;
+  background-position-y: 100%;
+}
+.goa_tile.goa_market[data-type="40"] {
+  background-position-x: 66.6666666667%;
+  background-position-y: 100%;
+}
+.goa_tile.goa_market[data-type="41"] {
+  background-position-x: 83.3333333333%;
   background-position-y: 100%;
 }
 

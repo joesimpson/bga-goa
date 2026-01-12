@@ -54,7 +54,12 @@ $board_img_height: calc(1 * 1429px);
             }
 
             #goa_board_tiles{
-                //TODO
+                
+                #goa_board_market{
+                    //TODO JSA grid
+                    display: flex;
+                    flex-wrap: wrap;
+                }
             }
 
         }

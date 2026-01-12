@@ -31,3 +31,21 @@
         }
     }
     
+    .goa_tile.goa_market
+    { 
+
+        //sprite positions
+        background-size: 700% 600%;
+        background-image: url("img/market.jpg");
+        
+        //back tile
+        background-position-x: 0%;
+        background-position-y: 0%;
+
+        @for $i from 0 through 40 {
+            &[data-type="#{$i + 1}"] {
+                background-position-x: math.div(($i % 7) * 100%, 6);//7 columns, 6 rows
+                background-position-y: math.div(math.div($i - ($i % 7), 7) * 100%, 5);//7 columns , 6 rows
+            }
+        }
+    }

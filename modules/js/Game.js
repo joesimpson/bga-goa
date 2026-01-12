@@ -411,6 +411,11 @@ export class Game {
             }
         }
         
+        if(tile.subtype == TILE_SUBTTYPE_MARKET){
+            if (tile.location.startsWith('deck') ) {//TODO JSA CLEAN FOR DEBUG
+                return `goa_board_market`;
+            }
+        }
         console.error('Trying to get container of a tile', tile);
         return 'goa_game_container';
     }
@@ -446,6 +451,10 @@ export class Game {
         if(tile.subtype == TILE_SUBTTYPE_OUTPOST) 
             return `<div class="goa_tile goa_tile${prefix} goa_outpost" id="goa_tile${prefix}-${tile.id}" data-id="${tile.id}" data-type="${tile.type}"
                 data-colony="${tile.colony}" >
+            </div>`;
+        if(tile.subtype == TILE_SUBTTYPE_MARKET) 
+            return `<div class="goa_tile goa_tile${prefix} goa_market" id="goa_tile${prefix}-${tile.id}" data-id="${tile.id}" data-type="${tile.type}"
+                data-play_type="${tile.play_type}" >
             </div>`;
         return '';
     }
