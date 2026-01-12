@@ -83,6 +83,35 @@ Icon extract in sprite with differents layers size (so % is not useful).
   left: 149px;
   top: 401px;
 }
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_left,
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_right {
+  top: 55px;
+  width: 55px;
+  height: 620px;
+  position: absolute;
+  display: grid;
+  grid-template-rows: repeat(5, 124px);
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_bottom,
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_top {
+  left: 57px;
+  width: 620px;
+  height: 54px;
+  position: absolute;
+  display: grid;
+  grid-template-columns: repeat(5, 124px);
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_right {
+  right: 0px;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_bottom {
+  bottom: 0px;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame .goa_grid_space {
+  display: flex;
+  justify-content: center;
+  align-self: center;
+}
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_grid {
   position: absolute;
   width: 620px;
@@ -122,6 +151,17 @@ Icon extract in sprite with differents layers size (so % is not useful).
 }
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_grid .goa_grid_space[data-row="5"] {
   grid-row-start: 5;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_grid .goa_grid_space .goa_first_auction_marker,
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_grid .goa_grid_space .goa_auction_marker {
+  position: absolute;
+  left: 45%;
+  top: 25%;
+  z-index: 2;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_grid .goa_grid_space .goa_auction_marker {
+  left: 46%;
+  z-index: 3;
 }
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_grid .goa_tile {
   left: 8px;
@@ -353,6 +393,20 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-size: 606.0606060606% 170.9844559585%;
 }
 
+/**
+ *------
+ * BGA framework: Gregory Isabelli & Emmanuel Colin & BoardGameArena
+ * Goa implementation : © joesimpson <1324811+joesimpson@users.noreply.github.com>
+ *
+ * This code has been produced on the BGA studio platform for use on http://boardgamearena.com.
+ * See http://en.boardgamearena.com/#!doc/Studio for more information.
+ * -----
+ *
+ * goa.scss
+ *
+ * Goa stylesheet
+ *
+ */
 .goa_auction_marker {
   position: relative;
   width: 50px;
@@ -410,6 +464,16 @@ Icon extract in sprite with differents layers size (so % is not useful).
 }
 .goa_progress_marker[data-color=feb713] {
   background-position-x: 100%;
+}
+
+.goa_first_auction_marker {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  background-image: url("img/icons.png");
+  background-position-x: -46.2595419847px;
+  background-position-y: 0px;
+  background-size: 458.0152671756% 129.4117647059%;
 }
 
 .goa_tile {

@@ -1,5 +1,6 @@
 
 @use "sass:math";
+@use "variables" as *;
 
 .goa_auction_marker {
     position: relative; 
@@ -58,4 +59,10 @@
         background-position-x: 100%;
     } 
 
+}
+
+
+.goa_first_auction_marker{
+    position: relative; 
+    @include goa_icons_sprite(202px,0px,60px,60px,262px,255px);
 }

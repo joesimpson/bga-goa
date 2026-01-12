@@ -83,7 +83,12 @@ export class Game {
                                         <div id="goa_board_outposts_4" class="goa_board_outposts_stock"></div>
                                     </div>
                                     <div id="goa_board_market">
-                                        <div id="goa_board_market_frame"></div>
+                                        <div id="goa_board_market_frame">
+                                            <div id="goa_board_market_top"></div>
+                                            <div id="goa_board_market_left"></div>
+                                            <div id="goa_board_market_right"></div>
+                                            <div id="goa_board_market_bottom"></div>
+                                        </div>
                                         <div id="goa_board_market_grid"></div>
                                     </div>
                                     <div id="goa_board_rounds">
@@ -434,11 +439,38 @@ export class Game {
         //market Grid cells
         for(let row=1;row<=MARKET_GRID_SIZE;row++){
             for(let col=1;col<=MARKET_GRID_SIZE;col++){
-                let grid_cell = `goa_market_grid_cell_${row}_${col}`;
+                let grid_cell = `goa_market_grid_space-${row}-${col}`;
                 if(!$(grid_cell)) document.getElementById(`goa_board_market_grid`).insertAdjacentHTML('beforeend', this.tplMarketGridSpace({'row':row, 'col':col}));
                 //this.empty(grid_cell);
             }
         }
+        //---------------------------------
+        //grid frame
+        for(let col=1;col<=MARKET_GRID_SIZE;col++){
+            let grid_cell = `goa_market_grid_space-${0}-${col}`;
+            if(!$(grid_cell)) document.getElementById(`goa_board_market_top`).insertAdjacentHTML('beforeend', this.tplMarketGridSpace({'row':0, 'col':col}));
+            //TODO JSA REMOVE DEBUG
+            document.getElementById(grid_cell).insertAdjacentHTML('beforeend', "<div class='goa_first_auction_marker'></div>");
+
+            grid_cell = `goa_market_grid_space-${(MARKET_GRID_SIZE+1)}-${col}`;
+            if(!$(grid_cell)) document.getElementById(`goa_board_market_bottom`).insertAdjacentHTML('beforeend', this.tplMarketGridSpace({'row':(MARKET_GRID_SIZE+1), 'col':col}));
+
+            //TODO JSA REMOVE DEBUG
+            document.getElementById(grid_cell).insertAdjacentHTML('beforeend', "<div class='goa_first_auction_marker'></div>");
+
+        }
+        for(let row=1;row<=MARKET_GRID_SIZE;row++){
+            let grid_cell = `goa_market_grid_space-${row}-${0}`;
+            if(!$(grid_cell)) document.getElementById(`goa_board_market_left`).insertAdjacentHTML('beforeend', this.tplMarketGridSpace({'row':row, 'col':0}));
+            //TODO JSA REMOVE DEBUG
+            document.getElementById(grid_cell).insertAdjacentHTML('beforeend', "<div class='goa_first_auction_marker'></div>");
+
+            grid_cell = `goa_market_grid_space-${row}-${(MARKET_GRID_SIZE+1)}`;
+            if(!$(grid_cell)) document.getElementById(`goa_board_market_right`).insertAdjacentHTML('beforeend', this.tplMarketGridSpace({'row':row, 'col':(MARKET_GRID_SIZE+1)}));
+            //TODO JSA REMOVE DEBUG
+            document.getElementById(grid_cell).insertAdjacentHTML('beforeend', "<div class='goa_first_auction_marker'></div>");
+        }
+        //---------------------------------
 
         let cardIds = this.gamedatas.tiles.map((card) => {
             this.addTile(card);

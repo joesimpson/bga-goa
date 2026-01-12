@@ -65,6 +65,39 @@ $board_img_height: calc(1 * calc(1429px + var(--goa_board_height_offset)));
                     left: 149px;
                     top: 401px;
 
+                    #goa_board_market_frame{
+                        #goa_board_market_left,
+                        #goa_board_market_right{
+                            top: 55px;
+                            width: 55px;
+                            height: 620px;
+                            position: absolute;
+                            display: grid;
+                            grid-template-rows: repeat(5, 124px);
+                        }
+                        #goa_board_market_bottom,
+                        #goa_board_market_top{
+                            left: 57px;
+                            width: 620px;
+                            height: 54px;
+                            position: absolute;
+                            display: grid;
+                            grid-template-columns: repeat(5, 124px);
+                        }
+                        #goa_board_market_right{
+                            right: 0px;
+                        }
+                        #goa_board_market_bottom{
+                            bottom: 0px;
+                        }
+                        
+                        .goa_grid_space{
+                            display: flex;
+                            justify-content: center;
+                            align-self: center;
+                        }
+                    }
+
                     #goa_board_market_grid{
                         position: absolute;
                         width: 620px;
@@ -88,6 +121,19 @@ $board_img_height: calc(1 * calc(1429px + var(--goa_board_height_offset)));
                                 &[data-row="#{$i}"]{
                                     grid-row-start: $i;
                                 }
+                            }
+
+                            .goa_first_auction_marker,
+                            .goa_auction_marker
+                            {
+                                position: absolute;
+                                left: 45%;
+                                top: 25%;
+                                z-index: 2;
+                            }
+                            .goa_auction_marker{
+                                left: 46%;
+                                z-index: 3;
                             }
                         }
 
