@@ -6,6 +6,19 @@ const BGA_GAMESTATE_GAMEVERSION = 300;
  * Game Constants
  */
 
+const ACTION_MONEY               = 1;
+const ACTION_CONTRACT            = 2;
+const ACTION_SHIP                = 3;
+const ACTION_COMPASS             = 4;
+const ACTION_EXPLORATION         = 5;
+const ACTION_SHIPS_OR_CONTRACTS  = 6;
+const ACTION_SPICE               = 7;
+const ACTION_FAVOR               = 8;
+const ACTION_SWAP                = 9;
+const ACTION_RESUPPLY            = 10;
+const ACTION_HARVEST             = 11;
+const ACTION_ESPIONAGE           = 12;
+const ACTION_VICEKING            = 13;
 
 const SPICE_WHITE     = 1;
 const SPICE_BLACK     = 2;
@@ -13,7 +26,7 @@ const SPICE_YELLOW    = 3;
 const SPICE_PINK      = 4;
 const SPICE_GREEN     = 5;
 
-const ALL_SPICES     = [
+const SPICES_ALL     = [
    SPICE_WHITE ,
    SPICE_BLACK ,
    SPICE_YELLOW,
@@ -42,7 +55,8 @@ const CARD_LOCATION_HAND = 'hand';
 const TILE_SUBTTYPE_OUTPOST = 1;
 const TILE_SUBTTYPE_MARKET = 2;
 
-const TILE_LOCATION_DECK = 'deck';
+const TILE_LOCATION_DECK_A = 'deck_a';
+const TILE_LOCATION_DECK_B = 'deck_b';
 const TILE_LOCATION_BOARD = 'board';
 const TILE_LOCATION_PLAYER_BOARD = 'p_board';
 
@@ -53,6 +67,13 @@ const TILE_LOCATION_BOARD_OUTPOSTS = [
    COLONY_MADRAS    => TILE_LOCATION_BOARD_OUTPOST.'3',
    COLONY_KOZHIKODE => TILE_LOCATION_BOARD_OUTPOST.'4',
 ];
+
+const MARKET_TYPE_PLANTATION      = 1;
+const MARKET_TYPE_ACTION_REUSEABLE = 2;
+const MARKET_TYPE_RESOURCES       = 3;
+const MARKET_TYPE_ACTION_DIRECT   = 4;
+const MARKET_TYPE_ACTION_ONCE     = 5;
+const MARKET_TYPE_SCORING         = 6;
 
 /////////////////////////////////////////////////////////
 //          MEEPLES

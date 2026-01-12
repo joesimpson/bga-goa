@@ -6,6 +6,7 @@ use Bga\Games\Goa\Core\Stats;
 use Bga\Games\Goa\Helpers\Log;
 use Bga\Games\Goa\Managers\Cards;
 use Bga\Games\Goa\Managers\Players;
+use Bga\Games\Goa\Managers\Tiles;
 use Bga\Games\Goa\Managers\Tokens;
 
 /**
@@ -48,6 +49,7 @@ trait DebugTrait
         Stats::DB()->delete()->run();
         Cards::DB()->delete()->run();
         Tokens::DB()->delete()->run();
+        Tiles::DB()->delete()->run();
         Globals::DB()->delete()->run();
         Players::DB()->delete()->run();
 
