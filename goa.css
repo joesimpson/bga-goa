@@ -122,6 +122,9 @@ Icon extract in sprite with differents layers size (so % is not useful).
   grid-template-columns: repeat(5, 124px);
   grid-template-rows: repeat(5, 124px);
 }
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_grid .goa_grid_space {
+  position: absolute;
+}
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_grid .goa_grid_space[data-col="1"] {
   grid-column-start: 1;
 }
@@ -160,7 +163,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
   z-index: 2;
 }
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_grid .goa_grid_space .goa_auction_marker {
-  left: 46%;
+  left: 50%;
   z-index: 3;
 }
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_grid .goa_tile {

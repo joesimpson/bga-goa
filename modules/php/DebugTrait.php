@@ -114,6 +114,87 @@ trait DebugTrait
         Globals::setRound($round);
         Game::get()->notify->all('reloadPage', "/!\ : Refresh page to see game has restarted...", []);
     }
+
+    function debug_FirstTokens(){
+        $player = Players::getCurrent();
+
+        $tokens = Tokens::getInLocation(TOKEN_LOCATION_BOARD);
+        foreach($tokens as $t) Tokens::delete($t->getId());
+
+        $tokens = [];
+        for($col=1;$col<=MARKET_GRID_SIZE;$col++){
+            $row = 0;
+            $tokens[] = [
+                'location' => TOKEN_LOCATION_BOARD,
+                'type' => TOKEN_TYPE_FIRSTAUCTION_MARKER,
+                'subtype' => TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER,
+                'row' => $row,
+                'col' => $col,
+                'nbr' => 1,
+            ];
+            $row = MARKET_GRID_SIZE+1;
+            $tokens[] = [
+                'location' => TOKEN_LOCATION_BOARD,
+                'type' => TOKEN_TYPE_FIRSTAUCTION_MARKER,
+                'subtype' => TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER,
+                'row' => $row,
+                'col' => $col,
+                'nbr' => 1,
+            ];
+        }
+        for($row=1;$row<=MARKET_GRID_SIZE;$row++){
+            $col = 0;
+            $tokens[] = [
+                'location' => TOKEN_LOCATION_BOARD,
+                'type' => TOKEN_TYPE_FIRSTAUCTION_MARKER,
+                'subtype' => TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER,
+                'row' => $row,
+                'col' => $col,
+                'nbr' => 1,
+            ];
+            $col = MARKET_GRID_SIZE+1;
+            $tokens[] = [
+                'location' => TOKEN_LOCATION_BOARD,
+                'type' => TOKEN_TYPE_FIRSTAUCTION_MARKER,
+                'subtype' => TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER,
+                'row' => $row,
+                'col' => $col,
+                'nbr' => 1,
+            ];
+        }
+        
+        for($col=1;$col<=MARKET_GRID_SIZE;$col++){
+            for($row=1;$row<=MARKET_GRID_SIZE;$row++){
+                $tokens[] = [
+                    'location' => TOKEN_LOCATION_BOARD,
+                    'type' => TOKEN_TYPE_FIRSTAUCTION_MARKER,
+                    'subtype' => TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER,
+                    'row' => $row,
+                    'col' => $col,
+                    'nbr' => 1,
+                ];
+            }
+        }
+
+        $players = Players::getAll();
+        $index = 0;
+        foreach ($players as $pId => $player) {
+            $index++;
+            $tokens[] = [
+                'location' => TOKEN_LOCATION_BOARD,
+                'type' => TOKEN_TYPE_AUCTION_MARKER_1,
+                'subtype' => TOKEN_SUBTTYPE_AUCTION_MARKER,
+                'player_id' => $pId,
+                'row' => $index,
+                'col' => $index,
+                'nbr' => 1,
+            ];
+        }
+
+        Tokens::create($tokens);
+
+        Game::get()->notify->player($player->getId(),'reloadPage', "/!\ : Refresh page to see game has restarted...", []);
+    }
     ////////////////////////////////////////////////////
 
 }

@@ -44,6 +44,8 @@ CREATE TABLE IF NOT EXISTS `tokens` (
   `token_location` varchar(32) NOT NULL,
   `type` int(10) NOT NULL,
   `subtype` int(10) NOT NULL,
+  `row` int(10) NULL,
+  `col` int(10) NULL,
   `player_id` int(10) NULL,
   PRIMARY KEY (`token_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;

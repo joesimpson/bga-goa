@@ -123,6 +123,8 @@ $board_img_height: calc(1 * calc(1429px + var(--goa_board_height_offset)));
                                 }
                             }
 
+                            position: absolute;
+
                             .goa_first_auction_marker,
                             .goa_auction_marker
                             {
@@ -132,7 +134,7 @@ $board_img_height: calc(1 * calc(1429px + var(--goa_board_height_offset)));
                                 z-index: 2;
                             }
                             .goa_auction_marker{
-                                left: 46%;
+                                left: 50%;
                                 z-index: 3;
                             }
                         }

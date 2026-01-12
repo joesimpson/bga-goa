@@ -17,6 +17,9 @@ class Token extends \Bga\Games\Goa\Helpers\DB_Model
     'location' => 'token_location',
     'pId' => ['player_id', 'int'],
     'type' => ['type', 'int'],
+    
+    'row' => ['row', 'int'],
+    'col' => ['col', 'int'],
   ];
    
   public function __construct($row, $datas)

@@ -28,10 +28,12 @@ const MARKET_GRID_SIZE = 5;
 const TILE_LOCATION_BOARD_MARKET = 'market';
 const TILE_LOCATION_BOARD_OUTPOST = 'board_c';
 
+const TOKEN_LOCATION_BOARD = 'board';
 const TOKEN_LOCATION_PLAYER_BOARD = 'p_board';
 
 const TOKEN_SUBTTYPE_PROGRESS_MARKER = 1;
 const TOKEN_SUBTTYPE_AUCTION_MARKER = 2;
+const TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER = 3;
 
 export class Game {
     
@@ -449,26 +451,18 @@ export class Game {
         for(let col=1;col<=MARKET_GRID_SIZE;col++){
             let grid_cell = `goa_market_grid_space-${0}-${col}`;
             if(!$(grid_cell)) document.getElementById(`goa_board_market_top`).insertAdjacentHTML('beforeend', this.tplMarketGridSpace({'row':0, 'col':col}));
-            //TODO JSA REMOVE DEBUG
-            document.getElementById(grid_cell).insertAdjacentHTML('beforeend', "<div class='goa_first_auction_marker'></div>");
 
             grid_cell = `goa_market_grid_space-${(MARKET_GRID_SIZE+1)}-${col}`;
             if(!$(grid_cell)) document.getElementById(`goa_board_market_bottom`).insertAdjacentHTML('beforeend', this.tplMarketGridSpace({'row':(MARKET_GRID_SIZE+1), 'col':col}));
 
-            //TODO JSA REMOVE DEBUG
-            document.getElementById(grid_cell).insertAdjacentHTML('beforeend', "<div class='goa_first_auction_marker'></div>");
 
         }
         for(let row=1;row<=MARKET_GRID_SIZE;row++){
             let grid_cell = `goa_market_grid_space-${row}-${0}`;
             if(!$(grid_cell)) document.getElementById(`goa_board_market_left`).insertAdjacentHTML('beforeend', this.tplMarketGridSpace({'row':row, 'col':0}));
-            //TODO JSA REMOVE DEBUG
-            document.getElementById(grid_cell).insertAdjacentHTML('beforeend', "<div class='goa_first_auction_marker'></div>");
 
             grid_cell = `goa_market_grid_space-${row}-${(MARKET_GRID_SIZE+1)}`;
             if(!$(grid_cell)) document.getElementById(`goa_board_market_right`).insertAdjacentHTML('beforeend', this.tplMarketGridSpace({'row':row, 'col':(MARKET_GRID_SIZE+1)}));
-            //TODO JSA REMOVE DEBUG
-            document.getElementById(grid_cell).insertAdjacentHTML('beforeend', "<div class='goa_first_auction_marker'></div>");
         }
         //---------------------------------
 
@@ -581,6 +575,14 @@ export class Game {
                 return `goa_player_auction_markers-${token.pId}`;
             }
         } 
+        if( TOKEN_LOCATION_BOARD == token.location) {
+            if(token.subtype == TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER){
+                return `goa_market_grid_space-${token.row}-${token.col}`;
+            }
+            if(token.subtype == TOKEN_SUBTTYPE_AUCTION_MARKER){
+                return `goa_market_grid_space-${token.row}-${token.col}`;
+            }
+        } 
         
         console.error('Trying to get container of a token', token);
         return 'goa_game_container';
@@ -600,6 +602,8 @@ export class Game {
             return `<div id="goa_token-${token.id}" class="goa_token goa_progress_marker" data-track='${token.track}' data-row='${token.state}' data-color='${this.gamedatas.players[token.pId].color}' data-pid='${token.pId}'></div>`;
         if(token.subtype == TOKEN_SUBTTYPE_AUCTION_MARKER) 
             return `<div id="goa_token-${token.id}" class="goa_token goa_auction_marker" data-value='${token.auctionOrder}' data-color='${this.gamedatas.players[token.pId].color}' data-pid='${token.pId}'></div>`;
+        if(token.subtype == TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER) 
+            return `<div id="goa_token-${token.id}" class="goa_token goa_first_auction_marker" ></div>`;
         return '';
     }
     tplProgressTrack(datas) {

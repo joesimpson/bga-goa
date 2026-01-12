@@ -4,6 +4,7 @@ namespace Bga\Games\Goa\Managers;
 
 use Bga\Games\Goa\Helpers\Collection;
 use Bga\Games\Goa\Models\AuctionMarker;
+use Bga\Games\Goa\Models\FirstAuctionMarker;
 use Bga\Games\Goa\Models\ProgressMarker;
 use Bga\Games\Goa\Models\Token;
 
@@ -15,7 +16,7 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
   protected static $prefix = 'token_';
   protected static $autoIncrement = true;
   protected static $autoremovePrefix = false;
-  protected static $customFields = ['player_id', 'type', 'subtype'];
+  protected static $customFields = ['player_id', 'type', 'subtype', 'row', 'col'];
   protected static $autoreshuffle = false;
 
   protected static function cast($row)
@@ -29,6 +30,9 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
       case TOKEN_SUBTTYPE_AUCTION_MARKER:
         $data = self::getTokensTypes()[$type];
         return new AuctionMarker($row, $data);
+      case TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER:
+        $data = self::getTokensTypes()[$type];
+        return new FirstAuctionMarker($row, $data);
     }
 
     $data = self::getTokensTypes()[$type];
@@ -77,9 +81,14 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
    * @param int $pId
    * @return Collection
    */
-  public static function getPlayerBoard($pId)
+  public static function getPlayerBoard(int $pId)
   {
     return self::getFilteredQuery($pId, TOKEN_LOCATION_PLAYER_BOARD)->get();
+  }
+  
+  public static function delete(int $tokenId)
+  {
+    return self::DB()->delete($tokenId);
   }
 
   ///////////////////////////////////////////////////////////////////////////////
@@ -89,14 +98,6 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
   {
     $tokens = [];
     
-    //foreach (self::getTokensTypes() as $type => $token) {
-    //  $tokens[] = [
-    //    'location' => TOKEN_LOCATION_DECK,
-    //    'type' => $type,
-    //    'nbr' => $token['nbr'],
-    //  ];
-    //} 
-
     foreach ($players as $pId => $player) {
       for($k = 0; $k < count($players) +1; $k++){
         $tokens[] = [
@@ -144,6 +145,7 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
       TOKEN_TYPE_AUCTION_MARKER_3 => $f([  ]), 
       TOKEN_TYPE_AUCTION_MARKER_4 => $f([  ]), 
       TOKEN_TYPE_AUCTION_MARKER_5 => $f([  ]), 
+      TOKEN_TYPE_FIRSTAUCTION_MARKER => $f([  ]), 
     ];
   }
 }
