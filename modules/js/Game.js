@@ -75,7 +75,7 @@ export class Game {
                         <div id='goa_board_container'>
                             <div id="goa_board">
                                 <div id="goa_board_background"></div>
-                                <div id="goa_board_tiles">
+                                <div id="goa_board_components">
                                     <div id="goa_board_outposts">
                                         <div id="goa_board_outposts_1" class="goa_board_outposts_stock"></div>
                                         <div id="goa_board_outposts_2" class="goa_board_outposts_stock"></div>

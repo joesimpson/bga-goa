@@ -1,6 +1,6 @@
 
 $board_img_width: calc(1 * 1000px);
-$board_img_height: calc(1 * 1429px);
+$board_img_height: calc(1 * calc(1429px + var(--goa_board_height_offset)));
 
 #goa_resizable_board {
     width: calc(var(--goa_board_display_scale) * $board_img_width);
@@ -31,6 +31,7 @@ $board_img_height: calc(1 * 1429px);
                 background-size: 100% auto;
                 background-repeat: no-repeat;
                 border-radius: 10px;
+                background-position-y: var(--goa_board_height_offset);
             }
 
             .goa_board_outposts_stock{
@@ -53,8 +54,9 @@ $board_img_height: calc(1 * 1429px);
                 left: 709px;
             }
 
-            #goa_board_tiles{
-                
+            #goa_board_components{
+                top: var(--goa_board_height_offset);
+                position: absolute;
                 
                 #goa_board_market{
                     position: absolute;
@@ -112,6 +114,9 @@ $board_img_height: calc(1 * 1429px);
 // --------------------------------------------------------------------
 $playerboard_img_width: calc(1 * 810px);
 $playerboard_img_height: calc(1 * 796px);
+.goa_player_table{
+    align-self: baseline;
+}
 .goa_resizable_playerboard {
     width: calc(var(--goa_playerboard_display_scale) * $playerboard_img_width);
     height: calc(var(--goa_playerboard_display_scale) * $playerboard_img_height);
