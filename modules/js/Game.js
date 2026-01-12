@@ -74,7 +74,7 @@ export class Game {
                     <div id='goa_resizable_board'>
                         <div id='goa_board_container'>
                             <div id="goa_board">
-                                <div id="goa_board_background"></div>
+                                <img id="goa_board_background"></img>
                                 <div id="goa_board_components">
                                     <div id="goa_board_outposts">
                                         <div id="goa_board_outposts_1" class="goa_board_outposts_stock"></div>
@@ -85,6 +85,17 @@ export class Game {
                                     <div id="goa_board_market">
                                         <div id="goa_board_market_frame"></div>
                                         <div id="goa_board_market_grid"></div>
+                                    </div>
+                                    <div id="goa_board_rounds">
+                                        <div id="goa_board_round_marker"></div>
+                                        <div id="goa_board_round_cell_1" class="goa_board_round_cell"></div>
+                                        <div id="goa_board_round_cell_2" class="goa_board_round_cell"></div>
+                                        <div id="goa_board_round_cell_3" class="goa_board_round_cell"></div>
+                                        <div id="goa_board_round_cell_4" class="goa_board_round_cell"></div>
+                                        <div id="goa_board_round_cell_5" class="goa_board_round_cell"></div>
+                                        <div id="goa_board_round_cell_6" class="goa_board_round_cell"></div>
+                                        <div id="goa_board_round_cell_7" class="goa_board_round_cell"></div>
+                                        <div id="goa_board_round_cell_8" class="goa_board_round_cell"></div>
                                     </div>
                                 </div>
                                 <div class="goa_board_filler">&nbsp;<br/></div>
@@ -183,6 +194,8 @@ export class Game {
         );
         this.setupTiles();
         this.setupTokens();
+
+        this.setupRoundMarker();
 
         // Setup game notifications to handle (see "setupNotifications" method below)
         this.setupNotifications();
@@ -322,6 +335,19 @@ export class Game {
             node.remove();
         });
         container.innerHTML = '';
+    }
+
+    async setupRoundMarker(){
+        let round = this.gamedatas.round;
+        console.log("setupRoundMarker", round);
+        if(round>0){
+            const meepleDiv = document.getElementById(`goa_board_round_marker`);
+            const destinationDiv = document.getElementById(`goa_board_round_cell_${round}`);
+            await this.animationManager.slideAndAttach(meepleDiv, destinationDiv);
+        }
+        else {
+            //TODO JSA reset round between sessions ?
+        }
     }
 
     ///////////////////////////////////////////////////

@@ -1,3 +1,5 @@
+@use "sass:math";
+
 :root {
     --goa_board_display_scale: 0.90; 
     --goa_playerboard_display_scale: 0.90; 
@@ -7,3 +9,23 @@
     --goa_board_height_offset: -230px;
 }
  
+
+// Sprite dimensions
+$goa_icons_sprite_width: 1200px;
+$goa_icons_sprite_height: 330px;
+/**
+Icon extract in sprite with differents layers size (so % is not useful).
+ * iconPosX, iconPosY : position of icon in sprite
+ * width, height : dimensions of icon to be displayed
+ * layer_width, layer_height : dimensions of icon in sprite
+*/
+@mixin goa_icons_sprite($iconPosX,$iconPosY,$width,$height,$layer_width,$layer_height){
+    width: $width;
+    height: $height;
+    background-image: url("img/icons.png");
+    background-position-x: calc(math.div($width, $layer_width) * -1 * $iconPosX);
+    background-position-y: calc(math.div($height, $layer_height ) * -1 * $iconPosY);
+    background-size: 
+        math.percentage(math.div($goa_icons_sprite_width, $layer_width )) 
+        math.percentage(math.div($goa_icons_sprite_height,$layer_height ));
+}

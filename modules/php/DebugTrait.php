@@ -2,6 +2,7 @@
 namespace Bga\Games\Goa;
 
 use Bga\Games\Goa\Core\Globals;
+use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Core\Stats;
 use Bga\Games\Goa\Helpers\Log;
 use Bga\Games\Goa\Managers\Cards;
@@ -108,6 +109,10 @@ trait DebugTrait
         Cards::shuffle(CARD_LOCATION_DECK);
         $cards = Cards::getInLocation(CARD_LOCATION_BOARD);
 
+    }
+    function debug_changeRound(int $round = 1){
+        Globals::setRound($round);
+        Game::get()->notify->all('reloadPage', "/!\ : Refresh page to see game has restarted...", []);
     }
     ////////////////////////////////////////////////////
 

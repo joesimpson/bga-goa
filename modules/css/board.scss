@@ -97,6 +97,61 @@ $board_img_height: calc(1 * calc(1429px + var(--goa_board_height_offset)));
                         }
                     }
                 }
+
+                
+                #goa_board_rounds{
+                    position: absolute;
+                    left: 17px;
+                    top: 507px;
+                    width: 115px;
+                    height: 540px;
+
+                    >#goa_board_round_marker{
+                        //don't display when round is unknown
+                        display: none;
+                    }
+                    .goa_board_round_cell{
+                        position: absolute;
+                        width: 55px;
+                        height: 55px;
+                        #goa_board_round_marker{
+                            width: 100%;
+                            height: 100%;
+                        }
+                        &#goa_board_round_cell_8{
+                            left: 27px;
+                        }
+                        &#goa_board_round_cell_7{
+                            left: 43px;
+                            top: 62px;
+                        }
+                        &#goa_board_round_cell_6{
+                            left: 52px;
+                            top: 128px;
+                        }
+                        &#goa_board_round_cell_5{
+                            left: 56px;
+                            top: 194px;
+                        }
+                        &#goa_board_round_cell_4{
+                            left: 56px;
+                            top: 271px;
+                        }
+                        &#goa_board_round_cell_3{
+                            left: 51px;
+                            top: 338px;
+                        }
+                        &#goa_board_round_cell_2{
+                            left: 44px;
+                            top: 402px;
+                        }
+                        &#goa_board_round_cell_1{
+                            left: 26px;
+                            top: 466px;
+                        }
+                    }
+                }
+                
             }
 
         }

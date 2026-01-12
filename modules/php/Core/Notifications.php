@@ -129,9 +129,6 @@ class Notifications
     $gameDatas = [
       'players' => $datas['players'],
       'cards' => $datas['cards'],
-      'deckSize' => $datas['deckSize'],
-      'phase' => $datas['phase'],
-      'lastPlayed' => $datas['lastPlayed'],
       'tokens' => $datas['tokens'],
     ];
 
