@@ -66,8 +66,25 @@
   left: 709px;
 }
 #goa_resizable_board #goa_board_container #goa_board #goa_board_tiles #goa_board_market {
-  display: flex;
-  flex-wrap: wrap;
+  position: absolute;
+  width: 730px;
+  height: 730px;
+  left: 149px;
+  top: 401px;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_tiles #goa_board_market #goa_board_market_grid {
+  position: absolute;
+  width: 620px;
+  height: 620px;
+  left: 57px;
+  top: 55px;
+  display: grid;
+  grid-template-columns: repeat(5, 124px);
+  grid-template-rows: repeat(5, 124px);
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_tiles #goa_board_market #goa_board_market_grid .goa_tile {
+  left: 8px;
+  top: 8px;
 }
 
 .goa_board_filler {

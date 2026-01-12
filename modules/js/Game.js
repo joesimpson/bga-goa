@@ -79,7 +79,10 @@ export class Game {
                                         <div id="goa_board_outposts_3" class="goa_board_outposts_stock"></div>
                                         <div id="goa_board_outposts_4" class="goa_board_outposts_stock"></div>
                                     </div>
-                                    <div id="goa_board_market"></div>
+                                    <div id="goa_board_market">
+                                        <div id="goa_board_market_frame"></div>
+                                        <div id="goa_board_market_grid"></div>
+                                    </div>
                                 </div>
                                 <div class="goa_board_filler">&nbsp;<br/></div>
                             </div>
@@ -413,7 +416,7 @@ export class Game {
         
         if(tile.subtype == TILE_SUBTTYPE_MARKET){
             if (tile.location.startsWith('deck') ) {//TODO JSA CLEAN FOR DEBUG
-                return `goa_board_market`;
+                return `goa_board_market_grid`;
             }
         }
         console.error('Trying to get container of a tile', tile);

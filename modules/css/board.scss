@@ -55,10 +55,31 @@ $board_img_height: calc(1 * 1429px);
 
             #goa_board_tiles{
                 
+                
                 #goa_board_market{
-                    //TODO JSA grid
-                    display: flex;
-                    flex-wrap: wrap;
+                    position: absolute;
+                    width: 730px;
+                    height: 730px;
+                    left: 149px;
+                    top: 401px;
+
+                    #goa_board_market_grid{
+                        position: absolute;
+                        width: 620px;
+                        height: 620px;
+                        left: 57px;
+                        top: 55px;
+                        display: grid;
+                        //grid-template-columns: repeat(5, 1fr);
+                        //grid-template-rows: repeat(5, 1fr);
+                        grid-template-columns: repeat(5, 124px);
+                        grid-template-rows: repeat(5, 124px);
+
+                        .goa_tile{
+                            left: 8px;
+                            top: 8px;
+                        }
+                    }
                 }
             }
 
