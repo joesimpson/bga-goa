@@ -222,6 +222,25 @@ $board_img_height: calc(1 * calc(1429px + var(--goa_board_height_offset)));
                     transition: rotate .5s, transform .5s;
                     border-radius: 10px;
                 }
+                #goa_exploration_discard{
+                    position: absolute;
+                    left: 817px;
+                    top: 1171px;
+                    width: 131px;
+                    height: 200px;
+                    rotate: -7deg;
+                    transform-style: preserve-3d;
+                    transition: rotate .5s, transform .5s;
+                    border-radius: 10px;
+
+                    //bga-cards DiscardDeck
+                    --discard-deck-horizontal-margin: 0px !important;
+                    --discard-deck-vertical-margin: 0px !important;
+                    &[data-empty="true"] {
+                        background: none;
+                        box-shadow: none;
+                    }
+                }
                 
             }
 

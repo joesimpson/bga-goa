@@ -237,6 +237,23 @@ Icon extract in sprite with differents layers size (so % is not useful).
   transition: rotate 0.5s, transform 0.5s;
   border-radius: 10px;
 }
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_exploration_discard {
+  position: absolute;
+  left: 817px;
+  top: 1171px;
+  width: 131px;
+  height: 200px;
+  rotate: -7deg;
+  transform-style: preserve-3d;
+  transition: rotate 0.5s, transform 0.5s;
+  border-radius: 10px;
+  --discard-deck-horizontal-margin: 0px !important;
+  --discard-deck-vertical-margin: 0px !important;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_exploration_discard[data-empty=true] {
+  background: none;
+  box-shadow: none;
+}
 
 .goa_board_filler {
   font-size: 0.1em;
@@ -496,140 +513,172 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-size: 458.0152671756% 129.4117647059%;
 }
 
-.goa_expedition_card {
+.goa_exploration_card {
   position: relative;
   width: 131px;
   height: 200px;
   --bga-cards_card-border-radius: 10px;
+  border-radius: var(--bga-cards_card-border-radius);
+}
+
+.goa_exploration_card,
+.goa_exploration_card-front, .goa_exploration_card-back {
+  --bga-cards_card-border-radius: 10px !important;
   border-radius: var(--bga-cards_card-border-radius);
   background-size: 700% 500%;
   background-image: url("img/exp_cards.jpg");
   background-position-x: 0%;
   background-position-y: 0%;
 }
-.goa_expedition_card[data-type="2"] {
+.goa_exploration_card[data-type="2"],
+.goa_exploration_card-front[data-type="2"], .goa_exploration_card-back[data-type="2"] {
   background-position-x: 16.6666666667%;
   background-position-y: 0%;
 }
-.goa_expedition_card[data-type="3"] {
+.goa_exploration_card[data-type="3"],
+.goa_exploration_card-front[data-type="3"], .goa_exploration_card-back[data-type="3"] {
   background-position-x: 33.3333333333%;
   background-position-y: 0%;
 }
-.goa_expedition_card[data-type="4"] {
+.goa_exploration_card[data-type="4"],
+.goa_exploration_card-front[data-type="4"], .goa_exploration_card-back[data-type="4"] {
   background-position-x: 50%;
   background-position-y: 0%;
 }
-.goa_expedition_card[data-type="5"] {
+.goa_exploration_card[data-type="5"],
+.goa_exploration_card-front[data-type="5"], .goa_exploration_card-back[data-type="5"] {
   background-position-x: 66.6666666667%;
   background-position-y: 0%;
 }
-.goa_expedition_card[data-type="6"] {
+.goa_exploration_card[data-type="6"],
+.goa_exploration_card-front[data-type="6"], .goa_exploration_card-back[data-type="6"] {
   background-position-x: 83.3333333333%;
   background-position-y: 0%;
 }
-.goa_expedition_card[data-type="7"] {
+.goa_exploration_card[data-type="7"],
+.goa_exploration_card-front[data-type="7"], .goa_exploration_card-back[data-type="7"] {
   background-position-x: 100%;
   background-position-y: 0%;
 }
-.goa_expedition_card[data-type="8"] {
+.goa_exploration_card[data-type="8"],
+.goa_exploration_card-front[data-type="8"], .goa_exploration_card-back[data-type="8"] {
   background-position-x: 0%;
   background-position-y: 25%;
 }
-.goa_expedition_card[data-type="9"] {
+.goa_exploration_card[data-type="9"],
+.goa_exploration_card-front[data-type="9"], .goa_exploration_card-back[data-type="9"] {
   background-position-x: 16.6666666667%;
   background-position-y: 25%;
 }
-.goa_expedition_card[data-type="10"] {
+.goa_exploration_card[data-type="10"],
+.goa_exploration_card-front[data-type="10"], .goa_exploration_card-back[data-type="10"] {
   background-position-x: 33.3333333333%;
   background-position-y: 25%;
 }
-.goa_expedition_card[data-type="11"] {
+.goa_exploration_card[data-type="11"],
+.goa_exploration_card-front[data-type="11"], .goa_exploration_card-back[data-type="11"] {
   background-position-x: 50%;
   background-position-y: 25%;
 }
-.goa_expedition_card[data-type="12"] {
+.goa_exploration_card[data-type="12"],
+.goa_exploration_card-front[data-type="12"], .goa_exploration_card-back[data-type="12"] {
   background-position-x: 66.6666666667%;
   background-position-y: 25%;
 }
-.goa_expedition_card[data-type="13"] {
+.goa_exploration_card[data-type="13"],
+.goa_exploration_card-front[data-type="13"], .goa_exploration_card-back[data-type="13"] {
   background-position-x: 83.3333333333%;
   background-position-y: 25%;
 }
-.goa_expedition_card[data-type="14"] {
+.goa_exploration_card[data-type="14"],
+.goa_exploration_card-front[data-type="14"], .goa_exploration_card-back[data-type="14"] {
   background-position-x: 100%;
   background-position-y: 25%;
 }
-.goa_expedition_card[data-type="15"] {
+.goa_exploration_card[data-type="15"],
+.goa_exploration_card-front[data-type="15"], .goa_exploration_card-back[data-type="15"] {
   background-position-x: 0%;
   background-position-y: 50%;
 }
-.goa_expedition_card[data-type="16"] {
+.goa_exploration_card[data-type="16"],
+.goa_exploration_card-front[data-type="16"], .goa_exploration_card-back[data-type="16"] {
   background-position-x: 16.6666666667%;
   background-position-y: 50%;
 }
-.goa_expedition_card[data-type="17"] {
+.goa_exploration_card[data-type="17"],
+.goa_exploration_card-front[data-type="17"], .goa_exploration_card-back[data-type="17"] {
   background-position-x: 33.3333333333%;
   background-position-y: 50%;
 }
-.goa_expedition_card[data-type="18"] {
+.goa_exploration_card[data-type="18"],
+.goa_exploration_card-front[data-type="18"], .goa_exploration_card-back[data-type="18"] {
   background-position-x: 50%;
   background-position-y: 50%;
 }
-.goa_expedition_card[data-type="19"] {
+.goa_exploration_card[data-type="19"],
+.goa_exploration_card-front[data-type="19"], .goa_exploration_card-back[data-type="19"] {
   background-position-x: 66.6666666667%;
   background-position-y: 50%;
 }
-.goa_expedition_card[data-type="20"] {
+.goa_exploration_card[data-type="20"],
+.goa_exploration_card-front[data-type="20"], .goa_exploration_card-back[data-type="20"] {
   background-position-x: 83.3333333333%;
   background-position-y: 50%;
 }
-.goa_expedition_card[data-type="21"] {
+.goa_exploration_card[data-type="21"],
+.goa_exploration_card-front[data-type="21"], .goa_exploration_card-back[data-type="21"] {
   background-position-x: 100%;
   background-position-y: 50%;
 }
-.goa_expedition_card[data-type="22"] {
+.goa_exploration_card[data-type="22"],
+.goa_exploration_card-front[data-type="22"], .goa_exploration_card-back[data-type="22"] {
   background-position-x: 0%;
   background-position-y: 75%;
 }
-.goa_expedition_card[data-type="23"] {
+.goa_exploration_card[data-type="23"],
+.goa_exploration_card-front[data-type="23"], .goa_exploration_card-back[data-type="23"] {
   background-position-x: 16.6666666667%;
   background-position-y: 75%;
 }
-.goa_expedition_card[data-type="24"] {
+.goa_exploration_card[data-type="24"],
+.goa_exploration_card-front[data-type="24"], .goa_exploration_card-back[data-type="24"] {
   background-position-x: 33.3333333333%;
   background-position-y: 75%;
 }
-.goa_expedition_card[data-type="25"] {
+.goa_exploration_card[data-type="25"],
+.goa_exploration_card-front[data-type="25"], .goa_exploration_card-back[data-type="25"] {
   background-position-x: 50%;
   background-position-y: 75%;
 }
-.goa_expedition_card[data-type="26"] {
+.goa_exploration_card[data-type="26"],
+.goa_exploration_card-front[data-type="26"], .goa_exploration_card-back[data-type="26"] {
   background-position-x: 66.6666666667%;
   background-position-y: 75%;
 }
-.goa_expedition_card[data-type="27"] {
+.goa_exploration_card[data-type="27"],
+.goa_exploration_card-front[data-type="27"], .goa_exploration_card-back[data-type="27"] {
   background-position-x: 83.3333333333%;
   background-position-y: 75%;
 }
-.goa_expedition_card[data-type="28"] {
+.goa_exploration_card[data-type="28"],
+.goa_exploration_card-front[data-type="28"], .goa_exploration_card-back[data-type="28"] {
   background-position-x: 100%;
   background-position-y: 75%;
 }
-.goa_expedition_card[data-type="29"] {
+.goa_exploration_card[data-type="29"],
+.goa_exploration_card-front[data-type="29"], .goa_exploration_card-back[data-type="29"] {
   background-position-x: 0%;
   background-position-y: 100%;
 }
-.goa_expedition_card[data-type="30"] {
+.goa_exploration_card[data-type="30"],
+.goa_exploration_card-front[data-type="30"], .goa_exploration_card-back[data-type="30"] {
   background-position-x: 16.6666666667%;
   background-position-y: 100%;
 }
-.goa_expedition_card[data-type="31"] {
+.goa_exploration_card[data-type="31"],
+.goa_exploration_card-front[data-type="31"], .goa_exploration_card-back[data-type="31"] {
   background-position-x: 33.3333333333%;
   background-position-y: 100%;
-}
-
-.goa_expedition_card-front, .goa_expedition_card-back {
-  --bga-cards_card-border-radius: 10px;
 }
 
 .goa_tile {

@@ -1,11 +1,18 @@
 @use "sass:math";
 
-.goa_expedition_card{
+.goa_exploration_card{
     position: relative;
 
     width: 131px;
     height: 200px;
     --bga-cards_card-border-radius: 10px;
+    border-radius: var(--bga-cards_card-border-radius);
+}
+
+.goa_exploration_card,
+.goa_exploration_card-front, .goa_exploration_card-back //for bga-cards manager 
+{ 
+    --bga-cards_card-border-radius: 10px !important;
     border-radius: var(--bga-cards_card-border-radius);
 
     //sprite positions
@@ -23,8 +30,3 @@
         }
     }
 }
-
-    .goa_expedition_card-front, .goa_expedition_card-back //for bga-cards manager 
-    { 
-        --bga-cards_card-border-radius: 10px;
-    }
