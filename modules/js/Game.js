@@ -577,10 +577,14 @@ export class Game {
         } 
         if( TOKEN_LOCATION_BOARD == token.location) {
             if(token.subtype == TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER){
-                return `goa_market_grid_space-${token.row}-${token.col}`;
+                if(token.row>=0 && token.col>=0 && token.row<=1+MARKET_GRID_SIZE && token.col<=1+MARKET_GRID_SIZE ){
+                    return `goa_market_grid_space-${token.row}-${token.col}`;
+                }
             }
             if(token.subtype == TOKEN_SUBTTYPE_AUCTION_MARKER){
-                return `goa_market_grid_space-${token.row}-${token.col}`;
+                if(token.row>=0 && token.col>=0 && token.row<=1+MARKET_GRID_SIZE && token.col<=1+MARKET_GRID_SIZE ){
+                    return `goa_market_grid_space-${token.row}-${token.col}`;
+                }
             }
         } 
         

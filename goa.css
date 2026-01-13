@@ -123,6 +123,8 @@ Icon extract in sprite with differents layers size (so % is not useful).
   grid-template-rows: repeat(5, 124px);
 }
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_grid .goa_grid_space {
+  width: 124px;
+  height: 124px;
   position: absolute;
 }
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_grid .goa_grid_space[data-col="1"] {
@@ -155,12 +157,16 @@ Icon extract in sprite with differents layers size (so % is not useful).
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_grid .goa_grid_space[data-row="5"] {
   grid-row-start: 5;
 }
-#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_grid .goa_grid_space .goa_first_auction_marker,
-#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_grid .goa_grid_space .goa_auction_marker {
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_grid .goa_grid_space .goa_token {
   position: absolute;
   left: 45%;
   top: 25%;
   z-index: 2;
+  transition: margin 0.5s;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_grid .goa_grid_space:hover .goa_token {
+  opacity: 0.7;
+  margin-top: -50%;
 }
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_grid .goa_grid_space .goa_auction_marker {
   left: 50%;

@@ -115,8 +115,9 @@ trait DebugTrait
         Game::get()->notify->all('reloadPage', "/!\ : Refresh page to see game has restarted...", []);
     }
 
-    function debug_FirstTokens(){
-        $player = Players::getCurrent();
+    // Test board UI : create fake tokens on board
+    function debug_BoardTokens(){
+        $player_id = Players::getCurrent()->getId();
 
         $tokens = Tokens::getInLocation(TOKEN_LOCATION_BOARD);
         foreach($tokens as $t) Tokens::delete($t->getId());
@@ -180,7 +181,7 @@ trait DebugTrait
         $index = 0;
         foreach ($players as $pId => $player) {
             $index++;
-            $tokens[] = [
+            /*$tokens[] = [
                 'location' => TOKEN_LOCATION_BOARD,
                 'type' => TOKEN_TYPE_AUCTION_MARKER_1,
                 'subtype' => TOKEN_SUBTTYPE_AUCTION_MARKER,
@@ -188,12 +189,24 @@ trait DebugTrait
                 'row' => $index,
                 'col' => $index,
                 'nbr' => 1,
-            ];
+            ];*/
+            
+            for($k = 0; $k < count(TOKEN_TYPE_PROGRESS_MARKERS); $k++){
+                $tokens[] = [
+                    'location' => TOKEN_LOCATION_BOARD,
+                    'type' => TOKEN_TYPE_AUCTION_MARKERS[$k],
+                    'subtype' => TOKEN_SUBTTYPE_AUCTION_MARKER,
+                    'player_id' => $pId,
+                    'row' => $index + $k,
+                    'col' => $index,
+                    'nbr' => 1,
+                ];
+            }
         }
 
         Tokens::create($tokens);
 
-        Game::get()->notify->player($player->getId(),'reloadPage', "/!\ : Refresh page to see game has restarted...", []);
+        Game::get()->notify->player($player_id,'reloadPage', "/!\ : Refresh page to see game has restarted...", []);
     }
     ////////////////////////////////////////////////////
 

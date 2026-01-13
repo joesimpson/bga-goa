@@ -112,6 +112,8 @@ $board_img_height: calc(1 * calc(1429px + var(--goa_board_height_offset)));
 
                         
                         .goa_grid_space{
+                            width: 124px;
+                            height: 124px;
                             @for $i from 1 through 5 {
                                 &[data-col="#{$i}"]{
                                     grid-column-start: $i;
@@ -125,13 +127,22 @@ $board_img_height: calc(1 * calc(1429px + var(--goa_board_height_offset)));
 
                             position: absolute;
 
-                            .goa_first_auction_marker,
-                            .goa_auction_marker
+                            .goa_token
                             {
                                 position: absolute;
                                 left: 45%;
                                 top: 25%;
                                 z-index: 2;
+                                transition: margin .5s;
+
+                            }
+                            &:hover .goa_token{
+                                opacity: 0.7;
+                                //display: none;
+                                //width: 0;
+                                //height: 0;
+                                //View behind token : 
+                                margin-top: -50%;
                             }
                             .goa_auction_marker{
                                 left: 50%;
