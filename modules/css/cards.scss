@@ -1,0 +1,30 @@
+@use "sass:math";
+
+.goa_expedition_card{
+    position: relative;
+
+    width: 131px;
+    height: 200px;
+    --bga-cards_card-border-radius: 10px;
+    border-radius: var(--bga-cards_card-border-radius);
+
+    //sprite positions
+    background-size: 700% 500%;
+    background-image: url("img/exp_cards.jpg");
+    
+    //back by default
+    background-position-x: 0%;
+    background-position-y: 0%;
+
+    @for $i from 1 through 30 {
+        &[data-type="#{$i + 1}"] {
+            background-position-x: math.div(($i % 7) * 100%, 6);//7 columns
+            background-position-y: math.div(math.div($i - ($i % 7), 7) * 100%, 4);//5 columns , 5 rows
+        }
+    }
+}
+
+    .goa_expedition_card-front, .goa_expedition_card-back //for bga-cards manager 
+    { 
+        --bga-cards_card-border-radius: 10px;
+    }

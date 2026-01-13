@@ -210,6 +210,18 @@ $board_img_height: calc(1 * calc(1429px + var(--goa_board_height_offset)));
                         }
                     }
                 }
+
+                #goa_exploration_deck{
+                    position: absolute;
+                    left: 663px;
+                    top: 1190px;
+                    width: 131px;
+                    height: 200px;
+                    rotate: -7deg;
+                    transform-style: preserve-3d;
+                    transition: rotate .5s, transform .5s;
+                    border-radius: 10px;
+                }
                 
             }
 

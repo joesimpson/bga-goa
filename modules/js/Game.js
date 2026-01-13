@@ -104,6 +104,8 @@ export class Game {
                                         <div id="goa_board_round_cell_7" class="goa_board_round_cell"></div>
                                         <div id="goa_board_round_cell_8" class="goa_board_round_cell"></div>
                                     </div>
+                                    <div id="goa_exploration_deck"></div>
+                                    <div id="goa_exploration_discard"></div>
                                 </div>
                                 <div class="goa_board_filler">&nbsp;<br/></div>
                             </div>
@@ -167,6 +169,25 @@ export class Game {
         // TODO: Set up your game interface here, according to "gamedatas"
         
         // create a card manager
+        this.explorationCardsManager = new BgaCards.Manager({
+            animationManager: this.animationManager,
+            type: 'goa_expedition_card',
+            getId: (card) => card.id,
+            setupFrontDiv: (card, div) => {
+                div.dataset.type = card.type; 
+                this.bga.gameui.addTooltipHtml(div.id, `TODO JSA tooltip of ${card.type}`);
+            },
+            cardWidth: 131,
+            cardHeight: 200,
+        });
+        this.explorationHiddenDeck = new BgaCards.Deck(this.explorationCardsManager, document.getElementById('goa_exploration_deck'), {
+            cardNumber: 5,//TODO JSA deck size
+            counter: {
+                position: 'center',
+                extraClasses: 'text-shadow',
+            },
+            fakeCardGenerator: deckId => ({ id: `${deckId}-visible-fake-card`, type: 2, type_arg: 3, location: 'table', location_arg: 0 }),
+        });
         this.outpostsTilesManager = new BgaCards.Manager({
             animationManager: this.animationManager,
             type: 'goa_outpost',
