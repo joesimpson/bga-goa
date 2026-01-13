@@ -19,11 +19,14 @@ const BgaAnimations = await importEsmLib('bga-animations', '1.x');
 const BgaCards = await importEsmLib('bga-cards', '1.x');
 
 //Used Constants copied from PHP file
+const CARD_SUBTTYPE_EXPLORATION = 1;
 
 const TILE_SUBTTYPE_OUTPOST = 1;
 const TILE_SUBTTYPE_MARKET = 2;
 
 const MARKET_GRID_SIZE = 5;
+
+const CARD_LOCATION_EXP_DISCARD = '1_discard';
 
 const TILE_LOCATION_BOARD_MARKET = 'market';
 const TILE_LOCATION_BOARD_OUTPOST = 'board_c';
@@ -231,6 +234,7 @@ export class Game {
         );
         this.setupTiles();
         this.setupTokens();
+        this.setupCards();
 
         this.setupRoundMarker();
 
@@ -645,5 +649,55 @@ export class Game {
     }
     tplProgressTrackSpace(datas) {
         return `<div class="goa_progress_track_space" id="goa_progress_track_space_${datas.track}_${datas.space}_${datas.pId}" data-track='${datas.track}' data-pos='${datas.space}'></div>`;
+    }
+
+    ////////////////////////////////////////////////////////
+    //    ____              _
+    //   / ___|__ _ _ __ __| |___
+    //  | |   / _` | '__/ _` / __|
+    //  | |__| (_| | | | (_| \__ \
+    //   \____\__,_|_|  \__,_|___/
+    //////////////////////////////////////////////////////////
+    setupCards() {
+        console.log("setupCards");
+        // This function is refreshUI compatible
+        //destroy previous cards
+        document.querySelectorAll('.goa_card[id^="goa_card-"]').forEach((pCard) => {
+            this.destroy(pCard);
+        });
+        
+        let cardIds = this.gamedatas.cards.map((card) => {
+            this.addCard(card);
+            return card.id;
+        });
+    }
+
+    getCardContainer(card) {
+        if(card.subtype == CARD_SUBTTYPE_EXPLORATION){
+            if (card.location == (CARD_LOCATION_EXP_DISCARD) ) {
+                return `goa_exploration_discard`;
+            }
+        }
+        
+        console.error('Trying to get container of a tile', tile);
+        return 'goa_game_container';
+    }
+    
+    
+    addCard(card, location = null) {
+        console.log('addCard',card,location);
+        if (!$(`goa_card-${card.id}`)){
+            let container = location == null ? this.getCardContainer(card) : location;
+            
+            if(container == `goa_exploration_discard`){
+                //use bga-cards stock
+                this.explorationDiscard.addCard(card);
+            }
+            else {//manual add
+                document.getElementById(container).insertAdjacentHTML('beforeend', this.tplCard(card));
+            }
+
+        }
+        return $(`goa_card-${card.id}`);
     }
 }

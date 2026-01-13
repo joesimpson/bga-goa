@@ -104,12 +104,6 @@ trait DebugTrait
 
     
     ////////////////////////////////////////////////////
-    function debug_shuffleCards(){
-        Cards::moveAllInLocation(CARD_LOCATION_BOARD,CARD_LOCATION_DECK);
-        Cards::shuffle(CARD_LOCATION_DECK);
-        $cards = Cards::getInLocation(CARD_LOCATION_BOARD);
-
-    }
     function debug_changeRound(int $round = 1){
         Globals::setRound($round);
         Game::get()->notify->all('reloadPage', "/!\ : Refresh page to see game has restarted...", []);
@@ -206,6 +200,22 @@ trait DebugTrait
 
         Tokens::create($tokens);
 
+        Game::get()->notify->player($player_id,'reloadPage', "/!\ : Refresh page to see game has restarted...", []);
+    }
+
+    
+    function debug_shuffleCards(){
+        Cards::moveAllInLocation(CARD_LOCATION_BOARD,CARD_LOCATION_EXP_DECK);
+        Cards::shuffle(CARD_LOCATION_EXP_DECK);
+        $cards = Cards::getInLocation(CARD_LOCATION_BOARD);
+
+    }
+    // Test board UI : 
+    function debug_boardCards(){
+        $player_id = Players::getCurrent()->getId();
+
+        $cards = Cards::moveAllInLocation(CARD_LOCATION_EXP_DECK,CARD_LOCATION_EXP_DISCARD);
+        Cards::shuffle(CARD_LOCATION_EXP_DISCARD);
         Game::get()->notify->player($player_id,'reloadPage', "/!\ : Refresh page to see game has restarted...", []);
     }
     ////////////////////////////////////////////////////

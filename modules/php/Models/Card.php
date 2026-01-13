@@ -15,6 +15,7 @@ class Card extends \Bga\Games\Goa\Helpers\DB_Model
     'id' => ['card_id', 'int'],
     'state' => ['card_state', 'int'],
     'location' => 'card_location',
+    'pId' => ['player_id', 'int'],
     'type' => ['type', 'int'],
   ];
   

@@ -45,10 +45,34 @@ const MARKET_GRID_SIZE = 5;
 //          CARDS
 /////////////////////////////////////////////////////////
 
-const CARD_LOCATION_DISCARD = 'discard';
-const CARD_LOCATION_DECK = 'deck';
+const CARD_LOCATION_EXP_DISCARD = '1_discard';
+const CARD_LOCATION_EXP_DECK = '1_deck';
 const CARD_LOCATION_BOARD = 'board';
 const CARD_LOCATION_HAND = 'hand';
+
+const CARD_SUBTTYPE_EXPLORATION = 1;
+const CARD_SUBTTYPE_CAPTAIN = 2;
+const CARD_SUBTTYPE_STORY = 3;
+const CARD_SUBTTYPE_GAMBIT = 4;
+const CARD_SUBTTYPE_SOLO = 5;
+
+const CARD_SYMBOL_ELEPHANT = 1;
+const CARD_SYMBOL_TIGER = 1;
+const CARD_SYMBOL_URN = 1;
+const CARD_SYMBOL_PALMTREE = 1;
+const CARD_SYMBOL_SHELL = 1;
+const CARD_SYMBOL_STATUE = 1;
+
+const CARD_ACTION_PROGRESS_NO_SPICE    = 'a';
+const CARD_ACTION_PROGRESS_NO_SHIP     = 'b';
+const CARD_ACTION_HARVEST_AND_CARDS     = 'c';
+const CARD_ACTION_OUTPOST_EXTRA_CONTRACTS = 'd';
+const CARD_ACTION_RESSOURCES_TO_COINS  = 'e';
+const CARD_ACTION_2_SPICES             = 'f';
+const CARD_ACTION_2_CONTRACTS          = 'g';
+const CARD_ACTION_2_SHIPS              = 'h';
+const CARD_ACTION_5_COINS              = 'i';
+const CARD_ACTION_PROGRESS_WITH_COINS  = 'j';
 
 /////////////////////////////////////////////////////////
 //          TILES

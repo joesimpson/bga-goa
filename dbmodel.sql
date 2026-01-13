@@ -23,6 +23,8 @@ CREATE TABLE IF NOT EXISTS `cards` (
   `card_state` int(10) DEFAULT 0,
   `card_location` varchar(32) NOT NULL,
   `type` int(10) NOT NULL,
+  `subtype` int(10) NOT NULL,
+  `player_id` int(10) NULL,
   PRIMARY KEY (`card_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
