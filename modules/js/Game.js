@@ -179,7 +179,7 @@ export class Game {
 
             // example of adding a div for each player
             document.getElementById('goa_main_zone').insertAdjacentHTML('beforeend', `
-                <div id="goa_player_table-${player.id}" class="goa_player_table" data-pid=${player.id} data-color='${player.color}'>
+                <div id="goa_player_table-${player.id}" class="goa_player_table whiteblock" data-pid=${player.id} data-color='${player.color}'>
                     <div class='goa_player_table_title_name' >${this.bga.gameui.format_string(('${player_name}'), { player_name:this.coloredPlayerName(player.name)}) }</div>
                     <div class='goa_resizable_playerboard'>
                         <div class='goa_playerboard_container'>
