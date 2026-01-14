@@ -522,8 +522,8 @@ export class Game {
     async notif_giveExplorationCardsToPlayer(notif) {
         console.log("notif_giveExplorationCardsToPlayer",notif);
 
-
         this.explorationHand.addCards(notif.cards, { fromStock: this.explorationDeck});
+        this._counters[notif.player_id]['exploration_hand_size'].incValue( notif.cards.length);
     }
 
     ////////////////////////////////////////////////////////
