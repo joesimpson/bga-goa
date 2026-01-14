@@ -254,6 +254,28 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background: none;
   box-shadow: none;
 }
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_money_stacks {
+  position: absolute;
+  left: 30px;
+  top: 1210px;
+  width: 520px;
+  height: 200px;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_money_stacks .goa_money_card {
+  position: absolute;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_money_stacks .goa_money_card[data-value="1"] {
+  left: 3px;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_money_stacks .goa_money_card[data-value="2"] {
+  left: 132px;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_money_stacks .goa_money_card[data-value="5"] {
+  left: 267px;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_money_stacks .goa_money_card[data-value="10"] {
+  left: 400px;
+}
 
 .goa_board_filler {
   font-size: 0.1em;
@@ -707,6 +729,29 @@ Icon extract in sprite with differents layers size (so % is not useful).
 .goa_exploration_card-front[data-type="31"], .goa_exploration_card-back[data-type="31"] {
   background-position-x: 33.3333333333%;
   background-position-y: 100%;
+}
+
+.goa_money_card {
+  width: 120px;
+  height: 182px;
+  border-radius: 5%;
+  box-shadow: 0px 0px 0px 2px black;
+  background-size: 500% 200%;
+  background-image: url("img/base_cards.jpg");
+  background-position-x: 0%;
+  background-position-y: 0%;
+}
+.goa_money_card[data-value="1"] {
+  background-position-x: 25%;
+}
+.goa_money_card[data-value="2"] {
+  background-position-x: 50%;
+}
+.goa_money_card[data-value="5"] {
+  background-position-x: 75%;
+}
+.goa_money_card[data-value="10"] {
+  background-position-x: 100%;
 }
 
 .goa_tile {

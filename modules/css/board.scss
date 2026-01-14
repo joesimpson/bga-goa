@@ -241,6 +241,30 @@ $board_img_height: calc(1 * calc(1429px + var(--goa_board_height_offset)));
                         box-shadow: none;
                     }
                 }
+
+                #goa_money_stacks{
+                    position: absolute;
+                    left: 30px;
+                    top: 1210px;
+                    width: 520px;
+                    height: 200px;
+
+                    .goa_money_card{
+                        position: absolute;
+                        &[data-value="1"] {
+                            left: 3px;
+                        }
+                        &[data-value="2"] {
+                            left: 132px;
+                        }
+                        &[data-value="5"] {
+                            left: 267px;
+                        }
+                        &[data-value="10"] {
+                            left: 400px;
+                        }
+                    }
+                }
                 
             }
 

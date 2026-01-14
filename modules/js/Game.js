@@ -109,6 +109,12 @@ export class Game {
                                         <div id="goa_board_round_cell_7" class="goa_board_round_cell"></div>
                                         <div id="goa_board_round_cell_8" class="goa_board_round_cell"></div>
                                     </div>
+                                    <div id="goa_money_stacks">
+                                        <div class="goa_money_card" data-value='1'></div>
+                                        <div class="goa_money_card" data-value='2'></div>
+                                        <div class="goa_money_card" data-value='5'></div>
+                                        <div class="goa_money_card" data-value='10'></div>
+                                    </div>
                                     <div id="goa_exploration_deck"></div>
                                     <div id="goa_exploration_discard"></div>
                                 </div>
