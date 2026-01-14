@@ -84,6 +84,14 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
     return self::getFilteredQuery($pId, $location)->count();
   }
   
+  public static function countSpices(int $pId, int $spiceTokenType)
+  {
+    return self::DB()
+      ->where( 'type', $spiceTokenType)
+      ->where( 'subType', TOKEN_SUBTTYPE_SPICE)
+      ->wherePlayer($pId)
+      ->count();
+  }
   /**
    * Return all Board tokens of this player
    * @param int $pId

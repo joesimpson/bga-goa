@@ -5,20 +5,27 @@
     @include goa_icons_sprite(0px,0px,0.25 * 198px,0.25 * 193px,198px,193px);
 }
 
-.goa_spice_white{
-    @include goa_icons_sprite(473px,0px,1 * 193px,1 * 119px,113px,119px);
+$spice_width: 29px;
+$spice_height: 30px;
+.goa_icon_spices_white{
+    position: relative;
+    @include goa_icons_sprite(473px,0px,$spice_width,$spice_height,113px,119px);
 }
-.goa_spice_black{
-    @include goa_icons_sprite(590px,0px,1 * 193px,1 * 119px,113px,119px);
+.goa_icon_spices_black{
+    position: relative;
+    @include goa_icons_sprite(590px,0px,$spice_width,$spice_height,113px,119px);
 }
-.goa_spice_yellow{
-    @include goa_icons_sprite(707px,0px,1 * 193px,1 * 119px,113px,119px);
+.goa_icon_spices_yellow{
+    position: relative;
+    @include goa_icons_sprite(707px,0px,$spice_width,$spice_height,113px,119px);
 }
-.goa_spice_pink{
-    @include goa_icons_sprite(824px,0px,1 * 193px,1 * 119px,113px,119px);
+.goa_icon_spices_pink{
+    position: relative;
+    @include goa_icons_sprite(824px,0px,$spice_width,$spice_height,113px,119px);
 }
-.goa_spice_green{
-    @include goa_icons_sprite(940px,0px,1 * 193px,1 * 119px,113px,119px);
+.goa_icon_spices_green{
+    position: relative;
+    @include goa_icons_sprite(940px,0px,$spice_width,$spice_height,113px,119px);
 }
 
 .goa_icon_exploration_hand_size{

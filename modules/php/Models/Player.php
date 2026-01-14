@@ -7,6 +7,7 @@ use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Core\Stats;
 use Bga\Games\Goa\Managers\Cards;
 use Bga\Games\Goa\Managers\Players;
+use Bga\Games\Goa\Managers\Tokens;
 
 /*
  * Player: all utility functions concerning a player
@@ -39,6 +40,8 @@ class Player extends \Bga\Games\Goa\Helpers\DB_Model
     $data = parent::getUiData();
 
     $data['exploration_hand_size'] = Cards::countInExplorationHand($this->getId());
+
+    $data['spices'] = $this->getSpicesCount();
     return $data;
   }
 
@@ -87,5 +90,17 @@ class Player extends \Bga\Games\Goa\Helpers\DB_Model
   
   public function giveExtraTime(){
     Game::get()->giveExtraTime($this->getId());
+  }
+
+  public function getSpicesCount(){
+    return [
+
+      SPICE_WHITE => Tokens::countSpices($this->getId(), TOKEN_TYPE_SPICE_WHITE ),
+      SPICE_BLACK  => Tokens::countSpices($this->getId(), TOKEN_TYPE_SPICE_BLACK ),
+      SPICE_YELLOW => Tokens::countSpices($this->getId(), TOKEN_TYPE_SPICE_YELLOW),
+      SPICE_PINK   => Tokens::countSpices($this->getId(), TOKEN_TYPE_SPICE_PINK  ),
+      SPICE_GREEN  => Tokens::countSpices($this->getId(), TOKEN_TYPE_SPICE_GREEN ),
+    ];
+
   }
 }

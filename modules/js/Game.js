@@ -143,59 +143,44 @@ export class Game {
                         ${this.tplResourceCounter(player,'contracts')}
                         ${this.tplResourceCounter(player,'compasses')}
                     </div>
+                    <div class='goa_player_counters_line'>
+                        ${this.tplResourceCounter(player,'spices_white')}
+                        ${this.tplResourceCounter(player,'spices_black')}
+                        ${this.tplResourceCounter(player,'spices_yellow')}
+                        ${this.tplResourceCounter(player,'spices_pink')}
+                        ${this.tplResourceCounter(player,'spices_green')}
+                    </div>
                 </div>
             `);
             this._counters[player.id] = {};
-            let counter = new ebg.counter();
-            counter.create(`goa_counter_${player.id}_exploration_hand_size`, {
-                value: player.exploration_hand_size,
-                playerCounter: 'exploration_hand_size',
-                playerId: player.id
-            });
-            this._counters[player.id]['exploration_hand_size'] = counter;
-
+            this.createCounter(player.id,'exploration_hand_size',player.exploration_hand_size);
+            this.createCounter(player.id,'ships',player.ships);
+            this.createCounter(player.id,'contracts',player.contracts);
+            this.createCounter(player.id,'compasses',player.compasses);
             if (currentPlayer && player.id == currentPlayer.id){
-                counter = new ebg.counter();
-                counter.create(`goa_counter_${player.id}_money`, {
-                    value: player.money,
-                    playerCounter: 'money',
-                    playerId: player.id
-                });
-                this._counters[player.id]['money'] = counter;
+                this.createCounter(player.id,'money',player.money);
             } 
             else {
                 document.getElementById(`goa_counter_${player.id}_money`).innerHTML = '???';
             }
-            
-            counter = new ebg.counter();
-            counter.create(`goa_counter_${player.id}_ships`, {
-                value: player.ships,
-                playerCounter: 'ships',
-                playerId: player.id
-            });
-            this._counters[player.id]['ships'] = counter;
-            
-            counter = new ebg.counter();
-            counter.create(`goa_counter_${player.id}_contracts`, {
-                value: player.contracts,
-                playerCounter: 'contracts',
-                playerId: player.id
-            });
-            this._counters[player.id]['contracts'] = counter;
-            
-            counter = new ebg.counter();
-            counter.create(`goa_counter_${player.id}_compasses`, {
-                value: player.compasses,
-                playerCounter: 'compasses',
-                playerId: player.id
-            });
-            this._counters[player.id]['compasses'] = counter;
 
-            this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_exploration_hand_size`, `Exploration cards`);
-            this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_money`, `Number of Gold Pardau coins on money cards`);
-            this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_ships`, `Number of Ships on ship cards`);
-            this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_contracts`, `Number of Contracts on contract cards`);
-            this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_compasses`, `Compass cards`);
+            this.createCounter(player.id,'spices_white' ,player.spices[1]); //SPICE_WHITE
+            this.createCounter(player.id,'spices_black' ,player.spices[2]);
+            this.createCounter(player.id,'spices_yellow',player.spices[3]);
+            this.createCounter(player.id,'spices_pink'  ,player.spices[4]);
+            this.createCounter(player.id,'spices_green' ,player.spices[5]);
+
+            this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_exploration_hand_size`, _('Exploration cards'));
+            this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_money`, _('Number of Gold Pardau coins on money cards'));
+            this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_ships`, _('Number of Ships on ship cards'));
+            this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_contracts`, _('Number of Contracts on contract cards'));
+            this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_compasses`, _('Compass cards'));
+
+            this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_spices_white`, _(`Spices`));
+            this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_spices_black`, _(`Spices`));
+            this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_spices_yellow`, _(`Spices`));
+            this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_spices_pink`, _(`Spices`));
+            this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_spices_green`, _(`Spices`));
 
             // example of adding a div for each player
             document.getElementById('goa_main_zone').insertAdjacentHTML('beforeend', `
@@ -451,6 +436,16 @@ export class Game {
                 <div class='goa_reserve' id='goa_reserve_${player.id}_${res}'></div>
             </div>
             `;
+    }
+
+    createCounter(player_id, resourceName, initValue){
+        let counter = new ebg.counter();
+        counter.create(`goa_counter_${player_id}_${resourceName}`, {
+            value: initValue,
+            playerCounter: resourceName,
+            playerId: player_id
+        });
+        this._counters[player_id][resourceName] = counter;
     }
 
     ///////////////////////////////////////////////////
