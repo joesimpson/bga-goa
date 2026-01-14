@@ -138,7 +138,7 @@ export class Game {
                         ${this.tplResourceCounter(player,'money')}
                         ${this.tplResourceCounter(player,'ships')}
                         ${this.tplResourceCounter(player,'contracts')}
-                        ${this.tplResourceCounter(player,'compass')}
+                        ${this.tplResourceCounter(player,'compasses')}
                     </div>
                 </div>
             `);
@@ -151,20 +151,17 @@ export class Game {
             });
             this._counters[player.id]['exploration_hand_size'] = counter;
 
-            let visibleMoney = '?';
             if (currentPlayer && player.id == currentPlayer.id){
-                visibleMoney = player.money;
-
                 counter = new ebg.counter();
                 counter.create(`goa_counter_${player.id}_money`, {
-                    value: visibleMoney,
+                    value: player.money,
                     playerCounter: 'money',
                     playerId: player.id
                 });
                 this._counters[player.id]['money'] = counter;
             } 
             else {
-                document.getElementById(`goa_counter_${player.id}_money`).innerHTML = '?';
+                document.getElementById(`goa_counter_${player.id}_money`).innerHTML = '???';
             }
             
             counter = new ebg.counter();
@@ -184,12 +181,18 @@ export class Game {
             this._counters[player.id]['contracts'] = counter;
             
             counter = new ebg.counter();
-            counter.create(`goa_counter_${player.id}_compass`, {
+            counter.create(`goa_counter_${player.id}_compasses`, {
                 value: player.compasses,
-                playerCounter: 'compass',
+                playerCounter: 'compasses',
                 playerId: player.id
             });
-            this._counters[player.id]['compass'] = counter;
+            this._counters[player.id]['compasses'] = counter;
+
+            this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_exploration_hand_size`, `Exploration cards`);
+            this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_money`, `Number of Gold Pardau coins on money cards`);
+            this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_ships`, `Number of Ships on ship cards`);
+            this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_contracts`, `Number of Contracts on contract cards`);
+            this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_compasses`, `Compass cards`);
 
             // example of adding a div for each player
             document.getElementById('goa_main_zone').insertAdjacentHTML('beforeend', `
