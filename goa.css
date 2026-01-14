@@ -546,6 +546,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
   height: 200px;
   --bga-cards_card-border-radius: 10px;
   border-radius: var(--bga-cards_card-border-radius);
+  box-shadow: 0px 0px 0px 2px black;
 }
 
 .goa_exploration_card,
