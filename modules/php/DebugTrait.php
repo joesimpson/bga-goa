@@ -246,6 +246,16 @@ trait DebugTrait
     function debug_playerTiles(){
         $player_id = Players::getCurrent()->getId();
 
+        //resetup outposts
+        $outposts = Tiles::getOutpostTilesTypes();
+        foreach ($outposts as $type => $outpost) {
+            $tiles = Tiles::getByType($type, TILE_SUBTTYPE_OUTPOST);
+            foreach ($tiles as $tile_id => $tile) {
+                $tile->setLocation(TILE_LOCATION_BOARD_OUTPOSTS[$outpost['colony']]);
+            }
+        }
+
+        //Test outposts :
         $tile = Tiles::getTopOf(TILE_LOCATION_BOARD_OUTPOSTS[COLONY_KOLLAM]);
         $tile->setLocation(TILE_LOCATION_PLAYER_BOARD);
         $tile->setPId($player_id);
@@ -261,6 +271,21 @@ trait DebugTrait
         $tile = Tiles::getTopOf(TILE_LOCATION_BOARD_OUTPOSTS[COLONY_KOZHIKODE]);
         $tile->setLocation(TILE_LOCATION_PLAYER_BOARD);
         $tile->setPId($player_id);
+
+        //Test plantations :
+        $tile = Tiles::getByType(20, TILE_SUBTTYPE_MARKET)->first();
+        $tile->setLocation(TILE_LOCATION_PLAYER_BOARD);
+        $tile->setPId($player_id);
+        $tile->setRow(null);
+        $tile->setCol(null);
+        $tile->setState(2);
+
+        $tile = Tiles::getByType(2, TILE_SUBTTYPE_MARKET)->first();
+        $tile->setLocation(TILE_LOCATION_PLAYER_BOARD);
+        $tile->setPId($player_id);
+        $tile->setRow(null);
+        $tile->setCol(null);
+        $tile->setState(4);
 
         Game::get()->notify->player($player_id,'reloadPage', "/!\ : Refresh page to see game has restarted...", []);
     }

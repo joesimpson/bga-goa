@@ -80,6 +80,14 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
   {
     return self::getFilteredQuery($pId, $location)->count();
   }
+  
+  public static function getByType(int $cardType, int $cardSubtype)
+  {
+    return self::DB()
+      ->where('type', $cardType)
+      ->where('subtype', $cardSubtype)
+      ->get();
+  }
 
   ///////////////////////////////////////////////////////////////////////////////
   

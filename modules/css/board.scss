@@ -435,6 +435,33 @@ $playerboard_img_height: calc(1 * 796px);
                 }
             }
 
+            
+            .goa_player_plantations{
+                position: absolute;
+                left: 174px;
+                top: 129px;
+                width: 468px;
+                height: 110px;
+
+                //for debug
+                //outline: 2px solid red;
+
+                .goa_tile{
+                    position: absolute;
+                    &[data-state="1"] { // &:nth-child(1) {
+                        left: 1px;
+                    }
+                    &[data-state="2"] { //  &:nth-child(2) {
+                        left: 120px;
+                    }
+                    &[data-state="3"] { // &:nth-child(3) {
+                        left: 240px;
+                    }
+                    &[data-state="4"] { // &:nth-child(4){
+                        left: 359px;
+                    }
+                }
+            }
         }
     }
 }
