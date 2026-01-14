@@ -48,6 +48,7 @@ export class Game {
         // Here, you can init the global variables of your user interface
         // Example:
         // this.myGlobalValue = 0;
+        this._counters = {};
 
     }
     
@@ -124,16 +125,57 @@ export class Game {
         let currentPlayer = this.bga.players.getCurrentPlayer();
         // Setting up player boards
         Object.values(gamedatas.players).forEach(player => {
-            // example of setting up players boards
             this.bga.playerPanels.getElement(player.id).insertAdjacentHTML('beforeend', `
-                <span id="energy-player-counter-${player.id}"></span> Energy
+                <div class='goa_panel'>
+                    <div class='goa_player_counters_line'>
+                        ${this.tplResourceCounter(player,'exploration_hand_size')}
+                        ${this.tplResourceCounter(player,'money')}
+                        ${this.tplResourceCounter(player,'ships')}
+                        ${this.tplResourceCounter(player,'contracts')}
+                        ${this.tplResourceCounter(player,'compass')}
+                    </div>
+                </div>
             `);
-            const counter = new ebg.counter();
-            counter.create(`energy-player-counter-${player.id}`, {
-                value: player.energy,
-                playerCounter: 'energy',
+            this._counters[player.id] = {};
+            let counter = new ebg.counter();
+            counter.create(`goa_counter_${player.id}_exploration_hand_size`, {
+                value: player.exploration_hand_size,
+                playerCounter: 'exploration_hand_size',
                 playerId: player.id
             });
+            this._counters[player.id]['exploration_hand_size'] = counter;
+
+            counter = new ebg.counter();
+            counter.create(`goa_counter_${player.id}_money`, {
+                value: player.money,
+                playerCounter: 'money',
+                playerId: player.id
+            });
+            this._counters[player.id]['money'] = counter;
+            
+            counter = new ebg.counter();
+            counter.create(`goa_counter_${player.id}_ships`, {
+                value: player.ships,
+                playerCounter: 'ships',
+                playerId: player.id
+            });
+            this._counters[player.id]['ships'] = counter;
+            
+            counter = new ebg.counter();
+            counter.create(`goa_counter_${player.id}_contracts`, {
+                value: player.contracts,
+                playerCounter: 'contracts',
+                playerId: player.id
+            });
+            this._counters[player.id]['contracts'] = counter;
+            
+            counter = new ebg.counter();
+            counter.create(`goa_counter_${player.id}_compass`, {
+                value: player.compass,
+                playerCounter: 'compass',
+                playerId: player.id
+            });
+            this._counters[player.id]['compass'] = counter;
 
             // example of adding a div for each player
             document.getElementById('goa_main_zone').insertAdjacentHTML('beforeend', `
@@ -368,6 +410,26 @@ export class Game {
         else {
             //TODO JSA reset round between sessions ?
         }
+    }
+    
+    formatIcon(name, n = null) {
+        let type = name;
+        let text = n == null ? '' : `<span class='goa_icon_qty' data-value="${n}">${n}</span>`;
+        return `<div class="goa_icon_container goa_icon_container_${type}">
+            <div class="goa_icon goa_icon_${type}">${text}</div>
+            </div>`;
+    }
+    /**
+     * Use this tpl for any counters that represent qty of tokens
+     */
+    tplResourceCounter(player, res) {
+        return `
+            <div class='goa_player_resource goa_resource_holder_${res}'>
+                ${this.formatIcon(res, null)}
+                <span id='goa_counter_${player.id}_${res}' class='goa_resource_${res}'></span>
+                <div class='goa_reserve' id='goa_reserve_${player.id}_${res}'></div>
+            </div>
+            `;
     }
 
     ///////////////////////////////////////////////////

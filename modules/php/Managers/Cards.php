@@ -65,7 +65,7 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
       ->get();
   }
 
-  public static function getExplorationDeckSize()
+  public static function countInExplorationDeck()
   {
     return self::DB()
       ->where( 'subType', CARD_SUBTTYPE_EXPLORATION)
@@ -79,6 +79,14 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
       ->where(static::$prefix . 'location', CARD_LOCATION_HAND)
       ->wherePlayer($pId)
       ->get();
+  }
+  public static function countInExplorationHand(int $playerId)
+  {
+    return self::DB()
+      ->where( 'subType', CARD_SUBTTYPE_EXPLORATION)
+      ->where(static::$prefix . 'location', CARD_LOCATION_HAND)
+      ->wherePlayer($playerId)
+      ->count();
   }
   
   public static function drawExplorationCardsToPlayer(Player $player,int $nb)

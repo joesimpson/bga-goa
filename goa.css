@@ -430,6 +430,17 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-size: 606.0606060606% 170.9844559585%;
 }
 
+.goa_icon_exploration_hand_size {
+  position: relative;
+  width: 26px;
+  height: 40px;
+  border-radius: 5%;
+  background-size: 700% 500%;
+  background-image: url("img/exp_cards.jpg");
+  background-position-x: 0%;
+  background-position-y: 0%;
+}
+
 /**
  *------
  * BGA framework: Gregory Isabelli & Emmanuel Colin & BoardGameArena
@@ -978,6 +989,45 @@ Icon extract in sprite with differents layers size (so % is not useful).
 }
 .player_board_inner > .player-name > a[style*="color: #84cba2"] {
   text-shadow: 2px 0px 2px white, 0px 2px 2px white, -2px 0px 2px white, 0px -2px 2px white;
+}
+
+.goa_panel {
+  display: flex;
+  flex-direction: column;
+  font-size: 10px;
+  position: relative;
+}
+.goa_panel .goa_player_counters_line {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  position: relative;
+  line-height: 3em;
+}
+.goa_panel .goa_player_resource {
+  position: relative;
+  text-align: center;
+  font-size: 12px;
+  font-weight: bold;
+}
+.goa_panel .goa_player_resource .goa_reserve {
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  width: 100%;
+  height: 100%;
+}
+.goa_panel .goa_player_resource .goa_reserve.tooltipable:hover {
+  outline: 2px solid green;
+  z-index: 2;
+}
+.goa_panel .goa_player_resource .goa_resource_exploration_hand_size {
+  font-size: 15px;
+  font-weight: bold;
+}
+.goa_panel .goa_icon_container {
+  margin: 0 0.5em;
 }
 
 #goa_game_container {

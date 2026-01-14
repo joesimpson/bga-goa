@@ -5,6 +5,7 @@ namespace Bga\Games\Goa\Models;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Core\Stats;
+use Bga\Games\Goa\Managers\Cards;
 use Bga\Games\Goa\Managers\Players;
 
 /*
@@ -31,6 +32,8 @@ class Player extends \Bga\Games\Goa\Helpers\DB_Model
   public function getUiData($currentPlayerId = null)
   {
     $data = parent::getUiData();
+
+    $data['exploration_hand_size'] = Cards::countInExplorationHand($this->getId());
     return $data;
   }
 

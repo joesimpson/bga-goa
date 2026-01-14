@@ -4,3 +4,15 @@
 #goa_board_round_marker{
     @include goa_icons_sprite(0px,0px,0.25 * 198px,0.25 * 193px,198px,193px);
 }
+
+.goa_icon_exploration_hand_size{
+    position: relative;
+    width: 26px;
+    height: 40px;
+    border-radius: 5%;
+
+    background-size: 700% 500%;
+    background-image: url("img/exp_cards.jpg");
+    background-position-x: 0%;
+    background-position-y: 0%;
+}
