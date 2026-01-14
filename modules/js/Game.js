@@ -151,13 +151,21 @@ export class Game {
             });
             this._counters[player.id]['exploration_hand_size'] = counter;
 
-            counter = new ebg.counter();
-            counter.create(`goa_counter_${player.id}_money`, {
-                value: player.money,
-                playerCounter: 'money',
-                playerId: player.id
-            });
-            this._counters[player.id]['money'] = counter;
+            let visibleMoney = '?';
+            if (currentPlayer && player.id == currentPlayer.id){
+                visibleMoney = player.money;
+
+                counter = new ebg.counter();
+                counter.create(`goa_counter_${player.id}_money`, {
+                    value: visibleMoney,
+                    playerCounter: 'money',
+                    playerId: player.id
+                });
+                this._counters[player.id]['money'] = counter;
+            } 
+            else {
+                document.getElementById(`goa_counter_${player.id}_money`).innerHTML = '?';
+            }
             
             counter = new ebg.counter();
             counter.create(`goa_counter_${player.id}_ships`, {
