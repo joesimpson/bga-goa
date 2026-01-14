@@ -231,6 +231,17 @@ trait DebugTrait
         Cards::drawExplorationCardsToPlayer($player, $size);
        
     }
+    
+    function debug_changePlayerCurrencies(int $money = 15,int $ships = 5,int $contracts = 3,int $compasses = 1,){
+        $player = Players::getCurrent();
+        $player_id = $player->getId();
+
+        $player->setMoney($money);
+        $player->setShips($ships);
+        $player->setContracts($contracts);
+        $player->setCompasses($compasses);
+        Game::get()->notify->player($player_id,'reloadPage', "/!\ : Refresh page to see game has restarted...", []);
+    }
     ////////////////////////////////////////////////////
 
 }

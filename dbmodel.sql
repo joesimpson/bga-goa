@@ -18,6 +18,13 @@
 -- Note: The database schema is created from this file when the game starts. If you modify this file,
 --       you have to restart a game to see your changes in database.
 
+-- we don't need to represent player money with cards
+ALTER TABLE `player` ADD `money` int(2) NOT NULL DEFAULT 0 COMMENT 'This player total count of coins on cards';
+ALTER TABLE `player` ADD `ships` int(2) NOT NULL DEFAULT 0 COMMENT 'This player total count of ships on cards';
+ALTER TABLE `player` ADD `contracts` int(2) NOT NULL DEFAULT 0 COMMENT 'This player total count of contracts on cards';
+ALTER TABLE `player` ADD `compasses` int(2) NOT NULL DEFAULT 0 COMMENT 'This player total count of compasses on cards';
+
+
 CREATE TABLE IF NOT EXISTS `cards` (
   `card_id` int(2) NOT NULL AUTO_INCREMENT,
   `card_state` int(10) DEFAULT 0,

@@ -27,6 +27,11 @@ class Player extends \Bga\Games\Goa\Helpers\DB_Model
     'zombie' => 'player_zombie',
 
     //GAME SPECIFIC : 
+    'money' => ['money', 'int'],
+    'ships' => ['ships', 'int'],
+    'contracts' => ['contracts', 'int'],
+    'compasses' => ['compasses', 'int'],
+
   ];
 
   public function getUiData($currentPlayerId = null)

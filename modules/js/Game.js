@@ -185,7 +185,7 @@ export class Game {
             
             counter = new ebg.counter();
             counter.create(`goa_counter_${player.id}_compass`, {
-                value: player.compass,
+                value: player.compasses,
                 playerCounter: 'compass',
                 playerId: player.id
             });
