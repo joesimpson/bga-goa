@@ -35,10 +35,12 @@ const TILE_LOCATION_PLAYER_BOARD = 'p_board';
 
 const TOKEN_LOCATION_BOARD = 'board';
 const TOKEN_LOCATION_PLAYER_BOARD = 'p_board';
+const TOKEN_LOCATION_TILE = 'tile-';
 
 const TOKEN_SUBTTYPE_PROGRESS_MARKER = 1;
 const TOKEN_SUBTTYPE_AUCTION_MARKER = 2;
 const TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER = 3;
+const TOKEN_SUBTTYPE_SPICE = 4;
 
 export class Game {
     
@@ -527,6 +529,11 @@ export class Game {
         this.explorationHand.addCards(notif.cards, { fromStock: this.explorationDeck});
         this._counters[notif.player_id]['exploration_hand_size'].incValue( notif.cards.length);
     }
+    
+    async notif_newSpiceOnTile(notif) {
+        console.log("notif_newSpiceOnTile",notif);
+
+    }
 
     ////////////////////////////////////////////////////////
     //  _____ _ _
@@ -630,11 +637,11 @@ export class Game {
     tplTile(tile, prefix ='') {
         if(tile.subtype == TILE_SUBTTYPE_OUTPOST) 
             return `<div class="goa_tile goa_tile${prefix} goa_outpost" id="goa_tile${prefix}-${tile.id}" data-id="${tile.id}" data-type="${tile.type}"
-                data-colony="${tile.colony}" >
+                data-colony="${tile.colony}" data-spots="${tile.spice_slots ? tile.spice_slots.length : 0}">
             </div>`;
         if(tile.subtype == TILE_SUBTTYPE_MARKET) 
             return `<div class="goa_tile goa_tile${prefix} goa_market" id="goa_tile${prefix}-${tile.id}" data-id="${tile.id}" data-type="${tile.type}"
-                data-play_type="${tile.play_type}" data-state="${tile.state}" >
+                data-play_type="${tile.play_type}" data-state="${tile.state}" data-spots="${tile.spice_slots ? tile.spice_slots.length : 0}" >
             </div>`;
         return '';
     }
@@ -698,6 +705,10 @@ export class Game {
                 }
             }
         } 
+        if( token.location.startsWith(TOKEN_LOCATION_TILE)) {
+            let tile_id = token.location.split('-')[1];
+            return `goa_tile-${tile_id}`;
+        }
         
         console.error('Trying to get container of a token', token);
         return 'goa_game_container';
@@ -719,6 +730,8 @@ export class Game {
             return `<div id="goa_token-${token.id}" class="goa_token goa_auction_marker" data-value='${token.auctionOrder}' data-color='${this.gamedatas.players[token.pId].color}' data-pid='${token.pId}'></div>`;
         if(token.subtype == TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER) 
             return `<div id="goa_token-${token.id}" class="goa_token goa_first_auction_marker" ></div>`;
+        if(token.subtype == TOKEN_SUBTTYPE_SPICE) 
+            return `<div id="goa_token-${token.id}" class="goa_token goa_spice" data-type="${token.type}" data-pid="${token.pId}" data-state="${token.state}"></div>`;
         return '';
     }
     tplProgressTrack(datas) {

@@ -7,6 +7,7 @@ class OutpostTile extends Tile
 
     protected $staticAttributes = [
         ['colony', 'int'],
+        'spice_slots', //array of ints
     ];
 
     public function __construct($row, $datas)

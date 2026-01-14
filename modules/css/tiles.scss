@@ -52,3 +52,39 @@
             }
         }
     }
+
+.goa_tile {
+    //SPICE ABSOLUTE positions on TILE :
+    .goa_spice{
+        position: absolute;
+        //base spot : when tile has only 1 spot
+        left: 36px;
+        top: 34px;
+    }
+    &[data-spots="2"]{
+        .goa_spice{
+            &[data-state="1"]{// spot 1/2
+                left: 14px;
+            }
+            &[data-state="2"]{// spot 2/2
+                left: 56px;
+            }
+        } 
+    }
+    &[data-spots="3"]{
+        .goa_spice{
+            &[data-state="1"]{// spot 1/3
+                left: 36px;
+                top: 13px;
+            }
+            &[data-state="2"]{// spot 2/3
+                left: 13px;
+                top: 53px;
+            }
+            &[data-state="3"]{// spot 3/3
+                left: 55px;
+                top: 53px;
+            }
+        } 
+    }
+}

@@ -513,6 +513,51 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-size: 606.0606060606% 170.9844559585%;
 }
 
+.goa_spice_white {
+  width: 193px;
+  height: 119px;
+  background-image: url("img/icons.png");
+  background-position-x: -807.8672566372px;
+  background-position-y: 0px;
+  background-size: 1061.9469026549% 277.3109243697%;
+}
+
+.goa_spice_black {
+  width: 193px;
+  height: 119px;
+  background-image: url("img/icons.png");
+  background-position-x: -1007.6991150442px;
+  background-position-y: 0px;
+  background-size: 1061.9469026549% 277.3109243697%;
+}
+
+.goa_spice_yellow {
+  width: 193px;
+  height: 119px;
+  background-image: url("img/icons.png");
+  background-position-x: -1207.5309734513px;
+  background-position-y: 0px;
+  background-size: 1061.9469026549% 277.3109243697%;
+}
+
+.goa_spice_pink {
+  width: 193px;
+  height: 119px;
+  background-image: url("img/icons.png");
+  background-position-x: -1407.3628318584px;
+  background-position-y: 0px;
+  background-size: 1061.9469026549% 277.3109243697%;
+}
+
+.goa_spice_green {
+  width: 193px;
+  height: 119px;
+  background-image: url("img/icons.png");
+  background-position-x: -1605.4867256637px;
+  background-position-y: 0px;
+  background-size: 1061.9469026549% 277.3109243697%;
+}
+
 .goa_icon_exploration_hand_size {
   position: relative;
   width: 26px;
@@ -639,6 +684,47 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-position-x: -46.2595419847px;
   background-position-y: 0px;
   background-size: 458.0152671756% 129.4117647059%;
+}
+
+.goa_spice[data-type="31"] {
+  width: 38px;
+  height: 39px;
+  background-image: url("img/icons.png");
+  background-position-x: -159.0619469027px;
+  background-position-y: 0px;
+  background-size: 1061.9469026549% 277.3109243697%;
+}
+.goa_spice[data-type="32"] {
+  width: 38px;
+  height: 39px;
+  background-image: url("img/icons.png");
+  background-position-x: -198.407079646px;
+  background-position-y: 0px;
+  background-size: 1061.9469026549% 277.3109243697%;
+}
+.goa_spice[data-type="33"] {
+  width: 38px;
+  height: 39px;
+  background-image: url("img/icons.png");
+  background-position-x: -237.7522123894px;
+  background-position-y: 0px;
+  background-size: 1061.9469026549% 277.3109243697%;
+}
+.goa_spice[data-type="34"] {
+  width: 38px;
+  height: 39px;
+  background-image: url("img/icons.png");
+  background-position-x: -277.0973451327px;
+  background-position-y: 0px;
+  background-size: 1061.9469026549% 277.3109243697%;
+}
+.goa_spice[data-type="35"] {
+  width: 38px;
+  height: 39px;
+  background-image: url("img/icons.png");
+  background-position-x: -316.1061946903px;
+  background-position-y: 0px;
+  background-size: 1061.9469026549% 277.3109243697%;
 }
 
 .goa_exploration_card {
@@ -1117,6 +1203,30 @@ Icon extract in sprite with differents layers size (so % is not useful).
 .goa_tile.goa_market[data-type="41"] {
   background-position-x: 83.3333333333%;
   background-position-y: 100%;
+}
+
+.goa_tile .goa_spice {
+  position: absolute;
+  left: 36px;
+  top: 34px;
+}
+.goa_tile[data-spots="2"] .goa_spice[data-state="1"] {
+  left: 14px;
+}
+.goa_tile[data-spots="2"] .goa_spice[data-state="2"] {
+  left: 56px;
+}
+.goa_tile[data-spots="3"] .goa_spice[data-state="1"] {
+  left: 36px;
+  top: 13px;
+}
+.goa_tile[data-spots="3"] .goa_spice[data-state="2"] {
+  left: 13px;
+  top: 53px;
+}
+.goa_tile[data-spots="3"] .goa_spice[data-state="3"] {
+  left: 55px;
+  top: 53px;
 }
 
 .player_board_inner > .player-name {

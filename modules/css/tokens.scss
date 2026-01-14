@@ -66,3 +66,24 @@
     position: relative; 
     @include goa_icons_sprite(202px,0px,60px,60px,262px,255px);
 }
+
+.goa_spice {
+    //to fit on tile spot
+    $spice_width: 38px;
+    $spice_height: 39px;
+    &[data-type="31"]{//TOKEN_TYPE_SPICE_WHITE
+        @include goa_icons_sprite(473px,0px, $spice_width,$spice_height,113px,119px);
+    }
+    &[data-type="32"]{//TOKEN_TYPE_SPICE_BLACK
+        @include goa_icons_sprite(590px,0px, $spice_width,$spice_height,113px,119px);
+    }
+    &[data-type="33"]{//TOKEN_TYPE_SPICE_YELLOW
+        @include goa_icons_sprite(707px,0px, $spice_width,$spice_height,113px,119px);
+    }
+    &[data-type="34"]{//TOKEN_TYPE_SPICE_PINK
+        @include goa_icons_sprite(824px,0px, $spice_width,$spice_height,113px,119px);
+    }
+    &[data-type="35"]{//TOKEN_TYPE_SPICE_GREEN
+        @include goa_icons_sprite(940px,0px, $spice_width,$spice_height,113px,119px);
+    }
+}

@@ -7,6 +7,8 @@ use Bga\Games\Goa\Helpers\Collection;
 use Bga\Games\Goa\Models\Card;
 use Bga\Games\Goa\Models\ExplorationCard;
 use Bga\Games\Goa\Models\Player;
+use Bga\Games\Goa\Models\Tile;
+use Bga\Games\Goa\Models\Token;
 
 class Notifications
 { 
@@ -59,6 +61,23 @@ class Notifications
     ];
     if(isset($n2)) $args['n2'] = $n2;
     self::notifyAll('addPoints',$msg, $args, );
+  }
+
+  
+    /**
+   * @param Player $player
+   * @param Token $token
+   * @param Tile $toTile
+   */
+  public static function newSpiceOnTile(Player $player,Token $token,Tile $toTile)
+  {
+    $msg = '';
+
+    self::notifyAll('newSpiceOnTile', $msg, [
+      'player' => $player,
+      'token' => $token->getUiData(),
+      'tile_id' => $toTile->getId(),
+    ]);
   }
   
   /**

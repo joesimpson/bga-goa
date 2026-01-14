@@ -2,11 +2,15 @@
 
 namespace Bga\Games\Goa\Managers;
 
+use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Helpers\Collection;
 use Bga\Games\Goa\Models\AuctionMarker;
 use Bga\Games\Goa\Models\FirstAuctionMarker;
+use Bga\Games\Goa\Models\Player;
 use Bga\Games\Goa\Models\ProgressMarker;
+use Bga\Games\Goa\Models\Tile;
 use Bga\Games\Goa\Models\Token;
+use Bga\Games\Goa\Models\TokenSpice;
 
 /* Class to manage all the tokens */
 
@@ -33,6 +37,9 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
       case TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER:
         $data = self::getTokensTypes()[$type];
         return new FirstAuctionMarker($row, $data);
+      case TOKEN_SUBTTYPE_SPICE:
+        $data = self::getTokensSpiceTypes()[$type];
+        return new TokenSpice($row, $data);
     }
 
     $data = self::getTokensTypes()[$type];
@@ -49,6 +56,7 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
     return 
       self::getInLocation(TOKEN_LOCATION_BOARD)
       ->merge(self::getInLocation(TOKEN_LOCATION_PLAYER_BOARD))
+      ->merge(self::getInLocationOrdered(TOKEN_LOCATION_TILE.'%'))
       ->map(function ($token) {
         return $token->getUiData();
       })
@@ -90,6 +98,20 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
   {
     return self::DB()->delete($tokenId);
   }
+  
+  public static function addSpiceOnTile(Tile $tile,Player $player,int $tokenType,int $position)
+  {
+    $token = [
+      'type' => $tokenType,
+      'subtype' => TOKEN_SUBTTYPE_SPICE,
+      'location' => TOKEN_LOCATION_TILE.$tile->getId(),
+      'player_id' => $player->getId(),
+      'state' => $position,
+    ];
+    $elt = self::singleCreate($token);
+    Notifications::newSpiceOnTile($player,$elt,$tile);
+    return $elt;
+  }
 
   ///////////////////////////////////////////////////////////////////////////////
   
@@ -124,6 +146,23 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
     self::create($tokens);
   }
   
+  
+  public static function getTokensSpiceTypes()
+  {
+    $f = function ($t) {
+      return [
+        'spice' => $t[0],
+      ];
+    };
+    return [
+      TOKEN_TYPE_SPICE_WHITE    => $f([ SPICE_WHITE  ]), 
+      TOKEN_TYPE_SPICE_BLACK    => $f([ SPICE_BLACK  ]), 
+      TOKEN_TYPE_SPICE_YELLOW   => $f([ SPICE_YELLOW ]), 
+      TOKEN_TYPE_SPICE_PINK     => $f([ SPICE_PINK   ]), 
+      TOKEN_TYPE_SPICE_GREEN    => $f([ SPICE_GREEN  ]), 
+    ];
+  }
+
   /**
    * @return array of all the different types of Tokens
    */
@@ -148,4 +187,5 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
       TOKEN_TYPE_FIRSTAUCTION_MARKER => $f([  ]), 
     ];
   }
+  
 }
