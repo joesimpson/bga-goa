@@ -184,12 +184,11 @@ export class Game {
             cardHeight: 200,
         });
         this.explorationDeck = new BgaCards.Deck(this.explorationCardsManager, document.getElementById('goa_exploration_deck'), {
-            cardNumber: 5,//TODO JSA deck size
+            cardNumber: this.gamedatas.deck_size.exploration,
             counter: {
                 position: 'center',
                 extraClasses: 'text-shadow',
             },
-            //fakeCardGenerator: deckId => ({ id: `${deckId}-visible-fake-card`, type: 0, type_arg: 3, location: 'table', location_arg: 0 }),
         });
         this.explorationDiscard = new BgaCards.DiscardDeck(this.explorationCardsManager, document.getElementById('goa_exploration_discard'), {
             shift: '0px',

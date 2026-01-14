@@ -154,6 +154,9 @@ class Game extends \Bga\GameFramework\Table
         $result["round"] = Globals::getRound();
         $result["players"] = Players::getUiData($current_player_id);
         $result["cards"] = Cards::getUiData($current_player_id);
+        $result["deck_size"] =[
+            'exploration' =>  Cards::getExplorationDeckSize(),
+        ];
         $result["tiles"] = Tiles::getUiData($current_player_id);
         $result["tokens"] = Tokens::getUiData($current_player_id);
 

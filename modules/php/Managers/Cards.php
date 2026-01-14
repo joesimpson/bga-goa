@@ -62,6 +62,14 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
       ->where(static::$prefix . 'location', CARD_LOCATION_EXP_DISCARD)
       ->get();
   }
+
+  public static function getExplorationDeckSize()
+  {
+    return self::DB()
+      ->where( 'subType', CARD_SUBTTYPE_EXPLORATION)
+      ->where(static::$prefix . 'location', CARD_LOCATION_EXP_DECK)
+      ->count();
+  }
    
   ///////////////////////////////////////////////////////////////////////////////////////
    
