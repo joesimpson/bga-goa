@@ -3,6 +3,8 @@
 namespace Bga\Games\Goa\Core;
 
 use Bga\Games\Goa\Game;
+use Bga\Games\Goa\Models\Card;
+use Bga\Games\Goa\Models\ExplorationCard;
 use Bga\Games\Goa\Models\Player;
 
 class Notifications
@@ -18,6 +20,18 @@ class Notifications
         "card_name" => $card_name,
         "card_id" => $card_id,
         "i18n" => ['card_name'],
+    ]);
+  }
+  
+  public static function drawAndDiscardExploration(int $playerId, ExplorationCard $card)
+  {
+    self::notifyAll("drawAndDiscardExploration", clienttranslate('${player_name} draws and discard ${card_icon}'), [
+       "player_id" => $playerId,
+        "player_name" => Game::get()->getPlayerNameById($playerId),
+        "card" => $card->getUiData(),
+        "card_id" => $card->getId(),
+        "card_icon" => '',
+        'preserve'=>['card'],
     ]);
   }
   

@@ -333,11 +333,16 @@ export class Game {
     bgaFormatText(log, args) {
       try {
         if (log && args) {
-          let playernames_keys = Object.keys(args).filter((key) => key.startsWith( 'player_name'));
-          for(let k=0; k<playernames_keys.length; k++){
-            let key = playernames_keys[k];
-            args[key] = this.coloredPlayerName(args[key]);
-          }
+
+            let playernames_keys = Object.keys(args).filter((key) => key.startsWith( 'player_name'));
+            for(let k=0; k<playernames_keys.length; k++){
+                let key = playernames_keys[k];
+                args[key] = this.coloredPlayerName(args[key]);
+            }
+
+            if('card' in args && 'card_icon' in args) {
+                args.card_icon = this.tplCard(args.card, '_log');
+            }
         }
       } catch (e) {
         console.error(log, args, 'Exception thrown', e.stack);
@@ -454,6 +459,11 @@ export class Game {
     //For debugging :
     notif_reloadPage(notif) {
         window.location.reload(true);
+    }
+    
+    async notif_drawAndDiscardExploration(notif) {
+        console.log("notif_drawAndDiscardExploration",notif);
+        this.discardExCard(notif.card);
     }
 
     ////////////////////////////////////////////////////////
@@ -698,5 +708,19 @@ export class Game {
 
         }
         return $(`goa_card-${card.id}`);
+    }
+    
+    tplCard(card, prefix ='') {
+        if(card.subtype == CARD_SUBTTYPE_EXPLORATION) 
+            return `<div id="goa_card-${card.id}${prefix}" class="goa_card goa_exploration_card goa_card${prefix}" data-type='${card.type}' data-pid='${card.pId}'></div>`;
+        return '';
+    }
+    // draw + discard from deck
+    discardExCard(card_datas) {
+        let cardNumber = this.explorationDeck.getCardNumber();
+
+        if (cardNumber >= 1) {
+            this.explorationDiscard.addCard(card_datas, { fromStock: this.explorationDeck });
+        }
     }
 }
