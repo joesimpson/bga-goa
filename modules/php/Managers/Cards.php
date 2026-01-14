@@ -2,8 +2,11 @@
 
 namespace Bga\Games\Goa\Managers;
 
+use Bga\Games\Goa\Core\Notifications;
+use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Collection;
 use Bga\Games\Goa\Models\ExplorationCard;
+use Bga\Games\Goa\Models\Player;
 use InvalidArgumentException;
 
 /* Class to manage all the cards */
@@ -36,12 +39,11 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
    */
   public static function getUiData($currentPlayerId)
   {
-    //$privateCards = self::getPlayerHand($currentPlayerId);
+    $privateCards = self::getExplorationHand($currentPlayerId);
 
     return 
       self::getExplorationDiscardPile()
-      //->merge($privateCards)
-      ->merge(self::getInLocation(CARD_LOCATION_HAND))
+      ->merge($privateCards)
       ->map(function ($card) {
         return $card->getUiData();
       })
@@ -69,6 +71,28 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
       ->where( 'subType', CARD_SUBTTYPE_EXPLORATION)
       ->where(static::$prefix . 'location', CARD_LOCATION_EXP_DECK)
       ->count();
+  }
+  public static function getExplorationHand(int $pId)
+  {
+    return self::DB()
+      ->where( 'subType', CARD_SUBTTYPE_EXPLORATION)
+      ->where(static::$prefix . 'location', CARD_LOCATION_HAND)
+      ->wherePlayer($pId)
+      ->get();
+  }
+  
+  public static function drawExplorationCardsToPlayer(Player $player,int $nb)
+  {
+    Game::get()->trace("drawExplorationCardsToPlayer($nb)");
+    $cards = Cards::pickForLocation($nb, CARD_LOCATION_EXP_DECK,CARD_LOCATION_HAND,);
+    
+    foreach($cards as $card){
+      $card->setPId($player->getId());
+      $card->setLocation(CARD_LOCATION_HAND);
+    }
+     
+    Notifications::giveExplorationCardsToPlayer($player,$cards);
+    return $cards;
   }
    
   ///////////////////////////////////////////////////////////////////////////////////////

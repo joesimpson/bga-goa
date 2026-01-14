@@ -27,6 +27,7 @@ const TILE_SUBTTYPE_MARKET = 2;
 const MARKET_GRID_SIZE = 5;
 
 const CARD_LOCATION_EXP_DISCARD = '1_discard';
+const CARD_LOCATION_HAND = 'hand';
 
 const TILE_LOCATION_BOARD_MARKET = 'market';
 const TILE_LOCATION_BOARD_OUTPOST = 'board_c';
@@ -151,6 +152,7 @@ export class Game {
                             </div>
                         </div>
                     </div>
+                    <div id="goa_exploration_hand-${player.id}" class="exploration_hand"></div>
                 </div>
             `);
             
@@ -172,33 +174,6 @@ export class Game {
         // TODO: Set up your game interface here, according to "gamedatas"
         
         // create a card manager
-        this.explorationCardsManager = new BgaCards.Manager({
-            animationManager: this.animationManager,
-            type: 'goa_exploration_card',
-            getId: (card) => card.id,
-            setupFrontDiv: (card, div) => {
-                div.dataset.type = card.type; 
-                this.bga.gameui.addTooltipHtml(div.id, `TODO JSA tooltip of ${card.type}`);
-            },
-            cardWidth: 131,
-            cardHeight: 200,
-        });
-        this.explorationDeck = new BgaCards.Deck(this.explorationCardsManager, document.getElementById('goa_exploration_deck'), {
-            cardNumber: this.gamedatas.deck_size.exploration,
-            counter: {
-                position: 'center',
-                extraClasses: 'text-shadow',
-            },
-        });
-        this.explorationDiscard = new BgaCards.DiscardDeck(this.explorationCardsManager, document.getElementById('goa_exploration_discard'), {
-            shift: '0px',
-            verticalShift: '0px',
-            horizontalShift: '0px',
-            maxHorizontalShift : 0,
-            counter: {
-                hideWhenEmpty: true,
-            }, 
-        });
         this.outpostsTilesManager = new BgaCards.Manager({
             animationManager: this.animationManager,
             type: 'goa_outpost',
@@ -465,6 +440,12 @@ export class Game {
         console.log("notif_drawAndDiscardExploration",notif);
         this.discardExCard(notif.card);
     }
+    async notif_giveExplorationCardsToPlayer(notif) {
+        console.log("notif_giveExplorationCardsToPlayer",notif);
+
+
+        this.explorationHand.addCards(notif.cards, { fromStock: this.explorationDeck});
+    }
 
     ////////////////////////////////////////////////////////
     //  _____ _ _
@@ -675,6 +656,41 @@ export class Game {
             this.destroy(pCard);
         });
         
+        this.explorationCardsManager = new BgaCards.Manager({
+            animationManager: this.animationManager,
+            type: 'goa_exploration_card',
+            getId: (card) => card.id,
+            setupFrontDiv: (card, div) => {
+                div.dataset.type = card.type; 
+                this.bga.gameui.addTooltipHtml(div.id, `TODO JSA tooltip of ${card.type}`);
+            },
+            cardWidth: 131,
+            cardHeight: 200,
+        });
+        this.explorationDeck = new BgaCards.Deck(this.explorationCardsManager, document.getElementById('goa_exploration_deck'), {
+            cardNumber: this.gamedatas.deck_size.exploration,
+            counter: {
+                position: 'center',
+                extraClasses: 'text-shadow',
+            },
+        });
+        this.explorationDiscard = new BgaCards.DiscardDeck(this.explorationCardsManager, document.getElementById('goa_exploration_discard'), {
+            shift: '0px',
+            verticalShift: '0px',
+            horizontalShift: '0px',
+            maxHorizontalShift : 0,
+            counter: {
+                hideWhenEmpty: true,
+            }, 
+        });
+        
+        let currentPlayer = this.bga.players.getCurrentPlayer();
+        if (currentPlayer) {
+            this.explorationHand = new BgaCards.HandStock(this.explorationCardsManager, document.getElementById(`goa_exploration_hand-${currentPlayer.id}`), {
+                sort: BgaCards.sort('type'),
+            });
+        }
+        
         let cardIds = this.gamedatas.cards.map((card) => {
             this.addCard(card);
             return card.id;
@@ -686,9 +702,12 @@ export class Game {
             if (card.location == (CARD_LOCATION_EXP_DISCARD) ) {
                 return `goa_exploration_discard`;
             }
+            if (card.location == (CARD_LOCATION_HAND) ) {
+                return `goa_exploration_hand`;
+            }
         }
         
-        console.error('Trying to get container of a tile', tile);
+        console.error('Trying to get container of a card', card);
         return 'goa_game_container';
     }
     
@@ -701,6 +720,9 @@ export class Game {
             if(container == `goa_exploration_discard`){
                 //use bga-cards stock
                 this.explorationDiscard.addCard(card);
+            } else if(container.startsWith(`goa_exploration_hand`)){
+                //use bga-cards stock
+                this.explorationHand.addCard(card);
             }
             else {//manual add
                 document.getElementById(container).insertAdjacentHTML('beforeend', this.tplCard(card));

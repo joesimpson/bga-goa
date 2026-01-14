@@ -225,6 +225,12 @@ trait DebugTrait
         $card = Cards::pickOneForLocation(CARD_LOCATION_EXP_DECK,CARD_LOCATION_EXP_DISCARD,);
         Notifications::drawAndDiscardExploration($player_id, $card);
     }
+    function debug_HandExplo(int $size = 1){
+        $player = Players::getCurrent();
+
+        Cards::drawExplorationCardsToPlayer($player, $size);
+       
+    }
     ////////////////////////////////////////////////////
 
 }

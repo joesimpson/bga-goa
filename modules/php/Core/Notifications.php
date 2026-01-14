@@ -3,6 +3,7 @@
 namespace Bga\Games\Goa\Core;
 
 use Bga\Games\Goa\Game;
+use Bga\Games\Goa\Helpers\Collection;
 use Bga\Games\Goa\Models\Card;
 use Bga\Games\Goa\Models\ExplorationCard;
 use Bga\Games\Goa\Models\Player;
@@ -32,6 +33,14 @@ class Notifications
         "card_id" => $card->getId(),
         "card_icon" => '',
         'preserve'=>['card'],
+    ]);
+  }
+  public static function giveExplorationCardsToPlayer(Player $player, Collection $cards)
+  {
+    self::notifyAll("giveExplorationCardsToPlayer", clienttranslate('${player_name} draws ${n} exploration cards'), [
+        "player" => $player,
+        "cards" => $cards->ui(),
+        "n" => $cards->count(),
     ]);
   }
   
