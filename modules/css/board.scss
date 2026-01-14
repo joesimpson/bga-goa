@@ -407,8 +407,32 @@ $playerboard_img_height: calc(1 * 796px);
                     }
                 }
             }
-            .goa_player_tiles{
-                //TODO
+
+            .goa_player_outposts{
+                position: absolute;
+                left: 174px;
+                top: 253px;
+                width: 468px;
+                height: 111px;
+
+                //for debug
+                //outline: 5px solid red;
+
+                .goa_tile{
+                    position: absolute;
+                    &[data-colony="1"] {
+                        left: 1px;
+                    }
+                    &[data-colony="2"] {
+                        left: 120px;
+                    }
+                    &[data-colony="3"] {
+                        left: 240px;
+                    }
+                    &[data-colony="4"] {
+                        left: 359px;
+                    }
+                }
             }
 
         }

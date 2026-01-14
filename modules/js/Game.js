@@ -31,6 +31,7 @@ const CARD_LOCATION_HAND = 'hand';
 
 const TILE_LOCATION_BOARD_MARKET = 'market';
 const TILE_LOCATION_BOARD_OUTPOST = 'board_c';
+const TILE_LOCATION_PLAYER_BOARD = 'p_board';
 
 const TOKEN_LOCATION_BOARD = 'board';
 const TOKEN_LOCATION_PLAYER_BOARD = 'p_board';
@@ -202,7 +203,8 @@ export class Game {
                         <div class='goa_playerboard_container'>
                             <div class="goa_playerboard">
                                 <div class="goa_playerboard_background"></div>
-                                <div id="goa_player_tiles-${player.id}" class="goa_player_tiles"></div>
+                                <div id="goa_player_plantations-${player.id}" class="goa_player_plantations"></div>
+                                <div id="goa_player_outposts-${player.id}" class="goa_player_outposts"></div>
                                 <div id="goa_player_auction_markers-${player.id}" class="goa_player_auction_markers">
                                 </div>
                                 <div id="goa_player_progress_tracks-${player.id}" class="goa_player_progress_tracks">
@@ -578,6 +580,9 @@ export class Game {
         if(tile.subtype == TILE_SUBTTYPE_OUTPOST){
             if (tile.location.startsWith(TILE_LOCATION_BOARD_OUTPOST) ) {
                 return `goa_board_outposts_${tile.colony}`;
+            }
+            if (tile.location == (TILE_LOCATION_PLAYER_BOARD) ) {
+                return `goa_player_outposts-${tile.pId}`;
             }
         }
         

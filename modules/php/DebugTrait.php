@@ -242,6 +242,28 @@ trait DebugTrait
         $player->setCompasses($compasses);
         Game::get()->notify->player($player_id,'reloadPage', "/!\ : Refresh page to see game has restarted...", []);
     }
+
+    function debug_playerTiles(){
+        $player_id = Players::getCurrent()->getId();
+
+        $tile = Tiles::getTopOf(TILE_LOCATION_BOARD_OUTPOSTS[COLONY_KOLLAM]);
+        $tile->setLocation(TILE_LOCATION_PLAYER_BOARD);
+        $tile->setPId($player_id);
+        
+        $tile = Tiles::getTopOf(TILE_LOCATION_BOARD_OUTPOSTS[COLONY_KOCHI]);
+        $tile->setLocation(TILE_LOCATION_PLAYER_BOARD);
+        $tile->setPId($player_id);
+        
+        $tile = Tiles::getTopOf(TILE_LOCATION_BOARD_OUTPOSTS[COLONY_MADRAS]);
+        $tile->setLocation(TILE_LOCATION_PLAYER_BOARD);
+        $tile->setPId($player_id);
+        
+        $tile = Tiles::getTopOf(TILE_LOCATION_BOARD_OUTPOSTS[COLONY_KOZHIKODE]);
+        $tile->setLocation(TILE_LOCATION_PLAYER_BOARD);
+        $tile->setPId($player_id);
+
+        Game::get()->notify->player($player_id,'reloadPage', "/!\ : Refresh page to see game has restarted...", []);
+    }
     ////////////////////////////////////////////////////
 
 }
