@@ -164,9 +164,11 @@ const TOKEN_TYPE_PROGRESS_MARKERS = [
 /////////////////////////////////////////////////////////
 //          GAME STATES
 /////////////////////////////////////////////////////////  
-const ST_START_CARD = 2;
 
-const ST_NEXT_TURN = 9;
+const ST_NEW_SESSION = 4;
+const ST_NEW_ROUND = 5;
+const ST_NEW_TURN = 6;
+const ST_NEXT_PLAYER = 9;
 const ST_PLAYER_TURN = 10;
 
 

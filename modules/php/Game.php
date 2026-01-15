@@ -20,7 +20,6 @@ namespace Bga\Games\Goa;
 
 require_once 'constants.inc.php';
 
-use Bga\Games\Goa\States\PlayerTurn;
 use Bga\GameFramework\Components\Counters\PlayerCounter;
 use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Core\Stats;
@@ -28,7 +27,7 @@ use Bga\Games\Goa\Managers\Cards;
 use Bga\Games\Goa\Managers\Players;
 use Bga\Games\Goa\Managers\Tiles;
 use Bga\Games\Goa\Managers\Tokens;
-use Bga\Games\Goa\States\NextPlayer;
+use Bga\Games\Goa\States\NewSession;
 
 class Game extends \Bga\GameFramework\Table
 {
@@ -152,6 +151,7 @@ class Game extends \Bga\GameFramework\Table
 
         $result["turn"] = Globals::getTurn();
         $result["round"] = Globals::getRound();
+        $result["session"] = Globals::getSession();
         $result["players"] = Players::getUiData($current_player_id);
         $result["cards"] = Cards::getUiData($current_player_id);
         $result["deck_size"] =[
@@ -221,7 +221,7 @@ class Game extends \Bga\GameFramework\Table
         // Init global values with their initial values.
         $this->setGameStateInitialValue('logging', 1); 
 
-        return NextPlayer::class;
+        return NewSession::class;
     }
 
 }

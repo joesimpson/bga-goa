@@ -113,7 +113,7 @@ export class Game {
         this.bga.states.register('PlayerTurn', this.playerTurn);
 
         // Uncomment the next line to show debug informations about state changes in the console. Remove before going to production!
-        // this.bga.states.logger = console.log;
+        this.bga.states.logger = console.log;
             
         // Here, you can init the global variables of your user interface
         // Example:
@@ -481,6 +481,15 @@ export class Game {
     notif_reloadPage(notif) {
         window.location.reload(true);
     }
+    //For debugging :
+    //notif_statesDiagram(notif) {
+    //    console.log("notif_statesDiagram",notif);
+    //    this.myDialogStatesDiagram = new ebg.popindialog();
+    //    this.myDialogStatesDiagram.create( 'myDialogStatesDiagram' );
+    //    this.myDialogStatesDiagram.setTitle( ("States Diagram") );
+    //    this.myDialogStatesDiagram.setContent( notif.diag );
+    //    this.myDialogStatesDiagram.show();
+    //}
     
     async notif_drawAndDiscardExploration(notif) {
         console.log("notif_drawAndDiscardExploration",notif);

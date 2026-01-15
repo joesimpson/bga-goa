@@ -4,7 +4,6 @@ namespace Bga\Games\Goa\Core;
 
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Collection;
-use Bga\Games\Goa\Models\Card;
 use Bga\Games\Goa\Models\ExplorationCard;
 use Bga\Games\Goa\Models\Player;
 use Bga\Games\Goa\Models\Tile;
@@ -13,6 +12,33 @@ use Bga\Games\Goa\Models\Token;
 class Notifications
 { 
   
+  public static function newSession(int $session)
+  {
+    $msg = clienttranslate('Session ${n} begins');
+
+    self::notifyAll('newSession', $msg, [
+      'n' => $session,
+    ]);
+  }
+
+  public static function newRound(int $round)
+  {
+    $msg = clienttranslate('Round ${n} begins');
+
+    self::notifyAll('newRound', $msg, [
+      'n' => $round,
+    ]);
+  }
+
+  public static function newTurn(int $turn)
+  {
+    $msg = clienttranslate('Actions turn ${n} begins');
+
+    self::notifyAll('newTurn', $msg, [
+      'n' => $turn,
+    ]);
+  }
+
   /**
    */
   public static function cardPlayed(int $playerId, string $card_name, int $card_id)

@@ -16,6 +16,8 @@ class Globals extends \Bga\Games\Goa\Helpers\DB_Manager
 
   protected static $initialized = false;
   protected static $variables = [
+    //session for campaign of multiple sessions
+    'session' => 'int',
     'round' => 'int',
     'turn' => 'int',
     'firstPlayer' => 'int',
@@ -30,6 +32,7 @@ class Globals extends \Bga\Games\Goa\Helpers\DB_Manager
   public static function setupNewGame($players, $options)
   {
 
+    self::setSession(0);
     self::setRound(0);
     self::setTurn(0);
 

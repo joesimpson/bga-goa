@@ -5,6 +5,7 @@ use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Core\Stats;
 use Bga\Games\Goa\Helpers\Log;
+use Bga\Games\Goa\Helpers\QueryBuilder;
 use Bga\Games\Goa\Managers\Cards;
 use Bga\Games\Goa\Managers\Players;
 use Bga\Games\Goa\Managers\Tiles;
@@ -17,7 +18,9 @@ trait DebugTrait
 {
     
     ////////////////////////////////////////////////////
-
+    /** 
+     * RESET ALL GAME DATAS in order to restart the game without recreating a new table spoiling server space etc...
+    */
     function debug_ReSetup(bool $option1 = true,bool $option2 = true,){
         Game::get()->trace("debug_ReSetup - START ////////////////////////////////////////////////////");
         $players = self::loadPlayersBasicInfos();
@@ -32,7 +35,8 @@ trait DebugTrait
         Game::get()->initGameStateLabels([
             'logging' => 10,
         ]);
-        
+
+        $this->debug_ClearLogs();
         Log::disable();
 
         //CLEAR DATAS
@@ -65,7 +69,7 @@ trait DebugTrait
         Log::enable();
 
         $players = self::loadPlayersBasicInfos(); 
-        Game::get()->gamestate->jumpToState(ST_NEXT_TURN);//first state 
+        Game::get()->gamestate->jumpToState(ST_NEW_SESSION);//first state 
         
         //$this->notify->all('reloadPage', "/!\ : Refresh page to see game has restarted...", []);
         Game::get()->notify->player($player->getId(),'reloadPage', "/!\ : Refresh page to see game has restarted...", []);
@@ -90,18 +94,6 @@ trait DebugTrait
     public function debug_playOneMove() {
         $this->debug->playUntil(fn(int $count) => $count == 1);
     }
-
-    /*
-    Another example of debug function, to easily create situations you want to test.
-    Here, put a card you want to test in your hand (assuming you use the Deck component).
-
-    public function debug_setCardInHand(int $cardType, int $playerId) {
-        $card = array_values($this->cards->getCardsOfType($cardType))[0];
-        $this->cards->moveCard($card['id'], 'hand', $playerId);
-    }
-    */
-
-
     
     ////////////////////////////////////////////////////
     function debug_changeRound(int $round = 1){
@@ -297,5 +289,12 @@ trait DebugTrait
         Game::get()->notify->player($player_id,'reloadPage', "/!\ : Refresh page to see game has restarted...", []);
     }
     ////////////////////////////////////////////////////
-
+        
+    //Clear logs
+    function debug_ClearLogs(){
+        $query = new QueryBuilder('gamelog', null, 'gamelog_packet_id');
+        $query->delete()->run();
+        $query = new QueryBuilder('log', null, 'id');
+        $query->delete()->run();
+    }
 }
