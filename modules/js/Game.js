@@ -330,6 +330,9 @@ export class Game {
 
         this.setupRoundMarker();
 
+        document.getElementById(`generalactions`).insertAdjacentHTML('afterend', "<div id='customActions' style='display:inline-block'></div>");
+        document.getElementById(`customActions`).insertAdjacentHTML('afterend', "<div id='restartActions' style='display:inline-block'></div>");
+
         // Setup game notifications to handle (see "setupNotifications" method below)
         this.setupNotifications();
 

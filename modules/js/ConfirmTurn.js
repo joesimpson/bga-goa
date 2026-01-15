@@ -21,12 +21,12 @@ export class ConfirmTurn {
             if (args && args.previousSteps) {
                 let lastStep = Math.max(...args.previousSteps);
                 if (lastStep > 0){
-                    this.bga.statusBar.addActionButton(_('Undo last step'), () => this.bga.actions.performAction("actUndoToStep",{ 'stepId': lastStep }), { color:'alert'}); 
+                    this.bga.statusBar.addActionButton(_('Undo last step'), () => this.bga.actions.performAction("actUndoToStep",{ 'stepId': lastStep }), { color:'alert', destination: document.getElementById('restartActions')}); 
                 }
             }
         }
         //TODO JSA PREF ICON BUTTON
-        this.bga.statusBar.addActionButton(_('Restart turn'), () => this.bga.actions.performAction("actRestart"), { color:'alert'}); 
+        this.bga.statusBar.addActionButton(_('Restart turn'), () => this.bga.actions.performAction("actRestart"), { color:'alert', destination: document.getElementById('restartActions')}); 
     }
 
     /**
