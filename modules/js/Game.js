@@ -42,6 +42,7 @@ const TOKEN_SUBTTYPE_AUCTION_MARKER = 2;
 const TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER = 3;
 const TOKEN_SUBTTYPE_SPICE = 4;
 
+import { ConfirmTurn } from "./ConfirmTurn.js";
 
 /**
  * We create one State class per declared state on the PHP side, to handle all state specific code here.
@@ -111,6 +112,8 @@ export class Game {
         // Declare the State classes
         this.playerTurn = new PlayerTurn(this, bga);
         this.bga.states.register('PlayerTurn', this.playerTurn);
+        this.confirmTurn = new ConfirmTurn(this, bga);
+        this.bga.states.register('ConfirmTurn', this.confirmTurn);
 
         // Uncomment the next line to show debug informations about state changes in the console. Remove before going to production!
         this.bga.states.logger = console.log;

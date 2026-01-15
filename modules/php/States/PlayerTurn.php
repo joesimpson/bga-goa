@@ -70,7 +70,7 @@ class PlayerTurn extends GameState
         $this->playerScore->inc($activePlayerId, 1);
 
         // at the end of the action, move to the next state
-        return NextPlayer::class;
+        return ConfirmTurn::class;
     }
 
     /**
@@ -82,6 +82,7 @@ class PlayerTurn extends GameState
     #[PossibleAction]
     public function actPass(int $activePlayerId)
     {
+        Log::addStep();
         // Notify all players about the choice to pass.
         $this->notify->all("pass", clienttranslate('${player_name} passes'), [
             "player_id" => $activePlayerId,
@@ -92,7 +93,7 @@ class PlayerTurn extends GameState
         $this->game->playerEnergy->inc($activePlayerId, 1);
 
         // at the end of the action, move to the next state
-        return NextPlayer::class;
+        return ConfirmTurn::class;
     }
 
     /**

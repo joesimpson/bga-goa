@@ -172,11 +172,13 @@ const ST_NEXT_PLAYER = 9;
 const ST_PLAYER_TURN = 10;
 
 
-const ST_CONFIRM_CHOICES = 70;
-const ST_CONFIRM_TURN = 71;
-const ST_END_TURN = 80;
+const ST_CONFIRM_TURN = 70;
+const ST_END_PLAYERTURN = 71;
 
-const ST_END_SCORING = 90;
-const ST_PRE_END_OF_GAME = 98;
+const ST_END_TURN = 80;
+const ST_END_ROUND = 81;
+const ST_END_SESSION = 82;
+
+const ST_END_SCORING = 98;
 const ST_END_GAME = 99;
  

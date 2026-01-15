@@ -37,13 +37,7 @@ class NewSession extends \Bga\GameFramework\States\GameState
         Notifications::newSession($session);
 
         // Go to another gamestate
-        $gameEnd = false; // TODO JSA game end condition
-        if ($gameEnd) {
-            Log::addCheckpoint(ST_END_SCORING);
-            return EndScore::class;
-        } else {
-            Log::addCheckpoint(ST_NEW_ROUND);
-            return NewRound::class;
-        }
+        Log::addCheckpoint(ST_NEW_ROUND);
+        return NewRound::class;
     }
 }

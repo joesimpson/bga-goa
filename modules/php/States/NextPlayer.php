@@ -38,13 +38,7 @@ class NextPlayer extends \Bga\GameFramework\States\GameState
         Players::setupNewTurn($player);
 
         // Go to another gamestate
-        $gameEnd = false; // Here, we would detect if the game is over to make the appropriate transition
-        if ($gameEnd) {
-            Log::addCheckpoint(ST_END_SCORING);
-            return EndScore::class;
-        } else {
-            Log::addCheckpoint(ST_PLAYER_TURN);
-            return PlayerTurn::class;
-        }
+        Log::addCheckpoint(ST_PLAYER_TURN);
+        return PlayerTurn::class;
     }
 }

@@ -1,0 +1,104 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Bga\Games\Goa\States;
+
+use Bga\GameFramework\StateType;
+use Bga\GameFramework\States\GameState;
+use Bga\GameFramework\States\PossibleAction;
+use Bga\GameFramework\UserException;
+use Bga\Games\Goa\Core\Globals;
+use Bga\Games\Goa\Core\Notifications;
+use Bga\Games\Goa\Exceptions\UnexpectedException;
+use Bga\Games\Goa\Game;
+use Bga\Games\Goa\Helpers\Log;
+use Bga\Games\Goa\Managers\Players;
+
+class ConfirmTurn extends GameState
+{
+    function __construct(
+        protected Game $game,
+    ) {
+        parent::__construct($game,
+            id: ST_CONFIRM_TURN,
+            type: StateType::ACTIVE_PLAYER,
+        );
+    }
+
+    /**
+     * Game state arguments
+     *
+     */
+    public function getArgs(): array
+    {
+        $data = [];
+        $this->addArgsForUndo($data);
+        return $data;
+    }    
+    
+    /**
+     * Update state args with some parameters used for canceling actions. To be called in each state args where we will want to cancel.
+     * 
+     */
+    public static function addArgsForUndo(&$args)
+    {
+        $args['previousSteps'] = Log::getUndoableSteps();
+        $args['previousChoices'] = Globals::getChoices();
+    }
+
+    public function stConfirmTurn()
+    {
+        $this->game->trace("stConfirmTurn()");
+        // TODO JSA AUTO CONFIRM TURN WITH users PREFS
+    }
+
+    /**
+     * Player action : Confirm ALL
+     *
+     */
+    #[PossibleAction]
+    public function actConfirmTurn()
+    {
+        return EndPlayerTurn::class;
+    }
+    
+    /**
+     * Player action : undo ALL
+     *
+     * @throws UnexpectedException
+     */
+    #[PossibleAction]
+    public function actRestart()
+    {
+        $player = Players::getCurrent();
+        $pId = $player->getId();
+        if (Globals::getChoices($pId) < 1) {
+            throw new UnexpectedException(404,'No choice to undo. You may need to reload the page.');
+        }
+        Log::undoTurn();
+        Notifications::restartTurn($player);
+    }
+    
+    /**
+     * Player action : undo 1 step
+     *
+     * @throws UnexpectedException
+     */
+    #[PossibleAction]
+    public function actUndoToStep(int $stepId,)
+    {
+        $player = Players::getCurrent();
+        $pId = $player->getId();
+        $steps = Log::getUndoableSteps($pId);
+        if(!in_array($stepId,$steps)){
+            throw new UnexpectedException(404,'This step is not undoable anymore. You may need to reload the page.');
+        }
+        Log::undoToStep($stepId);
+        Notifications::undoStep($player, $stepId);
+    }
+
+    function zombie(int $playerId) {
+        //TODO JSA ZOMBIE 
+    }
+}
