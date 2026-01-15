@@ -42,11 +42,78 @@ const TOKEN_SUBTTYPE_AUCTION_MARKER = 2;
 const TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER = 3;
 const TOKEN_SUBTTYPE_SPICE = 4;
 
+
+/**
+ * We create one State class per declared state on the PHP side, to handle all state specific code here.
+ * onEnteringState, onLeavingState and onPlayerActivationChange are predefined names that will be called by the framework.
+ * When executing code in this state, you can access the args using this.args
+ */
+class PlayerTurn {
+    constructor(game, bga) {
+        this.game = game;
+        this.bga = bga;
+    }
+
+    /**
+     * This method is called each time we are entering the game state. You can use this method to perform some user interface changes at this moment.
+     */
+    onEnteringState(args, isCurrentPlayerActive) {
+        this.bga.statusBar.setTitle(isCurrentPlayerActive ? 
+            _('${you} must play a card or pass') :
+            _('${actplayer} must play a card or pass')
+        );
+      
+        if (isCurrentPlayerActive) {
+            const playableCardsIds = args.playableCardsIds; // returned by the PlayerTurn::getArgs
+
+            // Add test action buttons in the action status bar, simulating a card click:
+            playableCardsIds.forEach(
+                cardId => this.bga.statusBar.addActionButton(_('Play card with id ${card_id}').replace('${card_id}', cardId), () => this.onCardClick(cardId))
+            ); 
+
+            this.bga.statusBar.addActionButton(_('Pass'), () => this.bga.actions.performAction("actPass"), { color: 'secondary' }); 
+        }
+    }
+
+    /**
+     * This method is called each time we are leaving the game state. You can use this method to perform some user interface changes at this moment.
+     */
+    onLeavingState(args, isCurrentPlayerActive) {
+    }
+
+    /**
+     * This method is called each time the current player becomes active or inactive in a MULTIPLE_ACTIVE_PLAYER state. You can use this method to perform some user interface changes at this moment.
+     * on MULTIPLE_ACTIVE_PLAYER states, you may want to call this function in onEnteringState using `this.onPlayerActivationChange(args, isCurrentPlayerActive)` at the end of onEnteringState.
+     * If your state is not a MULTIPLE_ACTIVE_PLAYER one, you can delete this function.
+     */
+    onPlayerActivationChange(args, isCurrentPlayerActive) {
+    }
+
+    
+    onCardClick(card_id) {
+        console.log( 'onCardClick', card_id );
+
+        this.bga.actions.performAction("actPlayCard", { 
+            card_id,
+        }).then(() =>  {                
+            // What to do after the server call if it succeeded
+            // (most of the time, nothing, as the game will react to notifs / change of state instead, so you can delete the `then`)
+        });        
+    }
+}
+
 export class Game {
     
     constructor(bga) {
         console.log('goa constructor');
         this.bga = bga;
+
+        // Declare the State classes
+        this.playerTurn = new PlayerTurn(this, bga);
+        this.bga.states.register('PlayerTurn', this.playerTurn);
+
+        // Uncomment the next line to show debug informations about state changes in the console. Remove before going to production!
+        // this.bga.states.logger = console.log;
             
         // Here, you can init the global variables of your user interface
         // Example:
@@ -268,82 +335,11 @@ export class Game {
     
 
     ///////////////////////////////////////////////////
-    //// Game & client states
-    
-    // onEnteringState: this method is called each time we are entering into a new game state.
-    //                  You can use this method to perform some user interface changes at this moment.
-    //
-    onEnteringState( stateName, args ) {
-        console.log( 'Entering state: '+stateName, args );
-        
-        switch( stateName ) {
-        
-        /* Example:
-        
-        case 'myGameState':
-        
-            // Show some HTML block at this game state
-            document.getElementById('my_html_block_id').style.display = 'block';
-            
-            break;
-        */
-        
-        
-        case 'dummy':
-            break;
-        }
-    }
-
-    // onLeavingState: this method is called each time we are leaving a game state.
-    //                 You can use this method to perform some user interface changes at this moment.
-    //
-    onLeavingState( stateName )
-    {
-        console.log( 'Leaving state: '+stateName );
-        
-        switch( stateName ) {
-        
-        /* Example:
-        
-        case 'myGameState':
-        
-            // Hide the HTML block we are displaying only during this game state
-            document.getElementById('my_html_block_id').style.display = 'none';
-            
-            break;
-        */
-        
-        
-        case 'dummy':
-            break;
-        }               
-    }
-
-    // onUpdateActionButtons: in this method you can manage "action buttons" that are displayed in the
-    //                        action status bar (ie: the HTML links in the status bar).
-    //        
-    onUpdateActionButtons( stateName, args ) {
-        console.log( 'onUpdateActionButtons: '+stateName, args );
-                    
-        if (this.bga.gameui.isCurrentPlayerActive()) {            
-            switch( stateName ) {
-                case 'PlayerTurn':    
-                const playableCardsIds = args.playableCardsIds; // returned by the argPlayerTurn
-
-                // Add test action buttons in the action status bar, simulating a card click:
-                playableCardsIds.forEach(
-                    cardId => this.bga.statusBar.addActionButton(_('Play card with id ${card_id}').replace('${card_id}', cardId), () => this.onCardClick(cardId))
-                ); 
-
-                this.bga.statusBar.addActionButton(_('Pass'), () => this.bga.actions.performAction("actPass"), { color: 'secondary' }); 
-                break;
-            }
-        }
-    }
-
-    ///////////////////////////////////////////////////
     //// Utility methods
-
+    /*
+        Here, you can defines some utility methods that you can use everywhere in your javascript
+        script. Typically, functions that are used in multiple state classes or outside a state class.
+    */
     coloredPlayerName(name, specifiedColor = null) {
       const player = Object.values(this.gamedatas.players).find((player) => player.name == name);
       if (player == undefined) return `<!--PNS--><span class="playername playername_wrapper_${specifiedColor}">${name}</span><!--PNE-->`;
@@ -448,34 +444,6 @@ export class Game {
         this._counters[player_id][resourceName] = counter;
     }
 
-    ///////////////////////////////////////////////////
-    //// Player's action
-    
-    /*
-    
-        Here, you are defining methods to handle player's action (ex: results of mouse click on 
-        game objects).
-        
-        Most of the time, these methods:
-        _ check the action is possible at this game state.
-        _ make a call to the game server
-    
-    */
-    
-    // Example:
-    
-    onCardClick( card_id ) {
-        console.log( 'onCardClick', card_id );
-
-        this.bga.actions.performAction("actPlayCard", { 
-            card_id,
-        }).then(() =>  {                
-            // What to do after the server call if it succeeded
-            // (most of the time, nothing, as the game will react to notifs / change of state instead)
-        });        
-    }
-
-    
     ///////////////////////////////////////////////////
     //// Reaction to cometD notifications
 
