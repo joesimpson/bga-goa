@@ -21,6 +21,8 @@
 @use "modules/css/cards.scss";
 @use "modules/css/tiles.scss";
 @use "modules/css/playerpanel.scss";
+@use "modules/css/ext/bga-help.css";
+@use "modules/css/ext/bga-zoom.css";
 
 #goa_game_container{
     display: flex;

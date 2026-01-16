@@ -17,6 +17,10 @@
 
 const BgaAnimations = await importEsmLib('bga-animations', '1.x');
 const BgaCards = await importEsmLib('bga-cards', '1.x');
+const [BgaHelp,BgaZoom] = await globalThis.importDojoLibs([g_gamethemeurl + "modules/js/ext/bga-help.js", g_gamethemeurl + "modules/js/ext/bga-zoom.js"]);
+
+//import * as bgz from "./ext/bga-zoom.js";
+//import * as bgh from "./ext/bga-help.js";
 
 //Used Constants copied from PHP file
 const CARD_SUBTTYPE_EXPLORATION = 1;
@@ -118,7 +122,7 @@ export class Game {
 
         // Uncomment the next line to show debug informations about state changes in the console. Remove before going to production!
         this.bga.states.logger = console.log;
-            
+
         // Here, you can init the global variables of your user interface
         // Example:
         // this.myGlobalValue = 0;
@@ -333,6 +337,24 @@ export class Game {
 
         document.getElementById(`generalactions`).insertAdjacentHTML('afterend', "<div id='customActions' style='display:inline-block'></div>");
         document.getElementById(`customActions`).insertAdjacentHTML('afterend', "<div id='restartActions' style='display:inline-block'></div>");
+
+        this.zoomManager = new ZoomManager({
+            element: document.getElementById('goa_game_container'),
+            localStorageZoomKey: 'goa-zoom',
+            zoomControls: {
+                color: 'white',
+            },
+        });
+        this.helpManager = new HelpManager(this.gamegui, {
+            buttons: [
+                new BgaHelpPopinButton({
+                    title: _("Player aid"),
+                    html: `<div id='goa_resources_help_popin'>
+                        TODO JSA HELP
+                    </div>`,
+                })
+            ],
+        });
 
         // Setup game notifications to handle (see "setupNotifications" method below)
         this.setupNotifications();
