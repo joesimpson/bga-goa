@@ -227,7 +227,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
       21 => $f([ 0, 1, MARKET_TYPE_PLANTATION, [ SPICE_PINK,   SPICE_PINK,   SPICE_PINK,   ], [], 0, ]),  
 
       
-      23 => $f([ 1, 2, MARKET_TYPE_ACTION_DIRECT, [], [ACTION_CONTRACT => 1, ACTION_SHIP => 1, ACTION_COMPASS => 1,  ], 0, ]),
+      23 => $f([ 1, 2, MARKET_TYPE_ACTION_DIRECT, [], [ACTION_CONTRACT => 1,  ACTION_COMPASS => 1, ACTION_SHIP => 1, ], 0, ]),
       24 => $f([ 1, 1, MARKET_TYPE_ACTION_DIRECT, [], [ACTION_CONTRACT => 4, ], 0, ]),
       25 => $f([ 1, 1, MARKET_TYPE_ACTION_DIRECT, [], [ACTION_SHIP => 4, ], 0, ]),
       26 => $f([ 2, 2, MARKET_TYPE_ACTION_DIRECT, [], [ACTION_SHIPS_OR_CONTRACTS => 3, ], 0, ]),

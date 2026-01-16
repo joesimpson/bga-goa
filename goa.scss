@@ -103,11 +103,32 @@ body.lockedInterface{
 // ------------------------------------------------------------------------------
 
 
+// tooltips
+
+.tundra #dijit__MasterTooltip_0.dijitTooltip  .dijitTooltipContainer {
+    box-shadow: 0px 6px 13px -7px black !important;
+    border-radius: 6px !important;
+    border: 0 !important;
+    background: #dab57d !important;
+    color: black;
+}
+.goa_tile_tooltip .goa_icon_container{
+    display: inline-block;
+}
+/* bga-help  -------------------------------------- */
+.bga-help_button{
+    box-shadow: 0px 0px 5px 5px rgb(243,156,18);
+}
+#goa_first_help_popin{
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
 
 // ------------------------------------------------------------------------------
 // ------------------------------------------------------------------------------
 // Re enable list style over BGA common CSS, only for wanted section : game WIKI and some tooltips 
-#pagesection_howtoplay li, .midSizeDialog li { margin-left: 2em; } 
+#pagesection_howtoplay li, .midSizeDialog li, .standard_popin li{ margin-left: 2em; } 
 #pagesection_howtoplay ol li { list-style: decimal; } /* BEFORE ul in case there are ul under ol */ 
-#pagesection_howtoplay ul li, .midSizeDialog ul li { list-style: disc; }
+#pagesection_howtoplay ul li, .midSizeDialog ul li, .standard_popin ul li { list-style: disc; }
 // ------------------------------------------------------------------------------

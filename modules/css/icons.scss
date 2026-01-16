@@ -7,27 +7,28 @@
 
 $spice_width: 29px;
 $spice_height: 30px;
-.goa_icon_spices_white{
+.goa_icon_spices_white, .goa_icon_spices_1{
     position: relative;
     @include goa_icons_sprite(473px,0px,$spice_width,$spice_height,113px,119px);
 }
-.goa_icon_spices_black{
+.goa_icon_spices_black, .goa_icon_spices_2{
     position: relative;
     @include goa_icons_sprite(590px,0px,$spice_width,$spice_height,113px,119px);
 }
-.goa_icon_spices_yellow{
+.goa_icon_spices_yellow, .goa_icon_spices_3{
     position: relative;
     @include goa_icons_sprite(707px,0px,$spice_width,$spice_height,113px,119px);
 }
-.goa_icon_spices_pink{
+.goa_icon_spices_pink, .goa_icon_spices_4{
     position: relative;
     @include goa_icons_sprite(824px,0px,$spice_width,$spice_height,113px,119px);
 }
-.goa_icon_spices_green{
+.goa_icon_spices_green, .goa_icon_spices_5{
     position: relative;
     @include goa_icons_sprite(940px,0px,$spice_width,$spice_height,113px,119px);
 }
 
+.goa_icon_exploration_card,
 .goa_icon_exploration_hand_size{
     position: relative;
     width: 26px;
@@ -39,6 +40,11 @@ $spice_height: 30px;
     background-image: url("img/exp_cards.jpg");
     background-position-x: 0%;
     background-position-y: 0%;
+
+    &.goa_icon_exploration_card{
+        //width: 52px;
+        //height: 80px;
+    }
 }
 
 .goa_icon_money,

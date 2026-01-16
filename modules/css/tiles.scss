@@ -96,3 +96,88 @@
         } 
     }
 }
+
+// ------------------------------------------------------------------------------
+// tooltips : 
+// ------------------------------------------------------------------------------
+
+.goa_tile_tooltip{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: black;
+    
+    hr{
+        width: 99%;
+    }
+    .goa_tooltip_block1{
+        width: 500px;
+    }
+    .goa_tooltip_block1, 
+    .goa_tooltip_block2{
+        display: flex;
+        flex-direction: column;
+    }
+    .goa_tile_title, .goa_tile_img_wrap {
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+    .goa_tile_img_wrap{
+        margin-bottom: 5px !important; 
+        .goa_tile  {
+            //if we want a different size in tooltip
+            width: 150px;
+            height: 150px;
+        } 
+    }
+    .goa_tile_text_action{
+        font-size: 1.5em;
+        //display: flex;
+        //flex-direction: column;
+    }
+}
+
+.goa_marketTilesHelp hr,
+.goa_tile_tooltip hr {
+    color: black !important;
+    border-style: solid;
+}
+
+.goa_marketTilesHelp {
+    border: 1px solid;
+    width: max-content;
+    background-color: #dab57d;
+    color: black;
+    .goa_marketTilesHelp_title{
+        font-size: 130%;
+        margin-left: 50px;
+    }
+    .goa_tile_title{
+        font-size: 1.5em;
+    }
+    .goa_tile_text_action{
+        font-size: 1em;
+    }
+    .goa_tile_img_wrap{
+        order: 1;
+        margin-right: 2px;
+    }
+    .goa_tooltip_block2 {
+        flex-direction: row;
+        width: max-content;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+    .goa_tile_text{
+        width: 350px;
+        order: 2;
+        .goa_tile_text_playType{
+            font-size: 0.75em;
+        }
+    }
+}
+
+  

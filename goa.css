@@ -513,7 +513,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-size: 606.0606060606% 170.9844559585%;
 }
 
-.goa_icon_spices_white {
+.goa_icon_spices_white, .goa_icon_spices_1 {
   position: relative;
   width: 29px;
   height: 30px;
@@ -523,7 +523,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-size: 1061.9469026549% 277.3109243697%;
 }
 
-.goa_icon_spices_black {
+.goa_icon_spices_black, .goa_icon_spices_2 {
   position: relative;
   width: 29px;
   height: 30px;
@@ -533,7 +533,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-size: 1061.9469026549% 277.3109243697%;
 }
 
-.goa_icon_spices_yellow {
+.goa_icon_spices_yellow, .goa_icon_spices_3 {
   position: relative;
   width: 29px;
   height: 30px;
@@ -543,7 +543,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-size: 1061.9469026549% 277.3109243697%;
 }
 
-.goa_icon_spices_pink {
+.goa_icon_spices_pink, .goa_icon_spices_4 {
   position: relative;
   width: 29px;
   height: 30px;
@@ -553,7 +553,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-size: 1061.9469026549% 277.3109243697%;
 }
 
-.goa_icon_spices_green {
+.goa_icon_spices_green, .goa_icon_spices_5 {
   position: relative;
   width: 29px;
   height: 30px;
@@ -563,6 +563,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-size: 1061.9469026549% 277.3109243697%;
 }
 
+.goa_icon_exploration_card,
 .goa_icon_exploration_hand_size {
   position: relative;
   width: 26px;
@@ -574,7 +575,6 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-position-x: 0%;
   background-position-y: 0%;
 }
-
 .goa_icon_money,
 .goa_icon_ships,
 .goa_icon_contracts,
@@ -1237,6 +1237,83 @@ Icon extract in sprite with differents layers size (so % is not useful).
   top: 53px;
 }
 
+.goa_tile_tooltip {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: black;
+}
+.goa_tile_tooltip hr {
+  width: 99%;
+}
+.goa_tile_tooltip .goa_tooltip_block1 {
+  width: 500px;
+}
+.goa_tile_tooltip .goa_tooltip_block1,
+.goa_tile_tooltip .goa_tooltip_block2 {
+  display: flex;
+  flex-direction: column;
+}
+.goa_tile_tooltip .goa_tile_title, .goa_tile_tooltip .goa_tile_img_wrap {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.goa_tile_tooltip .goa_tile_img_wrap {
+  margin-bottom: 5px !important;
+}
+.goa_tile_tooltip .goa_tile_img_wrap .goa_tile {
+  width: 150px;
+  height: 150px;
+}
+.goa_tile_tooltip .goa_tile_text_action {
+  font-size: 1.5em;
+}
+
+.goa_marketTilesHelp hr,
+.goa_tile_tooltip hr {
+  color: black !important;
+  border-style: solid;
+}
+
+.goa_marketTilesHelp {
+  border: 1px solid;
+  width: -moz-max-content;
+  width: max-content;
+  background-color: #dab57d;
+  color: black;
+}
+.goa_marketTilesHelp .goa_marketTilesHelp_title {
+  font-size: 130%;
+  margin-left: 50px;
+}
+.goa_marketTilesHelp .goa_tile_title {
+  font-size: 1.5em;
+}
+.goa_marketTilesHelp .goa_tile_text_action {
+  font-size: 1em;
+}
+.goa_marketTilesHelp .goa_tile_img_wrap {
+  order: 1;
+  margin-right: 2px;
+}
+.goa_marketTilesHelp .goa_tooltip_block2 {
+  flex-direction: row;
+  width: -moz-max-content;
+  width: max-content;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.goa_marketTilesHelp .goa_tile_text {
+  width: 350px;
+  order: 2;
+}
+.goa_marketTilesHelp .goa_tile_text .goa_tile_text_playType {
+  font-size: 0.75em;
+}
+
 .player_board_inner > .player-name {
   /** Add a BLACK shadow behind player name in case of bright colors like yellow*/
   /** Add a WHITE shadow*/
@@ -1290,6 +1367,10 @@ Icon extract in sprite with differents layers size (so % is not useful).
   margin: 0 0.1em;
 }
 
+/*
+https://github.com/thoun/bga-help/blob/main/bga-help.css
+16 jan 2026
+*/
 #bga-help_buttons {
   position: fixed;
   bottom: 12px;
@@ -1495,13 +1576,36 @@ body.lockedInterface #restartActions {
   text-shadow: 2px 0px 2px black, 0px 2px 2px black, -2px 0px 2px black, 0px -2px 2px black;
 }
 
-#pagesection_howtoplay li, .midSizeDialog li {
+.tundra #dijit__MasterTooltip_0.dijitTooltip .dijitTooltipContainer {
+  box-shadow: 0px 6px 13px -7px black !important;
+  border-radius: 6px !important;
+  border: 0 !important;
+  background: #dab57d !important;
+  color: black;
+}
+
+.goa_tile_tooltip .goa_icon_container {
+  display: inline-block;
+}
+
+/* bga-help  -------------------------------------- */
+.bga-help_button {
+  box-shadow: 0px 0px 5px 5px rgb(243, 156, 18);
+}
+
+#goa_first_help_popin {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+#pagesection_howtoplay li, .midSizeDialog li, .standard_popin li {
   margin-left: 2em;
 }
 
 #pagesection_howtoplay ol li {
   list-style: decimal;
 } /* BEFORE ul in case there are ul under ol */
-#pagesection_howtoplay ul li, .midSizeDialog ul li {
+#pagesection_howtoplay ul li, .midSizeDialog ul li, .standard_popin ul li {
   list-style: disc;
 }

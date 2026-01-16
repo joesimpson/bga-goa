@@ -158,6 +158,12 @@ class Game extends \Bga\GameFramework\Table
             'exploration' =>  Cards::countInExplorationDeck(),
         ];
         $result["tiles"] = Tiles::getUiData($current_player_id);
+        $result["material"] = [
+            'tiles' => [
+                TILE_SUBTTYPE_OUTPOST => Tiles::getOutpostTilesTypes(),
+                TILE_SUBTTYPE_MARKET => Tiles::getMarketTilesTypes(),
+            ],
+        ];
         $result["tokens"] = Tokens::getUiData($current_player_id);
 
         $this->playerEnergy->fillResult($result);

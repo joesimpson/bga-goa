@@ -28,7 +28,29 @@ const CARD_SUBTTYPE_EXPLORATION = 1;
 const TILE_SUBTTYPE_OUTPOST = 1;
 const TILE_SUBTTYPE_MARKET = 2;
 
+
+const ACTION_MONEY               = 1;
+const ACTION_CONTRACT            = 2;
+const ACTION_SHIP                = 3;
+const ACTION_COMPASS             = 4;
+const ACTION_EXPLORATION         = 5;
+const ACTION_SHIPS_OR_CONTRACTS  = 6;
+const ACTION_SPICE               = 7;
+const ACTION_FAVOR               = 8;
+const ACTION_SWAP                = 9;
+const ACTION_RESUPPLY            = 10;
+const ACTION_HARVEST             = 11;
+const ACTION_ESPIONAGE           = 12;
+const ACTION_VICEKING            = 13;
+
 const MARKET_GRID_SIZE = 5;
+
+const MARKET_TYPE_PLANTATION      = 1;
+const MARKET_TYPE_ACTION_REUSEABLE = 2;
+const MARKET_TYPE_RESOURCES       = 3;
+const MARKET_TYPE_ACTION_DIRECT   = 4;
+const MARKET_TYPE_ACTION_ONCE     = 5;
+const MARKET_TYPE_SCORING         = 6;
 
 const CARD_LOCATION_EXP_DISCARD = '1_discard';
 const CARD_LOCATION_HAND = 'hand';
@@ -349,8 +371,8 @@ export class Game {
             buttons: [
                 new BgaHelpPopinButton({
                     title: _("Player aid"),
-                    html: `<div id='goa_resources_help_popin'>
-                        TODO JSA HELP
+                    html: `<div id='goa_first_help_popin'>
+                        ${this.formatTilesHelp()}
                     </div>`,
                 })
             ],
@@ -625,20 +647,180 @@ export class Game {
             else {//manual add
                 document.getElementById(container).insertAdjacentHTML('beforeend', this.tplTile(tile));
             }
+            this.bga.gameui.addTooltipHtml(`goa_tile-${tile.id}`, this.getTileTooltip(tile));
 
         }
         return $(`goa_tile-${tile.id}`);
     }
     getTileTooltip(tile) {
         let cardDatas = tile;
-        let title = "";
+        let phaseA = false, phaseB = false;
+        if(this.gamedatas.material.tiles[tile.subtype][tile.type].nbr_A > 0) phaseA = true;
+        if(this.gamedatas.material.tiles[tile.subtype][tile.type].nbr_B > 0) phaseB = true;
+        let phaseLabel ='';
+        if(phaseA && phaseB) phaseLabel = _('Day') + ' / '+ _('Night');
+        else if(phaseA) phaseLabel = _('Day');
+        else if(phaseB) phaseLabel = _('Night');
+        let textPhase = this.bga.gameui.format_string( 
+            bga_format(_('Phase deck : *${x}*'), {
+                            '*': (t) => '<b><i>' + t + '</i></b>',
+                        }),
+             {'x': phaseLabel }
+        );
+        let textAction = this.formatTileActionText( tile );
         let div = this.tplTile(cardDatas,'_tmp'); 
         return [`<div class='goa_tile_tooltip'>
-                <div class="goa_h1">${title}</div>
-                <hr/>
-                ${div}
+                <div class="goa_tooltip_block1">
+                    <h1 class="goa_tile_title">${this.formatTileTitle( tile )}</h1>
+                </div>
+                <div class="goa_tooltip_block2">
+                    <div class="goa_tile_img_wrap">${div}</div>
+                    <div class="goa_tile_text">
+                        <span class="goa_tile_text_phase">${textPhase}</span>
+                        <hr>
+                        <span class="goa_tile_text_playType">${this.formatTilePlayTypeText( tile )}</span>
+                        <hr>
+                        <span class="goa_tile_text_action">${textAction}</span>
+                        <hr>
+                    </div>
+                </div>
             </div>`];
 
+    }
+    formatTileTitle (tile) {
+        let descriptionMap = new Map([
+            [MARKET_TYPE_PLANTATION, this.bga.gameui.format_string(_("Plantation"),{ })] ,
+            [MARKET_TYPE_ACTION_REUSEABLE, this.bga.gameui.format_string( _('Multi-use action'),{ } )],
+            [MARKET_TYPE_ACTION_DIRECT, this.bga.gameui.format_string(_("Immediate gain"),{ })] ,
+            [MARKET_TYPE_ACTION_ONCE, this.bga.gameui.format_string(_("Single use Action"),{ })] ,
+            [MARKET_TYPE_SCORING, this.bga.gameui.format_string(_("Scoring"),{ })] ,
+            
+        ]);
+        let text = '<b><i>' + descriptionMap.get(tile.play_type)+ '</i></b>';
+        return text;
+    }
+    formatTilePlayTypeText (tile) {
+        let descriptionMap;
+        switch (tile.subtype )
+        {
+            case TILE_SUBTTYPE_OUTPOST:
+                //TODO JSA
+                //break; 
+                return '';
+            case TILE_SUBTTYPE_MARKET: 
+                descriptionMap = new Map([
+                    [MARKET_TYPE_PLANTATION, this.bga.gameui.format_string(_("When you build a plantation, put it face up in one of the upper spaces of your personal board. Plantations have 1 to 3 spice fields; this one have ${x}. After building a plantation, fill the field(s) with the appropriate spice token(s). If you already own 4 plantations on your personal board, you must first discard 1 plantation, and any spice tokens still on it, before placing the 5th one. If the discarded plantation has a scoring symbol on it, keep the plantation face down in your play area. This plantation is worth ${n} points at the end of the game, whether it is face up on your personal board or face down in your play area."),{ x: tile.spice_slots.length , n : tile.end_score })] ,
+                    [MARKET_TYPE_ACTION_REUSEABLE, this.bga.gameui.format_string( _(' For this tile, players must put it face up in their play area. They can use it before, during or after their action. This tile can be played during a future action, but only once per round. After using it, the player must flip it and may no longer use it for the rest of the round. At the beginning of the following round, players flip the tile face up and can use it again.'),{ } )],
+                    [MARKET_TYPE_ACTION_DIRECT, this.bga.gameui.format_string(_("When a player acquires this tile, they immediately take the appropriate resources. After being used, the tile is discarded."),{ })] ,
+                    [MARKET_TYPE_ACTION_ONCE, this.bga.gameui.format_string(_("This tile may only be used once during the game. Once used, the tile is discarded."),{ })] ,
+                    [MARKET_TYPE_SCORING, this.formatScoringTileText(tile)] ,
+                ]);
+                break;
+            default : return '';
+        }
+        let text = descriptionMap.get(tile.play_type);
+        return text;
+    }
+    formatScoringTileText (tile) {
+        let descriptionMap = new Map([
+            [37, this.bga.gameui.format_string(_('At the end of the game, your single Plantation tiles are worth ${n} points instead of ${x} point.'),{n:3, x:1  })] ,
+            [38, this.bga.gameui.format_string(_('You can score ${n} victory points by returning to the supply ${x} spice tokens placed on your outposts/plantations. Immediately after, flip this tile face down until the final scoring. At the end of the game, reveal this tile to add ${n} points to your score.'),{ n:5, x:6 } )],
+            [39, this.bga.gameui.format_string(_('At the end of the game, this tile is worth ${n} victory points.'),{ 'n':tile.end_score })] ,
+            [40, this.bga.gameui.format_string(_('At the end of the game, this tile is worth ${n} victory points.'),{ 'n':tile.end_score})] ,
+        ]);
+        let text = descriptionMap.get(tile.type);
+        return text;
+    }
+    formatTileActionText (tile) {
+        console.log("formatTileActionText",tile);
+        let description = '';
+        switch (tile.subtype )
+        {
+            case TILE_SUBTTYPE_OUTPOST:
+                //TODO JSA
+                break;
+            case TILE_SUBTTYPE_MARKET: 
+                switch(this.gamedatas.material.tiles[tile.subtype][tile.type].play_type){
+                    case MARKET_TYPE_ACTION_REUSEABLE:
+                    case MARKET_TYPE_ACTION_DIRECT: 
+                        let  returnAfterThis = false;
+                        Object.entries( this.gamedatas.material.tiles[tile.subtype][tile.type].actions ).forEach(([action_type,number]) => {
+                            let resource_name = '', icon_name='';
+                            let number_label = number;
+                            switch(parseInt(action_type)){
+                                case ACTION_SPICE:
+                                    resource_name = _('Spices');
+                                    icon_name = '';
+                                    Object.values( number ).forEach((spice_type) => {
+                                        icon_name += this.formatIcon('spices_'+spice_type);
+                                    });
+                                    number_label = 1;
+                                    break;
+                                case ACTION_MONEY:
+                                    resource_name = _('Gold Pardau cards');
+                                    icon_name = this.formatIcon('money');
+                                    break;
+                                case ACTION_CONTRACT:
+                                    resource_name = _('Contracts');
+                                    icon_name = this.formatIcon('contracts');
+                                    break;
+                                case ACTION_SHIP:
+                                    resource_name = _('Ships');
+                                    icon_name = this.formatIcon('ships');
+                                    break;
+                                case ACTION_COMPASS:
+                                    resource_name = _('Compass cards');
+                                    icon_name = this.formatIcon('compasses');
+                                    break;
+                                case ACTION_EXPLORATION:
+                                    resource_name = _('Exploration cards');
+                                    icon_name = this.formatIcon('exploration_card');
+                                    break;
+                                case ACTION_SHIPS_OR_CONTRACTS:
+                                    resource_name = _('Ships or Contracts');
+                                    icon_name = this.formatIcon('ships');
+                                    break;
+                                case ACTION_FAVOR: 
+                                    description = this.bga.gameui.format_string(
+                                        _("Look through the ${n} tiles that were returned to the box during setup for phases Day and Night. Take the tile of your choice among them. You may use it immediately if the tile allows it.")
+                                        ,{n: 8}
+                                    );
+                                    returnAfterThis = true;
+                                default: break;
+                            }
+                            if(!returnAfterThis){
+                                description += '<li>'
+                                    + this.bga.gameui.format_string(
+                                        _("Take ${n} ${resource_name} : ${icon_resource}.")
+                                        ,{n:number_label, 'resource_name': resource_name, icon_resource : icon_name}
+                                    )
+                                    +'</li>';
+                            }
+                        });
+                        break;
+                    case MARKET_TYPE_ACTION_ONCE: 
+                        let actionDescriptionMap = new Map([
+                                [ACTION_SWAP, this.bga.gameui.format_string(_('When you buy the Swap tile, place it face up in your play area. During one of your later action turns, you may take 1 tile of your choice from the board and put it face up in your play area. Put the Swap tile, face up, in the space previously occupied by the tile you just took. You may use the tile that you obtained with the Swap tile as soon as you acquire it or later in the game. The Swap tile can be auctioned again, as per the normal rules. '),{}) + '<br/>' + _('Bonanza variant: If the Swap tile is used in one of the corners, you also take the Bonanza tile.') ],
+                                [ACTION_RESUPPLY, this.bga.gameui.format_string(_('Reveal ${n} Exploration cards and add the contracts shown on these cards. Then, take this sum in spices, contracts or ships. You choose the resource type after seeing the result. You can only choose one type of resource. Discard the Exploration cards after.'),{n:2})],
+                                [ACTION_HARVEST, this.bga.gameui.format_string(_('Fill up to ${n} of your plantations and/or outposts with the appropriate spices.'),{n :3})],
+                                [ACTION_ESPIONAGE, this.bga.gameui.format_string(
+                                    bga_format( _("Choose an opponent and do one of these actions, using the position of this player's Progress marker in the appropriate column: _*Build ships,* *Harvest,* *Taxes,* *Found an outpost*_ "), {
+                                        '*': (t) => '<li>' + t + '</li>',
+                                        '_': (t) => '<ul>' + t + '</ul>',
+                                    })
+                                    ,{ }) + '<br/>' + _('That tile cannot be used to obtain Exploration cards.')],
+                                [ACTION_VICEKING, this.bga.gameui.format_string(_('Without paying any resources, move your least advanced Progress marker (the one closest to the top) down on your Development board. If you have more than one marker in this row, move one of these markers, your choice.'),{})],
+                            ]);
+                        Object.entries( this.gamedatas.material.tiles[tile.subtype][tile.type].actions ).forEach(([action_type,number]) => {
+                            description += actionDescriptionMap.get(parseInt(action_type));
+                        });
+                        break;
+                    default: break;
+                }
+                break;
+            default: break;
+        }
+        return description;
     }
     tplTile(tile, prefix ='') {
         if(tile.subtype == TILE_SUBTTYPE_OUTPOST) 
@@ -660,6 +842,32 @@ export class Game {
         </div>`;
     }
 
+    formatTilesHelp(){
+        let list = "";
+        let k = 0;
+        Object.entries(this.gamedatas.material.tiles[TILE_SUBTTYPE_MARKET]).forEach(([type,tile_type]) => {
+            let resourceDatas = tile_type;
+            resourceDatas.id = 0;
+            resourceDatas.state = 0;
+            resourceDatas.type = parseInt(type);
+            resourceDatas.subtype = TILE_SUBTTYPE_MARKET;
+            if(k>0){
+                list = list.concat('<hr>');
+            }
+            list = list.concat( this.formatMarketTileHelp(resourceDatas));
+            k++; 
+        });
+        return `
+            <h1 class='goa_marketTilesHelp_title'>${_("Market Tiles") }</h1>
+            <div class='goa_marketTilesHelp'>
+                ${list}
+            </div>
+        `;
+    }
+    formatMarketTileHelp(tileTypeDatas) {
+        let tooltipHtml = this.getTileTooltip(tileTypeDatas);
+        return tooltipHtml;
+    }
     ////////////////////////////////////////
     //  _______    _                   
     // |__   __|  | |                  
