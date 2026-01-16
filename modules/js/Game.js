@@ -619,7 +619,9 @@ export class Game {
             </div>`;
         if(tile.subtype == TILE_SUBTTYPE_MARKET) 
             return `<div class="goa_tile goa_tile${prefix} goa_market" id="goa_tile${prefix}-${tile.id}" data-id="${tile.id}" data-type="${tile.type}"
-                data-play_type="${tile.play_type}" data-state="${tile.state}" data-spots="${tile.spice_slots ? tile.spice_slots.length : 0}" >
+                data-play_type="${tile.play_type}" data-state="${tile.state}" data-spots="${tile.spice_slots ? tile.spice_slots.length : 0}"
+                data-end_score="${tile.end_score}" 
+                >
             </div>`;
         return '';
     }

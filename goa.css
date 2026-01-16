@@ -1215,6 +1215,9 @@ Icon extract in sprite with differents layers size (so % is not useful).
   left: 35px;
   top: 34px;
 }
+.goa_tile[data-spots="1"][data-end_score="1"] .goa_spice[data-state="1"] {
+  top: 17px;
+}
 .goa_tile[data-spots="2"] .goa_spice[data-state="1"] {
   left: 14px;
 }

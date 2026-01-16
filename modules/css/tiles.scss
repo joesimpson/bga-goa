@@ -61,6 +61,14 @@
         left: 35px;
         top: 34px;
     }
+    &[data-spots="1"][data-end_score="1"]{
+        //scoring plantation have 1 spice at a different position
+        .goa_spice{
+            &[data-state="1"]{
+                top: 17px;
+            }
+        } 
+    }
     &[data-spots="2"]{
         .goa_spice{
             &[data-state="1"]{// spot 1/2

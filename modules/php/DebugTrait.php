@@ -286,6 +286,14 @@ trait DebugTrait
         $tile->setState(4);
         Tokens::addSpiceOnTile($tile, $player, TOKEN_TYPE_SPICE_PINK, 1);
 
+        $tile = Tiles::getByType(4, TILE_SUBTTYPE_MARKET)->first();
+        $tile->setLocation(TILE_LOCATION_PLAYER_BOARD);
+        $tile->setPId($player_id);
+        $tile->setRow(null);
+        $tile->setCol(null);
+        $tile->setState(3);
+        Tokens::addSpiceOnTile($tile, $player, TOKEN_TYPE_SPICE_YELLOW, 1);
+
         Game::get()->notify->player($player_id,'reloadPage', "/!\ : Refresh page to see game has restarted...", []);
     }
     ////////////////////////////////////////////////////
