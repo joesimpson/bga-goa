@@ -159,6 +159,13 @@ const TOKEN_TYPE_PROGRESS_MARKERS = [
 /////////////////////////////////////////////////////////
 //          User preferences
 /////////////////////////////////////////////////////////  
+const PREF_CONFIRM = 101;
+const PREF_CONFIRM_DISABLED = 0;
+const PREF_CONFIRM_ENABLED = 1;
+
+const PREF_UNDO_STYLE = 102;
+const PREF_UNDO_STYLE_TEXT = 1;
+const PREF_UNDO_STYLE_ICON = 2;
 
 
 /////////////////////////////////////////////////////////

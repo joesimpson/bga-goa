@@ -1,1 +1,30 @@
-{}
+{
+    "101": {
+        "name": "Ask for turn confirmation",
+        "needReload": false,
+        "values": {
+            "1": {
+                "name": "Enabled"
+            },
+            "0": {
+                "name": "Disabled"
+            }
+        },
+        "default": 1
+    }
+    ,"102": {
+        "name": "Undo buttons style",
+        "needReload": false,
+        "values": {
+            "1": {
+                "name": "Text"
+            },
+            "2": {
+                "name": "Icon"
+            }
+        },
+        "default": 2,
+        "attribute": "goa_undo_style"
+    }
+
+}

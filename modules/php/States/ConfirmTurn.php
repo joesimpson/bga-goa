@@ -47,10 +47,16 @@ class ConfirmTurn extends GameState
         $args['previousChoices'] = Globals::getChoices();
     }
 
-    public function stConfirmTurn()
-    {
-        $this->game->trace("stConfirmTurn()");
-        // TODO JSA AUTO CONFIRM TURN WITH users PREFS
+    public function onEnteringState(int $activePlayerId) {
+        $this->game->trace("ConfirmTurn.onEnteringState()");
+        $player = Players::getActive();
+        $prefConfirm = $player->getPref(PREF_CONFIRM);
+        $this->game->trace("ConfirmTurn.onEnteringState() prefConfirm=",json_encode($prefConfirm));
+        if (Globals::getChoices() == 0 
+            || $prefConfirm == PREF_CONFIRM_DISABLED 
+        ) {//AUTO CONFIRM
+            return $this->actConfirmTurn(true);
+        }
     }
 
     /**
@@ -58,8 +64,9 @@ class ConfirmTurn extends GameState
      *
      */
     #[PossibleAction]
-    public function actConfirmTurn()
+    public function actConfirmTurn(bool $auto = false)
     {
+        $this->game->trace("actConfirmTurn($auto)");
         return EndPlayerTurn::class;
     }
     
