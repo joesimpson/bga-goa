@@ -1309,6 +1309,21 @@ Icon extract in sprite with differents layers size (so % is not useful).
   margin: 5px;
 }
 
+html.goa_undo_style_text #btnIconUndoLastStep,
+html.goa_undo_style_text #btnIconRestartTurn {
+  display: none !important;
+}
+
+html.goa_undo_style_icon #btnTextUndoLastStep,
+html.goa_undo_style_icon #btnTextRestartTurn {
+  display: none !important;
+}
+
+body.lockedInterface #customActions,
+body.lockedInterface #restartActions {
+  pointer-events: none;
+}
+
 .playername_wrapper_84cba2 .playername, .playername_wrapper_84cba2.playername {
   text-shadow: 2px 0px 2px white, 0px 2px 2px white, -2px 0px 2px white, 0px -2px 2px white;
 }
@@ -1319,4 +1334,15 @@ Icon extract in sprite with differents layers size (so % is not useful).
 .playername_wrapper_e14a9b .playername,
 .playername_wrapper_e14a9b.playername {
   text-shadow: 2px 0px 2px black, 0px 2px 2px black, -2px 0px 2px black, 0px -2px 2px black;
+}
+
+#pagesection_howtoplay li, .midSizeDialog li {
+  margin-left: 2em;
+}
+
+#pagesection_howtoplay ol li {
+  list-style: decimal;
+} /* BEFORE ul in case there are ul under ol */
+#pagesection_howtoplay ul li, .midSizeDialog ul li {
+  list-style: disc;
 }

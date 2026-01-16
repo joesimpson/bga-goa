@@ -17,14 +17,15 @@
         "needReload": false,
         "values": {
             "1": {
-                "name": "Text"
+                "name": "Text",
+                "cssPref": "goa_undo_style_text"
             },
             "2": {
-                "name": "Icon"
+                "name": "Icon",
+                "cssPref": "goa_undo_style_icon"
             }
         },
-        "default": 2,
-        "attribute": "goa_undo_style"
+        "default": 2
     }
 
 }

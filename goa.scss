@@ -50,6 +50,33 @@
 }
 
 // ------------------------------------------------------------------------------
+// BUTTONS
+
+html.goa_undo_style_text{//PREF_UNDO_STYLE_TEXT
+    #btnIconUndoLastStep, 
+    #btnIconRestartTurn
+    {
+        display: none !important;
+    }
+}
+html.goa_undo_style_icon{//PREF_UNDO_STYLE_ICON
+    #btnTextUndoLastStep,
+    #btnTextRestartTurn
+    {
+        display: none !important;
+    }
+}
+ 
+
+body.lockedInterface{
+
+    #customActions,
+    #restartActions{
+        pointer-events: none;
+    }
+}
+
+// ------------------------------------------------------------------------------
 // Override BGA style for log player_name
 .playername_wrapper_84cba2{
     .playername, // Different in replay ?
@@ -75,3 +102,10 @@
 
 
 
+// ------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------
+// Re enable list style over BGA common CSS, only for wanted section : game WIKI and some tooltips 
+#pagesection_howtoplay li, .midSizeDialog li { margin-left: 2em; } 
+#pagesection_howtoplay ol li { list-style: decimal; } /* BEFORE ul in case there are ul under ol */ 
+#pagesection_howtoplay ul li, .midSizeDialog ul li { list-style: disc; }
+// ------------------------------------------------------------------------------
