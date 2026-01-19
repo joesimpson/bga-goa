@@ -28,6 +28,10 @@ const CARD_SUBTTYPE_EXPLORATION = 1;
 const TILE_SUBTTYPE_OUTPOST = 1;
 const TILE_SUBTTYPE_MARKET = 2;
 
+const COLONY_KOLLAM    = 1;
+const COLONY_KOCHI     = 2;
+const COLONY_MADRAS    = 3;
+const COLONY_KOZHIKODE = 4;
 
 const ACTION_MONEY               = 1;
 const ACTION_CONTRACT            = 2;
@@ -324,7 +328,7 @@ export class Game {
             getId: (card) => card.id,
             setupFrontDiv: (card, div) => {
                 div.dataset.type = card.type; 
-                this.bga.gameui.addTooltipHtml(div.id, `TODO JSA tooltip of ${card.type}`);
+                this.bga.gameui.addTooltipHtml(div.id, this.getTileTooltip(card));
             },
             cardWidth: 108,
             cardHeight: 108,
@@ -666,6 +670,9 @@ export class Game {
                         }),
              {'x': phaseLabel }
         );
+        if(tile.subtype == TILE_SUBTTYPE_OUTPOST){
+            textPhase = '';
+        }
         let textAction = this.formatTileActionText( tile );
         let div = this.tplTile(cardDatas,'_tmp'); 
         return [`<div class='goa_tile_tooltip'>
@@ -675,7 +682,7 @@ export class Game {
                 <div class="goa_tooltip_block2">
                     <div class="goa_tile_img_wrap">${div}</div>
                     <div class="goa_tile_text">
-                        <span class="goa_tile_text_phase">${textPhase}</span>
+                        ${textPhase == '' ? '' : '<span class="goa_tile_text_phase">'+textPhase+'</span>'}
                         ${textAction == '' ? '' : '<hr><span class="goa_tile_text_action">'+textAction+'</span>'}
                         <hr>
                         <span class="goa_tile_text_playType" data-playType="${tile.play_type}">${this.formatTilePlayTypeText( tile )}</span>
@@ -694,7 +701,12 @@ export class Game {
             [MARKET_TYPE_SCORING, this.bga.gameui.format_string(_("Scoring"),{ })] ,
             
         ]);
-        let text = '<b><i>' + descriptionMap.get(tile.play_type)+ '</i></b>';
+        let description = ''; 
+        if(tile.subtype == TILE_SUBTTYPE_OUTPOST){
+            return this.bga.gameui.format_string(_("Outpost : ${name}"),{ name : this.getColonyName(tile.colony)});
+        }
+        else description = descriptionMap.get(tile.play_type);
+        let text = '<b><i>' + description + '</i></b>';
         return text;
     }
     formatTilePlayTypeText (tile) {
@@ -702,9 +714,7 @@ export class Game {
         switch (tile.subtype )
         {
             case TILE_SUBTTYPE_OUTPOST:
-                //TODO JSA
-                //break; 
-                return '';
+                return this.bga.gameui.format_string(_("When you found an outpost, place the outpost tile on the matching space of your personal board. After founding an outpost, fill it with the appropriate spices from the supply. To found an outpost with the appropriate action, a player needs to recruit a minimum number of contracts: ${n} contracts for this one."),{ n : this.getNbContractsForColony(tile.colony) });
             case TILE_SUBTTYPE_MARKET: 
                 descriptionMap = new Map([
                     [MARKET_TYPE_PLANTATION, this.bga.gameui.format_string(_("When you build a plantation, put it face up in one of the upper spaces of your personal board. Plantations have 1 to 3 spice fields; this one have ${x}. After building a plantation, fill the field(s) with the appropriate spice token(s). If you already own 4 plantations on your personal board, you must first discard 1 plantation, and any spice tokens still on it, before placing the 5th one. If the discarded plantation has a scoring symbol on it, keep the plantation face down in your play area. This plantation is worth ${n} points at the end of the game, whether it is face up on your personal board or face down in your play area."),{ x: tile.spice_slots.length , n : tile.end_score })] ,
@@ -732,16 +742,32 @@ export class Game {
     formatTileSpicesText (tile) {
         let number_label = tile.spice_slots.length;  
         let icons = '';
+        let treatArray = null;
         Object.values( tile.spice_slots ).forEach((spice_type) => {
             icons += this.formatIcon('spices_'+spice_type);
-            Object.values( spice_type ).forEach((spice_type_listElement) => {
-                icons += this.formatIcon('spices_'+spice_type_listElement);
-            });
+            if(Array.isArray(spice_type)){
+                treatArray = spice_type;
+            }
         });
-        let text = this.bga.gameui.format_string(
-                        _("Take ${n} ${resource_name} : ${icon_resource}.")
-                        ,{n:number_label, 'resource_name': _('Spices'), icon_resource : icons}
-                    );
+        let text = '';
+        if(treatArray){
+            Object.values( tile.spice_slots ).forEach((spice_type) => {
+                icons = '';
+                Object.values( spice_type ).forEach((spice_type_listElement) => {
+                    icons += this.formatIcon('spices_'+spice_type_listElement);
+                });
+                text += '<li>' + this.bga.gameui.format_string(
+                    _("Take ${n} ${resource_name} : ${icon_resource}.")
+                    ,{n:1, 'resource_name': _('Spices'), icon_resource : icons}
+                ) + '</li>';
+            });
+        }
+        else {
+            text = this.bga.gameui.format_string(
+                _("Take ${n} ${resource_name} : ${icon_resource}.")
+                ,{n:number_label, 'resource_name': _('Spices'), icon_resource : icons}
+            );
+        }
                   
         return text;
     }
@@ -751,8 +777,7 @@ export class Game {
         switch (tile.subtype )
         {
             case TILE_SUBTTYPE_OUTPOST:
-                //TODO JSA
-                break;
+                return this.formatTileSpicesText(tile);
             case TILE_SUBTTYPE_MARKET: 
                 switch(this.gamedatas.material.tiles[tile.subtype][tile.type].play_type){
                     case MARKET_TYPE_PLANTATION:
@@ -877,6 +902,25 @@ export class Game {
     formatMarketTileHelp(tileTypeDatas) {
         let tooltipHtml = this.getTileTooltip(tileTypeDatas);
         return tooltipHtml;
+    }
+
+    getNbContractsForColony(colony){
+        switch(colony){
+            case COLONY_KOLLAM: return 6;
+            case COLONY_KOCHI:  return 8;
+            case COLONY_MADRAS: return 10;
+            case COLONY_KOZHIKODE: return 12;
+            default: return 0;
+        }
+    }
+    getColonyName(colony){
+        switch(colony){
+            case COLONY_KOLLAM: return _('Kollam');
+            case COLONY_KOCHI:  return _('Kochi');
+            case COLONY_MADRAS: return _('Madras');
+            case COLONY_KOZHIKODE: return _('Kozhikode');
+            default: return '';
+        }
     }
     ////////////////////////////////////////
     //  _______    _                   
