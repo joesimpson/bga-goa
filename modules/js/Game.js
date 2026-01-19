@@ -319,6 +319,7 @@ export class Game {
                                 <div id="goa_player_outposts-${player.id}" class="goa_player_outposts"></div>
                                 <div id="goa_player_auction_markers-${player.id}" class="goa_player_auction_markers">
                                 </div>
+                                <div id="goa_player_progress_headers-${player.id}" class="goa_player_progress_headers"></div>
                                 <div id="goa_player_progress_tracks-${player.id}" class="goa_player_progress_tracks">
                                 </div>
                                 <div class="goa_board_filler">&nbsp;<br/></div>
@@ -1023,6 +1024,9 @@ export class Game {
 
         Object.values(this.gamedatas.players).forEach(player => {
             for(let track=1;track<=5;track++){
+                if(!$(`goa_progress_header_${track}_${player.id}`)) document.getElementById(`goa_player_progress_headers-${player.id}`).insertAdjacentHTML('beforeend', this.tplProgressHeader({'track':track, 'pId':player.id}));
+                this.bga.gameui.addTooltipHtmlToClass(`goa_progress_header_${track}`, this.getActionBoardTooltip(track));
+
                 let progress_track = `goa_progress_track_${track}_${player.id}`;
                 if(!$(progress_track)) document.getElementById(`goa_player_progress_tracks-${player.id}`).insertAdjacentHTML('beforeend', this.tplProgressTrack({'track':track, 'pId':player.id}));
                 for(let k=1;k<=5;k++){
@@ -1093,6 +1097,86 @@ export class Game {
     }
     tplProgressTrackSpace(datas) {
         return `<div class="goa_progress_track_space" id="goa_progress_track_space_${datas.track}_${datas.space}_${datas.pId}" data-track='${datas.track}' data-pos='${datas.space}'></div>`;
+    }
+    tplProgressHeader(datas) {
+        return `
+            <div class="goa_progress_header goa_progress_header_${datas.track}" id="goa_progress_header_${datas.track}_${datas.pId}" data-track='${datas.track}'>
+            </div>`;
+    }
+    getActionBoardTooltip(track){
+        let action_label = '';
+        let action_desc = 'TODO JSA DESC';
+        let action_gains = [];
+        switch(track){
+            case 1: 
+                action_label = _('Build Ships');
+                action_desc = this.bga.gameui.format_string(
+                            _("Take n ${resource_name} ${icon_resource} where n is indicated on the row of your progress marker on this column.")
+                            ,{
+                                //n:_('n (n is the indicated on the row of your progress marker on this column)'),
+                                'resource_name': _('Ships'), 
+                                icon_resource : this.formatIcon('ships')
+                            }
+                        );
+                action_gains = [1,2,3,5,6];
+                break;
+            case 2:  
+                action_label = _('Harvest');
+                action_gains = [1,2,4,6,8];
+                action_desc = this.bga.gameui.format_string(
+                            _("Take n ${resource_name} ${icon_resource} where n is indicated on the row of your progress marker on this column.")
+                            ,{
+                                'resource_name': _('Spices (any spice matching an empty space on your own plantations or outposts)'), 
+                                icon_resource : this.formatIcon('spice_any')
+                            }
+                        );
+                break;
+            case 3:  
+                action_label = _('Taxes');
+                action_gains = [4,6,8,10,12];
+                action_desc = this.bga.gameui.format_string(
+                            _("Take n ${resource_name} ${icon_resource} where n is indicated on the row of your progress marker on this column.")
+                            ,{
+                                'resource_name': _('Coins'), 
+                                icon_resource : this.formatIcon('money')
+                            }
+                        );
+                break;
+            case 4:  
+                action_label = _('Exploration');
+                action_desc = this.bga.gameui.format_string(
+                            _("Draw Exploration cards from the supply. Each row of the Exploration column shows two numbers. The number on the left is the maximum number of cards a player can draw whereas the one on the right is the player's hand limit, i.e., the maximum number of Exploration cards a player can have in their hand at any time when doing the Exploration action.")
+                            ,{ }
+                        );
+                action_gains = ['1 -> 1','1 -> 2','2 -> 3','2 -> 4','3 -> 5'];
+                break;
+            case 5: 
+                action_label = _('Found Outpost');
+                action_desc = this.bga.gameui.format_string( _("Choose an unfounded outpost."),{ } )
+                            + '<br>' + this.bga.gameui.format_string( _("The row of your progress marker will give a base number of contracts."),{  } )
+                            + '<br>' + this.bga.gameui.format_string( _("Flip ${n} exploration cards and add their contracts to those on your player board."),{ n: 2 } )
+                            + '<br>' + this.bga.gameui.format_string( _("You may add ay number of contracts from your hand."),{  } )
+                            + '<br>' + this.bga.gameui.format_string( _("If you successfully meet the requirement of the chosen outpost, take it and place it on your board, filling the resources spots on it; if not you draw ${n} ${icon_card}"),{ n:1, icon_card: this.formatIcon('contracts') } )
+                        ;
+                action_gains = [0,2,4,5,6];
+                break;
+
+        }
+        action_label = this.bga.gameui.format_string( 
+            _('Player action ${action_label}'),
+             {'action_label': '<b><u>'+ action_label +'</u></b>'}
+        );
+        action_desc += '<ul>';
+        action_gains.forEach(element => {
+            action_desc += '<li>'+element+'</li>';
+        });
+        action_desc += '</ul>';
+
+        return `<div class="goa_custom_tooltip">
+            <div class="goa_action_label">${action_label}</div>
+            <div class="goa_action_desc">${action_desc}</div>
+            </div>
+        `;
     }
 
     ////////////////////////////////////////////////////////

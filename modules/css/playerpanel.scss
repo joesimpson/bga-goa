@@ -54,6 +54,7 @@
             &:hover{//tooltipable
                 outline: 2px solid green;
                 z-index: 2;
+                cursor: help;
             }
         }
         .goa_resource_exploration_hand_size

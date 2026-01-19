@@ -118,9 +118,11 @@ body.lockedInterface{
     background: #dab57d !important;
     color: black;
 }
+.goa_custom_tooltip .goa_icon_container,
 .goa_tile_tooltip .goa_icon_container,
 .goa_card_tooltip .goa_icon_container{
     display: inline-block;
+    vertical-align: middle;
 }
 /* bga-help  -------------------------------------- */
 .bga-help_button{

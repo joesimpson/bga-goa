@@ -339,6 +339,27 @@ $playerboard_img_height: calc(1 * 796px);
                     }
                 }
             }
+            
+            .goa_player_progress_headers{
+                position: absolute;
+                top: 371px;
+                left: 135px;
+                width: 543px;
+                height: 78px;
+                
+                //for debug only
+                //outline: 10px solid BLACK;
+
+                grid-template-columns: repeat(5, 1fr);
+                display: grid;
+                .goa_progress_header{
+                    &:hover{//tooltipable
+                        outline: 2px solid green;
+                        cursor: help;
+                    }
+                }
+
+            }
             .goa_player_progress_tracks{
                 position: absolute;
                 top: 460px;

@@ -340,6 +340,19 @@ Icon extract in sprite with differents layers size (so % is not useful).
 .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_auction_markers .goa_auction_marker[data-value="5"] {
   top: 240px;
 }
+.goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_progress_headers {
+  position: absolute;
+  top: 371px;
+  left: 135px;
+  width: 543px;
+  height: 78px;
+  grid-template-columns: repeat(5, 1fr);
+  display: grid;
+}
+.goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_progress_headers .goa_progress_header:hover {
+  outline: 2px solid green;
+  cursor: help;
+}
 .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_progress_tracks {
   position: absolute;
   top: 460px;
@@ -1601,6 +1614,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
 .goa_panel .goa_player_resource .goa_reserve:hover {
   outline: 2px solid green;
   z-index: 2;
+  cursor: help;
 }
 .goa_panel .goa_player_resource .goa_resource_exploration_hand_size {
   font-size: 15px;
@@ -1833,9 +1847,11 @@ body.lockedInterface #restartActions {
   color: black;
 }
 
+.goa_custom_tooltip .goa_icon_container,
 .goa_tile_tooltip .goa_icon_container,
 .goa_card_tooltip .goa_icon_container {
   display: inline-block;
+  vertical-align: middle;
 }
 
 /* bga-help  -------------------------------------- */
