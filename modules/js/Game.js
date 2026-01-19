@@ -503,6 +503,25 @@ export class Game {
         this._counters[player_id][resourceName] = counter;
     }
 
+    onToggleExpandable(div){
+        let parent = div.parentNode;
+        let expandable = parent.querySelector('.goa_expandablecontent');
+        let icon = parent.querySelector('.expandablearrow div');
+        if (
+            expandable.classList.contains("goa_expand_off")
+        ) {
+            parent.classList.add("goa_expand_on");
+            expandable.classList.remove("goa_expand_off");
+            icon.classList.add("icon20_collapse");
+            icon.classList.remove("icon20_expand");
+        } else {
+            expandable.classList.add("goa_expand_off");
+            parent.classList.remove("goa_expand_on");
+            icon.classList.add("icon20_expand");
+            icon.classList.remove("icon20_collapse");
+        }
+    }
+
     ///////////////////////////////////////////////////
     //// Reaction to cometD notifications
 
@@ -878,25 +897,55 @@ export class Game {
     }
 
     formatTilesHelp(){
-        let list = "";
-        let k = 0;
+        let list1 = "";
+        let j = 0;
         Object.entries(this.gamedatas.material.tiles[TILE_SUBTTYPE_MARKET]).forEach(([type,tile_type]) => {
             let resourceDatas = tile_type;
             resourceDatas.id = 0;
             resourceDatas.state = 0;
             resourceDatas.type = parseInt(type);
             resourceDatas.subtype = TILE_SUBTTYPE_MARKET;
-            if(k>0){
-                list = list.concat('<hr>');
+            if(j>0){
+                list1 = list1.concat('<hr>');
             }
-            list = list.concat( this.formatMarketTileHelp(resourceDatas));
+            list1 = list1.concat( this.formatMarketTileHelp(resourceDatas));
+            j++; 
+        });
+        let list2 = "";
+        let k = 0;
+        Object.entries(this.gamedatas.material.tiles[TILE_SUBTTYPE_OUTPOST]).forEach(([type,tile_type]) => {
+            let resourceDatas = tile_type;
+            resourceDatas.id = 0;
+            resourceDatas.state = 0;
+            resourceDatas.type = parseInt(type);
+            resourceDatas.subtype = TILE_SUBTTYPE_OUTPOST;
+            if(k>0){
+                list2 = list2.concat('<hr>');
+            }
+            list2 = list2.concat( this.getTileTooltip(resourceDatas));
             k++; 
         });
         return `
-            <h1 class='goa_marketTilesHelp_title'>${_("Market Tiles") }</h1>
-            <div class='goa_marketTilesHelp'>
-                ${list}
+         <div class="expandable">
+            <div id="goa_marketTilesHelp_toggle" class="expandabletoggle expandablearrow" onclick="gameui.GameModule.onToggleExpandable(this)">
+                <div class="icon20 icon20_expand"></div>
+                <h1 class='goa_marketTilesHelp_title'>${ this.bga.gameui.format_string( _("Market Tiles (${n})"), {n:j} ) }</h1>
+                <div class="goa_expand_ellipsis">...</div>
             </div>
+            <div class='goa_marketTilesHelp goa_expandablecontent goa_expand_off'>
+                ${list1}
+            </div>
+        </div>
+         <div class="expandable">
+            <div id="goa_outpostTilesHelp_toggle" class="expandabletoggle expandablearrow" onclick="gameui.GameModule.onToggleExpandable(this)">
+                <div class="icon20 icon20_expand"></div>
+                <h1 class='goa_outpostTilesHelp_title'>${this.bga.gameui.format_string( _("Outpost Tiles (${n})"), {n:k} ) }</h1>
+                <div class="goa_expand_ellipsis">...</div>
+            </div>
+            <div class='goa_outpostTilesHelp goa_expandablecontent goa_expand_off'>
+                ${list2}
+            </div>
+        </div>
         `;
     }
     formatMarketTileHelp(tileTypeDatas) {

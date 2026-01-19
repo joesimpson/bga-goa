@@ -172,20 +172,19 @@
 }
 
 .goa_marketTilesHelp hr,
+.goa_outpostTilesHelp hr,
 .goa_tile_tooltip hr {
     color: black !important;
     border-style: solid;
 }
 
+.goa_outpostTilesHelp,
 .goa_marketTilesHelp {
     border: 1px solid;
     width: max-content;
     background-color: #dab57d;
     color: black;
-    .goa_marketTilesHelp_title{
-        font-size: 130%;
-        margin-left: 50px;
-    }
+    
     .goa_tile_title{
         font-size: 1.5em;
     }
@@ -210,6 +209,9 @@
             font-size: 0.75em;
         }
     }
+}
+.goa_outpostTilesHelp{
+    background-color: #8b7861;
 }
 
   

@@ -1304,11 +1304,13 @@ Icon extract in sprite with differents layers size (so % is not useful).
 }
 
 .goa_marketTilesHelp hr,
+.goa_outpostTilesHelp hr,
 .goa_tile_tooltip hr {
   color: black !important;
   border-style: solid;
 }
 
+.goa_outpostTilesHelp,
 .goa_marketTilesHelp {
   border: 1px solid;
   width: -moz-max-content;
@@ -1316,20 +1318,20 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-color: #dab57d;
   color: black;
 }
-.goa_marketTilesHelp .goa_marketTilesHelp_title {
-  font-size: 130%;
-  margin-left: 50px;
-}
+.goa_outpostTilesHelp .goa_tile_title,
 .goa_marketTilesHelp .goa_tile_title {
   font-size: 1.5em;
 }
+.goa_outpostTilesHelp .goa_tile_text_action,
 .goa_marketTilesHelp .goa_tile_text_action {
   font-size: 1em;
 }
+.goa_outpostTilesHelp .goa_tile_img_wrap,
 .goa_marketTilesHelp .goa_tile_img_wrap {
   order: 1;
   margin-right: 2px;
 }
+.goa_outpostTilesHelp .goa_tooltip_block2,
 .goa_marketTilesHelp .goa_tooltip_block2 {
   flex-direction: row;
   width: -moz-max-content;
@@ -1338,12 +1340,18 @@ Icon extract in sprite with differents layers size (so % is not useful).
   align-items: center;
   text-align: center;
 }
+.goa_outpostTilesHelp .goa_tile_text,
 .goa_marketTilesHelp .goa_tile_text {
   width: 348px;
   order: 2;
 }
+.goa_outpostTilesHelp .goa_tile_text .goa_tile_text_playType,
 .goa_marketTilesHelp .goa_tile_text .goa_tile_text_playType {
   font-size: 0.75em;
+}
+
+.goa_outpostTilesHelp {
+  background-color: #8b7861;
 }
 
 .player_board_inner > .player-name {
@@ -1596,6 +1604,12 @@ body.lockedInterface #restartActions {
   pointer-events: none;
 }
 
+.expandabletoggle {
+  display: flex;
+  flex-direction: row;
+  cursor: pointer;
+}
+
 .playername_wrapper_84cba2 .playername, .playername_wrapper_84cba2.playername {
   text-shadow: 2px 0px 2px white, 0px 2px 2px white, -2px 0px 2px white, 0px -2px 2px white;
 }
@@ -1629,6 +1643,19 @@ body.lockedInterface #restartActions {
   align-items: center;
   display: flex;
   flex-direction: column;
+  align-items: baseline;
+}
+
+.goa_expand_off {
+  display: none;
+}
+
+.goa_expand_ellipsis {
+  align-self: end;
+}
+
+.goa_expand_on .goa_expand_ellipsis {
+  display: none;
 }
 
 #pagesection_howtoplay li, .midSizeDialog li, .standard_popin li {

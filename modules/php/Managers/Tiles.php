@@ -172,7 +172,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
       
       7 => $f([ 1,  COLONY_MADRAS, [ [SPICE_WHITE, SPICE_YELLOW], [SPICE_WHITE, SPICE_YELLOW]], ]), 
       8 => $f([ 1,  COLONY_MADRAS, [ [SPICE_BLACK, SPICE_PINK], [SPICE_BLACK, SPICE_PINK]],     ]), 
-      9 => $f([ 1,  COLONY_MADRAS, [ [SPICE_GREEN, SPICE_WHITE], [SPICE_GREEN, SPICE_YELLOW]], ]), 
+      9 => $f([ 1,  COLONY_MADRAS, [ [SPICE_GREEN, SPICE_WHITE], [SPICE_GREEN, SPICE_WHITE]], ]), 
       10 => $f([ 1, COLONY_MADRAS,  [ [SPICE_PINK, SPICE_GREEN], [SPICE_PINK, SPICE_GREEN]],     ]), 
       11 => $f([ 1, COLONY_MADRAS,  [ [SPICE_YELLOW, SPICE_BLACK], [SPICE_YELLOW, SPICE_BLACK]], ]), 
       

@@ -78,6 +78,12 @@ body.lockedInterface{
     }
 }
 
+.expandabletoggle {
+    display: flex;
+    flex-direction: row;
+    cursor: pointer;
+}
+
 // ------------------------------------------------------------------------------
 // Override BGA style for log player_name
 .playername_wrapper_84cba2{
@@ -123,8 +129,20 @@ body.lockedInterface{
     align-items: center;
     display: flex;
     flex-direction: column;
+    align-items: baseline;
 }
 
+.goa_expand_off{
+    display: none;
+}
+.goa_expand_ellipsis{
+    align-self: end;
+}
+.goa_expand_on{
+    .goa_expand_ellipsis{
+        display: none;
+    }
+}
 // ------------------------------------------------------------------------------
 // ------------------------------------------------------------------------------
 // Re enable list style over BGA common CSS, only for wanted section : game WIKI and some tooltips 
