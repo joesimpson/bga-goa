@@ -55,6 +55,26 @@ $symbol_height: 50px;
     @include goa_icons_sprite(947px,131px,$symbol_width,$symbol_height,88px,87px);
 }
 
+$symbol_tiny_width: 25px;
+$symbol_tiny_height: 25px;
+.goa_icon_explo_symbol_tiny_1{//CARD_SYMBOL_ELEPHANT
+    @include goa_icons_sprite(473px,127px,$symbol_tiny_width,$symbol_tiny_height,88px,73px);
+}
+.goa_icon_explo_symbol_tiny_2{//CARD_SYMBOL_TIGER
+    @include goa_icons_sprite(567px,129px,$symbol_tiny_width,$symbol_tiny_height,89px,72px);
+}
+.goa_icon_explo_symbol_tiny_3{//CARD_SYMBOL_URN
+    @include goa_icons_sprite(660px,125px,$symbol_tiny_width,$symbol_tiny_height,90px,95px);
+}
+.goa_icon_explo_symbol_tiny_4{//CARD_SYMBOL_PALMTREE
+    @include goa_icons_sprite(779px,125px,$symbol_tiny_width,$symbol_tiny_height,79px,99px);
+}
+.goa_icon_explo_symbol_tiny_5{//CARD_SYMBOL_SHELL
+    @include goa_icons_sprite(857px,131px,$symbol_tiny_width,$symbol_tiny_height,84px,90px);
+}
+.goa_icon_explo_symbol_tiny_6{//CARD_SYMBOL_STATUE
+    @include goa_icons_sprite(947px,131px,$symbol_tiny_width,$symbol_tiny_height,88px,87px);
+}
 
 .goa_icon_exploration_card,
 .goa_icon_exploration_hand_size{

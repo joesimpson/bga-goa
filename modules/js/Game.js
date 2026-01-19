@@ -252,6 +252,14 @@ export class Game {
                         ${this.tplResourceCounter(player,'spices_pink')}
                         ${this.tplResourceCounter(player,'spices_green')}
                     </div>
+                    <div class='goa_player_counters_line'  ${ (currentPlayer && player.id == currentPlayer.id) ? '': 'style="display:none;"'}>
+                        ${this.tplResourceCounter(player,'explo_symbol_tiny_1')}
+                        ${this.tplResourceCounter(player,'explo_symbol_tiny_2')}
+                        ${this.tplResourceCounter(player,'explo_symbol_tiny_3')}
+                        ${this.tplResourceCounter(player,'explo_symbol_tiny_4')}
+                        ${this.tplResourceCounter(player,'explo_symbol_tiny_5')}
+                        ${this.tplResourceCounter(player,'explo_symbol_tiny_6')}
+                    </div>
                 </div>
             `);
             this._counters[player.id] = {};
@@ -261,6 +269,20 @@ export class Game {
             this.createCounter(player.id,'compasses',player.compasses);
             if (currentPlayer && player.id == currentPlayer.id){
                 this.createCounter(player.id,'money',player.money);
+                //counters on hand symbols :
+                this.createCounter(player.id,'explo_symbol_tiny_1' , 0);
+                this.createCounter(player.id,'explo_symbol_tiny_2' , 0);
+                this.createCounter(player.id,'explo_symbol_tiny_3' , 0);
+                this.createCounter(player.id,'explo_symbol_tiny_4' , 0);
+                this.createCounter(player.id,'explo_symbol_tiny_5' , 0);
+                this.createCounter(player.id,'explo_symbol_tiny_6' , 0);
+                
+                this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_explo_symbol_tiny_1`, this.getCardSymbolName(1));
+                this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_explo_symbol_tiny_2`, this.getCardSymbolName(2));
+                this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_explo_symbol_tiny_3`, this.getCardSymbolName(3));
+                this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_explo_symbol_tiny_4`, this.getCardSymbolName(4));
+                this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_explo_symbol_tiny_5`, this.getCardSymbolName(5));
+                this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_explo_symbol_tiny_6`, this.getCardSymbolName(6));
             } 
             else {
                 document.getElementById(`goa_counter_${player.id}_money`).innerHTML = '???';
@@ -283,6 +305,7 @@ export class Game {
             this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_spices_yellow`, _(`Spices`));
             this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_spices_pink`, _(`Spices`));
             this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_spices_green`, _(`Spices`));
+            
 
             // example of adding a div for each player
             document.getElementById('goa_main_zone').insertAdjacentHTML('beforeend', `
@@ -581,6 +604,12 @@ export class Game {
 
         this.explorationHand.addCards(notif.cards, { fromStock: this.explorationDeck});
         this._counters[notif.player_id]['exploration_hand_size'].incValue( notif.cards.length);
+        let currentPlayer = this.bga.players.getCurrentPlayer();
+        if (currentPlayer && currentPlayer.id == notif.player_id) {
+            Object.values(notif.cards).forEach((card) => {
+                this._counters[currentPlayer.id]['explo_symbol_tiny_'+card.symbol].incValue(1);
+            });
+        }
     }
     
     async notif_newSpiceOnTile(notif) {
@@ -1148,6 +1177,10 @@ export class Game {
             } else if(container.startsWith(`goa_exploration_hand`)){
                 //use bga-cards stock
                 this.explorationHand.addCard(card);
+                let currentPlayer = this.bga.players.getCurrentPlayer();
+                if (currentPlayer) {
+                    this._counters[currentPlayer.id]['explo_symbol_tiny_'+card.symbol].incValue(1);
+                }
             }
             else {//manual add
                 document.getElementById(container).insertAdjacentHTML('beforeend', this.tplCard(card));
@@ -1184,7 +1217,7 @@ export class Game {
             title = _('Exploration card');
             textSymbols = this.bga.gameui.format_string( 
                 _('Gives the symbol ${s_icon} (${s_name})'),
-                { s_name: this.getCardSymbolName( cardDatas ), s_icon: this.formatIcon('explo_symbol_'+cardDatas.symbol)}
+                { s_name: this.getCardSymbolName( cardDatas.symbol ), s_icon: this.formatIcon('explo_symbol_'+cardDatas.symbol)}
             );
             textSymbols += '<br>'+_('Victory points at the end of the game (if not played) : ');
             textSymbols += '<ul>';
@@ -1250,8 +1283,8 @@ export class Game {
         }
         return '';
     }
-    getCardSymbolName(card){
-        switch(card.symbol){
+    getCardSymbolName(card_symbol){
+        switch(card_symbol){
             case this.const.CARD_SYMBOL_ELEPHANT: return _('Elephant');
             case this.const.CARD_SYMBOL_TIGER: return _('Tiger');
             case this.const.CARD_SYMBOL_URN: return _('Urn');

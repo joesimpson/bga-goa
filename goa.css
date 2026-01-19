@@ -623,6 +623,60 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-size: 1363.6363636364% 379.3103448276%;
 }
 
+.goa_icon_explo_symbol_tiny_1 {
+  width: 25px;
+  height: 25px;
+  background-image: url("img/icons.png");
+  background-position-x: -134.375px;
+  background-position-y: -43.4931506849px;
+  background-size: 1363.6363636364% 452.0547945205%;
+}
+
+.goa_icon_explo_symbol_tiny_2 {
+  width: 25px;
+  height: 25px;
+  background-image: url("img/icons.png");
+  background-position-x: -159.2696629213px;
+  background-position-y: -44.7916666667px;
+  background-size: 1348.3146067416% 458.3333333333%;
+}
+
+.goa_icon_explo_symbol_tiny_3 {
+  width: 25px;
+  height: 25px;
+  background-image: url("img/icons.png");
+  background-position-x: -183.3333333333px;
+  background-position-y: -32.8947368421px;
+  background-size: 1333.3333333333% 347.3684210526%;
+}
+
+.goa_icon_explo_symbol_tiny_4 {
+  width: 25px;
+  height: 25px;
+  background-image: url("img/icons.png");
+  background-position-x: -246.5189873418px;
+  background-position-y: -31.5656565657px;
+  background-size: 1518.9873417722% 333.3333333333%;
+}
+
+.goa_icon_explo_symbol_tiny_5 {
+  width: 25px;
+  height: 25px;
+  background-image: url("img/icons.png");
+  background-position-x: -255.0595238095px;
+  background-position-y: -36.3888888889px;
+  background-size: 1428.5714285714% 366.6666666667%;
+}
+
+.goa_icon_explo_symbol_tiny_6 {
+  width: 25px;
+  height: 25px;
+  background-image: url("img/icons.png");
+  background-position-x: -269.0340909091px;
+  background-position-y: -37.6436781609px;
+  background-size: 1363.6363636364% 379.3103448276%;
+}
+
 .goa_icon_exploration_card,
 .goa_icon_exploration_hand_size {
   position: relative;
