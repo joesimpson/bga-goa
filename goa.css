@@ -1255,6 +1255,14 @@ Icon extract in sprite with differents layers size (so % is not useful).
   display: flex;
   flex-direction: column;
 }
+.goa_tile_tooltip .goa_tooltip_block2 {
+  flex-direction: row;
+  -moz-column-gap: 2px;
+       column-gap: 2px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
 .goa_tile_tooltip .goa_tile_title, .goa_tile_tooltip .goa_tile_img_wrap {
   justify-content: center;
   align-items: center;
@@ -1268,7 +1276,31 @@ Icon extract in sprite with differents layers size (so % is not useful).
   height: 150px;
 }
 .goa_tile_tooltip .goa_tile_text_action {
-  font-size: 1.5em;
+  font-size: 1.1em;
+}
+.goa_tile_tooltip .goa_tile_text_playType {
+  font-style: italic;
+  font-size: 0.9em;
+  display: inline-block;
+  border-radius: 0.75em;
+  padding-left: 3px;
+  padding-right: 3px;
+}
+.goa_tile_tooltip .goa_tile_text_playType[data-playType="2"] {
+  color: black;
+  background-color: #6796cc;
+}
+.goa_tile_tooltip .goa_tile_text_playType[data-playType="4"] {
+  color: black;
+  background-color: #87d2d6;
+}
+.goa_tile_tooltip .goa_tile_text_playType[data-playType="5"] {
+  color: black;
+  background-color: #eac361;
+}
+.goa_tile_tooltip .goa_tile_text_playType[data-playType="6"] {
+  color: white;
+  background-color: #a360a3;
 }
 
 .goa_marketTilesHelp hr,
@@ -1307,7 +1339,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
   text-align: center;
 }
 .goa_marketTilesHelp .goa_tile_text {
-  width: 350px;
+  width: 348px;
   order: 2;
 }
 .goa_marketTilesHelp .goa_tile_text .goa_tile_text_playType {

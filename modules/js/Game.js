@@ -47,7 +47,6 @@ const MARKET_GRID_SIZE = 5;
 
 const MARKET_TYPE_PLANTATION      = 1;
 const MARKET_TYPE_ACTION_REUSEABLE = 2;
-const MARKET_TYPE_RESOURCES       = 3;
 const MARKET_TYPE_ACTION_DIRECT   = 4;
 const MARKET_TYPE_ACTION_ONCE     = 5;
 const MARKET_TYPE_SCORING         = 6;
@@ -677,11 +676,10 @@ export class Game {
                     <div class="goa_tile_img_wrap">${div}</div>
                     <div class="goa_tile_text">
                         <span class="goa_tile_text_phase">${textPhase}</span>
+                        ${textAction == '' ? '' : '<hr><span class="goa_tile_text_action">'+textAction+'</span>'}
                         <hr>
-                        <span class="goa_tile_text_playType">${this.formatTilePlayTypeText( tile )}</span>
-                        <hr>
-                        <span class="goa_tile_text_action">${textAction}</span>
-                        <hr>
+                        <span class="goa_tile_text_playType" data-playType="${tile.play_type}">${this.formatTilePlayTypeText( tile )}</span>
+                        
                     </div>
                 </div>
             </div>`];
@@ -731,6 +729,22 @@ export class Game {
         let text = descriptionMap.get(tile.type);
         return text;
     }
+    formatTileSpicesText (tile) {
+        let number_label = tile.spice_slots.length;  
+        let icons = '';
+        Object.values( tile.spice_slots ).forEach((spice_type) => {
+            icons += this.formatIcon('spices_'+spice_type);
+            Object.values( spice_type ).forEach((spice_type_listElement) => {
+                icons += this.formatIcon('spices_'+spice_type_listElement);
+            });
+        });
+        let text = this.bga.gameui.format_string(
+                        _("Take ${n} ${resource_name} : ${icon_resource}.")
+                        ,{n:number_label, 'resource_name': _('Spices'), icon_resource : icons}
+                    );
+                  
+        return text;
+    }
     formatTileActionText (tile) {
         console.log("formatTileActionText",tile);
         let description = '';
@@ -741,6 +755,8 @@ export class Game {
                 break;
             case TILE_SUBTTYPE_MARKET: 
                 switch(this.gamedatas.material.tiles[tile.subtype][tile.type].play_type){
+                    case MARKET_TYPE_PLANTATION:
+                        return this.formatTileSpicesText(tile);
                     case MARKET_TYPE_ACTION_REUSEABLE:
                     case MARKET_TYPE_ACTION_DIRECT: 
                         let  returnAfterThis = false;
@@ -749,13 +765,7 @@ export class Game {
                             let number_label = number;
                             switch(parseInt(action_type)){
                                 case ACTION_SPICE:
-                                    resource_name = _('Spices');
-                                    icon_name = '';
-                                    Object.values( number ).forEach((spice_type) => {
-                                        icon_name += this.formatIcon('spices_'+spice_type);
-                                    });
-                                    number_label = 1;
-                                    break;
+                                    return this.formatTileSpicesText(tile);
                                 case ACTION_MONEY:
                                     resource_name = _('Gold Pardau cards');
                                     icon_name = this.formatIcon('money');

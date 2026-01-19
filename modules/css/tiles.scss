@@ -119,6 +119,13 @@
         display: flex;
         flex-direction: column;
     }
+    .goa_tooltip_block2 {
+        flex-direction: row;
+        column-gap: 2px;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
     .goa_tile_title, .goa_tile_img_wrap {
         justify-content: center;
         align-items: center;
@@ -133,9 +140,34 @@
         } 
     }
     .goa_tile_text_action{
-        font-size: 1.5em;
+        font-size: 1.1em;
         //display: flex;
         //flex-direction: column;
+    }
+    .goa_tile_text_playType{
+        font-style: italic;
+        font-size: 0.90em;
+        display: inline-block;
+        border-radius: .75em;
+        padding-left: 3px;
+        padding-right: 3px;
+
+        &[data-playType='2']{//MARKET_TYPE_ACTION_REUSEABLE
+            color: black;
+            background-color: #6796cc;
+        }
+        &[data-playType='4']{//MARKET_TYPE_ACTION_DIRECT
+            color: black;
+            background-color: #87d2d6;
+        }
+        &[data-playType='5']{//MARKET_TYPE_ACTION_ONCE
+            color: black;
+            background-color: #eac361;
+        }
+        &[data-playType='6']{//MARKET_TYPE_SCORING
+            color: white;
+            background-color: #a360a3;
+        }
     }
 }
 
@@ -172,7 +204,7 @@
         text-align: center;
     }
     .goa_tile_text{
-        width: 350px;
+        width: 348px;
         order: 2;
         .goa_tile_text_playType{
             font-size: 0.75em;
