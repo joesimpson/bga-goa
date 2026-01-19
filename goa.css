@@ -563,6 +563,66 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-size: 1061.9469026549% 277.3109243697%;
 }
 
+.goa_icon_explo_symbol_1 {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  background-image: url("img/icons.png");
+  background-position-x: -268.75px;
+  background-position-y: -86.9863013699px;
+  background-size: 1363.6363636364% 452.0547945205%;
+}
+
+.goa_icon_explo_symbol_2 {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  background-image: url("img/icons.png");
+  background-position-x: -318.5393258427px;
+  background-position-y: -89.5833333333px;
+  background-size: 1348.3146067416% 458.3333333333%;
+}
+
+.goa_icon_explo_symbol_3 {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  background-image: url("img/icons.png");
+  background-position-x: -366.6666666667px;
+  background-position-y: -65.7894736842px;
+  background-size: 1333.3333333333% 347.3684210526%;
+}
+
+.goa_icon_explo_symbol_4 {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  background-image: url("img/icons.png");
+  background-position-x: -493.0379746835px;
+  background-position-y: -63.1313131313px;
+  background-size: 1518.9873417722% 333.3333333333%;
+}
+
+.goa_icon_explo_symbol_5 {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  background-image: url("img/icons.png");
+  background-position-x: -510.119047619px;
+  background-position-y: -72.7777777778px;
+  background-size: 1428.5714285714% 366.6666666667%;
+}
+
+.goa_icon_explo_symbol_6 {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  background-image: url("img/icons.png");
+  background-position-x: -538.0681818182px;
+  background-position-y: -75.2873563218px;
+  background-size: 1363.6363636364% 379.3103448276%;
+}
+
 .goa_icon_exploration_card,
 .goa_icon_exploration_hand_size {
   position: relative;
@@ -922,6 +982,86 @@ Icon extract in sprite with differents layers size (so % is not useful).
 }
 .goa_money_card[data-value="10"] {
   background-position-x: 100%;
+}
+
+.goa_card_tooltip {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: black;
+}
+.goa_card_tooltip hr {
+  width: 99%;
+}
+.goa_card_tooltip .goa_tooltip_block1 {
+  width: 500px;
+}
+.goa_card_tooltip .goa_tooltip_block1,
+.goa_card_tooltip .goa_tooltip_block2 {
+  display: flex;
+  flex-direction: column;
+}
+.goa_card_tooltip .goa_tooltip_block2 {
+  flex-direction: row;
+  -moz-column-gap: 2px;
+       column-gap: 2px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.goa_card_tooltip .goa_card_title, .goa_card_tooltip .goa_card_img_wrap {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.goa_card_tooltip .goa_card_img_wrap {
+  margin-bottom: 5px !important;
+}
+.goa_card_tooltip .goa_card_img_wrap .goa_card {
+  width: 150px;
+  height: 229px;
+}
+.goa_card_tooltip .goa_card_text_action {
+  font-size: 1.1em;
+}
+.goa_card_tooltip .goa_card_symbols {
+  font-size: 0.75em;
+}
+
+.goa_card_tooltip hr {
+  color: black !important;
+  border-style: solid;
+}
+
+.goa_ExplorationCardsHelp {
+  border: 1px solid;
+  width: -moz-max-content;
+  width: max-content;
+  background-color: #58d0ff;
+  color: black;
+}
+.goa_ExplorationCardsHelp .goa_card_title {
+  font-size: 1.5em;
+}
+.goa_ExplorationCardsHelp .goa_card_text_action {
+  font-size: 1em;
+}
+.goa_ExplorationCardsHelp .goa_card_img_wrap {
+  order: 1;
+  margin-right: 2px;
+}
+.goa_ExplorationCardsHelp .goa_tooltip_block2 {
+  flex-direction: row;
+  width: -moz-max-content;
+  width: max-content;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.goa_ExplorationCardsHelp .goa_card_text {
+  width: 348px;
+  order: 2;
 }
 
 .goa_tile {
@@ -1630,7 +1770,8 @@ body.lockedInterface #restartActions {
   color: black;
 }
 
-.goa_tile_tooltip .goa_icon_container {
+.goa_tile_tooltip .goa_icon_container,
+.goa_card_tooltip .goa_icon_container {
   display: inline-block;
 }
 

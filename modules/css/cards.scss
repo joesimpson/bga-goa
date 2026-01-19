@@ -58,3 +58,82 @@
         background-position-x: 100%;
     }
 }
+
+
+.goa_card_tooltip{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: black;
+    
+    hr{
+        width: 99%;
+    }
+    .goa_tooltip_block1{
+        width: 500px;
+    }
+    .goa_tooltip_block1, 
+    .goa_tooltip_block2{
+        display: flex;
+        flex-direction: column;
+    }
+    .goa_tooltip_block2 {
+        flex-direction: row;
+        column-gap: 2px;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+    .goa_card_title, .goa_card_img_wrap {
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+    .goa_card_img_wrap{
+        margin-bottom: 5px !important; 
+        .goa_card  {
+            //if we want a different size in tooltip
+            width: 150px;
+            height: 229px;
+        } 
+    }
+    .goa_card_text_action{
+        font-size: 1.1em;
+    } 
+    .goa_card_symbols{
+        font-size: 0.75em;
+    }
+}
+.goa_card_tooltip hr {
+    color: black !important;
+    border-style: solid;
+}
+.goa_ExplorationCardsHelp {
+    border: 1px solid;
+    width: max-content;
+    background-color: #58d0ff;
+    color: black;
+    
+    .goa_card_title{
+        font-size: 1.5em;
+    }
+    .goa_card_text_action{
+        font-size: 1em;
+    }
+    .goa_card_img_wrap{
+        order: 1;
+        margin-right: 2px;
+    }
+    .goa_tooltip_block2 {
+        flex-direction: row;
+        width: max-content;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+    .goa_card_text{
+        width: 348px;
+        order: 2;
+    }
+}

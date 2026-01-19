@@ -163,8 +163,13 @@ class Game extends \Bga\GameFramework\Table
                 TILE_SUBTTYPE_OUTPOST => Tiles::getOutpostTilesTypes(),
                 TILE_SUBTTYPE_MARKET => Tiles::getMarketTilesTypes(),
             ],
+            'cards' => [
+                CARD_SUBTTYPE_EXPLORATION => Cards::getExplorationCardsTypes(),
+            ],
         ];
         $result["tokens"] = Tokens::getUiData($current_player_id);
+        
+        $result["constants"] = ALL_MY_UI_CONSTANTS;
 
         $this->playerEnergy->fillResult($result);
 

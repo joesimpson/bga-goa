@@ -169,12 +169,14 @@ export class Game {
     */
     
     setup( gamedatas ) {
-        console.log( "Starting game setup" );
+        console.log( "Starting game setup" , gamedatas);
         this.gamedatas = gamedatas;
 
         this.animationManager = new BgaAnimations.Manager({
             animationsActive: () => this.bga.gameui.bgaAnimationsActive(),
         });
+
+        this.const = gamedatas.constants;
 
         // add a div on the game area
         this.bga.gameArea.getElement().insertAdjacentHTML('beforeend', `
@@ -376,6 +378,7 @@ export class Game {
                     title: _("Player aid"),
                     html: `<div id='goa_first_help_popin'>
                         ${this.formatTilesHelp()}
+                        ${this.formatCardsHelp()}
                     </div>`,
                 })
             ],
@@ -929,23 +932,23 @@ export class Game {
             k++; 
         });
         return `
-         <div class="expandable">
+        <div class="expandable">
             <div id="goa_marketTilesHelp_toggle" class="expandabletoggle expandablearrow" onclick="gameui.GameModule.onToggleExpandable(this)">
                 <div class="icon20 icon20_expand"></div>
                 <h1 class='goa_marketTilesHelp_title'>${ this.bga.gameui.format_string( _("Market Tiles (${n})"), {n:j} ) }</h1>
                 <div class="goa_expand_ellipsis">...</div>
             </div>
-            <div class='goa_marketTilesHelp goa_expandablecontent goa_expand_off'>
+            <div class='goa_marketTilesHelp goa_expandablecontent goa_expand_on'>
                 ${list1}
             </div>
         </div>
-         <div class="expandable">
+        <div class="expandable">
             <div id="goa_outpostTilesHelp_toggle" class="expandabletoggle expandablearrow" onclick="gameui.GameModule.onToggleExpandable(this)">
                 <div class="icon20 icon20_expand"></div>
                 <h1 class='goa_outpostTilesHelp_title'>${this.bga.gameui.format_string( _("Outpost Tiles (${n})"), {n:k} ) }</h1>
                 <div class="goa_expand_ellipsis">...</div>
             </div>
-            <div class='goa_outpostTilesHelp goa_expandablecontent goa_expand_off'>
+            <div class='goa_outpostTilesHelp goa_expandablecontent goa_expand_on'>
                 ${list2}
             </div>
         </div>
@@ -1084,7 +1087,7 @@ export class Game {
             getId: (card) => card.id,
             setupFrontDiv: (card, div) => {
                 div.dataset.type = card.type; 
-                this.bga.gameui.addTooltipHtml(div.id, `TODO JSA tooltip of ${card.type}`);
+                this.bga.gameui.addTooltipHtml(div.id, this.getCardTooltip(card));
             },
             cardWidth: 131,
             cardHeight: 200,
@@ -1166,5 +1169,125 @@ export class Game {
         if (cardNumber >= 1) {
             this.explorationDiscard.addCard(card_datas, { fromStock: this.explorationDeck });
         }
+    }
+    getCardTooltip(cardDatas) {
+        let textLine1 = ''
+        let title = '';
+        let textSymbols = '';
+        if(cardDatas.subtype == CARD_SUBTTYPE_EXPLORATION){
+            let iconsContracts = this.formatIcon('contracts');
+            for(let k=2;k<=cardDatas.contracts;k++) iconsContracts += this.formatIcon('contracts');
+            textLine1 = this.bga.gameui.format_string( 
+                _('When revealing and discarding this card to found an oupost, this gives ${n} ${resource_name} : ${icon_resource}'),
+                {'n': cardDatas.contracts , resource_name: _('Contracts'), icon_resource: iconsContracts}
+            );
+            title = _('Exploration card');
+            textSymbols = this.bga.gameui.format_string( 
+                _('Gives the symbol ${s_icon} (${s_name})'),
+                { s_name: this.getCardSymbolName( cardDatas ), s_icon: this.formatIcon('explo_symbol_'+cardDatas.symbol)}
+            );
+            textSymbols += '<br>'+_('Victory points at the end of the game (if not played) : ');
+            textSymbols += '<ul>';
+            textSymbols += '<li>'+this.bga.gameui.format_string( _(' ${n} identical symbols => ${x} points '), {n:1,x:1} ) +  '</li>'; 
+            textSymbols += '<li>'+this.bga.gameui.format_string( _(' ${n} identical symbols => ${x} points '), {n:2,x:3} ) +  '</li>'; 
+            textSymbols += '<li>'+this.bga.gameui.format_string( _(' ${n} identical symbols => ${x} points '), {n:3,x:6} ) +  '</li>'; 
+            textSymbols += '<li>'+this.bga.gameui.format_string( _(' ${n} identical symbols => ${x} points '), {n:4,x:10} ) + '</li>'; 
+            textSymbols += '<li>'+this.bga.gameui.format_string( _(' ${n} identical symbols => ${x} points '), {n:5,x:15} ) + '</li>'; 
+            textSymbols += '</ul>'
+        }
+        let textAction = this.formatCardActionText( cardDatas );
+        let div = this.tplCard(cardDatas,'_tmp'); 
+        return [`<div class='goa_card_tooltip'>
+                <div class="goa_tooltip_block1">
+                    <h1 class="goa_card_title">${title}</h1>
+                </div>
+                <div class="goa_tooltip_block2">
+                    <div class="goa_card_img_wrap">${div}</div>
+                    <div class="goa_card_text">
+                        ${textAction == '' ? '' : '<hr><span class="goa_card_text_action">'+textAction+'</span>'}
+                        ${textLine1 == '' ? '' : '<hr><span class="goa_card_text_line1">'+textLine1+'</span>'}
+                        ${textSymbols == '' ? '' : '<hr><span class="goa_card_symbols">'+textSymbols+'</span>'}
+                        
+                    </div>
+                </div>
+            </div>`];
+
+    }
+
+    formatCardActionText(card){
+        switch(card.action){
+            case this.const.CARD_ACTION_PROGRESS_NO_SPICE:  return _('Type a: When performing the Progress action, you only need to pay the Ships, you can ignore the Resource costs.');
+            case this.const.CARD_ACTION_PROGRESS_NO_SHIP:   return _('Type b: When performing the Progress action, you only need to pay the Resources, you can ignore the Ship costs.');
+            case this.const.CARD_ACTION_HARVEST_AND_CARDS:  return _('Type c: When performing the Harvest action, you may take any combination of Resources, Ships, and/or Contracts instead of only Resources.');
+            case this.const.CARD_ACTION_OUTPOST_EXTRA_CONTRACTS : return _('Type d: When performing the Found Outpost action, you may draw one extra exploration card and add its Contracts to your total.');
+            case this.const.CARD_ACTION_RESSOURCES_TO_COINS  : return _('Type e: You may spend 1/2/3/4 Resources to gain 3/6/9/12 Pardaos.');
+            case this.const.CARD_ACTION_2_SPICES             : return this.bga.gameui.format_string(_('Type ${x} : ${gain}') ,
+                    { 'x':'f', 'gain': this.formatTileSpicesText({'spice_slots':[this.const.SPICES_ALL,this.const.SPICES_ALL]}) }
+                );
+            case this.const.CARD_ACTION_2_CONTRACTS          : return this.bga.gameui.format_string(_('Type ${x} : ${gain}') ,
+                    { 'x':'g', 'gain': this.bga.gameui.format_string(
+                            _("Take ${n} ${resource_name} : ${icon_resource}.")
+                            ,{n:2, 'resource_name': _('Contracts'), icon_resource : this.formatIcon('contracts')}
+                        )
+                    }
+                );
+            case this.const.CARD_ACTION_2_SHIPS              : return this.bga.gameui.format_string(_('Type ${x} : ${gain}') ,
+                    { 'x':'h', 'gain': this.bga.gameui.format_string(
+                            _("Take ${n} ${resource_name} : ${icon_resource}.")
+                            ,{n:2, 'resource_name': _('Ships'), icon_resource : this.formatIcon('ships')}
+                        )
+                    }
+                );
+            case this.const.CARD_ACTION_5_COINS              : return this.bga.gameui.format_string(_('Type ${x} : ${gain}') ,
+             { 'x':'i', 'gain': this.bga.gameui.format_string(
+                    _("Take ${n} ${resource_name} : ${icon_resource}.")
+                    ,{n:5, 'resource_name': _('Coins'), icon_resource : this.formatIcon('money')}
+                )
+             }
+            );
+            case this.const.CARD_ACTION_PROGRESS_WITH_COINS  : return _('Type j: Spend 6/12/18/24 Pardaos to advance a Progress marker of your choice to the 2nd/3rd/4th/5th row.');
+            
+        }
+        return '';
+    }
+    getCardSymbolName(card){
+        switch(card.symbol){
+            case this.const.CARD_SYMBOL_ELEPHANT: return _('Elephant');
+            case this.const.CARD_SYMBOL_TIGER: return _('Tiger');
+            case this.const.CARD_SYMBOL_URN: return _('Urn');
+            case this.const.CARD_SYMBOL_PALMTREE: return _('Palm tree');
+            case this.const.CARD_SYMBOL_SHELL: return _('Shell');
+            case this.const.CARD_SYMBOL_STATUE: return _('Statue');
+        }
+        return '';
+    }
+    
+    formatCardsHelp(){
+        let list1 = "";
+        let j = 0;
+        Object.entries(this.gamedatas.material.cards[CARD_SUBTTYPE_EXPLORATION]).forEach(([type,card_type]) => {
+            let resourceDatas = card_type;
+            resourceDatas.id = 0;
+            resourceDatas.state = 0;
+            resourceDatas.type = parseInt(type);
+            resourceDatas.subtype = CARD_SUBTTYPE_EXPLORATION;
+            if(j>0){
+                list1 = list1.concat('<hr>');
+            }
+            list1 = list1.concat( this.getCardTooltip(resourceDatas));
+            j++; 
+        });
+        return `
+        <div class="expandable">
+            <div id="goa_ExplorationCardsHelp_toggle" class="expandabletoggle expandablearrow" onclick="gameui.GameModule.onToggleExpandable(this)">
+                <div class="icon20 icon20_expand"></div>
+                <h1 class='goa_ExplorationCardsHelp_title'>${ this.bga.gameui.format_string( _("Exploration Cards (${n})"), {n:j} ) }</h1>
+                <div class="goa_expand_ellipsis">...</div>
+            </div>
+            <div class='goa_ExplorationCardsHelp goa_expandablecontent goa_expand_on'>
+                ${list1}
+            </div>
+        </div>
+        `;
     }
 }
