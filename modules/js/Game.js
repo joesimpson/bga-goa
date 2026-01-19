@@ -1141,7 +1141,8 @@ export class Game {
         let currentPlayer = this.bga.players.getCurrentPlayer();
         if (currentPlayer) {
             this.explorationHand = new BgaCards.HandStock(this.explorationCardsManager, document.getElementById(`goa_exploration_hand-${currentPlayer.id}`), {
-                sort: BgaCards.sort('type'),
+                //sort: BgaCards.sort('type'),
+                sort: BgaCards.sort('action','contracts'),
             });
         }
         

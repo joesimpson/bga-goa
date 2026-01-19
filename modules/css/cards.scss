@@ -11,9 +11,22 @@
     box-shadow: 0px 0px 0px 2px black;
 }
 
+.exploration_hand{
+    //if we don't want the bga-cards rotated style, no need to keep more height
+    --bga-cards_hand-stock-height : 210px !important;
+    .goa_exploration_card{
+        //we need to see the card details
+        --bga-cards_hand-stock-card-overlap: 0px!important;
+    }
+}
+
 .goa_exploration_card,
 .goa_exploration_card-front, .goa_exploration_card-back //for bga-cards manager 
 { 
+    //if we don't want the bga-cards rotated style :
+    --bga-cards_hand-stock-card-a: 0deg !important;
+    --bga-cards_hand-stock-card-y: 0px !important;
+
     --bga-cards_card-border-radius: 10px !important;
     border-radius: var(--bga-cards_card-border-radius);
 

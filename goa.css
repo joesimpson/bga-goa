@@ -855,8 +855,17 @@ Icon extract in sprite with differents layers size (so % is not useful).
   box-shadow: 0px 0px 0px 2px black;
 }
 
+.exploration_hand {
+  --bga-cards_hand-stock-height: 210px !important;
+}
+.exploration_hand .goa_exploration_card {
+  --bga-cards_hand-stock-card-overlap: 0px!important;
+}
+
 .goa_exploration_card,
 .goa_exploration_card-front, .goa_exploration_card-back {
+  --bga-cards_hand-stock-card-a: 0deg !important;
+  --bga-cards_hand-stock-card-y: 0px !important;
   --bga-cards_card-border-radius: 10px !important;
   border-radius: var(--bga-cards_card-border-radius);
   background-size: 700% 500%;
