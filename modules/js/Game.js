@@ -683,14 +683,17 @@ export class Game {
         if(phaseA && phaseB) phaseLabel = _('Day') + ' / '+ _('Night');
         else if(phaseA) phaseLabel = _('Day');
         else if(phaseB) phaseLabel = _('Night');
-        let textPhase = this.bga.gameui.format_string( 
+        let textLine1 = this.bga.gameui.format_string( 
             bga_format(_('Phase deck : *${x}*'), {
                             '*': (t) => '<b><i>' + t + '</i></b>',
                         }),
              {'x': phaseLabel }
         );
         if(tile.subtype == TILE_SUBTTYPE_OUTPOST){
-            textPhase = '';
+            textLine1 = this.bga.gameui.format_string( 
+                _('Requires ${n} ${resource_name} : ${icon_resource}'),
+                {'n': this.getNbContractsForColony(tile.colony) , resource_name: _('Contracts'), icon_resource: this.formatIcon('contracts')}
+            );
         }
         let textAction = this.formatTileActionText( tile );
         let div = this.tplTile(cardDatas,'_tmp'); 
@@ -701,7 +704,7 @@ export class Game {
                 <div class="goa_tooltip_block2">
                     <div class="goa_tile_img_wrap">${div}</div>
                     <div class="goa_tile_text">
-                        ${textPhase == '' ? '' : '<span class="goa_tile_text_phase">'+textPhase+'</span>'}
+                        ${textLine1 == '' ? '' : '<span class="goa_tile_text_line1">'+textLine1+'</span>'}
                         ${textAction == '' ? '' : '<hr><span class="goa_tile_text_action">'+textAction+'</span>'}
                         <hr>
                         <span class="goa_tile_text_playType" data-playType="${tile.play_type}">${this.formatTilePlayTypeText( tile )}</span>
