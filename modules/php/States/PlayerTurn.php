@@ -89,9 +89,6 @@ class PlayerTurn extends GameState
             "player_name" => $this->game->getPlayerNameById($activePlayerId), // remove this line if you uncomment notification decorator
         ]);
 
-        // in this example, the player gains 1 energy each time he passes
-        $this->game->playerEnergy->inc($activePlayerId, 1);
-
         // at the end of the action, move to the next state
         return ConfirmTurn::class;
     }

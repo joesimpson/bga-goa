@@ -20,7 +20,6 @@ namespace Bga\Games\Goa;
 
 require_once 'constants.inc.php';
 
-use Bga\GameFramework\Components\Counters\PlayerCounter;
 use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Core\Stats;
 use Bga\Games\Goa\Managers\Cards;
@@ -36,8 +35,6 @@ class Game extends \Bga\GameFramework\Table
     public static $instance = null;
 
     public static array $CARD_TYPES;
-
-    public PlayerCounter $playerEnergy;
 
     /**
      * Your global variables labels:
@@ -55,8 +52,6 @@ class Game extends \Bga\GameFramework\Table
         $this->initGameStateLabels([
             'logging' => 10,
         ]);
-
-        $this->playerEnergy = $this->counterFactory->createPlayerCounter('energy');
 
         self::$CARD_TYPES = [
             1 => [
@@ -171,10 +166,6 @@ class Game extends \Bga\GameFramework\Table
         
         $result["constants"] = ALL_MY_UI_CONSTANTS;
 
-        $this->playerEnergy->fillResult($result);
-
-        // TODO: Gather all information about current game situation (visible by player $current_player_id).
-
         return $result;
     }
 
@@ -220,8 +211,6 @@ class Game extends \Bga\GameFramework\Table
      */
     protected function setupNewGame($players, $options = [])
     {
-        $this->playerEnergy->initDb(array_keys($players), initialValue: 2);
-
         Globals::setupNewGame($players, $options);
         $playersDatas = Players::setupNewGame($players, $options);
         Stats::setupNewGame($playersDatas);
