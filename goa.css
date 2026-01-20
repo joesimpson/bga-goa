@@ -773,7 +773,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
   width: 26px;
   height: 40px;
   border-radius: 5%;
-  box-shadow: 0px 0px 0px 1px black;
+  box-shadow: 0px 0px 0px 0.1em black;
   background-size: 700% 500%;
   background-image: url("img/exp_cards.jpg");
   background-position-x: 0%;
@@ -789,7 +789,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
   border-radius: 5%;
   background-size: 500% 200%;
   background-image: url("img/base_cards.jpg");
-  box-shadow: 0px 0px 0px 1px black;
+  box-shadow: 0px 0px 0px 0.1em black;
 }
 
 .goa_icon_money {
