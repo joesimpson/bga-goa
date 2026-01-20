@@ -71,7 +71,7 @@ const TOKEN_SUBTTYPE_AUCTION_MARKER = 2;
 const TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER = 3;
 const TOKEN_SUBTTYPE_SPICE = 4;
 
-import { ConfirmTurn } from "./ConfirmTurn.js";
+import { ConfirmTurn } from "./states/ConfirmTurn.js";
 
 /**
  * We create one State class per declared state on the PHP side, to handle all state specific code here.

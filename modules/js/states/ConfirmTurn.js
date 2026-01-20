@@ -26,7 +26,6 @@ export class ConfirmTurn {
                 }
             }
         }
-        //TODO JSA PREF ICON BUTTON
         this.bga.statusBar.addActionButton(_('Restart turn'), () => this.bga.actions.performAction("actRestart"), {id: 'btnTextRestartTurn', color:'alert', destination: document.getElementById('restartActions')}); 
         this.bga.statusBar.addActionButton('<i class="fa fa-undo"></i><i class="fa fa-undo"></i>', () => this.bga.actions.performAction("actRestart"), {id: 'btnIconRestartTurn',  color:'alert', destination: document.getElementById('restartActions')}); 
     }
