@@ -657,10 +657,9 @@ export class Game {
             this._counters[pId]['spices_green' ].toValue(player.spices[5]);
         });
         
-        this.setupCards(false);
-        //TODO JSA PRIVATE HAND
-        this.setupTiles(false);
-        this.setupTokens(false);
+        await this.setupCards(false);
+        await this.setupTiles(false);
+        await this.setupTokens(false);
     }
     
     async notif_auctionPlaced(notif) {
@@ -672,6 +671,14 @@ export class Game {
         await this.animationManager.slideAndAttach(tokenDiv, destinationDiv);
     }
 
+    async notif_reshuffleExplorationDeck(notif) {
+        console.log("notif_reshuffleExplorationDeck",notif);
+        //this.explorationDeck.addCards(this.explorationDiscard.getCards());
+        await this.explorationDeck.addCards(this.explorationDiscard.getCards().map(card => ({ id: card.id, })) );
+        await this.explorationDeck.shuffle().then(() => console.log('shuffle ended'));
+        //this.explorationDeck.removeAll();
+        await this.explorationDeck.setCardNumber(notif.deck_size);
+    }
     async notif_drawAndDiscardExploration(notif) {
         console.log("notif_drawAndDiscardExploration",notif);
         this.discardExCard(notif.card);
@@ -679,14 +686,19 @@ export class Game {
     async notif_giveExplorationCardsToPlayer(notif) {
         console.log("notif_giveExplorationCardsToPlayer",notif);
 
-        this._counters[notif.player_id]['exploration_hand_size'].incValue( notif.cards.length);
+        this._counters[notif.player_id]['exploration_hand_size'].incValue( notif.n);
         let currentPlayer = this.bga.players.getCurrentPlayer();
-        if (currentPlayer && currentPlayer.id == notif.player_id) {
-            this.explorationHand.addCards(notif.cards, { fromStock: this.explorationDeck});
-            Object.values(notif.cards).forEach((card) => {
+        if (currentPlayer && currentPlayer.id == notif.player_id && notif._private) {
+            this.explorationHand.addCards(notif._private.cards, { fromStock: this.explorationDeck});
+            Object.values(notif._private.cards).forEach((card) => {
                 this._counters[currentPlayer.id]['explo_symbol_tiny_'+card.symbol].incValue(1);
             });
         }
+        else {
+            //TODO JSA ANIMATE BACK CARD ?
+            await this.explorationDeck.setCardNumber(this.explorationDeck.getCardNumber() - notif.n );
+        }
+        
     }
     
     async notif_newSpiceOnTile(notif) {
@@ -1271,7 +1283,7 @@ export class Game {
      * This function is refreshUI compatible
      * @param {*} init 
      */
-    setupCards(init = true) {
+    async setupCards(init = true) {
         console.log("setupCards");
         
         if(init){
@@ -1304,14 +1316,16 @@ export class Game {
                     sort: BgaCards.sort('action','contracts'),
                 });
             }
+            this.explorationDeck = new BgaCards.Deck(this.explorationCardsManager, document.getElementById('goa_exploration_deck'), {
+                cardNumber: this.gamedatas.cards.deck_size.exploration,
+                counter: {
+                    position: 'center',
+                    extraClasses: 'text-shadow',
+                },
+            });
         }
-        this.explorationDeck = new BgaCards.Deck(this.explorationCardsManager, document.getElementById('goa_exploration_deck'), {
-            cardNumber: this.gamedatas.cards.deck_size.exploration,
-            counter: {
-                position: 'center',
-                extraClasses: 'text-shadow',
-            },
-        });
+        
+        await this.explorationDeck.setCardNumber(this.gamedatas.cards.deck_size.exploration);
         
         // This function is refreshUI compatible
         //destroy previous cards

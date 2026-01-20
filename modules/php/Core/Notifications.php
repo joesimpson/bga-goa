@@ -69,10 +69,14 @@ class Notifications
   }
   public static function giveExplorationCardsToPlayer(Player $player, Collection $cards)
   {
+    $privateDatas[$player->getId()] = new NotificationMessage('', [
+            "cards" => $cards->ui(),
+        ]);
+        
     self::notifyAll("giveExplorationCardsToPlayer", clienttranslate('${player_name} draws ${n} exploration cards'), [
         "player" => $player,
-        "cards" => $cards->ui(),
         "n" => $cards->count(),
+        '_private' => $privateDatas,
     ]);
   }
   
@@ -107,6 +111,13 @@ class Notifications
       'player' => $player,
       'token' => $token->getUiData(),
       'tile_id' => $toTile->getId(),
+    ]);
+  }
+  
+  public static function reshuffleExplorationDeck(Player $player, int $deck_size)
+  {
+    self::notifyAll('reshuffleExplorationDeck', '', [
+      'deck_size' => $deck_size,
     ]);
   }
   

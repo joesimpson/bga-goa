@@ -105,8 +105,19 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
   public static function drawExplorationCardsToPlayer(Player $player,int $nb)
   {
     Game::get()->trace("drawExplorationCardsToPlayer($nb)");
+    //$nbDiscardBefore = Cards::countInLocation(CARD_LOCATION_EXP_DISCARD);
+    $nbDeckBefore = Cards::countInExplorationDeck();
+
     $cards = Cards::pickForLocation($nb, CARD_LOCATION_EXP_DECK,CARD_LOCATION_HAND,);
     
+    //$nbDiscard = Cards::countInLocation(CARD_LOCATION_EXP_DISCARD);
+    if($nbDeckBefore< $nb){
+      $nbDeck = Cards::countInExplorationDeck();
+      //notify deck size BEFORE drawing, because we have an animation after
+      $nbDeckRightAfterShuffle = $nbDeck + max($nb,$nbDeckBefore);
+      Notifications::reshuffleExplorationDeck($player, $nbDeckRightAfterShuffle );
+    }
+
     foreach($cards as $card){
       $card->setPId($player->getId());
       $card->setLocation(CARD_LOCATION_HAND);
@@ -114,6 +125,24 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
      
     Notifications::giveExplorationCardsToPlayer($player,$cards);
     return $cards;
+  }
+  public static function drawAndDiscardExploration(Player $player,int $nb)
+  {
+    $nbDeckBefore = Cards::countInExplorationDeck();
+
+    $cards = Cards::pickForLocation($nb, CARD_LOCATION_EXP_DECK,CARD_LOCATION_EXP_DISCARD,);
+    
+    if($nbDeckBefore< $nb){
+      $nbDeck = Cards::countInExplorationDeck();
+      //notify deck size BEFORE drawing, because we have an animation after
+      $nbDeckRightAfterShuffle = $nbDeck + max($nb,$nbDeckBefore);
+      Notifications::reshuffleExplorationDeck($player, $nbDeckRightAfterShuffle );
+    }
+
+    foreach($cards as $card){
+      Notifications::drawAndDiscardExploration($player->getId(), $card);
+    }
+
   }
    
   ///////////////////////////////////////////////////////////////////////////////////////

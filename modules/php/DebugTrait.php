@@ -104,6 +104,7 @@ trait DebugTrait
     // Test board UI : create fake tokens on board
     function debug_BoardTokens(){
         $player_id = Players::getCurrent()->getId();
+        Log::addStep();
 
         $tokens = Tokens::getInLocation(TOKEN_LOCATION_BOARD);
         foreach($tokens as $t) Tokens::delete($t->getId());
@@ -192,7 +193,8 @@ trait DebugTrait
 
         Tokens::create($tokens);
 
-        Game::get()->notify->player($player_id,'reloadPage', "/!\ : Refresh page to see game has restarted...", []);
+        //Game::get()->notify->player($player_id,'reloadPage', "/!\ : Refresh page to see game has restarted...", []);
+        Notifications::refreshUI(Game::get()->getAllDatas());
     }
 
     
@@ -201,21 +203,26 @@ trait DebugTrait
         Cards::moveAllInLocation(CARD_LOCATION_BOARD,CARD_LOCATION_EXP_DECK);
         Cards::moveAllInLocation(CARD_LOCATION_EXP_DISCARD,CARD_LOCATION_EXP_DECK);
         Cards::shuffle(CARD_LOCATION_EXP_DECK);
-        Game::get()->notify->player($player_id,'reloadPage', "/!\ : Refresh page to see game has restarted...", []);
+        //Game::get()->notify->player($player_id,'reloadPage', "/!\ : Refresh page to see game has restarted...", []);
+        Notifications::refreshUI(Game::get()->getAllDatas());
     }
     // Test board UI : 
-    function debug_boardCards(){
+    function debug_boardCards(bool $keepOne = true){
         $player_id = Players::getCurrent()->getId();
+        Log::addStep();
 
-        $cards = Cards::moveAllInLocation(CARD_LOCATION_EXP_DECK,CARD_LOCATION_EXP_DISCARD);
+        Cards::moveAllInLocation(CARD_LOCATION_EXP_DECK,CARD_LOCATION_EXP_DISCARD);
+        //
+        if($keepOne) Cards::getTopOf(CARD_LOCATION_EXP_DISCARD)->setLocation(CARD_LOCATION_EXP_DECK);
         Cards::shuffle(CARD_LOCATION_EXP_DISCARD);
-        Game::get()->notify->player($player_id,'reloadPage', "/!\ : Refresh page to see game has restarted...", []);
+        //Game::get()->notify->player($player_id,'reloadPage', "/!\ : Refresh page to see game has restarted...", []);
+        Notifications::refreshUI(Game::get()->getAllDatas());
     }
-    function debug_drawAndDiscardExplo(){
-        $player_id = Players::getCurrent()->getId();
+    function debug_drawAndDiscardExplo(int $nb = 1){
+        $player = Players::getCurrent();
+        Log::addStep();
 
-        $card = Cards::pickOneForLocation(CARD_LOCATION_EXP_DECK,CARD_LOCATION_EXP_DISCARD,);
-        Notifications::drawAndDiscardExploration($player_id, $card);
+        Cards::drawAndDiscardExploration($player, $nb);
     }
     function debug_HandExplo(int $size = 1){
         $player = Players::getCurrent();
@@ -227,6 +234,7 @@ trait DebugTrait
     function debug_changePlayerCurrencies(int $money = 15,int $ships = 5,int $contracts = 3,int $compasses = 1,){
         $player = Players::getCurrent();
         $player_id = $player->getId();
+        Log::addStep();
 
         $player->setMoney($money);
         $player->setShips($ships);
@@ -239,6 +247,7 @@ trait DebugTrait
     function debug_playerTiles(){
         $player = Players::getCurrent();
         $player_id = $player->getId();
+        Log::addStep();
 
         //resetup outposts
         $outposts = Tiles::getOutpostTilesTypes();
@@ -295,7 +304,8 @@ trait DebugTrait
         $tile->setState(3);
         Tokens::addSpiceOnTile($tile, $player, TOKEN_TYPE_SPICE_YELLOW, 1);
 
-        Game::get()->notify->player($player_id,'reloadPage', "/!\ : Refresh page to see game has restarted...", []);
+        //Game::get()->notify->player($player_id,'reloadPage', "/!\ : Refresh page to see game has restarted...", []);
+        Notifications::refreshUI(Game::get()->getAllDatas());
     }
     ////////////////////////////////////////////////////
         
