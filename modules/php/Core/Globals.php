@@ -19,6 +19,8 @@ class Globals extends \Bga\Games\Goa\Helpers\DB_Manager
     //session for campaign of multiple sessions
     'session' => 'int',
     'round' => 'int',
+    //keep a trace of changes insides the same round in roundStep (1,2,3)
+    'roundStep' => 'int',
     'turn' => 'int',
     'firstPlayer' => 'int',
 

@@ -106,6 +106,12 @@ body.lockedInterface{
                     0px -2px 2px black; 
     }
 }
+
+.goa_token_log{
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+}
 // ------------------------------------------------------------------------------
 
 
@@ -124,6 +130,7 @@ body.lockedInterface{
     display: inline-block;
     vertical-align: middle;
 }
+
 /* bga-help  -------------------------------------- */
 .bga-help_button{
     box-shadow: 0px 0px 5px 5px rgb(243,156,18);

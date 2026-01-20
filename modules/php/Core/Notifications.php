@@ -4,6 +4,7 @@ namespace Bga\Games\Goa\Core;
 
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Collection;
+use Bga\Games\Goa\Models\AuctionMarker;
 use Bga\Games\Goa\Models\ExplorationCard;
 use Bga\Games\Goa\Models\Player;
 use Bga\Games\Goa\Models\Tile;
@@ -41,14 +42,15 @@ class Notifications
 
   /**
    */
-  public static function cardPlayed(int $playerId, string $card_name, int $card_id)
+  public static function auctionPlaced(Player $player, int $row, int $col, Token $token)
   {
-    self::notifyAll("cardPlayed", clienttranslate('${player_name} plays ${card_name}'), [
-       "player_id" => $playerId,
-        "player_name" => Game::get()->getPlayerNameById($playerId),
-        "card_name" => $card_name,
-        "card_id" => $card_id,
-        "i18n" => ['card_name'],
+    self::notifyAll("auctionPlaced", clienttranslate('${player_name} places the auction marker ${token_icon} on the market (row ${row}, column ${col})'), [
+        "player" => $player,
+        "row" => $row,
+        "col" => $col,
+        "token" => $token->getUiData(),
+        "token_icon" => '',
+        'preserve'=>['token'],
     ]);
   }
   

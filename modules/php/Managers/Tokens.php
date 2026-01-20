@@ -107,7 +107,7 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
     return self::DB()->delete($tokenId);
   }
   
-  public static function addSpiceOnTile(Tile $tile,Player $player,int $tokenType,int $position)
+  public static function addSpiceOnTile(Tile $tile,Player $player,int $tokenType,int $position): TokenSpice
   {
     $token = [
       'type' => $tokenType,
@@ -119,6 +119,61 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
     $elt = self::singleCreate($token);
     Notifications::newSpiceOnTile($player,$elt,$tile);
     return $elt;
+  }
+  
+  public static function placeFirstAuctionMarker(Player $player,int $row,int $col): FirstAuctionMarker
+  {
+    $token = [
+      'type' => TOKEN_TYPE_FIRSTAUCTION_MARKER,
+      'subtype' => TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER,
+      'location' => TOKEN_LOCATION_BOARD,
+      'player_id' => $player->getId(),
+      'row' => $row,
+      'col' => $col,
+    ];
+    $elt = self::singleCreate($token);
+    return $elt;
+  }
+  public static function placeAuction(Player $player,int $row,int $col, int $type): AuctionMarker
+  {
+    $token = self::DB()
+      ->where( 'type', $type)
+      ->where( 'subType', TOKEN_SUBTTYPE_AUCTION_MARKER)
+      ->wherePlayer($player->getId())
+      ->get()
+      ->first()
+      ;
+    $token->setRow($row);
+    $token->setCol($col);
+    $token->setLocation(TOKEN_LOCATION_BOARD);
+    return $token;
+  }
+  public static function getNextAuctionToken(Player $player): AuctionMarker|null
+  {
+    $placedTokens = self::DB()
+      ->where( 'subType', TOKEN_SUBTTYPE_AUCTION_MARKER)
+      ->where( static::$prefix . 'location', TOKEN_LOCATION_BOARD)
+      ->get()
+      ;
+
+    $placedTypes = $placedTokens->map(function ($token) { return $token->getType(); })->toArray();
+    $nextAuctionType = null;
+    foreach (TOKEN_TYPE_AUCTION_MARKERS as $k => $type){
+      if(in_array($type,$placedTypes )) continue;
+      $nextAuctionType = $type;
+      break;
+    }
+    if(!isset($nextAuctionType)){
+      return null;
+    }
+    $token = self::DB()
+      ->where( 'type', $nextAuctionType)
+      ->where( 'subType', TOKEN_SUBTTYPE_AUCTION_MARKER)
+      ->wherePlayer($player->getId())
+      ->get()
+      ->first()
+      ;
+    return $token;
   }
 
   ///////////////////////////////////////////////////////////////////////////////

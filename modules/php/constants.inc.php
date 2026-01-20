@@ -6,6 +6,10 @@ const BGA_GAMESTATE_GAMEVERSION = 300;
  * Game Constants
  */
 
+const ROUND_STEP_PLACE_AUCTIONS  = 1;
+const ROUND_STEP_TILE_AUCTIONS   = 2;
+const ROUND_STEP_PLAYER_ACTIONS  = 3;
+
 const ACTION_MONEY               = 1;
 const ACTION_CONTRACT            = 2;
 const ACTION_SHIP                = 3;
@@ -190,8 +194,14 @@ const ST_END_SCORING = 98;
 const ST_END_GAME = 99;
  
 /////////////////////////////////////////////////////////  
-
+/**
+ * ALL CONSTANTS where name is reused 'as-is' on JS side
+ */
 CONST ALL_MY_UI_CONSTANTS= [
+   'ROUND_STEP_PLACE_AUCTIONS' => ROUND_STEP_PLACE_AUCTIONS ,
+   'ROUND_STEP_TILE_AUCTIONS' => ROUND_STEP_TILE_AUCTIONS  ,
+   'ROUND_STEP_PLAYER_ACTIONS' => ROUND_STEP_PLAYER_ACTIONS ,
+
    'SPICES_ALL' =>   SPICES_ALL,
 
    'CARD_SYMBOL_ELEPHANT' =>  CARD_SYMBOL_ELEPHANT,

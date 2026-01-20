@@ -33,6 +33,7 @@ class NewRound extends \Bga\GameFramework\States\GameState
         $round = Globals::getRound();
         $round ++;
         Globals::setRound($round);
+        Globals::setRoundStep(ROUND_STEP_PLACE_AUCTIONS);
         Notifications::newRound($round);
 
         // Go to another gamestate

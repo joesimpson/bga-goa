@@ -8,9 +8,14 @@ use Bga\GameFramework\StateType;
 use Bga\GameFramework\States\GameState;
 use Bga\GameFramework\States\PossibleAction;
 use Bga\GameFramework\UserException;
+use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Core\Notifications;
+use Bga\Games\Goa\Exceptions\UnexpectedException;
 use Bga\Games\Goa\Game;
+use Bga\Games\Goa\Helpers\GridUtils;
 use Bga\Games\Goa\Helpers\Log;
+use Bga\Games\Goa\Managers\Players;
+use Bga\Games\Goa\Managers\Tokens;
 
 class PlayerTurn extends GameState
 {
@@ -24,7 +29,7 @@ class PlayerTurn extends GameState
     }
 
     /**
-     * Game state arguments, example content.
+     * Game state arguments
      *
      * This method returns some additional information that is very specific to the `PlayerTurn` game state.
      */
@@ -32,42 +37,60 @@ class PlayerTurn extends GameState
     {
         // Get some values from the current game situation from the database.
 
-        return [
-            "playableCardsIds" => [1, 2],
+        $roundStep = Globals::getRoundStep();
+        $player = Players::getActive();
+
+        $args = [
+            'roundStep' => $roundStep,
+            'possibleActions' => [],
         ];
+
+        switch($roundStep){
+            case ROUND_STEP_PLACE_AUCTIONS:
+                $nextAuctionToken = Tokens::getNextAuctionToken($player);
+                $args['token'] = $nextAuctionToken->getUiData();
+                $args['pAuctionableSpots'] = GridUtils::listPossibleSpotsForNextAuctionMarker($nextAuctionToken);
+                $args['possibleActions'][] = 'actPlaceAuction';
+                break;
+            case ROUND_STEP_TILE_AUCTIONS: 
+                $args['possibleActions'][] = 'actBid';
+                $args['possibleActions'][] = 'actPassAuction';
+                break;
+            case ROUND_STEP_PLAYER_ACTIONS:
+                break;
+            default : break;
+        }
+
+        ConfirmTurn::addArgsForUndo($args);
+        return $args;
     }    
 
     /**
-     * Player action, example content.
-     *
-     * In this scenario, each time a player plays a card, this method will be called. This method is called directly
-     * by the action trigger on the front side with `bgaPerformAction`.
+     * Player action in round step 1
      *
      * @throws UserException
      */
     #[PossibleAction]
-    public function actPlayCard(int $card_id, int $activePlayerId, array $args)
+    public function actPlaceAuction(int $row, int $col, int $activePlayerId, array $args)
     {
         // check input values
-        $playableCardsIds = $args['playableCardsIds'];
-        if (!in_array($card_id, $playableCardsIds)) {
-            throw new UserException('Invalid card choice');
+        $pAuctionableSpots = $args['pAuctionableSpots'];
+        if (!in_array(['row'=>$row,'col'=>$col], $pAuctionableSpots)) {
+            throw new UnexpectedException(101,"Invalid auction $row,$col");
         }
         
         Log::addStep();
+        $player = Players::get($activePlayerId);
 
         // Add your game logic to play a card here.
-        $card_name = Game::$CARD_TYPES[$card_id]['card_name'];
-
-        // Notify all players about the card played.
-        Notifications::cardPlayed(
-            $activePlayerId,
-            $card_name,
-            $card_id,
-        );
-
-        // in this example, the player gains 1 points each time he plays a card
-        $this->playerScore->inc($activePlayerId, 1);
+        $auctionType =  $args['token']['type'];
+        if($auctionType == TOKEN_TYPE_AUCTION_MARKER_1){
+            //add first auction token when needed
+            $token1 = Tokens::placeFirstAuctionMarker($player,$row,$col);
+            Notifications::auctionPlaced( $player, $row, $col, $token1 );
+        }
+        $token = Tokens::placeAuction($player,$row,$col, $auctionType);
+        Notifications::auctionPlaced( $player, $row, $col, $token );
 
         // at the end of the action, move to the next state
         return ConfirmTurn::class;
@@ -111,7 +134,7 @@ class PlayerTurn extends GameState
 
         // Example of zombie level 1:
         $args = $this->getArgs();
-        $zombieChoice = $this->getRandomZombieChoice($args['playableCardsIds']); // random choice over possible moves
-        return $this->actPlayCard($zombieChoice, $playerId, $args); // this function will return the transition to the next state
+        $zombieChoice = $this->getRandomZombieChoice($args['pAuctionableSpots']); // random choice over possible moves
+        return $this->actPlaceAuction($zombieChoice['row'],$zombieChoice['col'], $playerId, $args); // this function will return the transition to the next state
     }
 }

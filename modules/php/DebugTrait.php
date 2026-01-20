@@ -60,9 +60,9 @@ trait DebugTrait
 
         self::DbQuery("DELETE FROM `gamelog` where gamelog_packet_id > 1");
         
-        self::DbQuery("DELETE FROM `bga_player_counters`");
-        self::DbQuery("ALTER TABLE `bga_player_counters` DROP `energy`");
-        self::DbQuery("DROP TABLE `bga_player_counters`");
+        //self::DbQuery("DELETE FROM `bga_player_counters`");
+        //self::DbQuery("ALTER TABLE `bga_player_counters` DROP `energy`");
+        //self::DbQuery("DROP TABLE `bga_player_counters`");
 
         Game::get()->setupNewGame($players,$options);
         

@@ -72,66 +72,7 @@ const TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER = 3;
 const TOKEN_SUBTTYPE_SPICE = 4;
 
 import { ConfirmTurn } from "./states/ConfirmTurn.js";
-
-/**
- * We create one State class per declared state on the PHP side, to handle all state specific code here.
- * onEnteringState, onLeavingState and onPlayerActivationChange are predefined names that will be called by the framework.
- * When executing code in this state, you can access the args using this.args
- */
-class PlayerTurn {
-    constructor(game, bga) {
-        this.game = game;
-        this.bga = bga;
-    }
-
-    /**
-     * This method is called each time we are entering the game state. You can use this method to perform some user interface changes at this moment.
-     */
-    onEnteringState(args, isCurrentPlayerActive) {
-        this.bga.statusBar.setTitle(isCurrentPlayerActive ? 
-            _('${you} must play a card or pass') :
-            _('${actplayer} must play a card or pass')
-        );
-      
-        if (isCurrentPlayerActive) {
-            const playableCardsIds = args.playableCardsIds; // returned by the PlayerTurn::getArgs
-
-            // Add test action buttons in the action status bar, simulating a card click:
-            playableCardsIds.forEach(
-                cardId => this.bga.statusBar.addActionButton(_('Play card with id ${card_id}').replace('${card_id}', cardId), () => this.onCardClick(cardId))
-            ); 
-
-            this.bga.statusBar.addActionButton(_('Pass'), () => this.bga.actions.performAction("actPass"), { color: 'secondary' }); 
-        }
-    }
-
-    /**
-     * This method is called each time we are leaving the game state. You can use this method to perform some user interface changes at this moment.
-     */
-    onLeavingState(args, isCurrentPlayerActive) {
-        this.game.removeAllActionButtons();
-    }
-
-    /**
-     * This method is called each time the current player becomes active or inactive in a MULTIPLE_ACTIVE_PLAYER state. You can use this method to perform some user interface changes at this moment.
-     * on MULTIPLE_ACTIVE_PLAYER states, you may want to call this function in onEnteringState using `this.onPlayerActivationChange(args, isCurrentPlayerActive)` at the end of onEnteringState.
-     * If your state is not a MULTIPLE_ACTIVE_PLAYER one, you can delete this function.
-     */
-    onPlayerActivationChange(args, isCurrentPlayerActive) {
-    }
-
-    
-    onCardClick(card_id) {
-        console.log( 'onCardClick', card_id );
-
-        this.bga.actions.performAction("actPlayCard", { 
-            card_id,
-        }).then(() =>  {                
-            // What to do after the server call if it succeeded
-            // (most of the time, nothing, as the game will react to notifs / change of state instead, so you can delete the `then`)
-        });        
-    }
-}
+import { PlayerTurn } from "./states/PlayerTurn.js";
 
 export class Game {
     
@@ -443,6 +384,9 @@ export class Game {
             if('card' in args && 'card_icon' in args) {
                 args.card_icon = this.tplCard(args.card, '_log');
             }
+            if('token' in args && 'token_icon' in args) {
+                args.token_icon = this.tplToken(args.token, '_log');
+            }
         }
       } catch (e) {
         console.error(log, args, 'Exception thrown', e.stack);
@@ -586,16 +530,16 @@ export class Game {
     notif_reloadPage(notif) {
         window.location.reload(true);
     }
-    //For debugging :
-    //notif_statesDiagram(notif) {
-    //    console.log("notif_statesDiagram",notif);
-    //    this.myDialogStatesDiagram = new ebg.popindialog();
-    //    this.myDialogStatesDiagram.create( 'myDialogStatesDiagram' );
-    //    this.myDialogStatesDiagram.setTitle( ("States Diagram") );
-    //    this.myDialogStatesDiagram.setContent( notif.diag );
-    //    this.myDialogStatesDiagram.show();
-    //}
     
+    async notif_auctionPlaced(notif) {
+        console.log("notif_auctionPlaced",notif);
+        let token = notif.token;
+        //let tokenDiv = document.getElementById(`goa_token-${token.id}`);
+        let tokenDiv = this.addToken(token);
+        let destinationDiv = document.getElementById(`goa_market_grid_space-${token.row}-${token.col}`);
+        await this.animationManager.slideAndAttach(tokenDiv, destinationDiv);
+    }
+
     async notif_drawAndDiscardExploration(notif) {
         console.log("notif_drawAndDiscardExploration",notif);
         this.discardExCard(notif.card);
@@ -1083,13 +1027,13 @@ export class Game {
     
     tplToken(token, prefix ='') {
         if(token.subtype == TOKEN_SUBTTYPE_PROGRESS_MARKER) 
-            return `<div id="goa_token-${token.id}" class="goa_token goa_progress_marker" data-track='${token.track}' data-row='${token.state}' data-color='${this.gamedatas.players[token.pId].color}' data-pid='${token.pId}'></div>`;
+            return `<div id="goa_token${prefix}-${token.id}" class="goa_token goa_token${prefix} goa_progress_marker" data-track='${token.track}' data-row='${token.state}' data-color='${this.gamedatas.players[token.pId].color}' data-pid='${token.pId}'></div>`;
         if(token.subtype == TOKEN_SUBTTYPE_AUCTION_MARKER) 
-            return `<div id="goa_token-${token.id}" class="goa_token goa_auction_marker" data-value='${token.auctionOrder}' data-color='${this.gamedatas.players[token.pId].color}' data-pid='${token.pId}'></div>`;
+            return `<div id="goa_token${prefix}-${token.id}" class="goa_token goa_token${prefix} goa_auction_marker" data-value='${token.auctionOrder}' data-color='${this.gamedatas.players[token.pId].color}' data-pid='${token.pId}'></div>`;
         if(token.subtype == TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER) 
-            return `<div id="goa_token-${token.id}" class="goa_token goa_first_auction_marker" ></div>`;
+            return `<div id="goa_token${prefix}-${token.id}" class="goa_token goa_token${prefix} goa_first_auction_marker" ></div>`;
         if(token.subtype == TOKEN_SUBTTYPE_SPICE) 
-            return `<div id="goa_token-${token.id}" class="goa_token goa_spice" data-type="${token.type}" data-pid="${token.pId}" data-state="${token.state}"></div>`;
+            return `<div id="goa_token${prefix}-${token.id}" class="goa_token goa_token${prefix} goa_spice" data-type="${token.type}" data-pid="${token.pId}" data-state="${token.state}"></div>`;
         return '';
     }
     tplProgressTrack(datas) {
