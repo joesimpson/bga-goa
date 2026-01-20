@@ -39,11 +39,11 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
    */
   public static function getUiData($currentPlayerId)
   {
-    $privateCards = self::getExplorationHand($currentPlayerId);
+    //$privateCards = self::getExplorationHand($currentPlayerId);
 
     return 
       self::getExplorationDiscardPile()
-      ->merge($privateCards)
+      //->merge($privateCards)
       ->map(function ($card) {
         return $card->getUiData();
       })
@@ -65,6 +65,12 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
       ->get();
   }
 
+  public static function getAllDeckSizes()
+  {
+    return [
+            'exploration' => Cards::countInExplorationDeck(),
+        ];
+  }
   public static function countInExplorationDeck()
   {
     return self::DB()
@@ -87,6 +93,13 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
       ->where(static::$prefix . 'location', CARD_LOCATION_HAND)
       ->wherePlayer($playerId)
       ->count();
+  }
+  
+  public static function getPrivateDatas(int $pId)
+  {
+    return [ 
+      'hand' => Cards::getExplorationHand($pId)->ui(),
+    ];
   }
   
   public static function drawExplorationCardsToPlayer(Player $player,int $nb)

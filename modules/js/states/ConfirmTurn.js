@@ -21,8 +21,8 @@ export class ConfirmTurn {
             if (args && args.previousSteps) {
                 let lastStep = Math.max(...args.previousSteps);
                 if (lastStep > 0){
-                    this.bga.statusBar.addActionButton(_('Undo last step'), () => this.bga.actions.performAction("actUndoToStep",{ 'stepId': lastStep }), {id: 'btnTextUndoLastStep', color:'alert', destination: document.getElementById('restartActions')}); 
-                    this.bga.statusBar.addActionButton('<i class="fa fa-undo"></i>', () => this.bga.actions.performAction("actUndoToStep",{ 'stepId': lastStep }), {id: 'btnIconUndoLastStep', color:'alert', destination: document.getElementById('restartActions')}); 
+                    this.bga.statusBar.addActionButton(_('Undo last step'), () => this.bga.actions.performAction("actUndoLastStep",{ }), {id: 'btnTextUndoLastStep', color:'alert', destination: document.getElementById('restartActions')}); 
+                    this.bga.statusBar.addActionButton('<i class="fa fa-undo"></i>', () => this.bga.actions.performAction("actUndoLastStep",{ }), {id: 'btnIconUndoLastStep', color:'alert', destination: document.getElementById('restartActions')}); 
                 }
             }
         }

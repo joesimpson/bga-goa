@@ -2,8 +2,10 @@
 
 namespace Bga\Games\Goa\Core;
 
+use Bga\GameFramework\NotificationMessage;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Collection;
+use Bga\Games\Goa\Managers\Cards;
 use Bga\Games\Goa\Models\AuctionMarker;
 use Bga\Games\Goa\Models\ExplorationCard;
 use Bga\Games\Goa\Models\Player;
@@ -195,15 +197,28 @@ class Notifications
   
   public static function refreshUI($datas)
   {
-    // Keep only the things from getAllDatas that matters
+    // Keep only the things from getAllDatas that matters (changed during the player actions)
+    //$privateHand = $datas['cards']['hand'];
+    $players = $datas['players'];
     $gameDatas = [
-      'players' => $datas['players'],
+      'players' => $players,
       'cards' => $datas['cards'],
+      'tiles' => $datas['tiles'],
       'tokens' => $datas['tokens'],
     ];
+    unset($gameDatas['cards']['private']);
+
+    $playerId = Game::get()->getCurrentPlayerId();
+    $privateDatas = [];
+    foreach ($players as $pid => $player) {
+      $privateDatas[$pid] = new NotificationMessage('', [
+            'private' => Cards::getPrivateDatas($pid),
+          ]);
+    }
 
     self::notifyAll('refreshUI', '', [
       'datas' => $gameDatas,
+      '_private' => $privateDatas,
     ]);
   }
   

@@ -189,12 +189,12 @@ Icon extract in sprite with differents layers size (so % is not useful).
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_bottom .goa_grid_space .goa_first_auction_marker,
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_top .goa_grid_space .goa_first_auction_marker {
   top: 0%;
-  left: 5%;
+  left: 25%;
 }
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_bottom .goa_grid_space .goa_auction_marker,
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_top .goa_grid_space .goa_auction_marker {
   top: 0%;
-  left: 6%;
+  left: 30%;
 }
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_right {
   right: 0px;
@@ -1959,6 +1959,22 @@ body.lockedInterface #restartActions {
 
 .goa_expand_on .goa_expand_ellipsis {
   display: none;
+}
+
+/* Cancelled notification messages */
+.log.cancel {
+  color: #c62828 !important;
+  text-decoration: line-through;
+}
+
+/* Desktop logs */
+.log.cancel .roundedbox {
+  background-color: rgba(240, 186, 117, 0.6) !important;
+}
+
+/* Mobile logs */
+.log.cancel.roundedbox {
+  background-color: #ef9a9a;
 }
 
 #pagesection_howtoplay li, .midSizeDialog li, .standard_popin li {

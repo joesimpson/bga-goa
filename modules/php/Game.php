@@ -136,9 +136,10 @@ class Game extends \Bga\GameFramework\Table
         $result["round"] = Globals::getRound();
         $result["session"] = Globals::getSession();
         $result["players"] = Players::getUiData($current_player_id);
-        $result["cards"] = Cards::getUiData($current_player_id);
-        $result["deck_size"] =[
-            'exploration' =>  Cards::countInExplorationDeck(),
+        $result["cards"] = [
+            'all' => Cards::getUiData($current_player_id),
+            'private' => Cards::getPrivateDatas($current_player_id),
+            'deck_size' => Cards::getAllDeckSizes(),
         ];
         $result["tiles"] = Tiles::getUiData($current_player_id);
         $result["material"] = [

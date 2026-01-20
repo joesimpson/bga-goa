@@ -88,10 +88,24 @@ class ConfirmTurn extends GameState
     }
     
     /**
-     * Player action : undo 1 step
+     * Player action : undo last step
      *
      * @throws UnexpectedException
      */
+    #[PossibleAction]
+    public function actUndoLastStep()
+    {
+        $player = Players::getCurrent();
+        $pId = $player->getId();
+        $steps = Log::getUndoableSteps($pId);
+        if(count($steps) <1){
+            throw new UnexpectedException(404,'This step is not undoable anymore. You may need to reload the page.');
+        }
+        $stepId = array_shift($steps);
+        Log::undoToStep($stepId);
+        Notifications::undoStep($player, $stepId);
+    }
+    /*
     #[PossibleAction]
     public function actUndoToStep(int $stepId,)
     {
@@ -104,6 +118,7 @@ class ConfirmTurn extends GameState
         Log::undoToStep($stepId);
         Notifications::undoStep($player, $stepId);
     }
+    */
 
     function zombie(int $playerId) {
         //TODO JSA ZOMBIE 

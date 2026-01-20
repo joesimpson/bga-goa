@@ -219,7 +219,7 @@ trait DebugTrait
     }
     function debug_HandExplo(int $size = 1){
         $player = Players::getCurrent();
-
+        Log::addStep();
         Cards::drawExplorationCardsToPlayer($player, $size);
        
     }
@@ -232,7 +232,8 @@ trait DebugTrait
         $player->setShips($ships);
         $player->setContracts($contracts);
         $player->setCompasses($compasses);
-        Game::get()->notify->player($player_id,'reloadPage', "/!\ : Refresh page to see game has restarted...", []);
+        //Game::get()->notify->player($player_id,'reloadPage', "/!\ : Refresh page to see game has restarted...", []);
+        Notifications::refreshUI(Game::get()->getAllDatas());
     }
 
     function debug_playerTiles(){

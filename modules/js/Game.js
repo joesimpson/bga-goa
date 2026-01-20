@@ -95,6 +95,8 @@ export class Game {
         this._counters = {};
         this._selectableNodes = [];
         this._connections = [];
+        this._notif_uid_to_log_id = {};
+        this._notif_uid_to_mobile_log_id = {};
 
     }
     
@@ -535,6 +537,33 @@ export class Game {
             icon.classList.remove("icon20_collapse");
         }
     }
+    
+    refreshPlayersDatas(players){
+        console.log("refreshPlayersDatas()",players);
+        //Erasing this array would erase some BGA datas (ex color_back)-> we should erase only datas in parameter array
+        //this.gamedatas.players = players;
+        Object.values(players).forEach((player) => {
+            let pid = player.id;
+            for (const property in player) {
+                this.gamedatas.players[pid][property] = player[property];
+            }
+        });
+    }
+    
+    cancelLogs(notifIds) {
+      notifIds.forEach((uid) => {
+        if (this._notif_uid_to_log_id.hasOwnProperty(uid)) {
+          let logId = this._notif_uid_to_log_id[uid];
+          //if ($('log_' + logId)) dojo.addClass('log_' + logId, 'cancel');
+          document.getElementById('log_' + logId)?.classList.add('cancel');
+        }
+        if (this._notif_uid_to_mobile_log_id.hasOwnProperty(uid)) {
+          let mobileLogId = this._notif_uid_to_mobile_log_id[uid];
+          //if ($('dockedlog_' + mobileLogId)) dojo.addClass('dockedlog_' + mobileLogId, 'cancel');
+          document.getElementById('dockedlog_' + mobileLogId)?.classList.add('cancel');
+        }
+      });
+    }
 
     ///////////////////////////////////////////////////
     //// Reaction to cometD notifications
@@ -551,6 +580,18 @@ export class Game {
     setupNotifications() {
         console.log( 'notifications subscriptions setup' );
         
+        
+        const originalOnPlaceLogOnChannel = this.bga.gameui.onPlaceLogOnChannel.bind(this.bga.gameui);
+        this.bga.gameui.onPlaceLogOnChannel = (msg) => {
+            var currentLogId = this.bga.gameui.notifqueue.next_log_id;
+            var currentMobileLogId = this.bga.gameui.next_log_id;
+            var res = originalOnPlaceLogOnChannel(msg);
+            this._notif_uid_to_log_id[msg.uid] = currentLogId;
+            this._notif_uid_to_mobile_log_id[msg.uid] = currentMobileLogId;
+            return res;
+            
+        };
+
         // automatically listen to the notifications, based on the `notif_xxx` function on this class. 
         // Uncomment the logger param to see debug information in the console about notifications.
         this.bga.notifications.setupPromiseNotifications({
@@ -577,6 +618,51 @@ export class Game {
         window.location.reload(true);
     }
     
+    notif_clearTurn(n) {
+        console.log('notif_clearTurn: restarting turn/step', n);
+        this.cancelLogs(n.notifIds);
+    }
+
+    async notif_refreshUI(notif){
+        console.log("notif_refreshUI",notif);
+        this.refreshPlayersDatas(notif.datas['players']);
+        ['cards', 'tiles', 'tokens'].forEach((value) => {
+            this.gamedatas[value] = notif.datas[value];
+        });
+        this.gamedatas._private = notif._private;
+
+        let currentPlayer = this.bga.players.getCurrentPlayer();
+        Object.values(this.gamedatas.players).forEach((player) => {
+            let pId = player.id;
+            //UPDATE ALL PLAYER COUNTERS
+            this.bga.playerPanels.getScoreCounter(pId).toValue(player.score);
+            
+            this._counters[pId]['exploration_hand_size'].toValue(player.exploration_hand_size);
+            this._counters[pId]['ships'].toValue(player.ships);
+            this._counters[pId]['contracts'].toValue(player.contracts);
+            this._counters[pId]['compasses'].toValue(player.compasses);
+
+            if (currentPlayer && player.id == currentPlayer.id){
+
+                this._counters[pId].money.toValue(player.money);
+                Object.values([1,2,3,4,5,6]).forEach((i) => {
+                    this._counters[pId]['explo_symbol_tiny_'+i].toValue(0);//will be updated by setupCards
+                });
+            }
+            
+            this._counters[pId]['spices_white' ].toValue(player.spices[1]);
+            this._counters[pId]['spices_black' ].toValue(player.spices[2]);
+            this._counters[pId]['spices_yellow'].toValue(player.spices[3]);
+            this._counters[pId]['spices_pink'  ].toValue(player.spices[4]);
+            this._counters[pId]['spices_green' ].toValue(player.spices[5]);
+        });
+        
+        this.setupCards(false);
+        //TODO JSA PRIVATE HAND
+        this.setupTiles(false);
+        this.setupTokens(false);
+    }
+    
     async notif_auctionPlaced(notif) {
         console.log("notif_auctionPlaced",notif);
         let token = notif.token;
@@ -593,10 +679,10 @@ export class Game {
     async notif_giveExplorationCardsToPlayer(notif) {
         console.log("notif_giveExplorationCardsToPlayer",notif);
 
-        this.explorationHand.addCards(notif.cards, { fromStock: this.explorationDeck});
         this._counters[notif.player_id]['exploration_hand_size'].incValue( notif.cards.length);
         let currentPlayer = this.bga.players.getCurrentPlayer();
         if (currentPlayer && currentPlayer.id == notif.player_id) {
+            this.explorationHand.addCards(notif.cards, { fromStock: this.explorationDeck});
             Object.values(notif.cards).forEach((card) => {
                 this._counters[currentPlayer.id]['explo_symbol_tiny_'+card.symbol].incValue(1);
             });
@@ -616,40 +702,43 @@ export class Game {
     //   |_| |_|_|\___||___/
     //////////////////////////////////////////////////////////
  
-    setupTiles() {
+    setupTiles(init = true) {
         console.log("setupTiles"); 
         //Destroy previous tiles
         document.querySelectorAll('.goa_tile[id^="goa_tile-"]').forEach((oCard) => {
             this.destroy(oCard);
         });
 
-        //market Grid cells
-        for(let row=1;row<=MARKET_GRID_SIZE;row++){
-            for(let col=1;col<=MARKET_GRID_SIZE;col++){
-                let grid_cell = `goa_market_grid_space-${row}-${col}`;
-                if(!$(grid_cell)) document.getElementById(`goa_board_market_grid`).insertAdjacentHTML('beforeend', this.tplMarketGridSpace({'row':row, 'col':col}));
-                //this.empty(grid_cell);
+        
+        if(init){
+            //market Grid cells
+            for(let row=1;row<=MARKET_GRID_SIZE;row++){
+                for(let col=1;col<=MARKET_GRID_SIZE;col++){
+                    let grid_cell = `goa_market_grid_space-${row}-${col}`;
+                    if(!$(grid_cell)) document.getElementById(`goa_board_market_grid`).insertAdjacentHTML('beforeend', this.tplMarketGridSpace({'row':row, 'col':col}));
+                    //this.empty(grid_cell);
+                }
             }
+            //---------------------------------
+            //grid frame
+            for(let col=1;col<=MARKET_GRID_SIZE;col++){
+                let grid_cell = `goa_market_grid_space-${0}-${col}`;
+                if(!$(grid_cell)) document.getElementById(`goa_board_market_top`).insertAdjacentHTML('beforeend', this.tplMarketGridSpace({'row':0, 'col':col}));
+
+                grid_cell = `goa_market_grid_space-${(MARKET_GRID_SIZE+1)}-${col}`;
+                if(!$(grid_cell)) document.getElementById(`goa_board_market_bottom`).insertAdjacentHTML('beforeend', this.tplMarketGridSpace({'row':(MARKET_GRID_SIZE+1), 'col':col}));
+
+
+            }
+            for(let row=1;row<=MARKET_GRID_SIZE;row++){
+                let grid_cell = `goa_market_grid_space-${row}-${0}`;
+                if(!$(grid_cell)) document.getElementById(`goa_board_market_left`).insertAdjacentHTML('beforeend', this.tplMarketGridSpace({'row':row, 'col':0}));
+
+                grid_cell = `goa_market_grid_space-${row}-${(MARKET_GRID_SIZE+1)}`;
+                if(!$(grid_cell)) document.getElementById(`goa_board_market_right`).insertAdjacentHTML('beforeend', this.tplMarketGridSpace({'row':row, 'col':(MARKET_GRID_SIZE+1)}));
+            }
+            //---------------------------------
         }
-        //---------------------------------
-        //grid frame
-        for(let col=1;col<=MARKET_GRID_SIZE;col++){
-            let grid_cell = `goa_market_grid_space-${0}-${col}`;
-            if(!$(grid_cell)) document.getElementById(`goa_board_market_top`).insertAdjacentHTML('beforeend', this.tplMarketGridSpace({'row':0, 'col':col}));
-
-            grid_cell = `goa_market_grid_space-${(MARKET_GRID_SIZE+1)}-${col}`;
-            if(!$(grid_cell)) document.getElementById(`goa_board_market_bottom`).insertAdjacentHTML('beforeend', this.tplMarketGridSpace({'row':(MARKET_GRID_SIZE+1), 'col':col}));
-
-
-        }
-        for(let row=1;row<=MARKET_GRID_SIZE;row++){
-            let grid_cell = `goa_market_grid_space-${row}-${0}`;
-            if(!$(grid_cell)) document.getElementById(`goa_board_market_left`).insertAdjacentHTML('beforeend', this.tplMarketGridSpace({'row':row, 'col':0}));
-
-            grid_cell = `goa_market_grid_space-${row}-${(MARKET_GRID_SIZE+1)}`;
-            if(!$(grid_cell)) document.getElementById(`goa_board_market_right`).insertAdjacentHTML('beforeend', this.tplMarketGridSpace({'row':row, 'col':(MARKET_GRID_SIZE+1)}));
-        }
-        //---------------------------------
 
         let cardIds = this.gamedatas.tiles.map((card) => {
             this.addTile(card);
@@ -1006,26 +1095,28 @@ export class Game {
     //    |_|\___/|_|\_\___|_| |_|___/ 
     //                                
     ////////////////////////////////////////
-    setupTokens(){
+    setupTokens(init = true){
         console.log('setupTokens');
         document.querySelectorAll('.goa_token[id^="goa_token-"]').forEach((oToken) => {
             this.destroy(oToken);
         });
 
-        Object.values(this.gamedatas.players).forEach(player => {
-            for(let track=1;track<=5;track++){
-                if(!$(`goa_progress_header_${track}_${player.id}`)) document.getElementById(`goa_player_progress_headers-${player.id}`).insertAdjacentHTML('beforeend', this.tplProgressHeader({'track':track, 'pId':player.id}));
-                this.bga.gameui.addTooltipHtmlToClass(`goa_progress_header_${track}`, this.getActionBoardTooltip(track));
+        if(init){
+            Object.values(this.gamedatas.players).forEach(player => {
+                for(let track=1;track<=5;track++){
+                    if(!$(`goa_progress_header_${track}_${player.id}`)) document.getElementById(`goa_player_progress_headers-${player.id}`).insertAdjacentHTML('beforeend', this.tplProgressHeader({'track':track, 'pId':player.id}));
+                    this.bga.gameui.addTooltipHtmlToClass(`goa_progress_header_${track}`, this.getActionBoardTooltip(track));
 
-                let progress_track = `goa_progress_track_${track}_${player.id}`;
-                if(!$(progress_track)) document.getElementById(`goa_player_progress_tracks-${player.id}`).insertAdjacentHTML('beforeend', this.tplProgressTrack({'track':track, 'pId':player.id}));
-                for(let k=1;k<=5;k++){
-                    let progress_track_space = `goa_progress_track_space_${track}_${k}_${player.id}`;
-                    if(!$(progress_track_space)) document.getElementById(progress_track).insertAdjacentHTML('beforeend', this.tplProgressTrackSpace({'track':track, 'space':k, 'pId':player.id}));
-                    this.empty(progress_track_space);
+                    let progress_track = `goa_progress_track_${track}_${player.id}`;
+                    if(!$(progress_track)) document.getElementById(`goa_player_progress_tracks-${player.id}`).insertAdjacentHTML('beforeend', this.tplProgressTrack({'track':track, 'pId':player.id}));
+                    for(let k=1;k<=5;k++){
+                        let progress_track_space = `goa_progress_track_space_${track}_${k}_${player.id}`;
+                        if(!$(progress_track_space)) document.getElementById(progress_track).insertAdjacentHTML('beforeend', this.tplProgressTrackSpace({'track':track, 'space':k, 'pId':player.id}));
+                        this.empty(progress_track_space);
+                    }
                 }
-            }
-        });
+            });
+        }
 
         let tokenIds = this.gamedatas.tokens.map((token) => {
             this.addToken(token);
@@ -1176,53 +1267,73 @@ export class Game {
     //  | |__| (_| | | | (_| \__ \
     //   \____\__,_|_|  \__,_|___/
     //////////////////////////////////////////////////////////
-    setupCards() {
+    /**
+     * This function is refreshUI compatible
+     * @param {*} init 
+     */
+    setupCards(init = true) {
         console.log("setupCards");
-        // This function is refreshUI compatible
-        //destroy previous cards
-        document.querySelectorAll('.goa_card[id^="goa_card-"]').forEach((pCard) => {
-            this.destroy(pCard);
-        });
         
-        this.explorationCardsManager = new BgaCards.Manager({
-            animationManager: this.animationManager,
-            type: 'goa_exploration_card',
-            getId: (card) => card.id,
-            setupFrontDiv: (card, div) => {
-                div.dataset.type = card.type; 
-                this.bga.gameui.addTooltipHtml(div.id, this.getCardTooltip(card));
-            },
-            cardWidth: 131,
-            cardHeight: 200,
-        });
+        if(init){
+            this.explorationCardsManager = new BgaCards.Manager({
+                animationManager: this.animationManager,
+                type: 'goa_exploration_card',
+                getId: (card) => card.id,
+                setupFrontDiv: (card, div) => {
+                    div.dataset.type = card.type; 
+                    this.bga.gameui.addTooltipHtml(div.id, this.getCardTooltip(card));
+                },
+                cardWidth: 131,
+                cardHeight: 200,
+            });
+            
+            this.explorationDiscard = new BgaCards.DiscardDeck(this.explorationCardsManager, document.getElementById('goa_exploration_discard'), {
+                shift: '0px',
+                verticalShift: '0px',
+                horizontalShift: '0px',
+                maxHorizontalShift : 0,
+                counter: {
+                    hideWhenEmpty: true,
+                }, 
+            });
+            
+            let currentPlayer = this.bga.players.getCurrentPlayer();
+            if (currentPlayer) {
+                this.explorationHand = new BgaCards.HandStock(this.explorationCardsManager, document.getElementById(`goa_exploration_hand-${currentPlayer.id}`), {
+                    //sort: BgaCards.sort('type'),
+                    sort: BgaCards.sort('action','contracts'),
+                });
+            }
+        }
         this.explorationDeck = new BgaCards.Deck(this.explorationCardsManager, document.getElementById('goa_exploration_deck'), {
-            cardNumber: this.gamedatas.deck_size.exploration,
+            cardNumber: this.gamedatas.cards.deck_size.exploration,
             counter: {
                 position: 'center',
                 extraClasses: 'text-shadow',
             },
         });
-        this.explorationDiscard = new BgaCards.DiscardDeck(this.explorationCardsManager, document.getElementById('goa_exploration_discard'), {
-            shift: '0px',
-            verticalShift: '0px',
-            horizontalShift: '0px',
-            maxHorizontalShift : 0,
-            counter: {
-                hideWhenEmpty: true,
-            }, 
+        
+        // This function is refreshUI compatible
+        //destroy previous cards
+        this.explorationHand.removeAll();
+        this.explorationDiscard.removeAll();
+        document.querySelectorAll('.goa_card[id^="goa_card-"]').forEach((pCard) => {
+            this.destroy(pCard);
         });
         
-        let currentPlayer = this.bga.players.getCurrentPlayer();
-        if (currentPlayer) {
-            this.explorationHand = new BgaCards.HandStock(this.explorationCardsManager, document.getElementById(`goa_exploration_hand-${currentPlayer.id}`), {
-                //sort: BgaCards.sort('type'),
-                sort: BgaCards.sort('action','contracts'),
-            });
-        }
-        
-        let cardIds = this.gamedatas.cards.map((card) => {
+        let cardIds = this.gamedatas.cards.all.map((card) => {
             this.addCard(card);
             return card.id;
+        });
+        let hand = Object.values( [] );
+        if(init){
+            hand = Object.values(this.gamedatas.cards.private.hand);
+        }
+        else if(this.gamedatas._private && this.gamedatas._private.private){
+            hand = Object.values(this.gamedatas._private.private.hand);
+        }
+        hand.forEach((card) => {
+            this.addCard(card);
         });
     }
 
@@ -1267,7 +1378,7 @@ export class Game {
     
     tplCard(card, prefix ='') {
         if(card.subtype == CARD_SUBTTYPE_EXPLORATION) 
-            return `<div id="goa_card-${card.id}${prefix}" class="goa_card goa_exploration_card goa_card${prefix}" data-type='${card.type}' data-pid='${card.pId}'></div>`;
+            return `<div id="goa_card${prefix}-${card.id}" class="goa_card goa_exploration_card goa_card${prefix}" data-type='${card.type}' data-pid='${card.pId}'></div>`;
         return '';
     }
     // draw + discard from deck
