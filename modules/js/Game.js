@@ -93,6 +93,8 @@ export class Game {
         // Example:
         // this.myGlobalValue = 0;
         this._counters = {};
+        this._selectableNodes = [];
+        this._connections = [];
 
     }
     
@@ -430,7 +432,48 @@ export class Game {
         });
         container.innerHTML = '';
     }
+    
+    clearSelection() {
+        console.log('clearSelection()' );
+        this._connections.forEach((i) => {
+            let node = i[0];
+            let action = i[1];
+            console.log('clearSelection()... disconnect ' ,node, action,);
+            this.bga.gameui.disconnect(node,action);
+        });
+        this._connections = [];
+        this._selectableNodes.forEach((node) => {
+            if ($(node)){
+                $(node).classList.remove('selectable');
+                $(node).classList.remove('selected');
+            }
+        });
+        this._selectableNodes = [];
+        [...document.getElementsByClassName('selectable')].forEach((node) => {
+            if ($(node)){
+                $(node).classList.remove('selectable')
+            }
+        });
+        [...document.getElementsByClassName('selected')].forEach((node) => {
+            if ($(node)){
+                $(node).classList.remove('selected')
+            }
+        });
+    }
 
+    onClick(node, callback) {
+        let safeCallback = (evt) => {
+            evt.stopPropagation();
+            //if (this.isInterfaceLocked()) return false;
+            callback(evt);
+        };
+
+        let con = this.bga.gameui.connect( $(node), 'click', safeCallback )
+        this._connections.push( [$(node), 'click', safeCallback ]);
+        $(node).classList.add('selectable')
+        this._selectableNodes.push(node);
+    }
+    
     async setupRoundMarker(){
         let round = this.gamedatas.round;
         console.log("setupRoundMarker", round);
@@ -511,7 +554,10 @@ export class Game {
         // automatically listen to the notifications, based on the `notif_xxx` function on this class. 
         // Uncomment the logger param to see debug information in the console about notifications.
         this.bga.notifications.setupPromiseNotifications({
-            // logger: console.log
+            logger: console.log,
+            onStart: (notifName, msg, args) => {
+                this.clearSelection();
+            }, 
         });
     }
     

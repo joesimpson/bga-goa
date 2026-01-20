@@ -65,6 +65,36 @@ $board_img_height: calc(1 * calc(1429px + var(--goa_board_height_offset)));
                     left: 149px;
                     top: 401px;
 
+                    .goa_grid_space{
+                        position: absolute;
+                        &.selectable{
+                            cursor: pointer;
+                            box-shadow: 0px 0px 0px 4px blue;
+                            border-radius: 15px;
+                        }
+                        .goa_token
+                        {
+                            position: absolute;
+                            left: 45%;
+                            top: 25%;
+                            z-index: 2;
+                            transition: margin .5s;
+
+                        }
+                        &:hover .goa_token{
+                            opacity: 0.7;
+                            //display: none;
+                            //width: 0;
+                            //height: 0;
+                            //View behind token : 
+                            margin-top: -50%;
+                        }
+                        .goa_auction_marker{
+                            left: 50%;
+                            z-index: 3;
+                        }
+                    }
+
                     #goa_board_market_frame{
                         #goa_board_market_left,
                         #goa_board_market_right{
@@ -74,6 +104,26 @@ $board_img_height: calc(1 * calc(1429px + var(--goa_board_height_offset)));
                             position: absolute;
                             display: grid;
                             grid-template-rows: repeat(5, 124px);
+                            grid-template-columns: repeat(1, 55px);
+                                
+                            .goa_grid_space{
+                                width: 55px;
+                                height: 124px;
+                                grid-column-start: 1;
+                                
+                                @for $i from 1 through 5 {
+                                    &[data-row="#{$i}"]{
+                                        grid-row-start: $i;
+                                    }
+                                }
+
+                                .goa_first_auction_marker {
+                                    left: 5%;
+                                }
+                                .goa_auction_marker{
+                                    left: 15%;
+                                }
+                            }
                         }
                         #goa_board_market_bottom,
                         #goa_board_market_top{
@@ -82,7 +132,28 @@ $board_img_height: calc(1 * calc(1429px + var(--goa_board_height_offset)));
                             height: 54px;
                             position: absolute;
                             display: grid;
-                            grid-template-columns: repeat(5, 124px);
+                            grid-template-columns: repeat(5, 124px);  
+                            grid-template-rows: repeat(1, 54px);
+                            
+                            .goa_grid_space{
+                                width: 124px;
+                                height: 54px;
+                                grid-row-start: 1;
+                                @for $i from 1 through 5 {
+                                    &[data-col="#{$i}"]{
+                                        grid-column-start: $i;
+                                    }
+                                }
+                                
+                                .goa_first_auction_marker {
+                                    top: 0%;
+                                    left: 5%;
+                                }
+                                .goa_auction_marker{
+                                    top: 0%;
+                                    left: 6%;
+                                }
+                            }
                         }
                         #goa_board_market_right{
                             right: 0px;
@@ -91,11 +162,6 @@ $board_img_height: calc(1 * calc(1429px + var(--goa_board_height_offset)));
                             bottom: 0px;
                         }
                         
-                        .goa_grid_space{
-                            display: flex;
-                            justify-content: center;
-                            align-self: center;
-                        }
                     }
 
                     #goa_board_market_grid{
@@ -125,29 +191,11 @@ $board_img_height: calc(1 * calc(1429px + var(--goa_board_height_offset)));
                                 }
                             }
 
-                            position: absolute;
-
                             .goa_token
                             {
                                 position: absolute;
-                                left: 45%;
-                                top: 25%;
-                                z-index: 2;
-                                transition: margin .5s;
-
                             }
-                            &:hover .goa_token{
-                                opacity: 0.7;
-                                //display: none;
-                                //width: 0;
-                                //height: 0;
-                                //View behind token : 
-                                margin-top: -50%;
-                            }
-                            .goa_auction_marker{
-                                left: 50%;
-                                z-index: 3;
-                            }
+ 
                         }
 
                         .goa_tile{

@@ -83,6 +83,29 @@ Icon extract in sprite with differents layers size (so % is not useful).
   left: 149px;
   top: 401px;
 }
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market .goa_grid_space {
+  position: absolute;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market .goa_grid_space.selectable {
+  cursor: pointer;
+  box-shadow: 0px 0px 0px 4px blue;
+  border-radius: 15px;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market .goa_grid_space .goa_token {
+  position: absolute;
+  left: 45%;
+  top: 25%;
+  z-index: 2;
+  transition: margin 0.5s;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market .goa_grid_space:hover .goa_token {
+  opacity: 0.7;
+  margin-top: -50%;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market .goa_grid_space .goa_auction_marker {
+  left: 50%;
+  z-index: 3;
+}
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_left,
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_right {
   top: 55px;
@@ -91,6 +114,41 @@ Icon extract in sprite with differents layers size (so % is not useful).
   position: absolute;
   display: grid;
   grid-template-rows: repeat(5, 124px);
+  grid-template-columns: repeat(1, 55px);
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_left .goa_grid_space,
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_right .goa_grid_space {
+  width: 55px;
+  height: 124px;
+  grid-column-start: 1;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_left .goa_grid_space[data-row="1"],
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_right .goa_grid_space[data-row="1"] {
+  grid-row-start: 1;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_left .goa_grid_space[data-row="2"],
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_right .goa_grid_space[data-row="2"] {
+  grid-row-start: 2;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_left .goa_grid_space[data-row="3"],
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_right .goa_grid_space[data-row="3"] {
+  grid-row-start: 3;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_left .goa_grid_space[data-row="4"],
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_right .goa_grid_space[data-row="4"] {
+  grid-row-start: 4;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_left .goa_grid_space[data-row="5"],
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_right .goa_grid_space[data-row="5"] {
+  grid-row-start: 5;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_left .goa_grid_space .goa_first_auction_marker,
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_right .goa_grid_space .goa_first_auction_marker {
+  left: 5%;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_left .goa_grid_space .goa_auction_marker,
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_right .goa_grid_space .goa_auction_marker {
+  left: 15%;
 }
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_bottom,
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_top {
@@ -100,17 +158,49 @@ Icon extract in sprite with differents layers size (so % is not useful).
   position: absolute;
   display: grid;
   grid-template-columns: repeat(5, 124px);
+  grid-template-rows: repeat(1, 54px);
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_bottom .goa_grid_space,
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_top .goa_grid_space {
+  width: 124px;
+  height: 54px;
+  grid-row-start: 1;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_bottom .goa_grid_space[data-col="1"],
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_top .goa_grid_space[data-col="1"] {
+  grid-column-start: 1;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_bottom .goa_grid_space[data-col="2"],
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_top .goa_grid_space[data-col="2"] {
+  grid-column-start: 2;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_bottom .goa_grid_space[data-col="3"],
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_top .goa_grid_space[data-col="3"] {
+  grid-column-start: 3;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_bottom .goa_grid_space[data-col="4"],
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_top .goa_grid_space[data-col="4"] {
+  grid-column-start: 4;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_bottom .goa_grid_space[data-col="5"],
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_top .goa_grid_space[data-col="5"] {
+  grid-column-start: 5;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_bottom .goa_grid_space .goa_first_auction_marker,
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_top .goa_grid_space .goa_first_auction_marker {
+  top: 0%;
+  left: 5%;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_bottom .goa_grid_space .goa_auction_marker,
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_top .goa_grid_space .goa_auction_marker {
+  top: 0%;
+  left: 6%;
 }
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_right {
   right: 0px;
 }
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_bottom {
   bottom: 0px;
-}
-#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame .goa_grid_space {
-  display: flex;
-  justify-content: center;
-  align-self: center;
 }
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_grid {
   position: absolute;
@@ -125,7 +215,6 @@ Icon extract in sprite with differents layers size (so % is not useful).
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_grid .goa_grid_space {
   width: 124px;
   height: 124px;
-  position: absolute;
 }
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_grid .goa_grid_space[data-col="1"] {
   grid-column-start: 1;
@@ -159,18 +248,6 @@ Icon extract in sprite with differents layers size (so % is not useful).
 }
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_grid .goa_grid_space .goa_token {
   position: absolute;
-  left: 45%;
-  top: 25%;
-  z-index: 2;
-  transition: margin 0.5s;
-}
-#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_grid .goa_grid_space:hover .goa_token {
-  opacity: 0.7;
-  margin-top: -50%;
-}
-#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_grid .goa_grid_space .goa_auction_marker {
-  left: 50%;
-  z-index: 3;
 }
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_grid .goa_tile {
   left: 8px;

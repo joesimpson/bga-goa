@@ -27,8 +27,10 @@ export class PlayerTurn {
                 );
                 break;
             case this.game.const.ROUND_STEP_TILE_AUCTIONS: 
+                this.bga.statusBar.setTitle('TODO ROUND_STEP_TILE_AUCTIONS');
                 break;
             case this.game.const.ROUND_STEP_PLAYER_ACTIONS: 
+                this.bga.statusBar.setTitle('TODO ROUND_STEP_PLAYER_ACTIONS');
                 break;
             default: 
                 this.bga.statusBar.setTitle('');
@@ -41,8 +43,11 @@ export class PlayerTurn {
             if(possibleActions.includes('actPlaceAuction')){
                 let pAuctionableSpots = args.pAuctionableSpots;
                 pAuctionableSpots.forEach( spot => {
-                    this.bga.statusBar.addActionButton(_('Market row ${row}, column ${col}').replace('${row}', spot.row).replace('${col}', spot.col), () => this.onMarketSpotClick(spot.row,spot.col) );
-                    //TODO JSA add click on grid
+                    // remove button after tests, because with edges it will give a lot (20)
+                    //this.bga.statusBar.addActionButton(_('Market row ${row}, column ${col}').replace('${row}', spot.row).replace('${col}', spot.col), () => this.onMarketSpotClick(spot.row,spot.col) );
+
+                    let marketSpace = $(`goa_market_grid_space-${spot.row}-${spot.col}`);
+                    this.game.onClick(marketSpace,() => this.onMarketSpotClick(spot.row,spot.col));
                 }); 
             }
 
@@ -56,6 +61,7 @@ export class PlayerTurn {
      * This method is called each time we are leaving the game state. You can use this method to perform some user interface changes at this moment.
      */
     onLeavingState(args, isCurrentPlayerActive) {
+        this.game.clearSelection();
         this.game.removeAllActionButtons();
     }
 
