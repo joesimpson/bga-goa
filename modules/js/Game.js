@@ -353,6 +353,8 @@ export class Game {
             ],
         });
 
+        this.bga.userPreferences.onChange = (pref_id, pref_value) => this.myGamePreferenceChanged(pref_id, pref_value);
+
         // Setup game notifications to handle (see "setupNotifications" method below)
         this.setupNotifications();
 
@@ -563,6 +565,15 @@ export class Game {
           document.getElementById('dockedlog_' + mobileLogId)?.classList.add('cancel');
         }
       });
+    }
+
+    myGamePreferenceChanged(pref_id, pref_value) {
+        switch (pref_id) {
+            case this.const.PREF_CONFIRM: 
+                //We could hide pref "undo button style", but We also use undo button during a player turn before the action of confirm
+                //this.bga.userPreferences.toggleVisibility(this.const.PREF_UNDO_STYLE, pref_value != this.const.PREF_CONFIRM_DISABLED);
+                break;
+        }
     }
 
     ///////////////////////////////////////////////////

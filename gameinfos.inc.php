@@ -102,4 +102,6 @@ $gameinfos = [
     // Flag to enable 3D mode (adds a 3D button to the menu)
     // Enable this only if your game functions correctly in 3D
     'enable_3d' => false,
+
+    'exception_on_warning' => true,
 ];

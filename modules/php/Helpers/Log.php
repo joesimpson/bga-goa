@@ -210,19 +210,20 @@ class Log extends \APP_DbObject
 
         // Cancel the game notifications
         $query = new QueryBuilder('gamelog', null, 'gamelog_packet_id');
+        $currentPlayer = Players::getCurrent();
         if (!empty($moveIds)) {
             $notifications = $query
                 ->whereIn('gamelog_move_id', $moveIds)
                 ->get();
             $notifIds = self::extractNotifIds($notifications);
-            Notifications::clearTurn(Players::getCurrent(), $notifIds);
+            Notifications::clearTurn($currentPlayer, $notifIds);
         }
 
         // Force to clear cached informations
         Globals::fetch();
 
         // Notify
-        $datas = Game::get()->getAllDatas();
+        $datas = Game::get()->getAllDatas($currentPlayer->getId());
         Notifications::refreshUI($datas);
 
         // Force notif flush to be able to delete "restart turn" notif

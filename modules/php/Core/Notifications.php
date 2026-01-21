@@ -6,7 +6,6 @@ use Bga\GameFramework\NotificationMessage;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Collection;
 use Bga\Games\Goa\Managers\Cards;
-use Bga\Games\Goa\Models\AuctionMarker;
 use Bga\Games\Goa\Models\ExplorationCard;
 use Bga\Games\Goa\Models\Player;
 use Bga\Games\Goa\Models\Tile;
@@ -219,7 +218,6 @@ class Notifications
     ];
     unset($gameDatas['cards']['private']);
 
-    $playerId = Game::get()->getCurrentPlayerId();
     $privateDatas = [];
     foreach ($players as $pid => $player) {
       $privateDatas[$pid] = new NotificationMessage('', [

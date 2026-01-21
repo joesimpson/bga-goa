@@ -125,12 +125,12 @@ class Game extends \Bga\GameFramework\Table
      * - when the game starts
      * - when a player refreshes the game page (F5)
      */
-    public function getAllDatas(): array
+    public function getAllDatas(int $currentPlayerId): array
     {
         $result = [];
 
         // WARNING: We must only return information visible by the current player.
-        $current_player_id = (int) $this->getCurrentPlayerId();
+        $current_player_id = $currentPlayerId;
 
         $result["turn"] = Globals::getTurn();
         $result["round"] = Globals::getRound();
