@@ -654,6 +654,58 @@ export class Game {
         let destinationDiv = document.getElementById(`goa_market_grid_space-${token.row}-${token.col}`);
         await this.animationManager.slideAndAttach(tokenDiv, destinationDiv);
     }
+    
+    async notif_winsAuction(notif) {
+        console.log("notif_winsAuction",notif);
+        let amount = notif.n;
+        let fromPlayer = notif.player_id;
+        let fromElement = document.getElementById(`goa_reserve_${fromPlayer}_money`);
+        let toPlayer = notif.player_id2;
+        let toElement = document.getElementById(`goa_reserve_${toPlayer}_money`);
+
+        const floatingPieceAnimationSettings = {
+            duration: 2000,
+            ignoreScale: false,
+            ignoreRotation: true,
+        };
+        let animations = new Array(amount).fill(0).map(index => (() => {
+            this.animationManager.slideFloatingElement(this.createCoin(), fromElement, toElement, floatingPieceAnimationSettings)
+        }));
+        await this.animationManager.playInterval(animations);
+
+        let currentPlayer = this.bga.players.getCurrentPlayer();
+        if (currentPlayer) {
+            if( fromPlayer == currentPlayer.id){
+                this._counters[fromPlayer].money.incValue(-amount);
+            } else if( toPlayer == currentPlayer.id){
+                this._counters[toPlayer].money.incValue(amount);
+            }
+        }  
+    }
+    async notif_winsAuctionBank(notif) {
+        console.log("notif_winsAuctionBank",notif);
+        let amount = notif.n;
+        let fromPlayer = notif.player_id;
+        let fromElement = document.getElementById(`goa_reserve_${fromPlayer}_money`);
+        let toElement = document.getElementById(`goa_money_stacks`);
+
+        const floatingPieceAnimationSettings = {
+            duration: 2000,
+            ignoreScale: false,
+            ignoreRotation: true,
+        };
+        let animations = new Array(amount).fill(0).map(index => (() => {
+            this.animationManager.slideFloatingElement(this.createCoin(), fromElement, toElement, floatingPieceAnimationSettings)
+        }));
+        await this.animationManager.playInterval(animations);
+
+        let currentPlayer = this.bga.players.getCurrentPlayer();
+        if (currentPlayer) {
+            if( fromPlayer == currentPlayer.id){
+                this._counters[fromPlayer].money.incValue(-amount);
+            } 
+        } 
+    }
 
     async notif_reshuffleExplorationDeck(notif) {
         console.log("notif_reshuffleExplorationDeck",notif);
@@ -1550,5 +1602,16 @@ export class Game {
             </div>
         </div>
         `;
+    }
+    
+    /**
+     * Create a coin div to animate as a temporary piece (for example for scoring animation).
+     */
+    createCoin() {
+        const div = document.createElement('div');
+        div.innerHTML = `<p></p>`;
+        div.classList.add('goa_icon_money');
+        div.style.pointerEvents = 'all';
+        return div;
     }
 }

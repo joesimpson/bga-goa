@@ -43,9 +43,33 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
                     Globals::setRoundStep($roundStep);
                     Notifications::newRoundStep($roundStep, clienttranslate('Tile Auctions'));
                     Globals::setCurrentBid(0);
+                    Globals::setHighBidPlayer(null);
                 }
                 break;
             case ROUND_STEP_TILE_AUCTIONS: 
+                $highBid = Globals::getCurrentBid();
+                $highBidPlayerId = Globals::getHighBidPlayer();
+                $auctionToken = Tokens::getCurrentAuctionToken();
+                $currentAuctioneerId = $auctionToken->getPId();
+                $currentAuctioneer = Players::get($currentAuctioneerId);
+                
+                if($activePlayerId == $currentAuctioneerId) { // END the auction when auctioneer played
+                    if($highBidPlayerId == $currentAuctioneerId) {
+                        //AUCTIONEER PAYS THE BANK
+                        if($highBid>0){
+                            $currentAuctioneer->setMoney( $currentAuctioneer->getMoney() - $highBid );
+                        }
+                        Notifications::winsAuction($currentAuctioneer, $highBid);
+                    }
+                    else {
+                        //auction winner PAYS the auctioneer
+                        $highBidPlayer = Players::get($highBidPlayerId);
+                        $highBidPlayer->setMoney( $highBidPlayer->getMoney() - $highBid );
+                        $currentAuctioneer->setMoney( $currentAuctioneer->getMoney() + $highBid );
+                        $highBidPlayer->setMoney( $highBidPlayer->getMoney() - $highBid );
+                        Notifications::winsAuction($highBidPlayer, $highBid,$currentAuctioneer);
+                    }
+                }
                 break;
             case ROUND_STEP_PLAYER_ACTIONS:
                 break;

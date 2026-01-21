@@ -64,12 +64,14 @@ class PlayerTurn extends GameState
                 $args['minBid'] = min(1, $args['currentMoney'] - 1);
                 $args['maxBid'] = max(0, $args['currentMoney'] - $currentBid);
                 $args['bidRebate'] = 0;
+                $canPass = true;
 
                 if($currentAuctioneer == $player->getId()){
                     if($currentBid == 0){
-                        //auctioneer may bid 0 and win
+                        //auctioneer will bid 0 and win the auction
                         $args['minBid'] = 0;
                         $args['maxBid'] = 0;
+                        $canPass = false;
                     }
                     else {
                         $args['bidRebate'] = 1;
@@ -84,7 +86,9 @@ class PlayerTurn extends GameState
                 ){
                     $args['possibleActions'][] = 'actBid';
                 }
-                $args['possibleActions'][] = 'actPassBid';
+                if($canPass){
+                    $args['possibleActions'][] = 'actPassBid';
+                }
                 break;
             case ROUND_STEP_PLAYER_ACTIONS:
                 break;
@@ -152,6 +156,7 @@ class PlayerTurn extends GameState
         $currentBid = $args['bid'];
         $nextBid = $currentBid + $n;
         Globals::setCurrentBid($nextBid);
+        Globals::setHighBidPlayer($activePlayerId);
         if($nextBid > $currentBid){
             Notifications::newBid($player, $currentBid, $nextBid);
         }

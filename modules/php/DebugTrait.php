@@ -307,6 +307,14 @@ trait DebugTrait
 
         $this->debug_refreshUI();
     }
+    
+    //TEst different notif at a time
+    function debug_sendNotif(){
+        $players = Players::getAll()->toArray();
+        //Notifications::winsAuction($players[0], 12,$players[1]);
+        Notifications::winsAuction($players[0], 15,);
+    }
+
     ////////////////////////////////////////////////////
         
     //Clear logs

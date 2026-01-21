@@ -83,6 +83,22 @@ class Notifications
     ]);
   }
 
+  public static function winsAuction(Player $playerWins, int $bid, Player|null $player2Auctioneer = null )
+  {
+    if(isset($player2Auctioneer)){
+      self::notifyAll("winsAuction", clienttranslate('${player_name} wins the auction and gives ${n} coins to ${player_name2}'), [
+          "player" => $playerWins,
+          "player2" => $player2Auctioneer,
+          "n" => $bid,
+      ]);
+    } else {
+      self::notifyAll("winsAuctionBank", clienttranslate('${player_name} wins the auction and gives ${n} coins to the bank'), [
+          "player" => $playerWins,
+          "n" => $bid,
+      ]);
+    }
+  }
+
   public static function drawAndDiscardExploration(int $playerId, ExplorationCard $card)
   {
     self::notifyAll("drawAndDiscardExploration", clienttranslate('${player_name} draws and discard ${card_icon}'), [
