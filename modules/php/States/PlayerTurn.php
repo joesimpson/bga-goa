@@ -57,13 +57,13 @@ class PlayerTurn extends GameState
             case ROUND_STEP_TILE_AUCTIONS: 
                 $currentBid = Globals::getCurrentBid();
                 $args['bid'] = $currentBid;
-                $args['increaseAmounts'] = [1,2,4,8]; //TODO JSA COMPUTE
-                $nbPossibleBids = count($args['increaseAmounts']);
-                $args['minBid'] = $args['increaseAmounts'][0];
-                $args['maxBid'] = $args['increaseAmounts'][$nbPossibleBids-1];
                 $args['currentMoney'] = $player->getMoney();
+                $args['minBid'] = min(1, $args['currentMoney'] - 1);
+                $args['maxBid'] = max(0, $args['currentMoney'] - $currentBid);
 
-                $args['possibleActions'][] = 'actBid';
+                if($args['minBid'] >= 0 && $args['maxBid'] >= $args['minBid'] ){
+                    $args['possibleActions'][] = 'actBid';
+                }
                 $args['possibleActions'][] = 'actPassAuction';
                 break;
             case ROUND_STEP_PLAYER_ACTIONS:
@@ -116,9 +116,13 @@ class PlayerTurn extends GameState
     public function actBid(int $n, int $activePlayerId, array $args)
     {
         // check input values
-        $increaseAmounts = $args['increaseAmounts'];
-        if (!in_array($n, $increaseAmounts)) {
-            throw new UnexpectedException(102,"Invalid bid $n");
+        $minBid = $args['minBid'];
+        $maxBid = $args['maxBid'];
+        if ( $n < $minBid) {
+            throw new UnexpectedException(102,"Invalid bid $n, min is $minBid");
+        }
+        if ( $n > $maxBid) {
+            throw new UnexpectedException(102,"Invalid bid $n, max is $maxBid");
         }
         
         Log::addStep();

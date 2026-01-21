@@ -30,8 +30,8 @@ export class PlayerTurn {
             case this.game.const.ROUND_STEP_TILE_AUCTIONS: 
                 let currentBid = args.bid;
                 this.bga.statusBar.setTitle(isCurrentPlayerActive ? 
-                    _('${you} must pass or increase the current bid of ${bid} ${icon_money}').replace('${bid}', currentBid).replace('${icon_money}', icon_money) :
-                    _('${actplayer} must pass or increase the current bid of ${bid} ${icon_money}').replace('${bid}', currentBid).replace('${icon_money}', icon_money)
+                    _('${you} must pass or raise the current bid of ${bid} ${icon_money}').replace('${bid}', currentBid).replace('${icon_money}', icon_money) :
+                    _('${actplayer} must pass or raise the current bid of ${bid} ${icon_money}').replace('${bid}', currentBid).replace('${icon_money}', icon_money)
                 );
                 break;
             case this.game.const.ROUND_STEP_PLAYER_ACTIONS: 
@@ -58,43 +58,24 @@ export class PlayerTurn {
             }
             
             if(possibleActions.includes('actBid')){
-                let increaseAmounts = args.increaseAmounts;
                 this.currentBid = args.bid;
                 this.selectedBid = args.minBid;
-                //Don't display all as status bar buttons because with many coins, it becomes a long list
-                //increaseAmounts.forEach( increaseAmount => {
-                //    this.bga.statusBar.addActionButton(_('Increase +${n}').replace('${n}', increaseAmount), 
-                //        () => this.onBid(increaseAmount) 
-                //    );
-                //}); 
+
                 let hintLine1 = this.bga.gameui.format_string(  _('My current money : ${n} ${icon_money}') ,{ n:args.currentMoney , icon_money: icon_money});
                 let hintLineMin = this.bga.gameui.format_string(  _('Minimum bid : ${n} ${icon_money}') ,{ n:args.minBid , icon_money: icon_money});
                 let hintLineMax = this.bga.gameui.format_string(  _('Maximum bid : ${n} ${icon_money}') ,{ n:args.maxBid , icon_money:  icon_money});
-                let hintLine4 = this.bga.gameui.format_string(  _('Selected bid : ${n} ${icon_money}') ,{ n:args.minBid , icon_money:  icon_money});
 
                 document.getElementById('goa_top_zone').classList.remove('goa_no_display');
                 document.getElementById('goa_top_zone').insertAdjacentHTML('beforeend', `
                         <div id="goa_bid_hints">
                             <span>${hintLine1 }</span>
-                            <span>${''/*hintLineMin */}</span>
                             <div id='goa_bid_reset_min'></div>
-                            <div class='goa_bid' id='goa_bid_inc'>
-                                <!-- 
-                                <span>${''/*hintLine4*/}</span>
-                               
-                                <button id='goa_button_dec_bid' class='action-button bgabutton bgabutton_blue'>-</button>
-                                <button id='goa_button_inc_bid' class='action-button bgabutton bgabutton_blue'>+</button>
-                                -->
-                            </div>
+                            <div id='goa_bid_inc' class='goa_bid'></div>
                             <div id='goa_bid_reset_max'></div>
-                            <span>${''/*hintLineMax */}</span>
                         </div>
                     `);
                     
-                //this.bga.statusBar.addActionButton(this.bga.gameui.format_string(  _('+ ${n} ${icon_money} = ${m} ${icon_money}') ,{ n:args.minBid, m: (this.currentBid + args.minBid) , icon_money: icon_money}), 
-                //        () => this.onBid(args.minBid) 
-                //    , {'id':'goa_button_bid',});
-                this.refreshBidButton(); //this.selectedBid, (this.currentBid + this.selectedBid));
+                this.refreshBidButton();
 
                 this.bga.statusBar.addActionButton(this.bga.gameui.format_string(  hintLineMin ,{ n:args.minBid, m: (this.currentBid + args.minBid) , icon_money: icon_money}), 
                         () => {
@@ -112,14 +93,15 @@ export class PlayerTurn {
                         } 
                     ,{ destination: document.getElementById('goa_bid_reset_max') , 'color':'secondary'}
                 );
+
+                this.bga.statusBar.addActionButton('-1', 
+                        () => this.onIncreaseBid(-1, args.minBid, args.maxBid) 
+                    ,{ 'id':'goa_button_bid_dec',destination: document.getElementById('goa_bid_inc'), 'color':'secondary'  }
+                );
                 
                 this.bga.statusBar.addActionButton('+1', 
-                        () => this.onIncreaseBid(1) 
+                        () => this.onIncreaseBid(1, args.minBid, args.maxBid) 
                     ,{ 'id':'goa_button_bid_inc', destination: document.getElementById('goa_bid_inc'), 'color':'secondary'  }
-                );
-                this.bga.statusBar.addActionButton('-1', 
-                        () => this.onIncreaseBid(-1) 
-                    ,{ 'id':'goa_button_bid_dec',destination: document.getElementById('goa_bid_inc'), 'color':'secondary'  }
                 );
 
             }
@@ -166,12 +148,16 @@ export class PlayerTurn {
         });
     }
     
-    onIncreaseBid(delta) {
-        console.log( 'onIncreaseBid', delta,this.currentBid,this.selectedBid );
-        //TODO JSA CHECK mIN/ max 
-        //TODO JSA CHANGE Callback
-        this.selectedBid = this.selectedBid + delta;
-        //document.getElementById('goa_button_bid').innerHTML = this.currentBid;
+    onIncreaseBid(delta,minBid,maxBid) {
+        console.log( 'onIncreaseBid', delta,this.currentBid,this.selectedBid,minBid,maxBid );
+        let nextBid = this.selectedBid + delta;
+        if ( nextBid < minBid) {
+            return;
+        }
+        if ( nextBid > maxBid) {
+            return;
+        }
+        this.selectedBid = nextBid;
 
         this.refreshBidButton();
     }
