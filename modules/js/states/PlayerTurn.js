@@ -21,7 +21,7 @@ export class PlayerTurn {
 
         switch(roundStep){
             case this.game.const.ROUND_STEP_PLACE_AUCTIONS: 
-                let token_icon = (args.token) ? this.game.tplToken(args.token, '_log') : '';
+                var token_icon = (args.token) ? this.game.tplToken(args.token, '_log') : '';
                 this.bga.statusBar.setTitle(isCurrentPlayerActive ? 
                     _('${you} must place your auction marker ${token_icon}').replace('${token_icon}', token_icon) :
                     _('${actplayer} must place the auction marker ${token_icon}').replace('${token_icon}', token_icon)
@@ -29,9 +29,16 @@ export class PlayerTurn {
                 break;
             case this.game.const.ROUND_STEP_TILE_AUCTIONS: 
                 let currentBid = args.bid;
+                let auctionToken = args.token;
+                let auctionTokenDiv =  document.getElementById(`goa_token-${auctionToken.id}`);
+                if(auctionTokenDiv) {
+                    //HIGHLIGHT ZONE on grid
+                    auctionTokenDiv.parentNode.classList.add('selectable');
+                }
+                var token_icon = (auctionToken) ? this.game.tplToken(auctionToken, '_log') : '';
                 this.bga.statusBar.setTitle(isCurrentPlayerActive ? 
-                    _('${you} must pass or raise the current bid of ${bid} ${icon_money}').replace('${bid}', currentBid).replace('${icon_money}', icon_money) :
-                    _('${actplayer} must pass or raise the current bid of ${bid} ${icon_money}').replace('${bid}', currentBid).replace('${icon_money}', icon_money)
+                    _('${you} must pass or raise the current bid of ${bid} ${icon_money} for auction ${token_icon}').replace('${bid}', currentBid).replace('${icon_money}', icon_money).replace('${token_icon}', token_icon) :
+                    _('${actplayer} must pass or raise the current bid of ${bid} ${icon_money} for auction ${token_icon}').replace('${bid}', currentBid).replace('${icon_money}', icon_money).replace('${token_icon}', token_icon)
                 );
                 break;
             case this.game.const.ROUND_STEP_PLAYER_ACTIONS: 

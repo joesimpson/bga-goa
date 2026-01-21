@@ -175,6 +175,19 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
       ;
     return $token;
   }
+  
+  public static function getCurrentAuctionToken(): AuctionMarker|null
+  {
+    $placedTokens = self::DB()
+      ->where( 'subType', TOKEN_SUBTTYPE_AUCTION_MARKER)
+      ->where( static::$prefix . 'location', TOKEN_LOCATION_BOARD)
+      ->orderBy('type')
+      ->get()
+      ;
+    //We suppose the first low type still on board is to be auctioned
+    $token = $placedTokens->first();
+    return $token;
+  }
 
   ///////////////////////////////////////////////////////////////////////////////
   

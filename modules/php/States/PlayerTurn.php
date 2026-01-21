@@ -56,6 +56,7 @@ class PlayerTurn extends GameState
                 break;
             case ROUND_STEP_TILE_AUCTIONS: 
                 $currentBid = Globals::getCurrentBid();
+                $args['token'] = Tokens::getCurrentAuctionToken()->getUiData();
                 $args['bid'] = $currentBid;
                 $args['currentMoney'] = $player->getMoney();
                 $args['minBid'] = min(1, $args['currentMoney'] - 1);
