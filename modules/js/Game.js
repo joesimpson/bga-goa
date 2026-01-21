@@ -1409,7 +1409,7 @@ export class Game {
         
         // This function is refreshUI compatible
         //destroy previous cards
-        this.explorationHand.removeAll();
+        if(this.explorationHand) this.explorationHand.removeAll();
         this.explorationDiscard.removeAll();
         document.querySelectorAll('.goa_card[id^="goa_card-"]').forEach((pCard) => {
             this.destroy(pCard);
