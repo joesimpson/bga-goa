@@ -5,8 +5,12 @@ declare(strict_types=1);
 namespace Bga\Games\Goa\States;
 
 use Bga\GameFramework\StateType;
+use Bga\Games\Goa\Core\Globals;
+use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Log;
+use Bga\Games\Goa\Managers\Players;
+use Bga\Games\Goa\Managers\Tokens;
 
 class EndPlayerTurn extends \Bga\GameFramework\States\GameState
 {
@@ -27,6 +31,25 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
      */
     function onEnteringState(int $activePlayerId) {
         $this->game->trace("EndPlayerTurn.onEnteringState($activePlayerId)");
+
+        $player = Players::get($activePlayerId);
+        $roundStep = Globals::getRoundStep();
+        switch($roundStep){
+            case ROUND_STEP_PLACE_AUCTIONS:
+                $nextAuctionToken = Tokens::getNextAuctionToken($player);
+                if(!isset($nextAuctionToken)) {
+                    //Time to end this step
+                    $roundStep = ROUND_STEP_TILE_AUCTIONS;
+                    Globals::setRoundStep($roundStep);
+                    Notifications::newRoundStep($roundStep, clienttranslate('Tile Auctions'));
+                }
+                break;
+            case ROUND_STEP_TILE_AUCTIONS: 
+                break;
+            case ROUND_STEP_PLAYER_ACTIONS:
+                break;
+            default : break;
+        }
 
         $turnEnd = false;
         if ($turnEnd) {

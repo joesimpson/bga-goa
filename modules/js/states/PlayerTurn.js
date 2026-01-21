@@ -20,7 +20,7 @@ export class PlayerTurn {
 
         switch(roundStep){
             case this.game.const.ROUND_STEP_PLACE_AUCTIONS: 
-                let token_icon = this.game.tplToken(args.token, '_log');
+                let token_icon = (args.token) ? this.game.tplToken(args.token, '_log') : '';
                 this.bga.statusBar.setTitle(isCurrentPlayerActive ? 
                     _('${you} must place your auction marker ${token_icon}').replace('${token_icon}', token_icon) :
                     _('${actplayer} must place the auction marker ${token_icon}').replace('${token_icon}', token_icon)

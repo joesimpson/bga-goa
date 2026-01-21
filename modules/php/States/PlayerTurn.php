@@ -48,9 +48,11 @@ class PlayerTurn extends GameState
         switch($roundStep){
             case ROUND_STEP_PLACE_AUCTIONS:
                 $nextAuctionToken = Tokens::getNextAuctionToken($player);
-                $args['token'] = $nextAuctionToken->getUiData();
-                $args['pAuctionableSpots'] = GridUtils::listPossibleSpotsForNextAuctionMarker($nextAuctionToken);
-                $args['possibleActions'][] = 'actPlaceAuction';
+                if(isset($nextAuctionToken)) {
+                    $args['token'] = $nextAuctionToken->getUiData();
+                    $args['pAuctionableSpots'] = GridUtils::listPossibleSpotsForNextAuctionMarker($nextAuctionToken);
+                    $args['possibleActions'][] = 'actPlaceAuction';
+                }
                 break;
             case ROUND_STEP_TILE_AUCTIONS: 
                 $args['possibleActions'][] = 'actBid';

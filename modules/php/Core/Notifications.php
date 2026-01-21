@@ -31,6 +31,17 @@ class Notifications
       'n' => $round,
     ]);
   }
+  
+  public static function newRoundStep(int $roundStep, string $stepMessage)
+  {
+    $msg = clienttranslate('Round step ${n} begins : ${stepMessage}');
+
+    self::notifyAll('newRoundStep', $msg, [
+      'n' => $roundStep,
+      'stepMessage' => $stepMessage,
+      "i18n" => ['stepMessage'],
+    ]);
+  }
 
   public static function newTurn(int $turn)
   {
