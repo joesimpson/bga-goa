@@ -27,12 +27,18 @@ export class PlayerTurn {
                 );
                 break;
             case this.game.const.ROUND_STEP_TILE_AUCTIONS: 
-                this.bga.statusBar.setTitle('TODO ROUND_STEP_TILE_AUCTIONS');
+                let currentBid = args.bid;
+                let icon_money = this.game.formatIcon('money');
+                this.bga.statusBar.setTitle(isCurrentPlayerActive ? 
+                    _('${you} must pass or increase the current bid of ${bid} ${icon_money}').replace('${bid}', currentBid).replace('${icon_money}', icon_money) :
+                    _('${actplayer} must pass or increase the current bid of ${bid} ${icon_money}').replace('${bid}', currentBid).replace('${icon_money}', icon_money)
+                );
                 break;
             case this.game.const.ROUND_STEP_PLAYER_ACTIONS: 
                 this.bga.statusBar.setTitle('TODO ROUND_STEP_PLAYER_ACTIONS');
                 break;
             default: 
+                //UNEXPECTED
                 this.bga.statusBar.setTitle('');
                 break;
         }
@@ -48,6 +54,15 @@ export class PlayerTurn {
 
                     let marketSpace = $(`goa_market_grid_space-${spot.row}-${spot.col}`);
                     this.game.onClick(marketSpace,() => this.onMarketSpotClick(spot.row,spot.col));
+                }); 
+            }
+            
+            if(possibleActions.includes('actBid')){
+                let increaseAmounts = args.increaseAmounts;
+                increaseAmounts.forEach( increaseAmount => {
+                    this.bga.statusBar.addActionButton(_('Increase +${n}').replace('${n}', increaseAmount), 
+                        () => this.onBid(increaseAmount) 
+                    );
                 }); 
             }
 
@@ -81,6 +96,15 @@ export class PlayerTurn {
                             'row': row,
                             'col': col,
         }).then(() =>  {               
+        });
+    }
+    
+    onBid(amount) {
+        console.log( 'onBid', amount );
+
+        this.bga.actions.performAction("actBid", { 
+                            'n': amount,
+        }).then(() =>  {
         });
     }
 }

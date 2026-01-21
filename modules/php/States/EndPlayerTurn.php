@@ -42,6 +42,7 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
                     $roundStep = ROUND_STEP_TILE_AUCTIONS;
                     Globals::setRoundStep($roundStep);
                     Notifications::newRoundStep($roundStep, clienttranslate('Tile Auctions'));
+                    Globals::setCurrentBid(0);
                 }
                 break;
             case ROUND_STEP_TILE_AUCTIONS: 

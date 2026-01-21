@@ -594,6 +594,11 @@ Icon extract in sprite with differents layers size (so % is not useful).
  * Goa stylesheet
  *
  */
+.goa_icon_container {
+  display: inline-block;
+  vertical-align: middle;
+}
+
 #goa_board_round_marker {
   width: 49.5px;
   height: 48.25px;
@@ -1699,6 +1704,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
 }
 .goa_panel .goa_icon_container {
   margin: 0 0.1em;
+  display: block;
 }
 
 /*

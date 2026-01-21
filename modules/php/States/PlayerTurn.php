@@ -55,6 +55,9 @@ class PlayerTurn extends GameState
                 }
                 break;
             case ROUND_STEP_TILE_AUCTIONS: 
+                $currentBid = Globals::getCurrentBid();
+                $args['bid'] = $currentBid;
+                $args['increaseAmounts'] = [1,2,3,4,5]; //TODO JSA COMPUTE
                 $args['possibleActions'][] = 'actBid';
                 $args['possibleActions'][] = 'actPassAuction';
                 break;
@@ -84,7 +87,7 @@ class PlayerTurn extends GameState
         Log::addStep();
         $player = Players::get($activePlayerId);
 
-        // Add your game logic to play a card here.
+        // game logic 
         $auctionType =  $args['token']['type'];
         if($auctionType == TOKEN_TYPE_AUCTION_MARKER_1){
             //add first auction token when needed
@@ -93,6 +96,34 @@ class PlayerTurn extends GameState
         }
         $token = Tokens::placeAuction($player,$row,$col, $auctionType);
         Notifications::auctionPlaced( $player, $row, $col, $token );
+
+        // at the end of the action, move to the next state
+        return ConfirmTurn::class;
+    }
+
+    
+    /**
+     * Player action in round step 2
+     *
+     * @throws UserException
+     */
+    #[PossibleAction]
+    public function actBid(int $n, int $activePlayerId, array $args)
+    {
+        // check input values
+        $increaseAmounts = $args['increaseAmounts'];
+        if (!in_array($n, $increaseAmounts)) {
+            throw new UnexpectedException(102,"Invalid bid $n");
+        }
+        
+        Log::addStep();
+        $player = Players::get($activePlayerId);
+
+        // game logic 
+        $currentBid = $args['bid'];
+        $nextBid = $currentBid + $n;
+        Globals::setCurrentBid($nextBid);
+        Notifications::newBid($player, $currentBid, $nextBid);
 
         // at the end of the action, move to the next state
         return ConfirmTurn::class;

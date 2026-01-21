@@ -23,6 +23,7 @@ class Globals extends \Bga\Games\Goa\Helpers\DB_Manager
     'roundStep' => 'int',
     'turn' => 'int',
     'firstPlayer' => 'int',
+    'currentBid' => 'int',
 
     //For Undo log module
     'choices' => 'int',

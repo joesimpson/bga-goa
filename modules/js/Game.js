@@ -360,6 +360,9 @@ export class Game {
             if('token' in args && 'token_icon' in args) {
                 args.token_icon = this.tplToken(args.token, '_log');
             }
+            if('icon_money' in args) {
+                args.icon_money = this.formatIcon('money');
+            }
         }
       } catch (e) {
         console.error(log, args, 'Exception thrown', e.stack);
