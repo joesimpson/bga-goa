@@ -65,8 +65,8 @@ export class PlayerTurn {
             }
             
             if(possibleActions.includes('actBid')){
-                this.currentBid = args.bid;
-                this.selectedBid = args.minBid;
+                this.currentBid = args.bid ; //- args.bidRebate;
+                this.selectedBid = args.minBid; // - args.bidRebate;
 
                 let hintLine1 = this.bga.gameui.format_string(  _('My current money : ${n} ${icon_money}') ,{ n:args.currentMoney , icon_money: icon_money});
                 let hintLineMin = this.bga.gameui.format_string(  _('Minimum bid : ${n} ${icon_money}') ,{ n:args.minBid , icon_money: icon_money});
@@ -175,7 +175,7 @@ export class PlayerTurn {
         if(button) this.game.destroy(button);
         let icon_money = this.game.formatIcon('money');
 
-        this.bga.statusBar.addActionButton(this.bga.gameui.format_string(  _('Bid + ${n} ${icon_money} = ${m} ${icon_money}') ,
+        this.bga.statusBar.addActionButton(this.bga.gameui.format_string(  _('Bid ${n} ${icon_money} => ${m} ${icon_money}') ,
                     { 'n': this.selectedBid, m: (this.currentBid + this.selectedBid), icon_money: icon_money}), 
                 () => this.onBid(this.selectedBid) 
             , {'id':'goa_button_bid', destination: document.getElementById('customActions')}

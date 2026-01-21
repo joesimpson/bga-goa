@@ -56,13 +56,32 @@ class PlayerTurn extends GameState
                 break;
             case ROUND_STEP_TILE_AUCTIONS: 
                 $currentBid = Globals::getCurrentBid();
-                $args['token'] = Tokens::getCurrentAuctionToken()->getUiData();
+                $auctionToken = Tokens::getCurrentAuctionToken();
+                $args['token'] = $auctionToken->getUiData();
+                $currentAuctioneer = $auctionToken->getPId();
                 $args['bid'] = $currentBid;
                 $args['currentMoney'] = $player->getMoney();
                 $args['minBid'] = min(1, $args['currentMoney'] - 1);
                 $args['maxBid'] = max(0, $args['currentMoney'] - $currentBid);
+                $args['bidRebate'] = 0;
 
-                if($args['minBid'] >= 0 && $args['maxBid'] >= $args['minBid'] ){
+                if($currentAuctioneer == $player->getId()){
+                    if($currentBid == 0){
+                        //auctioneer may bid 0 and win
+                        $args['minBid'] = 0;
+                        $args['maxBid'] = 0;
+                    }
+                    else {
+                        $args['bidRebate'] = 1;
+                        $args['minBid'] = ($currentBid - $args['bidRebate']) - $currentBid;
+                        $args['maxBid'] = $args['minBid'];
+                    }
+                }
+
+
+                if($args['minBid'] + $args['bidRebate'] >= 0 
+                && $args['maxBid'] >= $args['minBid'] 
+                ){
                     $args['possibleActions'][] = 'actBid';
                 }
                 $args['possibleActions'][] = 'actPassBid';
@@ -133,7 +152,9 @@ class PlayerTurn extends GameState
         $currentBid = $args['bid'];
         $nextBid = $currentBid + $n;
         Globals::setCurrentBid($nextBid);
-        Notifications::newBid($player, $currentBid, $nextBid);
+        if($nextBid > $currentBid){
+            Notifications::newBid($player, $currentBid, $nextBid);
+        }
 
         // at the end of the action, move to the next state
         return ConfirmTurn::class;
