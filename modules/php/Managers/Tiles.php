@@ -208,7 +208,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
       6 => $f([ 1, 0, MARKET_TYPE_PLANTATION, [ SPICE_BLACK,  ], [], 1, ]),  
       7 => $f([ 1, 0, MARKET_TYPE_PLANTATION, [ SPICE_PINK,   ], [], 1, ]),  
       
-      8 => $f([ 1, 0, MARKET_TYPE_ACTION_REUSEABLE, [], [ACTION_SPICE => SPICES_ALL ], 0, ]),
+      8 => $f([ 1, 0, MARKET_TYPE_ACTION_REUSEABLE, [SPICES_ALL], [ACTION_SPICE => 1 ], 0, ]),
       9 => $f([ 1, 0, MARKET_TYPE_ACTION_REUSEABLE, [], [ACTION_CONTRACT => 1 ], 0, ]),
       
       10 => $f([ 2, 1, MARKET_TYPE_PLANTATION, [ SPICE_WHITE,  SPICE_WHITE   ], [], 0, ]),  

@@ -957,7 +957,8 @@ export class Game {
                             let number_label = number;
                             switch(parseInt(action_type)){
                                 case ACTION_SPICE:
-                                    return this.formatTileSpicesText(tile);
+                                    returnAfterThis = true;
+                                    description = this.formatTileSpicesText(tile);
                                 case ACTION_MONEY:
                                     resource_name = _('Gold Pardau cards');
                                     icon_name = this.formatIcon('money');
