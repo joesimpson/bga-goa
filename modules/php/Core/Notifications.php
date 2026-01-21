@@ -76,6 +76,13 @@ class Notifications
     ]);
   }
   
+  public static function passBid(Player $player, )
+  {
+    self::notifyAll("passBid", clienttranslate('${player_name} passes'), [
+        "player" => $player,
+    ]);
+  }
+
   public static function drawAndDiscardExploration(int $playerId, ExplorationCard $card)
   {
     self::notifyAll("drawAndDiscardExploration", clienttranslate('${player_name} draws and discard ${card_icon}'), [

@@ -106,8 +106,9 @@ export class PlayerTurn {
 
             }
 
-            //TODO JSA MANAGE when we can pass
-            this.bga.statusBar.addActionButton(_('Pass'), () => this.bga.actions.performAction("actPass"), { color: 'secondary', destination: document.getElementById('restartActions') }); 
+            if(possibleActions.includes('actPassBid')){
+                this.bga.statusBar.addActionButton(_('Pass'), () => this.bga.actions.performAction("actPassBid"), { color: 'secondary', destination: document.getElementById('restartActions') }); 
+            }
 
         }
     }

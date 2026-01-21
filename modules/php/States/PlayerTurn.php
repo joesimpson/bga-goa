@@ -64,7 +64,7 @@ class PlayerTurn extends GameState
                 if($args['minBid'] >= 0 && $args['maxBid'] >= $args['minBid'] ){
                     $args['possibleActions'][] = 'actBid';
                 }
-                $args['possibleActions'][] = 'actPassAuction';
+                $args['possibleActions'][] = 'actPassBid';
                 break;
             case ROUND_STEP_PLAYER_ACTIONS:
                 break;
@@ -139,20 +139,14 @@ class PlayerTurn extends GameState
     }
 
     /**
-     * Player action, example content.
-     *
-     * In this scenario, each time a player pass, this method will be called. This method is called directly
-     * by the action trigger on the front side with `bgaPerformAction`.
+     * Player action : pass the bid
      */
     #[PossibleAction]
-    public function actPass(int $activePlayerId)
+    public function actPassBid(int $activePlayerId)
     {
         Log::addStep();
-        // Notify all players about the choice to pass.
-        $this->notify->all("pass", clienttranslate('${player_name} passes'), [
-            "player_id" => $activePlayerId,
-            "player_name" => $this->game->getPlayerNameById($activePlayerId), // remove this line if you uncomment notification decorator
-        ]);
+        $player = Players::get($activePlayerId);
+        Notifications::passBid($player);
 
         // at the end of the action, move to the next state
         return ConfirmTurn::class;
