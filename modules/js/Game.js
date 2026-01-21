@@ -127,6 +127,7 @@ export class Game {
         this.bga.gameArea.getElement().insertAdjacentHTML('beforeend', `
             <div id="goa_game_container">
                 <div id="goa_overall_background"></div>
+                <div id="goa_top_zone" class="whiteblock goa_no_display"></div>
                 <div id="goa_main_zone">
                     <div id='goa_resizable_board'>
                         <div id='goa_board_container'>
@@ -433,6 +434,8 @@ export class Game {
                 $(node).classList.remove('selected')
             }
         });
+        this.empty(document.getElementById('goa_top_zone'));
+        document.getElementById('goa_top_zone').classList.add('goa_no_display');
     }
 
     onClick(node, callback) {

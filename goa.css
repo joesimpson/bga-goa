@@ -1875,6 +1875,36 @@ https://github.com/thoun/bga-zoom/blob/main/bga-zoom.css
   flex-wrap: wrap;
 }
 
+#goa_top_zone {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+#goa_top_zone #goa_bid_hints {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+#goa_top_zone #goa_bid_hints span {
+  align-self: baseline;
+  flex-grow: 1;
+}
+#goa_top_zone #goa_bid_hints .goa_bid {
+  align-self: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  border-radius: 5px;
+  box-shadow: 0px 0px 0px 3px blue;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+#goa_top_zone #goa_bid_hints .goa_bid span, #goa_top_zone #goa_bid_hints .goa_bid button {
+  align-self: baseline;
+  flex-grow: 0;
+}
+
 #goa_main_zone {
   display: flex;
   justify-content: center;
@@ -1887,6 +1917,10 @@ https://github.com/thoun/bga-zoom/blob/main/bga-zoom.css
 #goa_main_zone .goa_player_table_title_name {
   text-align: center;
   margin: 5px;
+}
+
+.goa_no_display {
+  display: none !important;
 }
 
 html.goa_undo_style_text #btnIconUndoLastStep,

@@ -57,7 +57,12 @@ class PlayerTurn extends GameState
             case ROUND_STEP_TILE_AUCTIONS: 
                 $currentBid = Globals::getCurrentBid();
                 $args['bid'] = $currentBid;
-                $args['increaseAmounts'] = [1,2,3,4,5]; //TODO JSA COMPUTE
+                $args['increaseAmounts'] = [1,2,4,8]; //TODO JSA COMPUTE
+                $nbPossibleBids = count($args['increaseAmounts']);
+                $args['minBid'] = $args['increaseAmounts'][0];
+                $args['maxBid'] = $args['increaseAmounts'][$nbPossibleBids-1];
+                $args['currentMoney'] = $player->getMoney();
+
                 $args['possibleActions'][] = 'actBid';
                 $args['possibleActions'][] = 'actPassAuction';
                 break;
