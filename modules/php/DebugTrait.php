@@ -96,7 +96,7 @@ trait DebugTrait
     }
     
     ////////////////////////////////////////////////////
-    function debug_refrehUI(){
+    function debug_refreshUI(){
         $player_id = Players::getCurrent()->getId();
         //Game::get()->notify->player($player_id,'reloadPage', "/!\ : Refresh page to see game has restarted...", []);
         Notifications::refreshUI(Game::get()->getAllDatas($player_id));
@@ -198,7 +198,7 @@ trait DebugTrait
 
         Tokens::create($tokens);
 
-        $this->debug_refrehUI();
+        $this->debug_refreshUI();
     }
 
     
@@ -207,7 +207,7 @@ trait DebugTrait
         Cards::moveAllInLocation(CARD_LOCATION_BOARD,CARD_LOCATION_EXP_DECK);
         Cards::moveAllInLocation(CARD_LOCATION_EXP_DISCARD,CARD_LOCATION_EXP_DECK);
         Cards::shuffle(CARD_LOCATION_EXP_DECK);
-        $this->debug_refrehUI();
+        $this->debug_refreshUI();
     }
     // Test board UI : 
     function debug_boardCards(bool $keepOne = true){
@@ -218,7 +218,7 @@ trait DebugTrait
         //
         if($keepOne) Cards::getTopOf(CARD_LOCATION_EXP_DISCARD)->setLocation(CARD_LOCATION_EXP_DECK);
         Cards::shuffle(CARD_LOCATION_EXP_DISCARD);
-        $this->debug_refrehUI();
+        $this->debug_refreshUI();
     }
     function debug_drawAndDiscardExplo(int $nb = 1){
         $player = Players::getCurrent();
@@ -242,7 +242,7 @@ trait DebugTrait
         $player->setShips($ships);
         $player->setContracts($contracts);
         $player->setCompasses($compasses);
-        $this->debug_refrehUI();
+        $this->debug_refreshUI();
     }
 
     function debug_playerTiles(){
@@ -305,7 +305,7 @@ trait DebugTrait
         $tile->setState(3);
         Tokens::addSpiceOnTile($tile, $player, TOKEN_TYPE_SPICE_YELLOW, 1);
 
-        $this->debug_refrehUI();
+        $this->debug_refreshUI();
     }
     ////////////////////////////////////////////////////
         

@@ -292,39 +292,6 @@ export class Game {
         
         // TODO: Set up your game interface here, according to "gamedatas"
         
-        // create a card manager
-        this.outpostsTilesManager = new BgaCards.Manager({
-            animationManager: this.animationManager,
-            type: 'goa_outpost',
-            getId: (card) => card.id,
-            setupFrontDiv: (card, div) => {
-                div.dataset.type = card.type; 
-                this.bga.gameui.addTooltipHtml(div.id, this.getTileTooltip(card));
-            },
-            cardWidth: 108,
-            cardHeight: 108,
-        });
-        this.outpostsTilesStocks = [];
-        this.outpostsTilesStocks[1] = new BgaCards.AllVisibleDeck(
-            this.outpostsTilesManager, 
-            document.getElementById('goa_board_outposts_1'),
-            { direction:"vertical", },
-        );
-        this.outpostsTilesStocks[2] = new BgaCards.AllVisibleDeck(
-            this.outpostsTilesManager, 
-            document.getElementById('goa_board_outposts_2'),
-            { direction:"vertical", },
-        );
-        this.outpostsTilesStocks[3] = new BgaCards.AllVisibleDeck(
-            this.outpostsTilesManager, 
-            document.getElementById('goa_board_outposts_3'),
-            { direction:"vertical", },
-        );
-        this.outpostsTilesStocks[4] = new BgaCards.AllVisibleDeck(
-            this.outpostsTilesManager, 
-            document.getElementById('goa_board_outposts_4'),
-            { direction:"vertical", },
-        );
         this.setupTiles();
         this.setupTokens();
         this.setupCards();
@@ -725,14 +692,19 @@ export class Game {
     //   |_| |_|_|\___||___/
     //////////////////////////////////////////////////////////
  
-    setupTiles(init = true) {
+    async setupTiles(init = true) {
         console.log("setupTiles"); 
-        //Destroy previous tiles
-        document.querySelectorAll('.goa_tile[id^="goa_tile-"]').forEach((oCard) => {
-            this.destroy(oCard);
-        });
-
         
+        if(!init){
+            //Manual remove all stocks in order to be able to remove all tiles
+            this.outpostsTilesStocks.forEach((stock) => { 
+                //stock.remove();//DESTROy STOCK  KO because it removes the div holder
+                stock.getCards().forEach((card) => {
+                    stock.cardRemoved(card);
+                });
+                stock.removeAll();
+            });
+        }
         if(init){
             //market Grid cells
             for(let row=1;row<=MARKET_GRID_SIZE;row++){
@@ -761,11 +733,49 @@ export class Game {
                 if(!$(grid_cell)) document.getElementById(`goa_board_market_right`).insertAdjacentHTML('beforeend', this.tplMarketGridSpace({'row':row, 'col':(MARKET_GRID_SIZE+1)}));
             }
             //---------------------------------
+            // create a card manager
+            this.outpostsTilesManager = new BgaCards.Manager({
+                animationManager: this.animationManager,
+                type: 'goa_outpost',
+                getId: (card) => card.id,
+                setupFrontDiv: (card, div) => {
+                    div.dataset.type = card.type; 
+                    this.bga.gameui.addTooltipHtml(div.id, this.getTileTooltip(card));
+                },
+                cardWidth: 108,
+                cardHeight: 108,
+            });
+            this.outpostsTilesStocks = [];
+            this.outpostsTilesStocks[1] = new BgaCards.AllVisibleDeck(
+                this.outpostsTilesManager, 
+                document.getElementById('goa_board_outposts_1'),
+                { direction:"vertical", },
+            );
+            this.outpostsTilesStocks[2] = new BgaCards.AllVisibleDeck(
+                this.outpostsTilesManager, 
+                document.getElementById('goa_board_outposts_2'),
+                { direction:"vertical", },
+            );
+            this.outpostsTilesStocks[3] = new BgaCards.AllVisibleDeck(
+                this.outpostsTilesManager, 
+                document.getElementById('goa_board_outposts_3'),
+                { direction:"vertical", },
+            );
+            this.outpostsTilesStocks[4] = new BgaCards.AllVisibleDeck(
+                this.outpostsTilesManager, 
+                document.getElementById('goa_board_outposts_4'),
+                { direction:"vertical", },
+            );
         }
+        
+        //Destroy existing tiles
+        document.querySelectorAll('.goa_tile[id^="goa_tile-"], .goa_outpost[id^="goa_outpost-"]').forEach((oTile) => {
+            this.destroy(oTile);
+        });
 
-        let cardIds = this.gamedatas.tiles.map((card) => {
-            this.addTile(card);
-            return card.id;
+        let tileIds = this.gamedatas.tiles.map((oTile) => {
+            this.addTile(oTile);
+            return oTile.id;
         });
     }
     getTileContainer(tile) {
