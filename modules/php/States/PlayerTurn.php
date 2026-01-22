@@ -91,6 +91,8 @@ class PlayerTurn extends GameState
                 }
                 break;
             case ROUND_STEP_PLAYER_ACTIONS:
+                //TODO JSA REMOVE DEBUG when real actions ready
+                $args['possibleActions'][] = 'actPassBid';
                 break;
             default : break;
         }

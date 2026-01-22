@@ -34,6 +34,8 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
     function onEnteringState(int $activePlayerId) {
         $this->game->trace("EndPlayerTurn.onEnteringState($activePlayerId)");
 
+        $turnEnd = false;
+
         $player = Players::get($activePlayerId);
         $roundStep = Globals::getRoundStep();
         switch($roundStep){
@@ -95,11 +97,12 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
                 }
                 break;
             case ROUND_STEP_PLAYER_ACTIONS:
+                //TODO JSA REMOVE DEBUG when real actions ready
+                $turnEnd = true;
                 break;
             default : break;
         }
 
-        $turnEnd = false;
         if ($turnEnd) {
             Log::addCheckpoint(ST_END_TURN);
             return EndTurn::class;

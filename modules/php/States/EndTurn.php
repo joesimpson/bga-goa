@@ -28,6 +28,8 @@ class EndTurn extends \Bga\GameFramework\States\GameState
         $this->game->trace("EndTurn.onEnteringState($activePlayerId)");
 
         $roundEnd = false;
+            //TODO JSA REMOVE DEBUG when ready
+            $roundEnd = true;
         if ($roundEnd) {
             Log::addCheckpoint(ST_END_ROUND);
             return EndRound::class;
