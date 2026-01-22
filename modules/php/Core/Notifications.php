@@ -95,15 +95,19 @@ class Notifications
   public static function winsAuction(Player $playerWins, int $bid, Player|null $player2Auctioneer = null )
   {
     if(isset($player2Auctioneer)){
-      self::notifyAll("winsAuction", clienttranslate('${player_name} wins the auction and gives ${n} coins to ${player_name2}'), [
+      self::notifyAll("winsAuction", clienttranslate('${player_name} wins the auction and gives ${n} ${icon_money} to ${player_name2}'), [
           "player" => $playerWins,
           "player2" => $player2Auctioneer,
           "n" => $bid,
+          "icon_money" => clienttranslate('Pardaos'),
+          "i18n" => ['icon_money'],
       ]);
     } else {
-      self::notifyAll("winsAuctionBank", clienttranslate('${player_name} wins the auction and gives ${n} coins to the bank'), [
+      self::notifyAll("winsAuctionBank", clienttranslate('${player_name} wins the auction and gives ${n} ${icon_money} to the bank'), [
           "player" => $playerWins,
           "n" => $bid,
+          "icon_money" => clienttranslate('Pardaos'),
+          "i18n" => ['icon_money'],
       ]);
     }
   }
