@@ -69,10 +69,10 @@ trait DebugTrait
         Log::enable();
 
         $players = self::loadPlayersBasicInfos(); 
+        $this->debug_refreshUI();
+
         Game::get()->gamestate->jumpToState(ST_NEW_SESSION);//first state 
         
-        //$this->notify->all('reloadPage', "/!\ : Refresh page to see game has restarted...", []);
-        Game::get()->notify->player($player->getId(),'reloadPage', "/!\ : Refresh page to see game has restarted...", []);
         Game::get()->trace("debug_ReSetup - END ////////////////////////////////////////////////////");
 
     }
@@ -98,6 +98,7 @@ trait DebugTrait
     ////////////////////////////////////////////////////
     function debug_refreshUI(){
         $player_id = Players::getCurrent()->getId();
+        //Game::get()->notify->player($player_id,'reloadPage', "/!\ : Refresh page to see game has restarted...", []);
         //Game::get()->notify->player($player_id,'reloadPage', "/!\ : Refresh page to see game has restarted...", []);
         Notifications::refreshUI(Game::get()->getAllDatas($player_id));
     }
@@ -243,6 +244,7 @@ trait DebugTrait
         $player->setContracts($contracts);
         $player->setCompasses($compasses);
         $this->debug_refreshUI();
+        $this->debug_goToState(ST_PLAYER_TURN);
     }
 
     function debug_playerTiles(){

@@ -71,7 +71,14 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
                         Notifications::winsAuction($highBidPlayer, $highBid,$currentAuctioneer);
                     }
 
-                    //TODO JSA $highBidPlayer receives the FIRST token if this is the first auction
+                    if( TOKEN_TYPE_AUCTION_MARKER_1 == $auctionToken->getType()){
+                        //$highBidPlayer receives the FIRST token if this is the first auction
+                        Tokens::giveFirstPlayerToken($highBidPlayer);
+                    }
+                    else {
+                        //ELSE TODO JSA highBidPlayer receives a tile
+                    }
+
                     Tokens::returnAuctionMarkerToPlayer($currentAuctioneer,$auctionToken);
 
                     $nextAuctionTokenToBid = Tokens::getCurrentAuctionToken();

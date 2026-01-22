@@ -66,6 +66,9 @@
     position: relative; 
     @include goa_icons_sprite(202px,0px,60px,60px,262px,255px);
 }
+.goa_first_player_container .goa_first_auction_marker{
+    @include goa_icons_sprite(202px,0px,30px,30px,262px,255px);
+}
 
 .goa_spice {
     //to fit on tile spot

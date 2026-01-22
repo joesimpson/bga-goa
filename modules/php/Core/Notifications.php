@@ -52,6 +52,15 @@ class Notifications
     ]);
   }
 
+  public static function giveFirstPlayerToken(Player $player, Token $token)
+  {
+    self::notifyAll("giveFirstPlayerToken", clienttranslate('${player_name} gets the ${token_icon} marker and becomes the starting player'), [
+        "player" => $player,
+        "token" => $token->getUiData(),
+        "token_icon" => '',
+        'preserve'=>['token'],
+    ]);
+  }
   /**
    */
   public static function auctionPlaced(Player $player, int $row, int $col, Token $token)

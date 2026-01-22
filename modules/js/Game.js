@@ -206,8 +206,13 @@ export class Game {
                         ${this.tplResourceCounter(player,'explo_symbol_tiny_5')}
                         ${this.tplResourceCounter(player,'explo_symbol_tiny_6')}
                     </div>
+                    <div class='goa_player_counters_line goa_player_counters_lastline'>
+                        <div id="goa_first_player_container_${player.id}" class="goa_first_player_container"></div>
+                    </div>
                 </div>
             `);
+            this.bga.gameui.addTooltipHtmlToClass(`goa_first_player_container`, _('Starting player'));
+
             this._counters[player.id] = {};
             this.createCounter(player.id,'exploration_hand_size',player.exploration_hand_size);
             this.createCounter(player.id,'ships',player.ships);
@@ -657,6 +662,14 @@ export class Game {
     
     async notif_auctionMarkerBack(notif) {
         console.log("notif_auctionMarkerBack",notif);
+        let token = notif.token;
+        let tokenDiv = this.addToken(token);
+        let destinationDiv = document.getElementById(this.getTokenContainer(token));
+        await this.animationManager.slideAndAttach(tokenDiv, destinationDiv);
+    }
+    
+    async notif_giveFirstPlayerToken(notif) {
+        console.log("notif_giveFirstPlayerToken",notif);
         let token = notif.token;
         let tokenDiv = this.addToken(token);
         let destinationDiv = document.getElementById(this.getTokenContainer(token));
@@ -1230,6 +1243,10 @@ export class Game {
             }
             if(token.subtype == TOKEN_SUBTTYPE_AUCTION_MARKER){
                 return `goa_player_auction_markers-${token.pId}`;
+            }
+            if(token.subtype == TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER){
+                //return `goa_player_auction_markers-${token.pId}`;
+                return `goa_first_player_container_${token.pId}`;
             }
         } 
         if( TOKEN_LOCATION_BOARD == token.location) {

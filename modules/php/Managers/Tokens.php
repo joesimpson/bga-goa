@@ -134,6 +134,20 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
     $elt = self::singleCreate($token);
     return $elt;
   }
+  
+  public static function giveFirstPlayerToken(Player $player): FirstAuctionMarker
+  {
+    $token = self::DB()
+      ->where( 'type', TOKEN_TYPE_FIRSTAUCTION_MARKER)
+      ->where( 'subType', TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER)
+      ->get()
+      ->first()
+      ;
+    $token->setPId($player->getId());
+    $token->setLocation(TOKEN_LOCATION_PLAYER_BOARD);
+    Notifications::giveFirstPlayerToken($player, $token);
+    return $token;
+  }
   public static function placeAuction(Player $player,int $row,int $col, int $type): AuctionMarker
   {
     $token = self::DB()

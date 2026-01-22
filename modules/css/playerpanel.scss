@@ -29,7 +29,18 @@
     display: flex;
     flex-direction: column;
     font-size: 10px;
-    position: relative;
+    //position: relative;
+    //align-items: center;
+        
+    .goa_first_player_container{
+        /*
+        position: absolute;
+        top: 0px;
+        right: 43px;
+        height: 35px;
+        width: 30px;
+        */
+    }
     
     .goa_player_counters_line{
         display: flex;
@@ -37,7 +48,9 @@
         flex-wrap: wrap;
         justify-content: space-around;
         position: relative;
-        line-height: 3em;
+        &:not(.goa_player_counters_lastline){
+            line-height: 3em;
+        }
     }
     
     .goa_player_resource {

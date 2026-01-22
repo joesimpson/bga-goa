@@ -900,6 +900,15 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-size: 458.0152671756% 129.4117647059%;
 }
 
+.goa_first_player_container .goa_first_auction_marker {
+  width: 30px;
+  height: 30px;
+  background-image: url("img/icons.png");
+  background-position-x: -23.1297709924px;
+  background-position-y: 0px;
+  background-size: 458.0152671756% 129.4117647059%;
+}
+
 .goa_spice[data-type="31"] {
   width: 38px;
   height: 39px;
@@ -1670,7 +1679,15 @@ Icon extract in sprite with differents layers size (so % is not useful).
   display: flex;
   flex-direction: column;
   font-size: 10px;
-  position: relative;
+}
+.goa_panel .goa_first_player_container {
+  /*
+  position: absolute;
+  top: 0px;
+  right: 43px;
+  height: 35px;
+  width: 30px;
+  */
 }
 .goa_panel .goa_player_counters_line {
   display: flex;
@@ -1678,6 +1695,8 @@ Icon extract in sprite with differents layers size (so % is not useful).
   flex-wrap: wrap;
   justify-content: space-around;
   position: relative;
+}
+.goa_panel .goa_player_counters_line:not(.goa_player_counters_lastline) {
   line-height: 3em;
 }
 .goa_panel .goa_player_resource {
