@@ -98,6 +98,16 @@ class Notifications
       ]);
     }
   }
+  
+  public static function auctionMarkerBack(Player $player, Token $token)
+  {
+    self::notifyAll("auctionMarkerBack", clienttranslate('${player_name} takes back the auction marker ${token_icon}'), [
+        "player" => $player,
+        "token" => $token->getUiData(),
+        "token_icon" => '',
+        'preserve'=>['token'],
+    ]);
+  }
 
   public static function drawAndDiscardExploration(int $playerId, ExplorationCard $card)
   {

@@ -148,6 +148,7 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
     $token->setLocation(TOKEN_LOCATION_BOARD);
     return $token;
   }
+
   public static function getNextAuctionToken(Player $player): AuctionMarker|null
   {
     $placedTokens = self::DB()
@@ -175,7 +176,7 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
       ;
     return $token;
   }
-  
+
   public static function getCurrentAuctionToken(): AuctionMarker|null
   {
     $placedTokens = self::DB()
@@ -187,6 +188,11 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
     //We suppose the first low type still on board is to be auctioned
     $token = $placedTokens->first();
     return $token;
+  }
+
+  public static function returnAuctionMarkerToPlayer(Player $player, AuctionMarker $token) {
+    $token->setLocation(TOKEN_LOCATION_PLAYER_BOARD);
+    Notifications::auctionMarkerBack($player,$token);
   }
 
   ///////////////////////////////////////////////////////////////////////////////
@@ -206,6 +212,8 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
           'nbr' => 1,
         ];
       } 
+
+      //TODO JSA create first player marker, because it is 1 per game
 
       for($k = 0; $k < count(TOKEN_TYPE_PROGRESS_MARKERS); $k++){
         $tokens[] = [

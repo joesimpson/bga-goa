@@ -655,6 +655,14 @@ export class Game {
         await this.animationManager.slideAndAttach(tokenDiv, destinationDiv);
     }
     
+    async notif_auctionMarkerBack(notif) {
+        console.log("notif_auctionMarkerBack",notif);
+        let token = notif.token;
+        let tokenDiv = this.addToken(token);
+        let destinationDiv = document.getElementById(this.getTokenContainer(token));
+        await this.animationManager.slideAndAttach(tokenDiv, destinationDiv);
+    }
+    
     async notif_winsAuction(notif) {
         console.log("notif_winsAuction",notif);
         let amount = notif.n;

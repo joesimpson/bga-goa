@@ -55,6 +55,7 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
                 
                 if($activePlayerId == $currentAuctioneerId) { // END the auction when auctioneer played
                     if($highBidPlayerId == $currentAuctioneerId) {
+                        $highBidPlayer = $currentAuctioneer;
                         //AUCTIONEER PAYS THE BANK
                         if($highBid>0){
                             $currentAuctioneer->setMoney( $currentAuctioneer->getMoney() - $highBid );
@@ -68,6 +69,17 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
                         $currentAuctioneer->setMoney( $currentAuctioneer->getMoney() + $highBid );
                         $highBidPlayer->setMoney( $highBidPlayer->getMoney() - $highBid );
                         Notifications::winsAuction($highBidPlayer, $highBid,$currentAuctioneer);
+                    }
+
+                    //TODO JSA $highBidPlayer receives the FIRST token if this is the first auction
+                    Tokens::returnAuctionMarkerToPlayer($currentAuctioneer,$auctionToken);
+
+                    $nextAuctionTokenToBid = Tokens::getCurrentAuctionToken();
+                    if(!isset($nextAuctionTokenToBid)) {
+                        //Time to end this step
+                        $roundStep = ROUND_STEP_PLAYER_ACTIONS;
+                        Globals::setRoundStep($roundStep);
+                        Notifications::newRoundStep($roundStep, clienttranslate('Player Auctions'));
                     }
                 }
                 break;
