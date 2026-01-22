@@ -47,6 +47,7 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
                     Globals::setRoundStep($roundStep);
                     Notifications::newRoundStep($roundStep, clienttranslate('Tile Auctions'));
                     Globals::setCurrentBid(0);
+                    Globals::setBidTurns(0);
                     Globals::setHighBidPlayer(null);
                 }
                 break;
@@ -86,6 +87,7 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
                     }
 
                     Tokens::returnAuctionMarkerToPlayer($currentAuctioneer,$auctionToken);
+                    Globals::setBidTurns(0);
 
                     $nextAuctionTokenToBid = Tokens::getCurrentAuctionToken();
                     if(!isset($nextAuctionTokenToBid)) {

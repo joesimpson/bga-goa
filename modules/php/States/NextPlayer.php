@@ -9,6 +9,7 @@ use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Log;
 use Bga\Games\Goa\Managers\Players;
+use Bga\Games\Goa\Managers\Tokens;
 
 class NextPlayer extends \Bga\GameFramework\States\GameState
 {
@@ -31,11 +32,29 @@ class NextPlayer extends \Bga\GameFramework\States\GameState
     function onEnteringState(int $activePlayerId) {
         $this->game->trace("NextPlayer.onEnteringState($activePlayerId)");
 
-        Globals::setupNewTurn();
-        $player = Players::getNextPlayerNotEliminated($activePlayerId);
-        Players::changeActive($player->getId());
-        $player->giveExtraTime();
-        Players::setupNewTurn($player);
+        Globals::setupNewTurn();//TODO JSA CHECK right place ?
+
+        $roundStep = Globals::getRoundStep();
+        switch($roundStep){
+            case ROUND_STEP_TILE_AUCTIONS:
+                Globals::incBidTurns();
+                $bidTurns = Globals::getBidTurns();
+                if($bidTurns == 1){
+                    //First turn of bidding on each auction => player after the auctioneer
+                    $auctionToken = Tokens::getCurrentAuctionToken();
+                    $currentAuctioneerId = $auctionToken->getPId();
+                    $nextPlayer = Players::getNextPlayer($currentAuctioneerId);
+                }
+                break;
+            default : 
+                break;
+        }
+
+        if(!isset($nextPlayer)) $nextPlayer = Players::getNextPlayer($activePlayerId);
+
+        Players::changeActive($nextPlayer->getId());
+        $nextPlayer->giveExtraTime();
+        Players::setupNewTurn($nextPlayer);
 
         // Go to another gamestate
         Log::addCheckpoint(ST_PLAYER_TURN);

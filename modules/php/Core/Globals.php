@@ -24,6 +24,7 @@ class Globals extends \Bga\Games\Goa\Helpers\DB_Manager
     'turn' => 'int',
     'firstPlayer' => 'int',
     'currentBid' => 'int',
+    'bidTurns' => 'int',
     'highBidPlayer' => 'int',
 
     //For Undo log module
@@ -39,6 +40,7 @@ class Globals extends \Bga\Games\Goa\Helpers\DB_Manager
     self::setSession(0);
     self::setRound(0);
     self::setTurn(0);
+    self::setBidTurns(0);
     self::setHighBidPlayer(null);
 
     //Randomize first player selection

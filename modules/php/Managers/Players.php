@@ -155,16 +155,25 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
    * @param int $player_id
    * @return Player
    */
-  public static function getNextPlayerNotEliminated(int $player_id)
+  public static function getNextPlayerNotEliminated(int $player_id) : Player
   {
-    $nextPlayer_id = Players::getNextId($player_id);
-    $nextPlayer = Players::get($nextPlayer_id);
+    $nextPlayer = Players::getNextPlayer($player_id);
     if(isset($nextPlayer) 
       && $nextPlayer->getZombie() != 1 && $nextPlayer->getEliminated() == 0
     ){
       return $nextPlayer;
     }
-    return self::getNextPlayerNotEliminated($nextPlayer_id);
+    return self::getNextPlayerNotEliminated($nextPlayer->getId());
+  }
+  
+  /**
+   * @param int $player_id
+   * @return Player player playing after $player_id
+   */
+  public static function getNextPlayer(int $player_id) : Player
+  {
+    $nextPlayer_id = Players::getNextId($player_id);
+    return Players::get($nextPlayer_id);
   }
 
   /*
