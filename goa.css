@@ -1970,6 +1970,7 @@ body.lockedInterface #restartActions {
   text-shadow: 2px 0px 2px black, 0px 2px 2px black, -2px 0px 2px black, 0px -2px 2px black;
 }
 
+.goa_tile_log,
 .goa_token_log {
   display: inline-block;
   text-align: center;

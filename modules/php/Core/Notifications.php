@@ -130,6 +130,16 @@ class Notifications
         "icon_compass" => clienttranslate('Compass cards'),
     ]);
   }
+  
+  public static function giveTile(Player $player, Tile $tile)
+  {
+    self::notifyAll("giveTile", clienttranslate('${player_name} gets the tile ${tile_icon}'), [
+        "player" => $player,
+        "tile" => $tile->getUiData(),
+        "tile_icon" => '',
+        'preserve'=>['tile'],
+    ]);
+  }
 
   public static function drawAndDiscardExploration(int $playerId, ExplorationCard $card)
   {
@@ -180,12 +190,14 @@ class Notifications
    */
   public static function newSpiceOnTile(Player $player,Token $token,Tile $toTile)
   {
-    $msg = '';
+    $msg = clienttranslate('${player_name} places a ${token_icon} on their tile');
 
     self::notifyAll('newSpiceOnTile', $msg, [
       'player' => $player,
       'token' => $token->getUiData(),
-      'tile_id' => $toTile->getId(),
+      //'tile_id' => $toTile->getId(),
+      'token_icon' => clienttranslate('Spice'),
+      'preserve'=>['token'],
     ]);
   }
   

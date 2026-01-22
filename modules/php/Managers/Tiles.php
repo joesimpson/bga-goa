@@ -2,9 +2,11 @@
 
 namespace Bga\Games\Goa\Managers;
 
+use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Helpers\Collection;
 use Bga\Games\Goa\Models\MarketTile;
 use Bga\Games\Goa\Models\OutpostTile;
+use Bga\Games\Goa\Models\Player;
 use Bga\Games\Goa\Models\Tile;
 use InvalidArgumentException;
 
@@ -87,6 +89,98 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
       ->where('type', $cardType)
       ->where('subtype', $cardSubtype)
       ->get();
+  }
+
+  
+  public static function giveMarketTileToPlayer(Player $player, int $row, int $col)
+  {
+    $tilesOnMarketSpace = self::DB()
+      ->where( static::$prefix . 'location', TILE_LOCATION_BOARD_MARKET)
+      ->where('row', $row)
+      ->where('col', $col)
+      ->get();
+      //TODO JSA multiples if BONANZA
+    
+    $tile = $tilesOnMarketSpace->first();
+    if(isset($tile)){
+
+      $tile->setPId($player->getId());
+      $tile->setRow(null);
+      $tile->setCol(null);
+      $tile->setLocation(TILE_LOCATION_PLAYER_BOARD);
+      $tile->setState(null);
+      
+      if(MARKET_TYPE_PLANTATION == $tile->getPlay_type())
+      {
+        $nextAvailableSpaceOnPlayerBoard = Tiles::getNextAvailablePlantationSpot($player);
+        if(!isset($nextAvailableSpaceOnPlayerBoard)){
+
+          //TODO JSA IF no more space ask player to discard 1  
+        }
+
+        $tile->setState($nextAvailableSpaceOnPlayerBoard);
+        Notifications::giveTile($player,$tile);
+        //FILL tile spices_slots
+        $slots = $tile->spice_slots;
+        $slotPosition = 0;
+        foreach($slots as $spice){
+          $slotPosition++;
+          
+          if(SPICES_ALL == $spice){
+            //TODO JSA IF WILD SPICE, ASK PLAYER choice ! 
+          }
+          else {
+            $spiceTokenType = Tokens::getTokenSpiceTypeFromSpice($spice);
+            Tokens::addSpiceOnTile($tile, $player, $spiceTokenType, $slotPosition);
+          }
+        }
+      }
+      else {
+        //TODO JSA ELSE NOT PLANTATION
+        Notifications::giveTile($player,$tile);
+      }
+
+    }
+  }
+
+  public static function getNextAvailablePlantationSpot(Player $player,) : int |null
+  {
+    $plantationTypes = Tiles::getTilesTypesByMarketPlayType(MARKET_TYPE_PLANTATION);
+    $plantationsOnPlayerBoard = self::DB()
+      ->whereIn('type', $plantationTypes)
+      ->where('subtype', TILE_SUBTTYPE_MARKET)
+      ->whereNotIn( static::$prefix . 'state', [0, null])
+      ->where( static::$prefix . 'location', TILE_LOCATION_PLAYER_BOARD)
+      ->wherePlayer($player->getId())
+      ->get();
+
+    $unavailablePositions = $plantationsOnPlayerBoard->map( function($tile) {
+      return $tile->getState();
+    })->toArray();
+
+    if(count($unavailablePositions) == 0) return 1;
+
+    $maxPos = max( $unavailablePositions);
+    if($maxPos == PLAYER_PLANTATIONS_MAX ){
+      return null;
+    }
+    return $maxPos + 1;
+  }
+
+  
+  /**
+   * @param int $pType the type to search
+   * @return array list of types
+   */
+  public static function getTilesTypesByMarketPlayType($pType){
+    $types = [];
+    $marketTiles = Tiles::getMarketTilesTypes();
+    foreach ($marketTiles as $type => $tile) {
+      if($pType == $tile['play_type']){
+        $types[] = $type;
+      }
+    }
+    return $types;
   }
 
   ///////////////////////////////////////////////////////////////////////////////

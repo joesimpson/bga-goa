@@ -10,6 +10,7 @@ use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Log;
 use Bga\Games\Goa\Managers\Players;
+use Bga\Games\Goa\Managers\Tiles;
 use Bga\Games\Goa\Managers\Tokens;
 
 class EndPlayerTurn extends \Bga\GameFramework\States\GameState
@@ -78,7 +79,8 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
                         Players::giveExtraActionCard($highBidPlayer);
                     }
                     else {
-                        //ELSE TODO JSA highBidPlayer receives a tile
+                        //ELSE highBidPlayer receives a tile
+                        Tiles::giveMarketTileToPlayer($highBidPlayer, $auctionToken->getRow(), $auctionToken->getCol() );
                     }
 
                     Tokens::returnAuctionMarkerToPlayer($currentAuctioneer,$auctionToken);

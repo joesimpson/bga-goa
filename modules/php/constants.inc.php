@@ -44,6 +44,8 @@ const COLONY_MADRAS    = 3;
 const COLONY_KOZHIKODE = 4;
 
 const MARKET_GRID_SIZE = 5;
+
+const PLAYER_PLANTATIONS_MAX = 4;
  
 /////////////////////////////////////////////////////////
 //          CARDS

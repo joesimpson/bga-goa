@@ -192,11 +192,11 @@ export class Game {
                         ${this.tplResourceCounter(player,'compasses')}
                     </div>
                     <div class='goa_player_counters_line'>
-                        ${this.tplResourceCounter(player,'spices_white')}
-                        ${this.tplResourceCounter(player,'spices_black')}
-                        ${this.tplResourceCounter(player,'spices_yellow')}
-                        ${this.tplResourceCounter(player,'spices_pink')}
-                        ${this.tplResourceCounter(player,'spices_green')}
+                        ${this.tplResourceCounter(player,'spices_1')}
+                        ${this.tplResourceCounter(player,'spices_2')}
+                        ${this.tplResourceCounter(player,'spices_3')}
+                        ${this.tplResourceCounter(player,'spices_4')}
+                        ${this.tplResourceCounter(player,'spices_5')}
                     </div>
                     <div class='goa_player_counters_line'  ${ (currentPlayer && player.id == currentPlayer.id) ? '': 'style="display:none;"'}>
                         ${this.tplResourceCounter(player,'explo_symbol_tiny_1')}
@@ -239,11 +239,9 @@ export class Game {
                 document.getElementById(`goa_counter_${player.id}_money`).innerHTML = '???';
             }
 
-            this.createCounter(player.id,'spices_white' ,player.spices[1]); //SPICE_WHITE
-            this.createCounter(player.id,'spices_black' ,player.spices[2]);
-            this.createCounter(player.id,'spices_yellow',player.spices[3]);
-            this.createCounter(player.id,'spices_pink'  ,player.spices[4]);
-            this.createCounter(player.id,'spices_green' ,player.spices[5]);
+            this.const.SPICES_ALL.forEach((spice) => {
+                this.createCounter(player.id,'spices_'+spice ,player.spices[spice]);
+            });
 
             this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_exploration_hand_size`, _('Exploration cards'));
             this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_money`, _('Number of Gold Pardau coins on money cards'));
@@ -251,12 +249,10 @@ export class Game {
             this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_contracts`, _('Number of Contracts on contract cards'));
             this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_compasses`, _('Compass cards'));
 
-            this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_spices_white`, _(`Spices`));
-            this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_spices_black`, _(`Spices`));
-            this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_spices_yellow`, _(`Spices`));
-            this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_spices_pink`, _(`Spices`));
-            this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_spices_green`, _(`Spices`));
             
+            this.const.SPICES_ALL.forEach((spice) => {
+                this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_spices_${spice}`, _(`Spices`));
+            });
 
             // example of adding a div for each player
             document.getElementById('goa_main_zone').insertAdjacentHTML('beforeend', `
@@ -365,6 +361,9 @@ export class Game {
             }
             if('token' in args && 'token_icon' in args) {
                 args.token_icon = this.tplToken(args.token, '_log');
+            }
+            if('tile' in args && 'tile_icon' in args) {
+                args.tile_icon = this.tplTile(args.tile, '_log');
             }
             if('icon_money' in args) {
                 args.icon_money = this.formatIcon('money');
@@ -642,11 +641,9 @@ export class Game {
                 });
             }
             
-            this._counters[pId]['spices_white' ].toValue(player.spices[1]);
-            this._counters[pId]['spices_black' ].toValue(player.spices[2]);
-            this._counters[pId]['spices_yellow'].toValue(player.spices[3]);
-            this._counters[pId]['spices_pink'  ].toValue(player.spices[4]);
-            this._counters[pId]['spices_green' ].toValue(player.spices[5]);
+            this.const.SPICES_ALL.forEach((spice) => {
+                this._counters[pId]['spices_'+spice ].toValue(player.spices[spice]);
+            });
         });
         
         await this.setupCards(false);
@@ -735,6 +732,28 @@ export class Game {
         console.log('notif_getCompass', notif);
         this._counters[notif.player_id]['compasses'].incValue(notif.n);
     }
+    
+    async notif_giveTile(notif) {
+        console.log("notif_giveTile",notif);
+        let tile = notif.tile;
+        let tileDiv = this.addTile(tile);
+        let destinationDiv = document.getElementById(this.getTileContainer(tile));
+        await this.animationManager.slideAndAttach(tileDiv, destinationDiv);
+    }
+    
+    async notif_newSpiceOnTile(notif) {
+        console.log("notif_newSpiceOnTile",notif);
+        let token = notif.token;
+        let tokenDiv = this.addToken(token);
+        //let destinationDiv = document.getElementById(this.getTokenContainer(token));
+        //await this.animationManager.slideAndAttach(tokenDiv, destinationDiv);
+        let voidDiv = document.getElementById('goa_top_zone');
+        await this.animationManager.slideIn(tokenDiv, voidDiv, {duration: 1000});
+
+        let spice_type = token.spice;
+        this._counters[notif.player_id]['spices_'+spice_type ].incValue(1);
+        
+    }
 
     async notif_reshuffleExplorationDeck(notif) {
         console.log("notif_reshuffleExplorationDeck",notif);
@@ -764,11 +783,6 @@ export class Game {
             await this.explorationDeck.setCardNumber(this.explorationDeck.getCardNumber() - notif.n );
         }
         
-    }
-    
-    async notif_newSpiceOnTile(notif) {
-        console.log("notif_newSpiceOnTile",notif);
-
     }
 
     ////////////////////////////////////////////////////////
@@ -891,7 +905,8 @@ export class Game {
     
     addTile(tile, location = null) {
         console.log('addTile',tile,location);
-        if (!$(`goa_tile-${tile.id}`)){
+        let tileDiv = document.getElementById(`goa_tile-${tile.id}`) ;
+        if (!tileDiv){
             let container = location == null ? this.getTileContainer(tile) : location;
             
             if(container == `goa_board_outposts_${tile.colony}`){
@@ -903,8 +918,13 @@ export class Game {
             }
             this.bga.gameui.addTooltipHtml(`goa_tile-${tile.id}`, this.getTileTooltip(tile));
 
+            tileDiv = document.getElementById(`goa_tile-${tile.id}`) ;
         }
-        return $(`goa_tile-${tile.id}`);
+        else {
+            tileDiv.dataset.state = tile.state;//refresh state if already exists
+        }
+
+        return tileDiv;
     }
     getTileTooltip(tile) {
         let cardDatas = tile;

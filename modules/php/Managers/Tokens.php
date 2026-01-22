@@ -209,6 +209,15 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
     Notifications::auctionMarkerBack($player,$token);
   }
 
+  
+  public static function getTokenSpiceTypeFromSpice(int $spiceType) : int | null
+  {
+    $types = Tokens::getTokensSpiceTypes();
+    foreach($types as $tokenType => $tokenTypeDatas){
+      if($tokenTypeDatas['spice'] == $spiceType) return $tokenType;
+    }
+    return null;
+  }
   ///////////////////////////////////////////////////////////////////////////////
   
   /** Creation of the tokens */
