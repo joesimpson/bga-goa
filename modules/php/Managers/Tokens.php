@@ -2,6 +2,7 @@
 
 namespace Bga\Games\Goa\Managers;
 
+use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Helpers\Collection;
 use Bga\Games\Goa\Models\AuctionMarker;
@@ -123,19 +124,15 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
   
   public static function placeFirstAuctionMarker(Player $player,int $row,int $col): FirstAuctionMarker
   {
-    $token = [
-      'type' => TOKEN_TYPE_FIRSTAUCTION_MARKER,
-      'subtype' => TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER,
-      'location' => TOKEN_LOCATION_BOARD,
-      'player_id' => $player->getId(),
-      'row' => $row,
-      'col' => $col,
-    ];
-    $elt = self::singleCreate($token);
-    return $elt;
+    $token = self::getFirstPlayerToken();
+    $token->setRow($row);
+    $token->setCol($col);
+    $token->setPId($player->getId());
+    $token->setLocation(TOKEN_LOCATION_BOARD);
+    return $token;
   }
   
-  public static function giveFirstPlayerToken(Player $player): FirstAuctionMarker
+  public static function getFirstPlayerToken(): FirstAuctionMarker
   {
     $token = self::DB()
       ->where( 'type', TOKEN_TYPE_FIRSTAUCTION_MARKER)
@@ -143,6 +140,12 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
       ->get()
       ->first()
       ;
+    return $token;
+  }
+
+  public static function giveFirstPlayerToken(Player $player): FirstAuctionMarker
+  {
+    $token = self::getFirstPlayerToken();
     $token->setPId($player->getId());
     $token->setLocation(TOKEN_LOCATION_PLAYER_BOARD);
     Notifications::giveFirstPlayerToken($player, $token);
@@ -224,6 +227,15 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
   public static function setupNewGame($players, $options)
   {
     $tokens = [];
+  
+    //create first player marker, because it is 1 per game
+    $tokens[]= [
+      'type' => TOKEN_TYPE_FIRSTAUCTION_MARKER,
+      'subtype' => TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER,
+      'location' => TOKEN_LOCATION_PLAYER_BOARD,
+      'player_id' => Globals::getFirstPlayer(),
+      'nbr' => 1,
+    ];
     
     foreach ($players as $pId => $player) {
       for($k = 0; $k < count($players) +1; $k++){
@@ -235,8 +247,6 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
           'nbr' => 1,
         ];
       } 
-
-      //TODO JSA create first player marker, because it is 1 per game
 
       for($k = 0; $k < count(TOKEN_TYPE_PROGRESS_MARKERS); $k++){
         $tokens[] = [
