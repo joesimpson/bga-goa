@@ -2,8 +2,10 @@
 
 namespace Bga\Games\Goa\Managers;
 
+use Bga\GameFramework\NotificationMessage;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Core\Globals;
+use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Core\Stats;
 use Bga\Games\Goa\Models\Player;
 
@@ -213,4 +215,15 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
       $player->startTurn($turn);
     }
   }
+
+  // ----------------------------------------------------------------------------
+  // ----------------------------------------------------------------------------
+
+  public static function giveExtraActionCard(Player $player)
+  {
+    $player->incCompasses();
+    Notifications::getCompass($player,1);
+  }
+
+
 }

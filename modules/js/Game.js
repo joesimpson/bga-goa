@@ -369,6 +369,9 @@ export class Game {
             if('icon_money' in args) {
                 args.icon_money = this.formatIcon('money');
             }
+            if('icon_compass' in args) {
+                args.icon_compass = this.formatIcon('compasses');
+            }
         }
       } catch (e) {
         console.error(log, args, 'Exception thrown', e.stack);
@@ -726,6 +729,11 @@ export class Game {
                 this._counters[fromPlayer].money.incValue(-amount);
             } 
         } 
+    }
+    
+    async notif_getCompass(notif) {
+        console.log('notif_getCompass', notif);
+        this._counters[notif.player_id]['compasses'].incValue(notif.n);
     }
 
     async notif_reshuffleExplorationDeck(notif) {

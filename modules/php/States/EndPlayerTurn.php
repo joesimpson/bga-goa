@@ -22,6 +22,7 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
             id: ST_END_PLAYERTURN,
             type: StateType::GAME,
             updateGameProgression: true,
+            description: clienttranslate('Ending player turn'),
         );
     }
 
@@ -74,6 +75,7 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
                     if( TOKEN_TYPE_AUCTION_MARKER_1 == $auctionToken->getType()){
                         //$highBidPlayer receives the FIRST token if this is the first auction
                         Tokens::giveFirstPlayerToken($highBidPlayer);
+                        Players::giveExtraActionCard($highBidPlayer);
                     }
                     else {
                         //ELSE TODO JSA highBidPlayer receives a tile

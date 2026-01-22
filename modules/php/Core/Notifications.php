@@ -121,6 +121,15 @@ class Notifications
         'preserve'=>['token'],
     ]);
   }
+  
+  public static function getCompass(Player $player, int $n)
+  {
+    self::notifyAll("getCompass", clienttranslate('${player_name} gets ${n} ${icon_compass}'), [
+        "player" => $player,
+        "n" => $n,
+        "icon_compass" => clienttranslate('Compass cards'),
+    ]);
+  }
 
   public static function drawAndDiscardExploration(int $playerId, ExplorationCard $card)
   {
