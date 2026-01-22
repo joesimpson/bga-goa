@@ -1358,13 +1358,25 @@ export class Game {
                 break;
             case 5: 
                 action_label = _('Found Outpost');
-                action_desc = this.bga.gameui.format_string( _("Choose an unfounded outpost."),{ } )
-                            + '<br>' + this.bga.gameui.format_string( _("The row of your progress marker will give a base number of contracts."),{  } )
-                            + '<br>' + this.bga.gameui.format_string( _("Flip ${n} exploration cards and add their contracts to those on your player board."),{ n: 2 } )
-                            + '<br>' + this.bga.gameui.format_string( _("You may add ay number of contracts from your hand."),{  } )
-                            + '<br>' + this.bga.gameui.format_string( _("If you successfully meet the requirement of the chosen outpost, take it and place it on your board, filling the resources spots on it; if not you draw ${n} ${icon_card}"),{ n:1, icon_card: this.formatIcon('contracts') } )
-                        ;
                 action_gains = [0,2,4,5,6];
+
+                let action_gains_desc = '<ul>';
+                action_gains.forEach(element => {
+                    action_gains_desc += '<li>'+element+'</li>';
+                });
+                action_gains_desc += '</ul>';
+                
+                action_desc = '<ul>'
+                            + '<li>' + this.bga.gameui.format_string( _("Choose an unfounded outpost."),{  } ) + '</li>'
+                            + '<li>' + this.bga.gameui.format_string( _("The row of your progress marker will give a base number of contracts."),{  } ) + '</li>'
+                            + '<li>' + this.bga.gameui.format_string( _("Flip ${n} exploration cards and add their contracts to those on your player board."),{ n: 2 } ) + '</li>'
+                            + '<li>' + action_gains_desc + '</li>' 
+                            + '<li>' + this.bga.gameui.format_string( _("You may add ay number of contracts from your hand."),{  } ) + '</li>'
+                            + '<li>' + this.bga.gameui.format_string( _("If you successfully meet the requirement of the chosen outpost, take it and place it on your board, filling the resources spots on it; if not you draw ${n} ${icon_card}"),{ n:1, icon_card: this.formatIcon('contracts') } ) + '</li>'
+                        + '</ul>'
+                        ;
+
+                action_gains = [];//reset to empty to avoid having it again in the common desc
                 break;
 
         }
