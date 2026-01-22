@@ -114,7 +114,7 @@ export class PlayerTurn {
             }
 
             if(possibleActions.includes('actPassBid')){
-                this.bga.statusBar.addActionButton(_('Pass'), () => this.bga.actions.performAction("actPassBid"), { color: 'secondary', destination: document.getElementById('restartActions') }); 
+                this.bga.statusBar.addActionButton(_('Pass'), () => this.bga.actions.performAction("actPassBid"), { destination: document.getElementById('restartActions') }); 
             }
 
         }
