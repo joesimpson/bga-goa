@@ -22,6 +22,14 @@ class Notifications
       'n' => $session,
     ]);
   }
+  public static function setupMarket(int $phase, Collection $tiles)
+  {
+    self::notifyAll("setupMarket", clienttranslate('The market board is filled with tiles'), [
+        "phase" => $phase,
+        "tiles" => $tiles->ui(),
+        "preserve" => ['tiles'],
+    ]);
+  }
 
   public static function newRound(int $round)
   {
@@ -61,8 +69,7 @@ class Notifications
         'preserve'=>['token'],
     ]);
   }
-  /**
-   */
+
   public static function auctionPlaced(Player $player, int $row, int $col, Token $token)
   {
     self::notifyAll("auctionPlaced", clienttranslate('${player_name} places the auction marker ${token_icon} on the market (row ${row}, column ${col})'), [

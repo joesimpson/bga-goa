@@ -5,6 +5,8 @@ const BGA_GAMESTATE_GAMEVERSION = 300;
 /*
  * Game Constants
  */
+const NB_ROUNDS_DAY = 4;
+const NB_ROUNDS_NIGHT = 4;
 
 const ROUND_STEP_PLACE_AUCTIONS  = 1;
 const ROUND_STEP_TILE_AUCTIONS   = 2;

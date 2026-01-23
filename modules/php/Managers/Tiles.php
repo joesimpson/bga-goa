@@ -176,6 +176,45 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
     return $maxPos + 1;
   }
 
+  /**
+   * @param int phase Default is 1 for DAY , 2 for night
+   */
+  public static function setupMarket(int $phase = 1){
+    $deck = TILE_LOCATION_DECK_A;
+    if($phase == 1){
+      //RESET FROM THE BEGINNING 
+      //TODO JSA We need a tile attribute 'deck' A/B in order to replace it in A or B for next session
+      //Tiles::moveAllTo(TILE_LOCATION_DECK_A);
+
+          //DEBUG  waiting solution...
+          Tiles::DB()->delete()->run();
+          Tiles::setupNewGame(null,null);
+    }
+    else if($phase == 2){
+      //EMPTY BOARD
+      Tiles::moveAllInLocation(TILE_LOCATION_BOARD_MARKET, TILE_LOCATION_DISCARD);
+      
+      $deck = TILE_LOCATION_DECK_B;
+    }
+
+    //SHUFFLE deck of current phase
+    Tiles::shuffle($deck);
+    $tiles = Tiles::pickForLocation(4,$deck,TILE_LOCATION_BOX);
+    //TODO JSA if more than 2 plantations, pick and replace ...
+    
+    //DRAW TILES
+    $deckPhase = self::getInLocationOrdered($deck);
+    $counter = 0;
+    foreach($deckPhase as $tile_id => &$tile){
+      $tile->setLocation(TILE_LOCATION_BOARD_MARKET);
+      $tile->setRow(1 + intval($counter / MARKET_GRID_SIZE) );
+      $tile->setCol(1 + $counter - ($tile->getRow()-1)*MARKET_GRID_SIZE );
+      $counter++;
+    }
+
+    //NOTIFY
+    Notifications::setupMarket($phase,$deckPhase);
+  }
   
   /**
    * @param int $pType the type to search
@@ -233,21 +272,6 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
     self::create($tiles);
     self::shuffle(TILE_LOCATION_DECK_A);
     self::shuffle(TILE_LOCATION_DECK_B);
-
-    //TODO JSA move it in other state for each round / phase:
-    $tiles = self::pickForLocation(4,TILE_LOCATION_DECK_A,TILE_LOCATION_BOX);
-    //TODO JSA if more than 2 plantations, pick and replace ...
-
-    $deckPhase = self::getInLocationOrdered(TILE_LOCATION_DECK_A);
-    $counter = 0;
-    foreach($deckPhase as $tile_id => $tile){
-      $tile->setLocation(TILE_LOCATION_BOARD_MARKET);
-      $tile->setRow(1 + intval($counter / MARKET_GRID_SIZE) );
-      $tile->setCol(1 + $counter - ($tile->getRow()-1)*MARKET_GRID_SIZE );
-      $counter++;
-    }
-
-
 
   }
    

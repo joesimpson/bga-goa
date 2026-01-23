@@ -660,6 +660,24 @@ export class Game {
         await this.setupTiles(false);
         await this.setupTokens(false);
     }
+    
+    async notif_setupMarket(notif) {
+        console.log("notif_setupMarket",notif);
+        let tiles = notif.tiles;
+        let voidDiv = document.getElementById('goa_top_zone');
+        
+        let marketDiv = document.getElementById('goa_board_market_grid');
+        let marketTilesDiv = [...marketDiv.querySelectorAll('.goa_tile')];
+        let animationsCleanMarket = marketTilesDiv.map(tileDiv => (() => {
+            this.animationManager.slideOutAndDestroy(tileDiv, voidDiv, {duration: 1000});
+        }));
+        await this.animationManager.playInterval(animationsCleanMarket);
+
+        let animationsRefill = Object.values(tiles).map(tile => (() => {
+            this.animationManager.slideIn(this.addTile(tile), voidDiv, {duration: 1000});
+        }));
+        await this.animationManager.playInterval(animationsRefill);
+    }
 
     async notif_newRound(notif) {
         console.log("notif_newRound",notif);
