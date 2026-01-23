@@ -20,7 +20,7 @@ Visual Diagram (hand made), in order to keep a trace of each possible transition
                playerTurn   -------\                  |  |   |  |
               |       |            |                  |  |   |  |
               |       v            |                  |  |   |  |
-              |     XXXX  -->\     |                  |  |   |  |
+              |playerChoice->\     |                  |  |   |  |
               |       |      |     |                  |  |   |  |
               v       v      |     |                  |  |   |  |
               YYYYYYYYY  -->\|     |                  |  |   |  |

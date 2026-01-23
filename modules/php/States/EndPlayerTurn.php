@@ -7,6 +7,7 @@ namespace Bga\Games\Goa\States;
 use Bga\GameFramework\StateType;
 use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Core\Notifications;
+use Bga\Games\Goa\Exceptions\PrematureStateChangeException;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Log;
 use Bga\Games\Goa\Managers\Players;
@@ -35,6 +36,7 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
         $this->game->trace("EndPlayerTurn.onEnteringState($activePlayerId)");
 
         $turnEnd = false;
+        $prematureStateChange = null;
 
         $player = Players::get($activePlayerId);
         $roundStep = Globals::getRoundStep();
@@ -82,7 +84,13 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
                     }
                     else {
                         //ELSE highBidPlayer receives a tile
-                        Tiles::giveMarketTileToPlayer($highBidPlayer, $auctionToken->getRow(), $auctionToken->getCol() );
+                        try{
+
+                            Tiles::giveMarketTileToPlayer($highBidPlayer, $auctionToken->getRow(), $auctionToken->getCol() );
+                        }
+                        catch(PrematureStateChangeException $exc){
+                            $prematureStateChange = $exc;
+                        }
                     }
 
                     Tokens::returnAuctionMarkerToPlayer($currentAuctioneer,$auctionToken);
@@ -105,7 +113,10 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
             default : break;
         }
 
-        if ($turnEnd) {
+        if(isset($prematureStateChange) ){
+            return $prematureStateChange->nextStateClass;
+        }
+        else if ($turnEnd) {
             Log::addCheckpoint(ST_END_TURN);
             return EndTurn::class;
         } else {

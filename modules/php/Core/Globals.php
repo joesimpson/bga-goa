@@ -3,6 +3,7 @@
 namespace Bga\Games\Goa\Core;
 
 use Bga\GameFramework\SystemException;
+use Bga\Games\Goa\Models\Tile;
 
 /** 
  * Globals to reuse the same Globals as BGA framework but with Tisaac boilerplate Logger and cache
@@ -27,6 +28,9 @@ class Globals extends \Bga\Games\Goa\Helpers\DB_Manager
     'bidTurns' => 'int',
     'highBidPlayer' => 'int',
 
+    //save infos about tiles between states
+    'choiceTiles' => 'obj',
+
     //For Undo log module
     'choices' => 'int',
   ];
@@ -42,6 +46,7 @@ class Globals extends \Bga\Games\Goa\Helpers\DB_Manager
     self::setTurn(0);
     self::setBidTurns(0);
     self::setHighBidPlayer(null);
+    self::setChoiceTiles([]);
 
     //Randomize first player selection
     $randomPId = array_rand($players);
@@ -61,6 +66,13 @@ class Globals extends \Bga\Games\Goa\Helpers\DB_Manager
     self::incTurn(1);
     
     Stats::inc("turns_number");
+  }
+
+  public static function addChoiceTile(Tile $tile, int $choiceType, int $choiceQuantity)
+  {
+    $choiceTiles = Globals::getChoiceTiles(); 
+    $choiceTiles[] = ['tile_id'=>$tile->getId(), 'type' => $choiceType, 'n' => $choiceQuantity ];
+    Globals::setChoiceTiles($choiceTiles);
   }
 
   //////////////////////////////////////////////////////////////////////////////////////

@@ -3,6 +3,7 @@
 namespace Bga\Games\Goa\Managers;
 
 use Bga\Games\Goa\Core\Notifications;
+use Bga\Games\Goa\Exceptions\PrematureStateChangeException;
 use Bga\Games\Goa\Helpers\Collection;
 use Bga\Games\Goa\Models\MarketTile;
 use Bga\Games\Goa\Models\OutpostTile;
@@ -91,7 +92,9 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
       ->get();
   }
 
-  
+  /**
+   * @throws PrematureStateChangeException when caller will need to go to another state than default one
+   * */
   public static function giveMarketTileToPlayer(Player $player, int $row, int $col)
   {
     $tilesOnMarketSpace = self::DB()
@@ -99,7 +102,9 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
       ->where('row', $row)
       ->where('col', $col)
       ->get();
-      //TODO JSA multiples if BONANZA
+      //TODO JSA multiples if BONANZA + warning if Tile WILD spice, it adds another choice 
+
+    $stateExc = null;  
     
     $tile = $tilesOnMarketSpace->first();
     if(isset($tile)){
@@ -140,8 +145,12 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
           Notifications::discardTile($player,$tile);
           $gains = $tile->getActions();
           foreach($gains as $type => $quantity){
-            //TODO JSA IF FAVOR => state choice tile to give, which may be a plantation
-            Players::directGain($player,$type,$quantity);
+            try{
+              Players::directGain($player,$type,$quantity, $tile);
+            }
+            catch(PrematureStateChangeException $exc){
+              $stateExc = $exc;
+            }
           }
           break;
         default:
@@ -149,6 +158,9 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
           break;
       }
 
+    }
+    if(isset($stateExc)) {
+        throw $stateExc;
     }
   }
 

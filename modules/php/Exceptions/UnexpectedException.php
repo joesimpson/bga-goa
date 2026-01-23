@@ -6,7 +6,7 @@ class UnexpectedException extends BgaVisibleSystemException
 {
     protected $code;
 
-    public function __construct($code,$str)
+    public function __construct(int $code,string $str)
     {
         parent::__construct($str);
         $this->code = $code;
