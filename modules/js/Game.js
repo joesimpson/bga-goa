@@ -660,6 +660,12 @@ export class Game {
         await this.setupTiles(false);
         await this.setupTokens(false);
     }
+
+    async notif_newRound(notif) {
+        console.log("notif_newRound",notif);
+        this.gamedatas.round = notif.n;
+        this.setupRoundMarker();
+    }
     
     async notif_auctionPlaced(notif) {
         console.log("notif_auctionPlaced",notif);
