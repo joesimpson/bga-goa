@@ -72,7 +72,6 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
                         $highBidPlayer = Players::get($highBidPlayerId);
                         $highBidPlayer->setMoney( $highBidPlayer->getMoney() - $highBid );
                         $currentAuctioneer->setMoney( $currentAuctioneer->getMoney() + $highBid );
-                        $highBidPlayer->setMoney( $highBidPlayer->getMoney() - $highBid );
                         Notifications::winsAuction($highBidPlayer, $highBid,$currentAuctioneer);
                     }
 
@@ -88,6 +87,7 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
 
                     Tokens::returnAuctionMarkerToPlayer($currentAuctioneer,$auctionToken);
                     Globals::setBidTurns(0);
+                    Globals::setCurrentBid(0);
 
                     $nextAuctionTokenToBid = Tokens::getCurrentAuctionToken();
                     if(!isset($nextAuctionTokenToBid)) {

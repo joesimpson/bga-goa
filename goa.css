@@ -91,6 +91,11 @@ Icon extract in sprite with differents layers size (so % is not useful).
   box-shadow: 0px 0px 0px 5px blue;
   border-radius: 15px;
 }
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market .goa_grid_space.selected {
+  cursor: crosshair;
+  box-shadow: 0px 0px 0px 8px red;
+  border-radius: 20px;
+}
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market .goa_grid_space .goa_token {
   position: absolute;
   left: 45%;
@@ -361,6 +366,15 @@ Icon extract in sprite with differents layers size (so % is not useful).
 .goa_player_table {
   align-self: baseline;
   border-radius: 10px;
+}
+
+.goa_player_tiles {
+  align-self: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  margin-bottom: 5px;
 }
 
 .goa_resizable_playerboard {
@@ -1697,7 +1711,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
   position: relative;
 }
 .goa_panel .goa_player_counters_line:not(.goa_player_counters_lastline) {
-  line-height: 3em;
+  line-height: 2em;
 }
 .goa_panel .goa_player_resource {
   position: relative;
@@ -1898,12 +1912,14 @@ https://github.com/thoun/bga-zoom/blob/main/bga-zoom.css
   width: 100%;
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
 }
 #goa_top_zone #goa_bid_hints {
   width: 100%;
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
+  justify-content: center;
 }
 #goa_top_zone #goa_bid_hints span {
   align-self: center;

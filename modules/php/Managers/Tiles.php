@@ -145,8 +145,6 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
           }
           break;
         default:
-
-          //TODO JSA ELSE NOT PLANTATION
           Notifications::giveTile($player,$tile);
           break;
       }

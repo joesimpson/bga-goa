@@ -258,6 +258,7 @@ export class Game {
             document.getElementById('goa_main_zone').insertAdjacentHTML('beforeend', `
                 <div id="goa_player_table-${player.id}" class="goa_player_table whiteblock" data-pid=${player.id} data-color='${player.color}'>
                     <div class='goa_player_table_title_name' >${this.bga.gameui.format_string(('${player_name}'), { player_name:this.coloredPlayerName(player.name)}) }</div>
+                    <div id="goa_player_tiles-${player.id}" class="goa_player_tiles"></div>
                     <div class='goa_resizable_playerboard'>
                         <div class='goa_playerboard_container'>
                             <div class="goa_playerboard">
@@ -923,7 +924,10 @@ export class Game {
                 }
             }
             if (tile.location == (TILE_LOCATION_PLAYER_BOARD) ) {
-                return `goa_player_plantations-${tile.pId}`;
+                if (tile.play_type == MARKET_TYPE_PLANTATION ) {
+                    return `goa_player_plantations-${tile.pId}`;
+                }
+                return `goa_player_tiles-${tile.pId}`;
             }
         }
         console.error('Trying to get container of a tile', tile);
@@ -1115,7 +1119,7 @@ export class Game {
                                     break;
                                 case ACTION_SHIPS_OR_CONTRACTS:
                                     resource_name = _('Ships or Contracts');
-                                    icon_name = this.formatIcon('ships');
+                                    icon_name = this.formatIcon('ships') + ' '+  this.formatIcon('contracts');
                                     break;
                                 case ACTION_FAVOR: 
                                     description = this.bga.gameui.format_string(
@@ -1358,7 +1362,7 @@ export class Game {
     }
     getActionBoardTooltip(track){
         let action_label = '';
-        let action_desc = 'TODO JSA DESC';
+        let action_desc = '';
         let action_gains = [];
         switch(track){
             case 1: 

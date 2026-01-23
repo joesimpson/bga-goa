@@ -32,12 +32,14 @@
     width: 100%;
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
 
     #goa_bid_hints{
         width: 100%;
         display: flex;
         flex-wrap: wrap;
         flex-direction: row;
+        justify-content: center;
 
         span{
             align-self: center;

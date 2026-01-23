@@ -33,7 +33,7 @@ export class PlayerTurn {
                 let auctionTokenDiv =  document.getElementById(`goa_token-${auctionToken.id}`);
                 if(auctionTokenDiv) {
                     //HIGHLIGHT ZONE on grid
-                    auctionTokenDiv.parentNode.classList.add('selectable');
+                    auctionTokenDiv.parentNode.classList.add('selected');
                 }
                 var token_icon = (auctionToken) ? this.game.tplToken(auctionToken, '_log') : '';
                 this.bga.statusBar.setTitle(isCurrentPlayerActive ? 

@@ -75,8 +75,11 @@ class PlayerTurn extends GameState
                     }
                     else {
                         $args['bidRebate'] = 1;
-                        $args['minBid'] = ($currentBid - $args['bidRebate']) - $currentBid;
-                        $args['maxBid'] = $args['minBid'];
+                        $minMoneyForAuctioneer = $currentBid - $args['bidRebate'];
+                        if($args['currentMoney'] >= $minMoneyForAuctioneer) {
+                            $args['minBid'] = $minMoneyForAuctioneer - $currentBid;
+                            $args['maxBid'] = $args['minBid'];
+                        }
                     }
                 }
 
