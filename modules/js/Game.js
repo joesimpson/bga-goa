@@ -72,7 +72,7 @@ const TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER = 3;
 const TOKEN_SUBTTYPE_SPICE = 4;
 
 import { ConfirmTurn } from "./states/ConfirmTurn.js";
-import { PlayerChoice } from "./states/PlayerChoice.js";
+import { PlayerChoice, ClientSelectTileAction } from "./states/PlayerChoice.js";
 import { PlayerTurn } from "./states/PlayerTurn.js";
 
 export class Game {
@@ -88,6 +88,8 @@ export class Game {
         this.bga.states.register('ConfirmTurn', this.confirmTurn);
         this.playerChoice = new PlayerChoice(this, bga);
         this.bga.states.register('PlayerChoice', this.playerChoice);
+        this.clientSelectTileAction = new ClientSelectTileAction(this, bga);
+        this.bga.states.register('ClientSelectTileAction', this.clientSelectTileAction);
 
         // Uncomment the next line to show debug informations about state changes in the console. Remove before going to production!
         this.bga.states.logger = console.log;

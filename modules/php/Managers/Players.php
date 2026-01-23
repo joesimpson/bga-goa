@@ -2,12 +2,14 @@
 
 namespace Bga\Games\Goa\Managers;
 
-use Bga\GameFramework\NotificationMessage;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Core\Stats;
+use Bga\Games\Goa\Exceptions\PrematureStateChangeException;
 use Bga\Games\Goa\Models\Player;
+use Bga\Games\Goa\Models\Tile;
+use Bga\Games\Goa\States\PlayerChoice;
 
 /*
  * Players manager : allows to easily access players ...
@@ -251,7 +253,10 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
     Notifications::getCompass($player,$nb);
   }
 
-  public static function directGain(Player $player, int $gainType, int $gainQuantity)
+  /**
+   * @throws PrematureStateChangeException when caller will need to go to another state than default one
+   * */
+  public static function directGain(Player $player, int $gainType, int $gainQuantity, Tile $tile)
   {
     switch($gainType){
       // gains from tiles with MARKET_TYPE_ACTION_DIRECT
@@ -268,10 +273,12 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
         Cards::drawExplorationCardsToPlayer($player, $gainQuantity);
         break;
       case ACTION_SHIPS_OR_CONTRACTS: 
-        //TODO JSA STATE CHOICE !
-        break;
+        //Save datas for next state
+        Globals::addChoiceTile($tile,$gainType, $gainQuantity, [ACTION_SHIP, ACTION_CONTRACT]);
+        throw new PrematureStateChangeException (1,PlayerChoice::class);
       case ACTION_FAVOR: 
-        //TODO JSA STATE CHOICE !
+        Globals::addChoiceTile($tile,$gainType, $gainQuantity, []);
+        throw new PrematureStateChangeException (2,PlayerChoice::class);
         break;
       default: break;
     }

@@ -27,20 +27,125 @@ export class PlayerChoice {
         if (isCurrentPlayerActive) {
 
             if(possibleActions.includes('actTileChoice')){
-                Object.values(tiles_choices).forEach( tile_choice => {
-                    let tile_id = tile_choice.tile_id;
-                    let tile = tiles[tile_id];
-                    if(tile){
-                        let tile_icon = this.game.tplTile(tile, '_log');
-                        this.bga.statusBar.addActionButton( tile_icon, () => {
-                            //TODO JSA CLIENT STATE
-                        }, { destination: document.getElementById('customActions') }); 
-                    }
+                Object.values(tiles_choices).forEach( tile_choice_entry => {
+                    Object.values(tile_choice_entry).forEach( tile_choice => {
+                        let tile_id = tile_choice.tile_id;
+                        let tile = tiles[tile_id];
+                        if(tile){
+                            let tile_icon = this.game.tplTile(tile, '_log');
+                            this.bga.statusBar.addActionButton( tile_icon, () => {
+                                this.bga.states.setClientState("ClientSelectTileAction", {
+                                    descriptionmyturn : _("${you} must select one of these"),
+                                    args: { 'tile_choice':tile_choice, 'tile':tile },
+                                });
+                            }, {  destination: document.getElementById('customActions') }); 
+                        }
+                    });
                 });
 
             }
 
         }
+    }
+
+    /**
+     * This method is called each time we are leaving the game state. You can use this method to perform some user interface changes at this moment.
+     */
+    onLeavingState(args, isCurrentPlayerActive) {
+        this.game.clearSelection();
+        this.game.removeAllActionButtons();
+    }
+ 
+}
+/// -----------------------------------------------------------
+/// -----------------------------------------------------------
+/// -----------------------------------------------------------
+/// -----------------------------------------------------------
+
+/**
+ * Client STATE
+ */
+export class ClientSelectTileAction {
+    constructor(game, bga) {
+        this.game = game;
+        this.bga = bga;
+    }
+
+    /**
+     * This method is called each time we are entering the game state. You can use this method to perform some user interface changes at this moment.
+     */
+    onEnteringState(args, isCurrentPlayerActive) {
+        
+        let tile_choice = args.tile_choice;
+        let tile_id = args.tile.id;
+      
+        Object.values(tile_choice.choices).forEach( choice => {
+            switch(choice){
+                case this.game.const.ACTION_SHIP:
+                    let buttonText = this.bga.gameui.format_string(
+                                _("Take ${n} ${resource_name} : ${icon_resource}")
+                                ,{n:tile_choice.n, 'resource_name': _('Ships'), icon_resource : this.game.formatIcon('ships')}
+                            );
+                    this.bga.statusBar.addActionButton( buttonText, () => {
+                        this.bga.actions.performAction("actTileChoice", { 
+                                'tile_id' : tile_id,
+                                'choice': choice,
+                            })
+                    }, {destination: document.getElementById('customActions') }); 
+                    break;
+                case this.game.const.ACTION_CONTRACT:
+                    let buttonText1 = this.bga.gameui.format_string(
+                                _("Take ${n} ${resource_name} : ${icon_resource}")
+                                ,{n:tile_choice.n, 'resource_name': _('Contracts'), icon_resource : this.game.formatIcon('contracts')}
+                            );
+                    this.bga.statusBar.addActionButton( buttonText1, () => {
+                        this.bga.actions.performAction("actTileChoice", { 
+                                'tile_id' : tile_id,
+                                'choice': choice,
+                            })
+                    }, { destination: document.getElementById('customActions') }); 
+
+                    break;
+                default: break;
+            }
+        });
+
+
+
+        /*
+        switch(tile_choice.type){
+            case this.game.const.ACTION_SHIPS_OR_CONTRACTS:
+                let buttonText2 = this.bga.gameui.format_string(
+                            _("Take ${n} ${resource_name} : ${icon_resource}")
+                            ,{n:tile_choice.n, 'resource_name': _('Ships'), icon_resource : this.game.formatIcon('ships')}
+                        );
+                this.bga.statusBar.addActionButton( buttonText2, () => {
+                    this.bga.actions.performAction("actPlaceAuction", { 
+                            'tile_id' : tile_id,
+                            'choice': this.game.const.ACTION_SHIPS,
+                        })
+                }, {destination: document.getElementById('customActions') }); 
+
+                let buttonText1 = this.bga.gameui.format_string(
+                            _("Take ${n} ${resource_name} : ${icon_resource}")
+                            ,{n:tile_choice.n, 'resource_name': _('Contracts'), icon_resource : this.game.formatIcon('contracts')}
+                        );
+                this.bga.statusBar.addActionButton( buttonText1, () => {
+                    this.bga.actions.performAction("actPlaceAuction", { 
+                            'tile_id' : tile_id,
+                            'choice': this.game.const.ACTION_CONTRACTS,
+                        })
+                }, { destination: document.getElementById('customActions') }); 
+
+                break;
+            default: break;
+        }
+        */
+
+        this.bga.statusBar.addActionButton( _('Cancel'), () => {
+            this.bga.states.restoreServerGameState();
+        }, { 'color':'secondary',destination: document.getElementById('customActions') }); 
+
     }
 
     /**

@@ -104,7 +104,12 @@ trait DebugTrait
     }
     function debug_changeRound(int $round = 1){
         Globals::setRound($round);
-        Game::get()->notify->all('reloadPage', "/!\ : Refresh page to see game has restarted...", []);
+        $this->debug_refreshUI();
+    }
+    function debug_Globals(){
+        Globals::setChoiceTiles([]);
+        $tile = Tiles::getByType(26,TILE_SUBTTYPE_MARKET)->first();
+        Globals::addChoiceTile($tile,ACTION_SHIPS_OR_CONTRACTS, 3, [ACTION_SHIP, ACTION_CONTRACT]);
     }
 
     // Test board UI : create fake tokens on board

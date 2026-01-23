@@ -212,6 +212,20 @@ CONST ALL_MY_UI_CONSTANTS= [
    'ROUND_STEP_TILE_AUCTIONS' => ROUND_STEP_TILE_AUCTIONS  ,
    'ROUND_STEP_PLAYER_ACTIONS' => ROUND_STEP_PLAYER_ACTIONS ,
 
+   'ACTION_MONEY'             => ACTION_MONEY               ,  
+   'ACTION_CONTRACT'          => ACTION_CONTRACT            ,  
+   'ACTION_SHIP'              => ACTION_SHIP                ,  
+   'ACTION_COMPASS'           => ACTION_COMPASS             ,  
+   'ACTION_EXPLORATION'       => ACTION_EXPLORATION         ,  
+   'ACTION_SHIPS_OR_CONTRACTS'=> ACTION_SHIPS_OR_CONTRACTS  ,  
+   'ACTION_SPICE'             => ACTION_SPICE               ,  
+   'ACTION_FAVOR'             => ACTION_FAVOR               ,  
+   'ACTION_SWAP'              => ACTION_SWAP                ,  
+   'ACTION_RESUPPLY'          => ACTION_RESUPPLY            ,  
+   'ACTION_HARVEST'           => ACTION_HARVEST             ,  
+   'ACTION_ESPIONAGE'         => ACTION_ESPIONAGE           ,  
+   'ACTION_VICEKING'          => ACTION_VICEKING            ,  
+
    'SPICES_ALL' =>   SPICES_ALL,
 
    'CARD_SYMBOL_ELEPHANT' =>  CARD_SYMBOL_ELEPHANT,

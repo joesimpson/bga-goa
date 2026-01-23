@@ -68,10 +68,10 @@ class Globals extends \Bga\Games\Goa\Helpers\DB_Manager
     Stats::inc("turns_number");
   }
 
-  public static function addChoiceTile(Tile $tile, int $choiceType, int $choiceQuantity)
+  public static function addChoiceTile(Tile $tile, int $choiceType, int $choiceQuantity, array $choices)
   {
     $choiceTiles = Globals::getChoiceTiles(); 
-    $choiceTiles[] = ['tile_id'=>$tile->getId(), 'type' => $choiceType, 'n' => $choiceQuantity ];
+    $choiceTiles[] = ['tile_id'=>$tile->getId(), 'type' => $choiceType, 'n' => $choiceQuantity, 'choices' => $choices ];
     Globals::setChoiceTiles($choiceTiles);
   }
 
