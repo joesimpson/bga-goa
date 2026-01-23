@@ -91,6 +91,7 @@ const TILE_LOCATION_DECK_A = 'deck_a';
 const TILE_LOCATION_DECK_B = 'deck_b';
 const TILE_LOCATION_BOARD_MARKET = 'market';
 const TILE_LOCATION_PLAYER_BOARD = 'p_board';
+const TILE_LOCATION_DISCARD = 'dicard';
 /** For tiles we return to the game box (not the tiles we play and discard) */
 const TILE_LOCATION_BOX = 'box';
 

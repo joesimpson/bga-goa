@@ -122,6 +122,23 @@ class Notifications
     ]);
   }
   
+  public static function getContracts(Player $player, int $n)
+  {
+    self::notifyAll("getContracts", clienttranslate('${player_name} gets ${n} ${icon_contracts}'), [
+        "player" => $player,
+        "n" => $n,
+        "icon_contracts" => clienttranslate('Contracts'),
+    ]);
+  }
+  
+  public static function getShips(Player $player, int $n)
+  {
+    self::notifyAll("getShips", clienttranslate('${player_name} gets ${n} ${icon_ships}'), [
+        "player" => $player,
+        "n" => $n,
+        "icon_ships" => clienttranslate('Ships'),
+    ]);
+  }
   public static function getCompass(Player $player, int $n)
   {
     self::notifyAll("getCompass", clienttranslate('${player_name} gets ${n} ${icon_compass}'), [
@@ -130,10 +147,19 @@ class Notifications
         "icon_compass" => clienttranslate('Compass cards'),
     ]);
   }
-  
   public static function giveTile(Player $player, Tile $tile)
   {
     self::notifyAll("giveTile", clienttranslate('${player_name} gets the tile ${tile_icon}'), [
+        "player" => $player,
+        "tile" => $tile->getUiData(),
+        "tile_icon" => '',
+        'preserve'=>['tile'],
+    ]);
+  }
+
+  public static function discardTile(Player $player, Tile $tile)
+  {
+    self::notifyAll("discardTile", clienttranslate('${player_name} discards the tile ${tile_icon}'), [
         "player" => $player,
         "tile" => $tile->getUiData(),
         "tile_icon" => '',
@@ -154,13 +180,15 @@ class Notifications
   }
   public static function giveExplorationCardsToPlayer(Player $player, Collection $cards)
   {
-    $privateDatas[$player->getId()] = new NotificationMessage('', [
+    $message = clienttranslate('${player_name} draws ${n} exploration cards ${icon_explo}');
+    $privateDatas[$player->getId()] = new NotificationMessage($message, [
             "cards" => $cards->ui(),
         ]);
         
-    self::notifyAll("giveExplorationCardsToPlayer", clienttranslate('${player_name} draws ${n} exploration cards'), [
+    self::notifyAll("giveExplorationCardsToPlayer", $message, [
         "player" => $player,
         "n" => $cards->count(),
+        "icon_explo" => '',
         '_private' => $privateDatas,
     ]);
   }

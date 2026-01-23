@@ -368,8 +368,17 @@ export class Game {
             if('icon_money' in args) {
                 args.icon_money = this.formatIcon('money');
             }
+            if('icon_ships' in args) {
+                args.icon_ships = this.formatIcon('ships');
+            }
+            if('icon_contracts' in args) {
+                args.icon_contracts = this.formatIcon('contracts');
+            }
             if('icon_compass' in args) {
                 args.icon_compass = this.formatIcon('compasses');
+            }
+            if('icon_explo' in args) {
+                args.icon_explo = this.formatIcon('exploration_hand_size');
             }
         }
       } catch (e) {
@@ -728,6 +737,14 @@ export class Game {
         } 
     }
     
+    async notif_getContracts(notif) {
+        console.log('notif_getContracts', notif);
+        this._counters[notif.player_id]['contracts'].incValue(notif.n);
+    }
+    async notif_getShips(notif) {
+        console.log('notif_getShips', notif);
+        this._counters[notif.player_id]['ships'].incValue(notif.n);
+    }
     async notif_getCompass(notif) {
         console.log('notif_getCompass', notif);
         this._counters[notif.player_id]['compasses'].incValue(notif.n);
@@ -739,6 +756,16 @@ export class Game {
         let tileDiv = this.addTile(tile);
         let destinationDiv = document.getElementById(this.getTileContainer(tile));
         await this.animationManager.slideAndAttach(tileDiv, destinationDiv);
+    }
+    
+    async notif_discardTile(notif) {
+        console.log("notif_discardTile",notif);
+        let tile = notif.tile;
+        let tileDiv = document.getElementById(`goa_tile-${tile.id}`);
+        if(tileDiv){
+            let voidDiv = document.getElementById('goa_top_zone');
+            await this.animationManager.slideOutAndDestroy(tileDiv, voidDiv, {duration: 1000});
+        }
     }
     
     async notif_newSpiceOnTile(notif) {

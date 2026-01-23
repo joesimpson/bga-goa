@@ -235,11 +235,46 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
   // ----------------------------------------------------------------------------
   // ----------------------------------------------------------------------------
 
-  public static function giveExtraActionCard(Player $player)
+  public static function giveContracts(Player $player, int $nb = 1)
   {
-    $player->incCompasses();
-    Notifications::getCompass($player,1);
+    $player->incContracts($nb);
+    Notifications::getContracts($player,$nb);
+  }
+  public static function giveShips(Player $player, int $nb = 1)
+  {
+    $player->incShips($nb);
+    Notifications::getShips($player,$nb);
+  }
+  public static function giveExtraActionCards(Player $player, int $nb = 1)
+  {
+    $player->incCompasses($nb);
+    Notifications::getCompass($player,$nb);
   }
 
+  public static function directGain(Player $player, int $gainType, int $gainQuantity)
+  {
+    switch($gainType){
+      // gains from tiles with MARKET_TYPE_ACTION_DIRECT
+      case ACTION_CONTRACT:
+        Players::giveContracts($player, $gainQuantity);
+        break;
+      case ACTION_SHIP:
+        Players::giveShips($player, $gainQuantity);
+        break;
+      case ACTION_COMPASS:
+        Players::giveExtraActionCards($player, $gainQuantity);
+        break;
+      case ACTION_EXPLORATION:
+        Cards::drawExplorationCardsToPlayer($player, $gainQuantity);
+        break;
+      case ACTION_SHIPS_OR_CONTRACTS: 
+        //TODO JSA STATE CHOICE !
+        break;
+      case ACTION_FAVOR: 
+        //TODO JSA STATE CHOICE !
+        break;
+      default: break;
+    }
+  }
 
 }

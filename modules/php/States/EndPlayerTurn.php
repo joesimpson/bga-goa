@@ -79,7 +79,7 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
                     if( TOKEN_TYPE_AUCTION_MARKER_1 == $auctionToken->getType()){
                         //$highBidPlayer receives the FIRST token if this is the first auction
                         Tokens::giveFirstPlayerToken($highBidPlayer);
-                        Players::giveExtraActionCard($highBidPlayer);
+                        Players::giveExtraActionCards($highBidPlayer);
                     }
                     else {
                         //ELSE highBidPlayer receives a tile

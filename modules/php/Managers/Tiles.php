@@ -53,8 +53,8 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
       ->merge(self::getInLocation(TILE_LOCATION_BOARD_OUTPOSTS[COLONY_KOZHIKODE ]))
       
       //for debug :
-      ->merge(self::getInLocation(TILE_LOCATION_DECK_A))
-      ->merge(self::getInLocation(TILE_LOCATION_DECK_B))
+      //->merge(self::getInLocation(TILE_LOCATION_DECK_A))
+      //->merge(self::getInLocation(TILE_LOCATION_DECK_B))
 
       ->map(function ($tile) {
         return $tile->getUiData();
@@ -110,34 +110,45 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
       $tile->setLocation(TILE_LOCATION_PLAYER_BOARD);
       $tile->setState(null);
       
-      if(MARKET_TYPE_PLANTATION == $tile->getPlay_type())
-      {
-        $nextAvailableSpaceOnPlayerBoard = Tiles::getNextAvailablePlantationSpot($player);
-        if(!isset($nextAvailableSpaceOnPlayerBoard)){
+      switch ($tile->getPlay_type()){
+        case MARKET_TYPE_PLANTATION:
+          $nextAvailableSpaceOnPlayerBoard = Tiles::getNextAvailablePlantationSpot($player);
+          if(!isset($nextAvailableSpaceOnPlayerBoard)){
 
-          //TODO JSA IF no more space ask player to discard 1  
-        }
+            //TODO JSA IF no more space ask player to discard 1  
+          }
 
-        $tile->setState($nextAvailableSpaceOnPlayerBoard);
-        Notifications::giveTile($player,$tile);
-        //FILL tile spices_slots
-        $slots = $tile->spice_slots;
-        $slotPosition = 0;
-        foreach($slots as $spice){
-          $slotPosition++;
-          
-          if(SPICES_ALL == $spice){
-            //TODO JSA IF WILD SPICE, ASK PLAYER choice ! 
+          $tile->setState($nextAvailableSpaceOnPlayerBoard);
+          Notifications::giveTile($player,$tile);
+          //FILL tile spices_slots
+          $slots = $tile->spice_slots;
+          $slotPosition = 0;
+          foreach($slots as $spice){
+            $slotPosition++;
+            
+            if(SPICES_ALL == $spice){
+              //TODO JSA IF WILD SPICE, ASK PLAYER choice ! 
+            }
+            else {
+              $spiceTokenType = Tokens::getTokenSpiceTypeFromSpice($spice);
+              Tokens::addSpiceOnTile($tile, $player, $spiceTokenType, $slotPosition);
+            }
           }
-          else {
-            $spiceTokenType = Tokens::getTokenSpiceTypeFromSpice($spice);
-            Tokens::addSpiceOnTile($tile, $player, $spiceTokenType, $slotPosition);
+          break;
+        case MARKET_TYPE_ACTION_DIRECT:
+          $tile->setLocation(TILE_LOCATION_DISCARD);
+          Notifications::discardTile($player,$tile);
+          $gains = $tile->getActions();
+          foreach($gains as $type => $quantity){
+            //TODO JSA IF FAVOR => state choice tile to give, which may be a plantation
+            Players::directGain($player,$type,$quantity);
           }
-        }
-      }
-      else {
-        //TODO JSA ELSE NOT PLANTATION
-        Notifications::giveTile($player,$tile);
+          break;
+        default:
+
+          //TODO JSA ELSE NOT PLANTATION
+          Notifications::giveTile($player,$tile);
+          break;
       }
 
     }
