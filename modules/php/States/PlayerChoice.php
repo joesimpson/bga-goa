@@ -42,16 +42,11 @@ class PlayerChoice extends GameState
 
         $choiceTiles = Globals::getChoiceTiles(); 
         if(isset($choiceTiles)){
-            foreach($choiceTiles as $choice){
-                $tileId = $choice['tile_id'];
+            foreach($choiceTiles as $tileId => $tileChoices){
                 $tile = Tiles::get((int)$tileId);
                 $args['tiles'][$tileId] = $tile->getUiData();
-                $nextIndex = 0;
-                if(in_array($tileId,array_keys($args['tiles_choices'])) ){
-                    $nextIndex = 1 + array_key_last( $args['tiles_choices'][$tileId]);
-                }
-                $args['tiles_choices'][$tileId][$nextIndex] = $choice;
             }
+            $args['tiles_choices'] = $choiceTiles;
             $args['possibleActions'][] = 'actTileChoice';
         }
 
@@ -116,12 +111,18 @@ class PlayerChoice extends GameState
             $prematureStateChange = $exc;
         }
 
-        //TODO JSA remove the right tile choice in Globals
+        //remove the right tile choice in Globals
+        $remainingChoices = Globals::removeChoiceTile($tile_id, $choice_index);
 
         // at the end of the action, move to the next state
         if(isset($prematureStateChange) ){
             return $prematureStateChange->nextStateClass;
         }
+        if(count($remainingChoices) > 0){
+            //continue to have choices
+            return PlayerChoice::class;
+        }
+        //Else end
         return ConfirmTurn::class;
     }
  

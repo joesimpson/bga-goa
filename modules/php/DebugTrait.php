@@ -116,7 +116,7 @@ trait DebugTrait
 
         //TEST removing an element of the list by index
         $allChoices = Globals::getChoiceTiles();
-        unset($allChoices[1]);
+        unset($allChoices[$tile->getId()][1]);
         Globals::setChoiceTiles($allChoices);
 
         //FAVOR

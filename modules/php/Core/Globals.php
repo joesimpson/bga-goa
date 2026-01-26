@@ -68,11 +68,27 @@ class Globals extends \Bga\Games\Goa\Helpers\DB_Manager
     Stats::inc("turns_number");
   }
 
-  public static function addChoiceTile(Tile $tile, int $choiceType, int $choiceQuantity, array $choices, int $selectType = CHOICE_PICK_ACTION)
+  public static function addChoiceTile(Tile $tile, int $choiceType, int $choiceQuantity, array $choices, int $selectType = CHOICE_PICK_ACTION) : array
   {
     $choiceTiles = Globals::getChoiceTiles(); 
-    $choiceTiles[] = ['tile_id'=>$tile->getId(), 'type' => $choiceType, 'n' => $choiceQuantity, 'choices' => $choices, 'selectType' => $selectType ];
+    $tileId = $tile->getId();
+    if(!array_key_exists($tileId,$choiceTiles) )  $choiceTiles[$tileId] = [];
+    //use tile id as key to keep track (in case of future multiples bonuses on same tile)
+    $choiceTiles[$tileId][] = ['tile_id'=>$tileId, 'type' => $choiceType, 'n' => $choiceQuantity, 'choices' => $choices, 'selectType' => $selectType ];
     Globals::setChoiceTiles($choiceTiles);
+    return $choiceTiles;
+  }
+
+  public static function removeChoiceTile(int $tileId, int $index) : array
+  {
+    $choiceTiles = Globals::getChoiceTiles(); 
+    if(!array_key_exists($tileId,$choiceTiles) ) return $choiceTiles;
+    unset($choiceTiles[$tileId][$index]);
+    if(count($choiceTiles[$tileId]) == 0){
+      unset($choiceTiles[$tileId]);
+    }
+    Globals::setChoiceTiles($choiceTiles);
+    return $choiceTiles;
   }
 
   //////////////////////////////////////////////////////////////////////////////////////
