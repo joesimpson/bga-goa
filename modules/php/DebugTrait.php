@@ -287,6 +287,8 @@ trait DebugTrait
         $player_id = $player->getId();
         Log::addStep();
 
+        Tokens::removeSpicesOnAllTiles();
+
         //resetup outposts
         $outposts = Tiles::getOutpostTilesTypes();
         foreach ($outposts as $type => $outpost) {

@@ -240,7 +240,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
       //RESET FROM THE BEGINNING 
       //TODO JSA We need a tile attribute 'deck' A/B in order to replace it in A or B for next session
       //Tiles::moveAllTo(TILE_LOCATION_DECK_A);
-
+      Tokens::removeSpicesOnAllTiles();
           //DEBUG  waiting solution...
           Tiles::DB()->delete()->run();
           Tiles::setupNewGame(null,null);

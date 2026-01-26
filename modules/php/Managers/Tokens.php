@@ -134,6 +134,15 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
     Notifications::removeSpices($player,$tile, $tokens);
   }
   
+  public static function removeSpicesOnAllTiles()
+  { 
+    $tokens = self::getInLocationOrdered(TOKEN_LOCATION_TILE.'%');
+    foreach($tokens as $token){
+      self::DB()->delete($token->getId());
+    } 
+    //TODO JSA NOTIFY removeSpicesOnAllTiles + update UI counters
+  }
+  
   public static function placeFirstAuctionMarker(Player $player,int $row,int $col): FirstAuctionMarker
   {
     $token = self::getFirstPlayerToken();
