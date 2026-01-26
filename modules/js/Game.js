@@ -827,10 +827,11 @@ export class Game {
             let tokenDivs = [...tileDiv.querySelectorAll('.goa_spice')];
             let voidDiv = document.getElementById('goa_top_zone');
             let animationsCleanTile = tokenDivs.map(tokenDiv => (() => {
+                let spice_type = tokenDiv.dataset.spice;
+                this._counters[notif.player_id]['spices_'+spice_type ].incValue(-1);
                 this.animationManager.slideOutAndDestroy(tokenDiv, voidDiv, {duration: 1000});
             }));
             await this.animationManager.playInterval(animationsCleanTile);
-            //TODO JSA update spice counter
         }
     }
 
@@ -1407,7 +1408,7 @@ export class Game {
         if(token.subtype == TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER) 
             return `<div id="goa_token${prefix}-${token.id}" class="goa_token goa_token${prefix} goa_first_auction_marker" ></div>`;
         if(token.subtype == TOKEN_SUBTTYPE_SPICE) 
-            return `<div id="goa_token${prefix}-${token.id}" class="goa_token goa_token${prefix} goa_spice" data-type="${token.type}" data-pid="${token.pId}" data-state="${token.state}"></div>`;
+            return `<div id="goa_token${prefix}-${token.id}" class="goa_token goa_token${prefix} goa_spice" data-type="${token.type}" data-pid="${token.pId}" data-state="${token.state}" data-spice="${token.spice}"></div>`;
         return '';
     }
     tplProgressTrack(datas) {
