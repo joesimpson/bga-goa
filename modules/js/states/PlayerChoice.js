@@ -24,7 +24,7 @@ export class PlayerChoice {
             _('${actplayer} must choose a tile action')
         );
       
-        if (isCurrentPlayerActive) {
+        if (isCurrentPlayerActive || true) { // display buttons choices for other players to let them know
 
             if(possibleActions.includes('actTileChoice')){
                 Object.values(tiles_choices).forEach( tile_choice_entry => {
@@ -137,7 +137,8 @@ export class ClientSelectTileAction {
                     break;
                 case this.game.const.CHOICE_REPLACE_TILE:
                     this.bga.statusBar.setTitle(isCurrentPlayerActive ? 
-                        _('${you} must choose a plantation to replace on your board'): ''
+                        _('${you} must choose a plantation to replace on your board'): 
+                        _('${actplayer} must choose a plantation to replace on his board')
                     );
                     //click on each selectable tile
                     let tileDiv = document.getElementById(`goa_tile-${choice}`);
