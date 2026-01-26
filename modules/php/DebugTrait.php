@@ -107,6 +107,7 @@ trait DebugTrait
         $this->debug_refreshUI();
     }
     function debug_Globals(){
+        $player = Players::getCurrent();
         Globals::setChoiceTiles([]);
         $tile = Tiles::getByType(26,TILE_SUBTTYPE_MARKET)->first();
         Globals::addChoiceTile($tile,ACTION_SHIPS_OR_CONTRACTS, 3, [ACTION_SHIP, ACTION_CONTRACT]);
@@ -129,6 +130,14 @@ trait DebugTrait
         
         Globals::addChoiceTile($tile,ACTION_FAVOR, 1, $tilesToChoose,CHOICE_PICK_TILE);
         
+        //Spices
+        //$tile = Tiles::getByType(2,TILE_SUBTTYPE_MARKET)->first();
+        //Globals::addChoiceTile($tile,ACTION_SPICE, 1, SPICES_ALL, CHOICE_PICK_SPICE);
+
+        //Plantation
+        $tile = Tiles::getByType(2,TILE_SUBTTYPE_MARKET)->first();
+        $playerPlantations = Tiles::getPlantations($player);
+        Globals::addChoiceTile($tile,0, 1, $playerPlantations->getIds(), CHOICE_REPLACE_TILE);
 
         Game::get()->gamestate->jumpToState(ST_PLAYER_CHOICE);
     }
@@ -283,27 +292,33 @@ trait DebugTrait
         foreach ($outposts as $type => $outpost) {
             $tiles = Tiles::getByType($type, TILE_SUBTTYPE_OUTPOST);
             foreach ($tiles as $tile_id => $tile) {
+                Tokens::removeSpicesOnTile($tile,$player);
                 $tile->setLocation(TILE_LOCATION_BOARD_OUTPOSTS[$outpost['colony']]);
             }
         }
+        $this->debug_refreshUI();
 
         //Test outposts :
         $tile = Tiles::getTopOf(TILE_LOCATION_BOARD_OUTPOSTS[COLONY_KOLLAM]);
         $tile->setLocation(TILE_LOCATION_PLAYER_BOARD);
         $tile->setPId($player_id);
+        Notifications::giveTile($player,$tile);
         Tokens::addSpiceOnTile($tile, $player, TOKEN_TYPE_SPICE_WHITE, 1);
         
         $tile = Tiles::getTopOf(TILE_LOCATION_BOARD_OUTPOSTS[COLONY_KOCHI]);
         $tile->setLocation(TILE_LOCATION_PLAYER_BOARD);
         $tile->setPId($player_id);
+        Notifications::giveTile($player,$tile);
         
         $tile = Tiles::getTopOf(TILE_LOCATION_BOARD_OUTPOSTS[COLONY_MADRAS]);
         $tile->setLocation(TILE_LOCATION_PLAYER_BOARD);
         $tile->setPId($player_id);
+        Notifications::giveTile($player,$tile);
         
         $tile = Tiles::getTopOf(TILE_LOCATION_BOARD_OUTPOSTS[COLONY_KOZHIKODE]);
         $tile->setLocation(TILE_LOCATION_PLAYER_BOARD);
         $tile->setPId($player_id);
+        Notifications::giveTile($player,$tile);
         Tokens::addSpiceOnTile($tile, $player, TOKEN_TYPE_SPICE_WHITE, 1);
         Tokens::addSpiceOnTile($tile, $player, TOKEN_TYPE_SPICE_GREEN, 2);
 
@@ -314,6 +329,7 @@ trait DebugTrait
         $tile->setRow(null);
         $tile->setCol(null);
         $tile->setState(2);
+        Notifications::giveTile($player,$tile);
         Tokens::addSpiceOnTile($tile, $player, TOKEN_TYPE_SPICE_BLACK, 1);
         Tokens::addSpiceOnTile($tile, $player, TOKEN_TYPE_SPICE_YELLOW, 2);
 
@@ -323,6 +339,7 @@ trait DebugTrait
         $tile->setRow(null);
         $tile->setCol(null);
         $tile->setState(4);
+        Notifications::giveTile($player,$tile);
         Tokens::addSpiceOnTile($tile, $player, TOKEN_TYPE_SPICE_PINK, 1);
 
         $tile = Tiles::getByType(4, TILE_SUBTTYPE_MARKET)->first();
@@ -331,9 +348,19 @@ trait DebugTrait
         $tile->setRow(null);
         $tile->setCol(null);
         $tile->setState(3);
+        Notifications::giveTile($player,$tile);
         Tokens::addSpiceOnTile($tile, $player, TOKEN_TYPE_SPICE_YELLOW, 1);
+        
+        $tile = Tiles::getByType(5, TILE_SUBTTYPE_MARKET)->first();
+        $tile->setLocation(TILE_LOCATION_PLAYER_BOARD);
+        $tile->setPId($player_id);
+        $tile->setRow(null);
+        $tile->setCol(null);
+        $tile->setState(1);
+        Notifications::giveTile($player,$tile);
+        Tokens::addSpiceOnTile($tile, $player, TOKEN_TYPE_SPICE_GREEN, 1);
 
-        $this->debug_refreshUI();
+        //$this->debug_refreshUI();
     }
     
     //TEst different notif at a time

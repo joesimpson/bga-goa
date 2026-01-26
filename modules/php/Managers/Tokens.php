@@ -122,6 +122,18 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
     return $elt;
   }
   
+  public static function removeSpicesOnTile(Tile $tile,Player $player,)
+  { 
+    $tokens = self::DB()
+      ->where( 'subType', TOKEN_SUBTTYPE_SPICE)
+      ->where( static::$prefix . 'location', TOKEN_LOCATION_TILE.$tile->getId())
+      ->get();
+    foreach($tokens as $token){
+      self::DB()->delete($token->getId());
+    } 
+    Notifications::removeSpices($player,$tile, $tokens);
+  }
+  
   public static function placeFirstAuctionMarker(Player $player,int $row,int $col): FirstAuctionMarker
   {
     $token = self::getFirstPlayerToken();

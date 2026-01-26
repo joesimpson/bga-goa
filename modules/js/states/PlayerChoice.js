@@ -135,40 +135,22 @@ export class ClientSelectTileAction {
                             })
                     }, {  destination: document.getElementById('customActions') }); 
                     break;
+                case this.game.const.CHOICE_REPLACE_TILE:
+                    this.bga.statusBar.setTitle(isCurrentPlayerActive ? 
+                        _('${you} must choose a plantation to replace on your board'): ''
+                    );
+                    //click on each selectable tile
+                    let tileDiv = document.getElementById(`goa_tile-${choice}`);
+                    this.game.onClick(tileDiv,() => {
+                            this.bga.actions.performAction("actTileChoice", { 
+                                'tile_id' : tile_id,
+                                'choice': choice,
+                                'choice_index':args.choice_index,
+                            });
+                        });
+                    break;
             }
         });
-
-
-
-        /*
-        switch(tile_choice.type){
-            case this.game.const.ACTION_SHIPS_OR_CONTRACTS:
-                let buttonText2 = this.bga.gameui.format_string(
-                            _("Take ${n} ${resource_name} : ${icon_resource}")
-                            ,{n:tile_choice.n, 'resource_name': _('Ships'), icon_resource : this.game.formatIcon('ships')}
-                        );
-                this.bga.statusBar.addActionButton( buttonText2, () => {
-                    this.bga.actions.performAction("actPlaceAuction", { 
-                            'tile_id' : tile_id,
-                            'choice': this.game.const.ACTION_SHIPS,
-                        })
-                }, {destination: document.getElementById('customActions') }); 
-
-                let buttonText1 = this.bga.gameui.format_string(
-                            _("Take ${n} ${resource_name} : ${icon_resource}")
-                            ,{n:tile_choice.n, 'resource_name': _('Contracts'), icon_resource : this.game.formatIcon('contracts')}
-                        );
-                this.bga.statusBar.addActionButton( buttonText1, () => {
-                    this.bga.actions.performAction("actPlaceAuction", { 
-                            'tile_id' : tile_id,
-                            'choice': this.game.const.ACTION_CONTRACTS,
-                        })
-                }, { destination: document.getElementById('customActions') }); 
-
-                break;
-            default: break;
-        }
-        */
 
         this.bga.statusBar.addActionButton( _('Cancel'), () => {
             this.bga.states.restoreServerGameState();

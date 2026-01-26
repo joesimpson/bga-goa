@@ -94,6 +94,13 @@ class PlayerChoice extends GameState
                     $selectedTile = Tiles::get($choice);
                     Tiles::giveMarketTileToPlayer($player, $selectedTile);
                     break;
+                case CHOICE_REPLACE_TILE:
+                    //SELECT A TILE : choice is a tile id
+                    $foundChoice = $this->checkChoiceAsValue($tile_choice,$tile_id,$choice);
+                    $selectedTile = Tiles::get($choice);
+                    Tiles::discardTileFromPlayer($player, $selectedTile);
+                    Tiles::giveMarketTileToPlayer($player, $tile);
+                    break;
                 case CHOICE_PICK_SPICE:
                     //SELECT A SPICE : choice is a spice type
                     $foundChoice = $this->checkChoiceAsValue($tile_choice,$tile_id,$choice);

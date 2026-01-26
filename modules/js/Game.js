@@ -790,6 +790,7 @@ export class Game {
             let voidDiv = document.getElementById('goa_top_zone');
             await this.animationManager.slideIn(tileDiv, voidDiv, {duration: 1000});
         } else {
+            tileDiv = this.addTile(tile);//refresh tile dataset
             let destinationDiv = document.getElementById(this.getTileContainer(tile));
             await this.animationManager.slideAndAttach(tileDiv, destinationDiv);
         }
@@ -817,6 +818,20 @@ export class Game {
         let spice_type = token.spice;
         this._counters[notif.player_id]['spices_'+spice_type ].incValue(1);
         
+    }
+    async notif_removeSpices(notif) {
+        console.log("notif_removeSpices",notif);
+        let tile_id = notif.tile_id;
+        let tileDiv = document.getElementById(`goa_tile-${tile_id}`);
+        if(tileDiv){
+            let tokenDivs = [...tileDiv.querySelectorAll('.goa_spice')];
+            let voidDiv = document.getElementById('goa_top_zone');
+            let animationsCleanTile = tokenDivs.map(tokenDiv => (() => {
+                this.animationManager.slideOutAndDestroy(tokenDiv, voidDiv, {duration: 1000});
+            }));
+            await this.animationManager.playInterval(animationsCleanTile);
+            //TODO JSA update spice counter
+        }
     }
 
     async notif_reshuffleExplorationDeck(notif) {

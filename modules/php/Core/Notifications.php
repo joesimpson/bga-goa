@@ -236,6 +236,27 @@ class Notifications
     ]);
   }
   
+    /**
+   * @param Player $player
+   * @param Tile $tile
+   * @param Collection $tokens
+   */
+  public static function removeSpices(Player $player,Tile $tile, Collection $tokens)
+  {
+    $nTiles = $tokens->count();
+    if($nTiles == 0) return;
+    $msg = clienttranslate('${player_name} removes ${n} spices tokens from their tile');
+
+    self::notifyAll('removeSpices', $msg, [
+      'player' => $player,
+      'n' => $nTiles,
+      'tokens' => $tokens->ui(),
+      'tile_id' => $tile->getId(),
+      'preserve'=>['tokens','tile_id'],
+    ]);
+  }
+
+  
   public static function reshuffleExplorationDeck(Player $player, int $deck_size)
   {
     self::notifyAll('reshuffleExplorationDeck', '', [

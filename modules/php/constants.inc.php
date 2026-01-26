@@ -29,6 +29,7 @@ const ACTION_VICEKING            = 13;
 const CHOICE_PICK_ACTION         = 1;
 const CHOICE_PICK_TILE           = 2;
 const CHOICE_PICK_SPICE          = 3;
+const CHOICE_REPLACE_TILE        = 4;
 
 const SPICE_WHITE     = 1;
 const SPICE_BLACK     = 2;
@@ -97,7 +98,7 @@ const TILE_LOCATION_DECK_A = 'deck_a';
 const TILE_LOCATION_DECK_B = 'deck_b';
 const TILE_LOCATION_BOARD_MARKET = 'market';
 const TILE_LOCATION_PLAYER_BOARD = 'p_board';
-const TILE_LOCATION_DISCARD = 'dicard';
+const TILE_LOCATION_DISCARD = 'discard';
 /** For tiles we return to the game box (not the tiles we play and discard) */
 const TILE_LOCATION_BOX = 'box';
 
@@ -232,7 +233,8 @@ CONST ALL_MY_UI_CONSTANTS= [
 
    'CHOICE_PICK_ACTION'       => CHOICE_PICK_ACTION          ,  
    'CHOICE_PICK_TILE'         => CHOICE_PICK_TILE            ,  
-   'CHOICE_PICK_SPICE'        => CHOICE_PICK_SPICE            ,  
+   'CHOICE_PICK_SPICE'        => CHOICE_PICK_SPICE           ,  
+   'CHOICE_REPLACE_TILE'      => CHOICE_REPLACE_TILE         ,  
 
    'SPICES_ALL' =>   SPICES_ALL,
 

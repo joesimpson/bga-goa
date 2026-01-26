@@ -5,6 +5,7 @@ namespace Bga\Games\Goa\Managers;
 use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Exceptions\PrematureStateChangeException;
+use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Collection;
 use Bga\Games\Goa\Models\MarketTile;
 use Bga\Games\Goa\Models\OutpostTile;
@@ -119,25 +120,31 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
    * then give it to player
    * @throws PrematureStateChangeException when caller will need to go to another state than default one
    * */
-  public static function giveMarketTileToPlayer(Player $player, MarketTile $tile) :void
+  public static function giveMarketTileToPlayer(Player $player, MarketTile &$tile) :void
   {
     $stateExc = null;  
     
     if(isset($tile)){
 
-      $tile->setPId($player->getId());
-      $tile->setRow(null);
-      $tile->setCol(null);
-      $tile->setLocation(TILE_LOCATION_PLAYER_BOARD);
-      $tile->setState(null);
+      $updateTileDatas = function ( $player, &$tile,) {
+        $tile->setPId($player->getId());
+        $tile->setRow(null);
+        $tile->setCol(null);
+        $tile->setLocation(TILE_LOCATION_PLAYER_BOARD);
+        $tile->setState(null);
+      };
       
       switch ($tile->getPlay_type()){
         case MARKET_TYPE_PLANTATION:
           $nextAvailableSpaceOnPlayerBoard = Tiles::getNextAvailablePlantationSpot($player);
           if(!isset($nextAvailableSpaceOnPlayerBoard)){
-
-            //TODO JSA IF no more space ask player to discard 1  
+            // IF no more space ask player to discard 1  
+            $playerPlantations = Tiles::getPlantations($player);
+            Globals::addChoiceTile($tile,0, 1, $playerPlantations->getIds(), CHOICE_REPLACE_TILE);
+            throw new PrematureStateChangeException (3,PlayerChoice::class);
+            //don't modify tile location before this exception !
           }
+          $updateTileDatas($player,$tile);
 
           $tile->setState($nextAvailableSpaceOnPlayerBoard);
           Notifications::giveTile($player,$tile);
@@ -160,8 +167,8 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
           }
           break;
         case MARKET_TYPE_ACTION_DIRECT:
-          $tile->setLocation(TILE_LOCATION_DISCARD);
-          Notifications::discardTile($player,$tile);
+          $updateTileDatas($player,$tile);
+          Tiles::discardTileFromPlayer($player, $tile);
           $gains = $tile->getActions();
           foreach($gains as $type => $quantity){
             try{
@@ -173,6 +180,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
           }
           break;
         default:
+          $updateTileDatas($player,$tile);
           Notifications::giveTile($player,$tile);
           break;
       }
@@ -183,7 +191,14 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
     }
   }
 
-  public static function getNextAvailablePlantationSpot(Player $player,) : int |null
+  public static function discardTileFromPlayer(Player $player, Tile &$tile)
+  {
+    $tile->setLocation(TILE_LOCATION_DISCARD);
+    Tokens::removeSpicesOnTile($tile,$player,);
+    Notifications::discardTile($player,$tile);
+  }
+
+  public static function getPlantations(Player $player) : Collection
   {
     $plantationTypes = Tiles::getTilesTypesByMarketPlayType(MARKET_TYPE_PLANTATION);
     $plantationsOnPlayerBoard = self::DB()
@@ -193,6 +208,13 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
       ->where( static::$prefix . 'location', TILE_LOCATION_PLAYER_BOARD)
       ->wherePlayer($player->getId())
       ->get();
+ 
+    return $plantationsOnPlayerBoard;
+  }
+
+  public static function getNextAvailablePlantationSpot(Player $player,) : int |null
+  {
+    $plantationsOnPlayerBoard = self::getPlantations($player);
 
     $unavailablePositions = $plantationsOnPlayerBoard->map( function($tile) {
       return $tile->getState();
@@ -201,10 +223,12 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
     if(count($unavailablePositions) == 0) return 1;
 
     $maxPos = max( $unavailablePositions);
-    if($maxPos == PLAYER_PLANTATIONS_MAX ){
-      return null;
+
+    for($k=1; $k<=PLAYER_PLANTATIONS_MAX;$k++){
+      if(!in_array($k, $unavailablePositions)) return $k;
     }
-    return $maxPos + 1;
+    Game::get()->trace("getNextAvailablePlantationSpot(".$player->getId().") : no space because unavailablePositions = ".json_encode($unavailablePositions));
+    return null;
   }
 
   /**
