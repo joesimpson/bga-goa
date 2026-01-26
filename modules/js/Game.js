@@ -783,9 +783,16 @@ export class Game {
     async notif_giveTile(notif) {
         console.log("notif_giveTile",notif);
         let tile = notif.tile;
-        let tileDiv = this.addTile(tile);
-        let destinationDiv = document.getElementById(this.getTileContainer(tile));
-        await this.animationManager.slideAndAttach(tileDiv, destinationDiv);
+        
+        let tileDiv = document.getElementById(`goa_tile-${tile.id}`);
+        if(! tileDiv){
+            tileDiv = this.addTile(tile);
+            let voidDiv = document.getElementById('goa_top_zone');
+            await this.animationManager.slideIn(tileDiv, voidDiv, {duration: 1000});
+        } else {
+            let destinationDiv = document.getElementById(this.getTileContainer(tile));
+            await this.animationManager.slideAndAttach(tileDiv, destinationDiv);
+        }
     }
     
     async notif_discardTile(notif) {
