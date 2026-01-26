@@ -1261,6 +1261,11 @@ Icon extract in sprite with differents layers size (so % is not useful).
   box-shadow: 0px 0px 0px 5px blue;
   border-radius: 15px;
 }
+.goa_tile.selected {
+  cursor: crosshair;
+  box-shadow: 0px 0px 0px 8px red;
+  border-radius: 20px;
+}
 
 .goa_tile.goa_outpost,
 .goa_outpost-front, .goa_outpost-back {

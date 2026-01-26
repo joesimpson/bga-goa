@@ -36,7 +36,8 @@ export class PlayerChoice {
                             let tile_icon = this.game.tplTile(tile, '_log');
                             this.bga.statusBar.addActionButton( tile_icon, () => {
                                 this.bga.states.setClientState("ClientSelectTileAction", {
-                                    descriptionmyturn : _("${you} must select one of these"),
+                                    descriptionmyturn: _("${you} must select one of these"),
+                                    description : _("${actplayer} must select one of these"),
                                     args: { 'tile_choice':tile_choice, 'tile':tile, 'choice_index': tile_choice_entry_index},
                                 });
                             }, {  destination: document.getElementById('customActions') }); 
@@ -126,6 +127,8 @@ export class ClientSelectTileAction {
                     }, {  destination: document.getElementById('customActions') }); 
                     break;
                 case this.game.const.CHOICE_PICK_SPICE:
+                    let tileToFill = document.getElementById(`goa_tile-${tile_id}`);
+                    tileToFill.classList.add('selected');
                     let spice_icon = this.game.formatIcon('spices_'+choice);
                     this.bga.statusBar.addActionButton( spice_icon, () => {
                         this.bga.actions.performAction("actTileChoice", { 
