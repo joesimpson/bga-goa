@@ -26,6 +26,9 @@ const ACTION_HARVEST             = 11;
 const ACTION_ESPIONAGE           = 12;
 const ACTION_VICEKING            = 13;
 
+const CHOICE_PICK_ACTION         = 1;
+const CHOICE_PICK_TILE           = 2;
+
 const SPICE_WHITE     = 1;
 const SPICE_BLACK     = 2;
 const SPICE_YELLOW    = 3;
@@ -225,6 +228,9 @@ CONST ALL_MY_UI_CONSTANTS= [
    'ACTION_HARVEST'           => ACTION_HARVEST             ,  
    'ACTION_ESPIONAGE'         => ACTION_ESPIONAGE           ,  
    'ACTION_VICEKING'          => ACTION_VICEKING            ,  
+
+   'CHOICE_PICK_ACTION'       => CHOICE_PICK_ACTION          ,  
+   'CHOICE_PICK_TILE'         => CHOICE_PICK_TILE            ,  
 
    'SPICES_ALL' =>   SPICES_ALL,
 

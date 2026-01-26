@@ -28,7 +28,8 @@ export class PlayerChoice {
 
             if(possibleActions.includes('actTileChoice')){
                 Object.values(tiles_choices).forEach( tile_choice_entry => {
-                    Object.values(tile_choice_entry).forEach( tile_choice => {
+                    //Object.values(tile_choice_entry).forEach( tile_choice => {
+                    Object.entries(tile_choice_entry).forEach( ([tile_choice_entry_index,tile_choice])  => {
                         let tile_id = tile_choice.tile_id;
                         let tile = tiles[tile_id];
                         if(tile){
@@ -36,7 +37,7 @@ export class PlayerChoice {
                             this.bga.statusBar.addActionButton( tile_icon, () => {
                                 this.bga.states.setClientState("ClientSelectTileAction", {
                                     descriptionmyturn : _("${you} must select one of these"),
-                                    args: { 'tile_choice':tile_choice, 'tile':tile },
+                                    args: { 'tile_choice':tile_choice, 'tile':tile, 'choice_index': tile_choice_entry_index},
                                 });
                             }, {  destination: document.getElementById('customActions') }); 
                         }
@@ -79,34 +80,51 @@ export class ClientSelectTileAction {
         let tile_choice = args.tile_choice;
         let tile_id = args.tile.id;
       
-        Object.values(tile_choice.choices).forEach( choice => {
-            switch(choice){
-                case this.game.const.ACTION_SHIP:
-                    let buttonText = this.bga.gameui.format_string(
-                                _("Take ${n} ${resource_name} : ${icon_resource}")
-                                ,{n:tile_choice.n, 'resource_name': _('Ships'), icon_resource : this.game.formatIcon('ships')}
-                            );
-                    this.bga.statusBar.addActionButton( buttonText, () => {
-                        this.bga.actions.performAction("actTileChoice", { 
-                                'tile_id' : tile_id,
-                                'choice': choice,
-                            })
-                    }, {destination: document.getElementById('customActions') }); 
-                    break;
-                case this.game.const.ACTION_CONTRACT:
-                    let buttonText1 = this.bga.gameui.format_string(
-                                _("Take ${n} ${resource_name} : ${icon_resource}")
-                                ,{n:tile_choice.n, 'resource_name': _('Contracts'), icon_resource : this.game.formatIcon('contracts')}
-                            );
-                    this.bga.statusBar.addActionButton( buttonText1, () => {
-                        this.bga.actions.performAction("actTileChoice", { 
-                                'tile_id' : tile_id,
-                                'choice': choice,
-                            })
-                    }, { destination: document.getElementById('customActions') }); 
+        Object.entries(tile_choice.choices).forEach( ([choice_id,choice])  => {
+            switch(tile_choice.selectType){
+                case this.game.const.CHOICE_PICK_ACTION:
+                default:
+                    switch(choice){
+                        case this.game.const.ACTION_SHIP:
+                            let buttonText = this.bga.gameui.format_string(
+                                        _("Take ${n} ${resource_name} : ${icon_resource}")
+                                        ,{n:tile_choice.n, 'resource_name': _('Ships'), icon_resource : this.game.formatIcon('ships')}
+                                    );
+                            this.bga.statusBar.addActionButton( buttonText, () => {
+                                this.bga.actions.performAction("actTileChoice", { 
+                                        'tile_id' : tile_id,
+                                        'choice': choice,
+                                        'choice_index':args.choice_index,
+                                    })
+                            }, {destination: document.getElementById('customActions') }); 
+                            break;
+                        case this.game.const.ACTION_CONTRACT:
+                            let buttonText1 = this.bga.gameui.format_string(
+                                        _("Take ${n} ${resource_name} : ${icon_resource}")
+                                        ,{n:tile_choice.n, 'resource_name': _('Contracts'), icon_resource : this.game.formatIcon('contracts')}
+                                    );
+                            this.bga.statusBar.addActionButton( buttonText1, () => {
+                                this.bga.actions.performAction("actTileChoice", { 
+                                        'tile_id' : tile_id,
+                                        'choice': choice,
+                                        'choice_index':args.choice_index,
+                                    })
+                            }, { destination: document.getElementById('customActions') }); 
 
+                            break;
+                        default: break;
+                    }
+                break;
+                case this.game.const.CHOICE_PICK_TILE:
+                    let tile_icon = this.game.tplTileFromType(choice, '_log');
+                    this.bga.statusBar.addActionButton( tile_icon, () => {
+                        this.bga.actions.performAction("actTileChoice", { 
+                                'tile_id' : tile_id,
+                                'choice': choice_id,
+                                'choice_index':args.choice_index,
+                            })
+                    }, {  destination: document.getElementById('customActions') }); 
                     break;
-                default: break;
             }
         });
 

@@ -86,7 +86,7 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
                         //ELSE highBidPlayer receives a tile
                         try{
 
-                            Tiles::giveMarketTileToPlayer($highBidPlayer, $auctionToken->getRow(), $auctionToken->getCol() );
+                            Tiles::giveMarketTileToPlayerAt($highBidPlayer, $auctionToken->getRow(), $auctionToken->getCol() );
                         }
                         catch(PrematureStateChangeException $exc){
                             $prematureStateChange = $exc;

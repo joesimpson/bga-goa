@@ -93,9 +93,11 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
   }
 
   /**
+   * Get the market tile placed at [row, col]
+   * then give it to player
    * @throws PrematureStateChangeException when caller will need to go to another state than default one
    * */
-  public static function giveMarketTileToPlayer(Player $player, int $row, int $col)
+  public static function giveMarketTileToPlayerAt(Player $player, int $row, int $col):void
   {
     $tilesOnMarketSpace = self::DB()
       ->where( static::$prefix . 'location', TILE_LOCATION_BOARD_MARKET)
@@ -104,9 +106,21 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
       ->get();
       //TODO JSA multiples if BONANZA + warning if Tile WILD spice, it adds another choice 
 
+    $tile = $tilesOnMarketSpace->first();
+    if(isset($tile)){
+      Tiles::giveMarketTileToPlayer($player, $tile);
+    }
+  }
+  
+  /**
+   * Get the selected market tile
+   * then give it to player
+   * @throws PrematureStateChangeException when caller will need to go to another state than default one
+   * */
+  public static function giveMarketTileToPlayer(Player $player, MarketTile $tile) :void
+  {
     $stateExc = null;  
     
-    $tile = $tilesOnMarketSpace->first();
     if(isset($tile)){
 
       $tile->setPId($player->getId());
@@ -241,6 +255,13 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
       }
     }
     return $types;
+  }
+
+  public static function getTilesForFavor(){
+    return self::DB()
+      ->where('subtype', TILE_SUBTTYPE_MARKET)
+      ->where( static::$prefix . 'location', TILE_LOCATION_BOX)
+      ->get();
   }
 
   ///////////////////////////////////////////////////////////////////////////////

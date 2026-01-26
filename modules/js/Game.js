@@ -1205,6 +1205,16 @@ export class Game {
             </div>`;
         return '';
     }
+    
+    tplTileFromType(tileType, prefix ='') {
+        let tileDatas = {};
+        tileDatas.type = parseInt(tileType);
+        //SUPPOSE ALL TILE_SUBTTYPE_MARKET
+        let material = this.gamedatas.material.tiles[TILE_SUBTTYPE_MARKET][tileDatas.type];
+        tileDatas = material;
+
+        return this.tplTile(tileDatas, prefix);
+    }
 
     tplMarketGridSpace(datas){
         return `<div class="goa_grid_space" id="goa_market_grid_space-${datas.row}-${datas.col}"

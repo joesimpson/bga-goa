@@ -110,6 +110,27 @@ trait DebugTrait
         Globals::setChoiceTiles([]);
         $tile = Tiles::getByType(26,TILE_SUBTTYPE_MARKET)->first();
         Globals::addChoiceTile($tile,ACTION_SHIPS_OR_CONTRACTS, 3, [ACTION_SHIP, ACTION_CONTRACT]);
+        //simulate 2 choices
+        Globals::addChoiceTile($tile,ACTION_SHIPS_OR_CONTRACTS, 1, [ACTION_SHIP, ACTION_CONTRACT]);
+        Globals::addChoiceTile($tile,ACTION_SHIPS_OR_CONTRACTS, 2, [ACTION_SHIP, ACTION_CONTRACT]);
+
+        //TEST removing an element of the list by index
+        $allChoices = Globals::getChoiceTiles();
+        unset($allChoices[1]);
+        Globals::setChoiceTiles($allChoices);
+
+        //FAVOR
+        $tile = Tiles::getByType(30,TILE_SUBTTYPE_MARKET)->first();
+        $tilesToChoose = Tiles::getTilesForFavor()
+            ->merge(Tiles::getByType(2,TILE_SUBTTYPE_MARKET))//+ Test chaining with SPICES_ALL
+            ->map(function ($tile) {
+                return $tile->getType();
+            })->toAssoc();
+        
+        Globals::addChoiceTile($tile,ACTION_FAVOR, 1, $tilesToChoose,CHOICE_PICK_TILE);
+        
+
+        Game::get()->gamestate->jumpToState(ST_PLAYER_CHOICE);
     }
 
     // Test board UI : create fake tokens on board

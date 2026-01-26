@@ -9,6 +9,7 @@ use Bga\GameFramework\States\GameState;
 use Bga\GameFramework\States\PossibleAction;
 use Bga\GameFramework\UserException;
 use Bga\Games\Goa\Core\Globals;
+use Bga\Games\Goa\Exceptions\PrematureStateChangeException;
 use Bga\Games\Goa\Exceptions\UnexpectedException;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Log;
@@ -32,8 +33,6 @@ class PlayerChoice extends GameState
      */
     public function getArgs(): array
     {
-        $roundStep = Globals::getRoundStep();
-        $player = Players::getActive();
 
         $args = [
             'possibleActions' => [],
@@ -47,7 +46,11 @@ class PlayerChoice extends GameState
                 $tileId = $choice['tile_id'];
                 $tile = Tiles::get((int)$tileId);
                 $args['tiles'][$tileId] = $tile->getUiData();
-                $args['tiles_choices'][$tileId][] = $choice;
+                $nextIndex = 0;
+                if(in_array($tileId,array_keys($args['tiles_choices'])) ){
+                    $nextIndex = 1 + array_key_last( $args['tiles_choices'][$tileId]);
+                }
+                $args['tiles_choices'][$tileId][$nextIndex] = $choice;
             }
             $args['possibleActions'][] = 'actTileChoice';
         }
@@ -61,8 +64,9 @@ class PlayerChoice extends GameState
      * @throws UserException
      */
     #[PossibleAction]
-    public function actTileChoice(int $tile_id, int $choice, int $activePlayerId, array $args)
+    public function actTileChoice(int $tile_id, int $choice, int $choice_index, int $activePlayerId, array $args)
     {
+        $this->game->trace("actTileChoice( $tile_id, $choice, $choice_index, $activePlayerId)");
         // check input values
         if ( !in_array('actTileChoice',$args['possibleActions'])) {
             throw new UnexpectedException(501,"Invalid action actTileChoice");
@@ -75,37 +79,94 @@ class PlayerChoice extends GameState
         if ( !in_array($tile_id,array_keys($choiceTiles))) {
             throw new UnexpectedException(503,"Invalid tile $tile_id");
         } 
-        $tile_choices = $args['tiles_choices'][$tile_id];
-        $foundChoice = null;
-        foreach($tile_choices as $tile_choice){
-            $choices = $tile_choice['choices'];
-            if ( in_array($choice,($choices))) {
-                $foundChoice = $tile_choice;
-                break;
-            }
-        }
-        if ( !isset($foundChoice)) {
-            throw new UnexpectedException(504,"Invalid choice $choice ");
-        } 
         $tile = Tiles::get($tile_id);
+        $tile_choices = $args['tiles_choices'][$tile_id];
+        $this->game->trace("actTileChoice()... tiles_choices= ".json_encode($tile_choices));
+        $tile_choice = $tile_choices[$choice_index];
         
         Log::addStep();
         $player = Players::get($activePlayerId);
 
         // game logic  
-        switch($choice){
-            case ACTION_SHIP:
-            case ACTION_CONTRACT:
-                Players::directGain($player,$choice, $foundChoice['n'], $tile );
+        $prematureStateChange = null;
+        try{
+            switch($tile_choice['selectType']){
+                //use 2 different switches, because in case of DB elements ids (like tiles ids), we cannot tell in advance if the id is the same as an predefined action id
+                case CHOICE_PICK_TILE:
+                    //SELECT A TILE : choice is a tile id
+                    $foundChoice = $this->checkChoiceAsKey($tile_choice,$tile_id,$choice);
+                    $selectedTile = Tiles::get($choice);
+                    Tiles::giveMarketTileToPlayer($player, $selectedTile);
+                    break;
+                case CHOICE_PICK_ACTION:
+                default:
+                    //SELECT AN ACTION : choice is an action id
+                    $foundChoice = $this->checkChoiceAsValue($tile_choice,$tile_id,$choice);
+                    switch($choice){
+                        case ACTION_SHIP:
+                        case ACTION_CONTRACT:
+                            Players::directGain($player,$choice, $foundChoice['n'], $tile );
+                            break;
+                        default: break;
+                    }
                 break;
-            default: break;
+            }
+        }
+        catch(PrematureStateChangeException $exc){
+            $prematureStateChange = $exc;
         }
 
+        //TODO JSA remove the right tile choice in Globals
+
         // at the end of the action, move to the next state
+        if(isset($prematureStateChange) ){
+            return $prematureStateChange->nextStateClass;
+        }
         return ConfirmTurn::class;
     }
  
     function zombie(int $playerId) {
         //TODO JSA Zombie
     }
+
+    ///------------------------------------------------------------
+    // CUSTOM FUNCTIONS :
+    ///------------------------------------------------------------
+    
+    /**
+     * @throws UnexpectedException when incorrect player inputs
+     * */
+    function checkChoiceAsKey(array $tile_choice, int $tile_id, int $choice): array{
+        $foundChoice = null;
+        $this->game->trace("checkChoiceAsKey()... choice $choice for tile $tile_id in ".json_encode($tile_choice));
+        
+        $choices = $tile_choice['choices'];
+        foreach($choices as $key => $value){
+            if ( intval( $key) == $choice) {
+                $foundChoice = $tile_choice;
+            }
+        }
+        if ( !isset($foundChoice)) {
+            throw new UnexpectedException(504,"Invalid choice $choice for tile $tile_id");
+        }    
+        return $foundChoice;   
+    }
+    /**
+     * @throws UnexpectedException when incorrect player inputs
+     * */
+    function checkChoiceAsValue(array $tile_choice, int $tile_id, int $choice) : array{
+        $foundChoice = null;
+        $choices = $tile_choice['choices'];
+        foreach($choices as $key => $value){
+            if ( intval( $value) == $choice) {
+                $foundChoice = $tile_choice;
+                break;
+            }
+        }
+        if ( !isset($foundChoice)) {
+            throw new UnexpectedException(504,"Invalid choice $choice for tile $tile_id");
+        } 
+        return $foundChoice;
+    }
+
 }
