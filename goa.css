@@ -54,6 +54,10 @@ Icon extract in sprite with differents layers size (so % is not useful).
   border-radius: 10px;
   background-position-y: var(--goa_board_height_offset);
 }
+#goa_resizable_board #goa_board_container #goa_board #goa_board_outposts {
+  position: absolute;
+  z-index: 10;
+}
 #goa_resizable_board #goa_board_container #goa_board .goa_board_outposts_stock {
   position: absolute;
   width: 108px;

@@ -34,6 +34,11 @@ $board_img_height: calc(1 * calc(1429px + var(--goa_board_height_offset)));
                 background-position-y: var(--goa_board_height_offset);
             }
 
+            #goa_board_outposts{
+                position: absolute;
+                z-index: 10;//in order to let all stock pile elements visibles over the board when we hover
+            }
+
             .goa_board_outposts_stock{
                 position: absolute;
                 width: 108px;
