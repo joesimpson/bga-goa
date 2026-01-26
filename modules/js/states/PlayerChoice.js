@@ -125,6 +125,16 @@ export class ClientSelectTileAction {
                             })
                     }, {  destination: document.getElementById('customActions') }); 
                     break;
+                case this.game.const.CHOICE_PICK_SPICE:
+                    let spice_icon = this.game.formatIcon('spices_'+choice);
+                    this.bga.statusBar.addActionButton( spice_icon, () => {
+                        this.bga.actions.performAction("actTileChoice", { 
+                                'tile_id' : tile_id,
+                                'choice': choice,
+                                'choice_index':args.choice_index,
+                            })
+                    }, {  destination: document.getElementById('customActions') }); 
+                    break;
             }
         });
 

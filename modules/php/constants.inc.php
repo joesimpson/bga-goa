@@ -28,6 +28,7 @@ const ACTION_VICEKING            = 13;
 
 const CHOICE_PICK_ACTION         = 1;
 const CHOICE_PICK_TILE           = 2;
+const CHOICE_PICK_SPICE          = 3;
 
 const SPICE_WHITE     = 1;
 const SPICE_BLACK     = 2;
@@ -231,6 +232,7 @@ CONST ALL_MY_UI_CONSTANTS= [
 
    'CHOICE_PICK_ACTION'       => CHOICE_PICK_ACTION          ,  
    'CHOICE_PICK_TILE'         => CHOICE_PICK_TILE            ,  
+   'CHOICE_PICK_SPICE'        => CHOICE_PICK_SPICE            ,  
 
    'SPICES_ALL' =>   SPICES_ALL,
 

@@ -15,6 +15,7 @@ use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Log;
 use Bga\Games\Goa\Managers\Players;
 use Bga\Games\Goa\Managers\Tiles;
+use Bga\Games\Goa\Managers\Tokens;
 
 class PlayerChoice extends GameState
 {
@@ -92,6 +93,13 @@ class PlayerChoice extends GameState
                     $foundChoice = $this->checkChoiceAsKey($tile_choice,$tile_id,$choice);
                     $selectedTile = Tiles::get($choice);
                     Tiles::giveMarketTileToPlayer($player, $selectedTile);
+                    break;
+                case CHOICE_PICK_SPICE:
+                    //SELECT A SPICE : choice is a spice type
+                    $foundChoice = $this->checkChoiceAsValue($tile_choice,$tile_id,$choice);
+                    $slotPosition = $foundChoice['n'];
+                    $spiceTokenType = Tokens::getTokenSpiceTypeFromSpice($choice);
+                    Tokens::addSpiceOnTile($tile, $player, $spiceTokenType, $slotPosition);
                     break;
                 case CHOICE_PICK_ACTION:
                 default:

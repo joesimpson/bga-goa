@@ -2,6 +2,7 @@
 
 namespace Bga\Games\Goa\Managers;
 
+use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Exceptions\PrematureStateChangeException;
 use Bga\Games\Goa\Helpers\Collection;
@@ -9,6 +10,7 @@ use Bga\Games\Goa\Models\MarketTile;
 use Bga\Games\Goa\Models\OutpostTile;
 use Bga\Games\Goa\Models\Player;
 use Bga\Games\Goa\Models\Tile;
+use Bga\Games\Goa\States\PlayerChoice;
 use InvalidArgumentException;
 
 /* Class to manage all the Tiles */
@@ -146,7 +148,10 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
             $slotPosition++;
             
             if(SPICES_ALL == $spice){
-              //TODO JSA IF WILD SPICE, ASK PLAYER choice ! 
+              //IF WILD SPICE, ASK PLAYER choice ! 
+              //Save datas for next state
+              Globals::addChoiceTile($tile,ACTION_SPICE, $slotPosition, SPICES_ALL, CHOICE_PICK_SPICE);
+              $stateExc = new PrematureStateChangeException (3,PlayerChoice::class);
             }
             else {
               $spiceTokenType = Tokens::getTokenSpiceTypeFromSpice($spice);
