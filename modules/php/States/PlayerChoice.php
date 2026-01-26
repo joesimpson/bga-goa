@@ -131,6 +131,8 @@ class PlayerChoice extends GameState
 
         // at the end of the action, move to the next state
         if(isset($prematureStateChange) ){
+            //Players::changeActive($prematureStateChange->changePlayer->getId());
+            //Should not be necessary, but we cannot change active player in active state
             return $prematureStateChange->nextStateClass;
         }
         if(count($remainingChoices) > 0){

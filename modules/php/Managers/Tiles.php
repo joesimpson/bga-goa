@@ -141,7 +141,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
             // IF no more space ask player to discard 1  
             $playerPlantations = Tiles::getPlantations($player);
             Globals::addChoiceTile($tile,0, 1, $playerPlantations->getIds(), CHOICE_REPLACE_TILE);
-            throw new PrematureStateChangeException (3,PlayerChoice::class);
+            throw new PrematureStateChangeException (3,PlayerChoice::class, $player);
             //don't modify tile location before this exception !
           }
           $updateTileDatas($player,$tile);
@@ -158,7 +158,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
               //IF WILD SPICE, ASK PLAYER choice ! 
               //Save datas for next state
               Globals::addChoiceTile($tile,ACTION_SPICE, $slotPosition, SPICES_ALL, CHOICE_PICK_SPICE);
-              $stateExc = new PrematureStateChangeException (3,PlayerChoice::class);
+              $stateExc = new PrematureStateChangeException (3,PlayerChoice::class, $player);
             }
             else {
               $spiceTokenType = Tokens::getTokenSpiceTypeFromSpice($spice);
