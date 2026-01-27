@@ -209,6 +209,16 @@ class Notifications
     ]);
   }
   
+  public static function getMoney(Player $player, int $amount, )
+  {
+    self::notifyAll("getMoney", clienttranslate('${player_name} gets ${n} ${icon_money}'), [
+        "player" => $player,
+        "n" => $amount,
+        "icon_money" => clienttranslate('Pardaos'),
+        "i18n" => ['icon_money'],
+    ]);
+  }
+  
   /**
    * @param Player $player
    * @param int $points

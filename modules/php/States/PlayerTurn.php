@@ -95,6 +95,7 @@ class PlayerTurn extends GameState
                 }
                 break;
             case ROUND_STEP_PLAYER_ACTIONS:
+                $args['possibleActions'][] = 'actTaxes';
                 //TODO JSA REMOVE DEBUG when real actions ready
                 $args['possibleActions'][] = 'actPassBid';
                 break;
@@ -182,6 +183,24 @@ class PlayerTurn extends GameState
         Notifications::passBid($player);
 
         // at the end of the action, move to the next state
+        return ConfirmTurn::class;
+    }
+    
+    /**
+     * Player action : turn ACTION take taxes
+     */
+    #[PossibleAction]
+    public function actTaxes(int $activePlayerId, array $args)
+    { 
+        $possibleActions = $args['possibleActions'];
+        if(!in_array('actTaxes',$possibleActions)){
+            throw new UnexpectedException(110,"Invalid action actTaxes, see ".json_encode($possibleActions));
+        }
+        Log::addStep();
+        $player = Players::get($activePlayerId);
+        $amount = 12;//TODO JSA
+        Notifications::getMoney($player, $amount);
+
         return ConfirmTurn::class;
     }
     

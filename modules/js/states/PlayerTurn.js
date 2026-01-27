@@ -112,6 +112,11 @@ export class PlayerTurn {
                 );
 
             }
+            
+            if(possibleActions.includes('actTaxes')){
+                this.bga.statusBar.addActionButton(_('Taxes'), () => this.bga.actions.performAction("actTaxes"), { destination: document.getElementById('customActions') }); 
+                //TODO JSA CLICK ON BOARD section
+            }
 
             if(possibleActions.includes('actPassBid')){
                 this.bga.statusBar.addActionButton(_('Pass'), () => this.bga.actions.performAction("actPassBid"), { destination: document.getElementById('restartActions') }); 

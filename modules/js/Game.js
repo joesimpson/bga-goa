@@ -779,6 +779,28 @@ export class Game {
         console.log('notif_getCompass', notif);
         this._counters[notif.player_id]['compasses'].incValue(notif.n);
     }
+    async notif_getMoney(notif) {
+        console.log('notif_getMoney', notif);
+        let amount = notif.n;
+        let toPlayer = notif.player_id;
+        let toElement = document.getElementById(`goa_reserve_${toPlayer}_money`);
+        let fromElement = document.getElementById(`goa_money_stacks`);
+
+        const floatingPieceAnimationSettings = {
+            duration: 1000,
+            ignoreScale: false,
+            ignoreRotation: true,
+        };
+        let animations = new Array(amount).fill(0).map(index => (() => {
+            this.animationManager.slideFloatingElement(this.createCoin(), fromElement, toElement, floatingPieceAnimationSettings)
+        }));
+        await this.animationManager.playInterval(animations);
+
+        let currentPlayer = this.bga.players.getCurrentPlayer();
+        if (currentPlayer && toPlayer == currentPlayer.id){
+            this._counters[toPlayer].money.incValue(amount);
+        }
+    }
     
     async notif_giveTile(notif) {
         console.log("notif_giveTile",notif);
