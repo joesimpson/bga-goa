@@ -18,6 +18,7 @@ export class PlayerTurn {
         let roundStep = args.roundStep;
         let possibleActions = args.possibleActions;
         let icon_money = this.game.formatIcon('money');
+        let currentPlayer = this.bga.players.getCurrentPlayer();
 
         switch(roundStep){
             case this.game.const.ROUND_STEP_PLACE_AUCTIONS: 
@@ -115,11 +116,17 @@ export class PlayerTurn {
             
             if(possibleActions.includes('actBuildShips')){
                 this.bga.statusBar.addActionButton(_('Build ships'), () => this.bga.actions.performAction("actBuildShips"), { destination: document.getElementById('customActions') }); 
-                //TODO JSA CLICK ON BOARD section
+                //+ CLICK ON BOARD section
+                let progressTrack = document.getElementById(`goa_progress_track_${1}_${currentPlayer.id}`);
+                let progressMarker = progressTrack.getElementsByClassName('goa_progress_marker')[0];
+                this.game.onClick(progressMarker.parentNode,() => this.bga.actions.performAction("actBuildShips"));
             }
             if(possibleActions.includes('actTaxes')){
                 this.bga.statusBar.addActionButton(_('Taxes'), () => this.bga.actions.performAction("actTaxes"), { destination: document.getElementById('customActions') }); 
-                //TODO JSA CLICK ON BOARD section
+                //+ CLICK ON BOARD section
+                let progressTrack = document.getElementById(`goa_progress_track_${3}_${currentPlayer.id}`);
+                let progressMarker = progressTrack.getElementsByClassName('goa_progress_marker')[0];
+                this.game.onClick(progressMarker.parentNode,() => this.bga.actions.performAction("actTaxes"));
             }
 
             if(possibleActions.includes('actPassBid')){
