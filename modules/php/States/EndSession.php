@@ -7,6 +7,7 @@ namespace Bga\Games\Goa\States;
 use Bga\GameFramework\StateType;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Log;
+use Bga\Games\Goa\Helpers\Utils;
 
 class EndSession extends \Bga\GameFramework\States\GameState
 {
@@ -15,7 +16,7 @@ class EndSession extends \Bga\GameFramework\States\GameState
         protected Game $game,
     ) {
         parent::__construct($game,
-            id: ST_END_SESSION,
+            id: Utils::getStateIdFromClass(self::class),
             type: StateType::GAME,
         );
     }
@@ -30,10 +31,10 @@ class EndSession extends \Bga\GameFramework\States\GameState
         //TODO JSA END session
         $gameEnd = false;
         if ($gameEnd) {
-            Log::addCheckpoint(ST_END_SCORING);
+            Log::addStateCheckpoint(EndScore::class);
             return EndScore::class;
         } else {
-            Log::addCheckpoint(ST_NEW_SESSION);
+            Log::addStateCheckpoint(NewSession::class);
             return NewSession::class;
         }
     }

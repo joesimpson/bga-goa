@@ -8,6 +8,7 @@ use Bga\GameFramework\StateType;
 use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Log;
+use Bga\Games\Goa\Helpers\Utils;
 use Bga\Games\Goa\Managers\Tiles;
 
 class EndRound extends \Bga\GameFramework\States\GameState
@@ -17,7 +18,7 @@ class EndRound extends \Bga\GameFramework\States\GameState
         protected Game $game,
     ) {
         parent::__construct($game,
-            id: ST_END_ROUND,
+            id: Utils::getStateIdFromClass(self::class),
             type: StateType::GAME,
         );
     }
@@ -40,10 +41,10 @@ class EndRound extends \Bga\GameFramework\States\GameState
         }
 
         if ($sessionEnd) {
-            Log::addCheckpoint(ST_END_SESSION);
+            Log::addStateCheckpoint(EndSession::class);
             return EndSession::class;
         } else {
-            Log::addCheckpoint(ST_NEW_ROUND);
+            Log::addStateCheckpoint(NewRound::class);
             return NewRound::class;
         }
     }

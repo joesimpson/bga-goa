@@ -39,6 +39,12 @@ class Log extends \APP_DbObject
         Globals::setChoices(0);
         Log::checkpoint($state);
     }
+    
+    public static function addStateCheckpoint($stateClass)
+    {
+        $idNextState = Utils::getStateIdFromClass($stateClass);
+        Log::addCheckpoint($idNextState);
+    }
 
     /**
      * Add an undoable step 

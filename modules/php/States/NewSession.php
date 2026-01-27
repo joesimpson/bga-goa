@@ -9,6 +9,7 @@ use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Log;
+use Bga\Games\Goa\Helpers\Utils;
 use Bga\Games\Goa\Managers\Tiles;
 
 class NewSession extends \Bga\GameFramework\States\GameState
@@ -18,7 +19,7 @@ class NewSession extends \Bga\GameFramework\States\GameState
         protected Game $game,
     ) {
         parent::__construct($game,
-            id: ST_NEW_SESSION,
+            id: Utils::getStateIdFromClass(self::class),
             type: StateType::GAME,
             updateGameProgression: true,
         );
@@ -42,7 +43,7 @@ class NewSession extends \Bga\GameFramework\States\GameState
         Tiles::setupMarket();
 
         // Go to another gamestate
-        Log::addCheckpoint(ST_NEW_ROUND);
+        Log::addStateCheckpoint(NewRound::class);
         return NewRound::class;
     }
 }

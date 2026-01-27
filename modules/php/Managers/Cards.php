@@ -124,6 +124,7 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
     }
      
     Notifications::giveExplorationCardsToPlayer($player,$cards);
+    //TODO JSA CHECKPOINT !
     return $cards;
   }
   public static function drawAndDiscardExploration(Player $player,int $nb)

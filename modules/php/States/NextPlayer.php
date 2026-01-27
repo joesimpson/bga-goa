@@ -8,6 +8,7 @@ use Bga\GameFramework\StateType;
 use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Log;
+use Bga\Games\Goa\Helpers\Utils;
 use Bga\Games\Goa\Managers\Players;
 use Bga\Games\Goa\Managers\Tokens;
 
@@ -18,7 +19,7 @@ class NextPlayer extends \Bga\GameFramework\States\GameState
         protected Game $game,
     ) {
         parent::__construct($game,
-            id: ST_NEXT_PLAYER,
+            id: Utils::getStateIdFromClass(self::class),
             type: StateType::GAME,
             updateGameProgression: true,
         );
@@ -57,7 +58,7 @@ class NextPlayer extends \Bga\GameFramework\States\GameState
         Players::setupNewTurn($nextPlayer);
 
         // Go to another gamestate
-        Log::addCheckpoint(ST_PLAYER_TURN);
+        Log::addStateCheckpoint(PlayerTurn::class);
         return PlayerTurn::class;
     }
 }

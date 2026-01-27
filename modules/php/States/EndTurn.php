@@ -7,6 +7,7 @@ namespace Bga\Games\Goa\States;
 use Bga\GameFramework\StateType;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Log;
+use Bga\Games\Goa\Helpers\Utils;
 
 class EndTurn extends \Bga\GameFramework\States\GameState
 {
@@ -15,7 +16,7 @@ class EndTurn extends \Bga\GameFramework\States\GameState
         protected Game $game,
     ) {
         parent::__construct($game,
-            id: ST_END_TURN,
+            id: Utils::getStateIdFromClass(self::class),
             type: StateType::GAME,
         );
     }
@@ -31,10 +32,10 @@ class EndTurn extends \Bga\GameFramework\States\GameState
             //TODO JSA REMOVE DEBUG when ready
             $roundEnd = true;
         if ($roundEnd) {
-            Log::addCheckpoint(ST_END_ROUND);
+            Log::addStateCheckpoint(EndRound::class);
             return EndRound::class;
         } else {
-            Log::addCheckpoint(ST_NEW_TURN);
+            Log::addStateCheckpoint(NewTurn::class);
             return NewTurn::class;
         }
     }

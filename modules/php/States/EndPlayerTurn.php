@@ -22,7 +22,7 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
         protected Game $game,
     ) {
         parent::__construct($game,
-            id: ST_END_PLAYERTURN,
+            id: Utils::getStateIdFromClass(self::class),
             type: StateType::GAME,
             updateGameProgression: true,
             description: clienttranslate('Ending player turn'),
@@ -117,16 +117,15 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
         if(isset($prematureStateChange) ){
             Players::changeActive($prematureStateChange->changePlayer->getId());
             if($activePlayerId != $prematureStateChange->changePlayer->getId()){
-                $idNextState = Utils::getStateIdFromClass($prematureStateChange->nextStateClass);
-                if(isset($idNextState)) Log::addCheckpoint($idNextState);
+                Log::addStateCheckpoint($prematureStateChange->nextStateClass);
             }
             return $prematureStateChange->nextStateClass;
         }
         else if ($turnEnd) {
-            Log::addCheckpoint(ST_END_TURN);
+            Log::addStateCheckpoint(EndTurn::class);
             return EndTurn::class;
         } else {
-            Log::addCheckpoint(ST_NEXT_PLAYER);
+            Log::addStateCheckpoint(NextPlayer::class);
             return NextPlayer::class;
         }
     }

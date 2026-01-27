@@ -13,6 +13,7 @@ use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Exceptions\UnexpectedException;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Log;
+use Bga\Games\Goa\Helpers\Utils;
 use Bga\Games\Goa\Managers\Players;
 
 class ConfirmTurn extends GameState
@@ -21,7 +22,7 @@ class ConfirmTurn extends GameState
         protected Game $game,
     ) {
         parent::__construct($game,
-            id: ST_CONFIRM_TURN,
+            id: Utils::getStateIdFromClass(self::class),
             type: StateType::ACTIVE_PLAYER,
         );
     }

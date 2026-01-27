@@ -9,6 +9,7 @@ use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Log;
+use Bga\Games\Goa\Helpers\Utils;
 
 class NewRound extends \Bga\GameFramework\States\GameState
 {
@@ -17,7 +18,7 @@ class NewRound extends \Bga\GameFramework\States\GameState
         protected Game $game,
     ) {
         parent::__construct($game,
-            id: ST_NEW_ROUND,
+            id: Utils::getStateIdFromClass(self::class),
             type: StateType::GAME,
             updateGameProgression: true,
         );
@@ -38,7 +39,7 @@ class NewRound extends \Bga\GameFramework\States\GameState
         Notifications::newRoundStep(ROUND_STEP_PLACE_AUCTIONS, clienttranslate('Place Auction tokens'));
 
         // Go to another gamestate
-        Log::addCheckpoint(ST_NEW_TURN);
+        Log::addStateCheckpoint(NewTurn::class);
         return NewTurn::class;
     }
 }

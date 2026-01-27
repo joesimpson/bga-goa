@@ -9,6 +9,7 @@ use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Log;
+use Bga\Games\Goa\Helpers\Utils;
 
 class NewTurn extends \Bga\GameFramework\States\GameState
 {
@@ -17,7 +18,7 @@ class NewTurn extends \Bga\GameFramework\States\GameState
         protected Game $game,
     ) {
         parent::__construct($game,
-            id: ST_NEW_TURN,
+            id: Utils::getStateIdFromClass(self::class),
             type: StateType::GAME,
             updateGameProgression: true,
         );
@@ -36,7 +37,7 @@ class NewTurn extends \Bga\GameFramework\States\GameState
         Notifications::newTurn($turn);
 
         // Go to another gamestate
-        Log::addCheckpoint(ST_NEXT_PLAYER);
+        Log::addStateCheckpoint(NextPlayer::class);
         return NextPlayer::class;
     }
 }
