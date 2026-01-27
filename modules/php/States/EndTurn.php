@@ -30,7 +30,7 @@ class EndTurn extends \Bga\GameFramework\States\GameState
 
         $roundEnd = false;
             //TODO JSA REMOVE DEBUG when ready
-            $roundEnd = true;
+            //$roundEnd = true;
         if ($roundEnd) {
             Log::addStateCheckpoint(EndRound::class);
             return EndRound::class;

@@ -4,6 +4,7 @@ namespace Bga\Games\Goa\Managers;
 
 use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Core\Notifications;
+use Bga\Games\Goa\Exceptions\UnexpectedException;
 use Bga\Games\Goa\Helpers\Collection;
 use Bga\Games\Goa\Models\AuctionMarker;
 use Bga\Games\Goa\Models\FirstAuctionMarker;
@@ -250,6 +251,55 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
       ->where('subtype', TOKEN_SUBTTYPE_PROGRESS_MARKER)
       ->wherePlayer($playerId)
       ->get()->first();
+  }
+  
+  public static function getProgressMarkers( int $playerId) : Collection
+  {
+    return self::DB()
+      ->where('subtype', TOKEN_SUBTTYPE_PROGRESS_MARKER)
+      ->wherePlayer($playerId)
+      ->get();
+  }
+  public static function getUpgradableProgressMarkers( int $playerId) : Collection
+  {
+    $allMarkers = Tokens::getProgressMarkers($playerId);
+    $maxProgress = count(PROGRESS_GAINS_SHIPS);
+    return $allMarkers->filter(function ($token) use ($maxProgress) {
+                //TODO JSA FILTER on upgrade cost (depending on cards, ships, spices,)
+                return $token->getRow() < $maxProgress;
+            });
+  }
+
+  public static function countProgressMarkersBelowRow( int $row) : int
+  {
+    $maxProgress = count(PROGRESS_GAINS_SHIPS);
+    $rowsBelow = [];
+    for($k =$row;$k<=$maxProgress ;$k++){
+      $rowsBelow[] = $k;
+    }
+    return self::DB()
+      ->where('subtype', TOKEN_SUBTTYPE_PROGRESS_MARKER)
+      ->whereIn('row', $rowsBelow)
+      ->count();
+  }
+  
+  /**
+   * @throws UnexpectedException
+   */
+  public static function progressOnTrack(int $progressType, int $playerId) : ProgressMarker
+  {
+    $token = Tokens::getProgressMarkerByType($progressType, $playerId);
+    $row = $token->getRow();
+    $maxProgress = count(PROGRESS_GAINS_SHIPS);
+    if($row == $maxProgress)
+      throw new UnexpectedException(150,"Impossible to progress more on this track ($progressType)");
+
+    $token->setRow($row+1);
+    
+    $player = Players::get($playerId);
+    Notifications::progress($player, $token);
+
+    return $token;
   }
 
   ///////////////////////////////////////////////////////////////////////////////

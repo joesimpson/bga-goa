@@ -14,11 +14,11 @@ export class ClientSelectProgress {
     onEnteringState(args, isCurrentPlayerActive) {
         
         let activePlayer = this.bga.players.getActivePlayerId();
-
-        for(let track=1;track<=5;track++){
+        let tracks = args.progressTracks;
+        Object.values(tracks).forEach( track => {
             let progressTrack = document.getElementById(`goa_progress_track_${track}_${activePlayer}`);
             this.game.onClick(progressTrack,() => this.bga.actions.performAction("actProgress", {'track': track}));
-        }
+        });
         
         this.bga.statusBar.addActionButton( _('Cancel'), () => {
             this.bga.states.restoreServerGameState();

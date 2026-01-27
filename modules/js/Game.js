@@ -894,6 +894,15 @@ export class Game {
         }
         
     }
+    
+    async notif_progress(notif) {
+        console.log("notif_progress : move token 1 space down",notif);
+        let token = notif.token;
+        let tokenDiv = this.addToken(token);
+        let destinationDiv = document.getElementById(this.getTokenContainer(token));
+        await this.animationManager.slideAndAttach(tokenDiv, destinationDiv);
+    }
+    
 
     ////////////////////////////////////////////////////////
     //  _____ _ _
@@ -1423,11 +1432,17 @@ export class Game {
     
     addToken(token, location = null) { 
         console.log("addToken",token,location); 
-        if (!$(`goa_token-${token.id}`)){
+        let tokenDiv = $(`goa_token-${token.id}`);
+        if (!tokenDiv){
             let container = location == null ? this.getTokenContainer(token) : location;
             document.getElementById(container).insertAdjacentHTML('beforeend', this.tplToken(token));
         }
-        return $(`goa_token-${token.id}`);
+        else {
+            //refresh dataset if already exists
+            tokenDiv.dataset.row = token.row;
+            tokenDiv.dataset.state = token.state;
+        }
+        return tokenDiv;
     }
     
     tplToken(token, prefix ='') {

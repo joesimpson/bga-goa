@@ -15,6 +15,7 @@ use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\GridUtils;
 use Bga\Games\Goa\Helpers\Log;
 use Bga\Games\Goa\Helpers\Utils;
+use Bga\Games\Goa\Managers\Cards;
 use Bga\Games\Goa\Managers\Players;
 use Bga\Games\Goa\Managers\Tokens;
 
@@ -95,7 +96,8 @@ class PlayerTurn extends GameState
                 }
                 break;
             case ROUND_STEP_PLAYER_ACTIONS:
-                $args['possibleActions'][] = 'actProgress';//TODO JSA CHECK PRogress not maxed
+                $args['possibleActions'][] = 'actProgress';
+                $args['progressTracks'] = Tokens::getUpgradableProgressMarkers($player->getId())->map(function ($token) { return $token->getTrackIndex();})->toArray();
                 $args['possibleActions'][] = 'actBuildShips';
                 $args['possibleActions'][] = 'actTaxes';
                 //TODO JSA REMOVE DEBUG when real actions ready
@@ -116,6 +118,7 @@ class PlayerTurn extends GameState
     #[PossibleAction]
     public function actPlaceAuction(int $row, int $col, int $activePlayerId, array $args)
     {
+        $this->game->trace("actPlaceAuction($row,$col,$activePlayerId)");
         // check input values
         $pAuctionableSpots = $args['pAuctionableSpots'];
         if (!in_array(['row'=>$row,'col'=>$col], $pAuctionableSpots)) {
@@ -148,6 +151,7 @@ class PlayerTurn extends GameState
     #[PossibleAction]
     public function actBid(int $n, int $activePlayerId, array $args)
     {
+        $this->game->trace("actBid($n,$activePlayerId)");
         // check input values
         $minBid = $args['minBid'];
         $maxBid = $args['maxBid'];
@@ -180,6 +184,7 @@ class PlayerTurn extends GameState
     #[PossibleAction]
     public function actPassBid(int $activePlayerId)
     {
+        $this->game->trace("actPassBid($activePlayerId)");
         Log::addStep();
         $player = Players::get($activePlayerId);
         Notifications::passBid($player);
@@ -192,15 +197,44 @@ class PlayerTurn extends GameState
      * Player action : turn ACTION #1 PROGRESS
      */
     #[PossibleAction]
-    public function actProgress(int $activePlayerId, array $args)
+    public function actProgress(int $track, int $activePlayerId, array $args)
     { 
+        $this->game->trace("actProgress($track,$activePlayerId)");
         $possibleActions = $args['possibleActions'];
         if(!in_array('actProgress',$possibleActions)){
             throw new UnexpectedException(110,"Invalid action actProgress, see ".json_encode($possibleActions));
         }
-        Log::addStep();
-        $player = Players::get($activePlayerId);
+        $progressTracks = $args['progressTracks'];
+        if(!in_array($track,$progressTracks)){
+            throw new UnexpectedException(111,"Invalid track to progress on ($track), see ".json_encode($progressTracks));
+        }
 
+        $player = Players::get($activePlayerId);
+        Log::addStep();
+
+        //TODO JSA PAY COST in SHIPS + spices (+sometimes 1 exploration card)
+
+        $upgradedToken = Tokens::progressOnTrack($track, $activePlayerId);
+        
+        $allMarkers = Tokens::getProgressMarkers($activePlayerId);
+        //BONUSES IF ALL tokens are >= this token row : draw 1 compass card 
+        $nbTokensToUpgradeBeforeExtraCompass = $allMarkers->filter(function ($token) use ($upgradedToken) {
+                return $token->getRow() < $upgradedToken->getRow();
+            })->count();
+        if($nbTokensToUpgradeBeforeExtraCompass == 0) {
+            Players::giveExtraActionCards($player,1);
+        }
+
+        //BONUSES the first time of the FIRST PLAYER ON LINE 4 or 5 : draw 1 exploration card 
+        if($upgradedToken->getRow() >=4 ){
+            $nbTokensBelowRow = Tokens::countProgressMarkersBelowRow($upgradedToken->getRow());
+            if($nbTokensBelowRow == 1) //consider =1 because the token has already moved down
+            {
+                Cards::drawExplorationCardsToPlayer($player,1);
+                Log::addStateCheckpoint(ConfirmTurn::class);
+            }
+        }
+        
 
         return ConfirmTurn::class;
     }
@@ -210,6 +244,7 @@ class PlayerTurn extends GameState
     #[PossibleAction]
     public function actBuildShips(int $activePlayerId, array $args)
     { 
+        $this->game->trace("actBuildShips($activePlayerId)");
         $possibleActions = $args['possibleActions'];
         if(!in_array('actBuildShips',$possibleActions)){
             throw new UnexpectedException(110,"Invalid action actBuildShips, see ".json_encode($possibleActions));
@@ -229,6 +264,7 @@ class PlayerTurn extends GameState
     #[PossibleAction]
     public function actTaxes(int $activePlayerId, array $args)
     { 
+        $this->game->trace("actTaxes($activePlayerId)");
         $possibleActions = $args['possibleActions'];
         if(!in_array('actTaxes',$possibleActions)){
             throw new UnexpectedException(110,"Invalid action actTaxes, see ".json_encode($possibleActions));

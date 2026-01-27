@@ -8,6 +8,7 @@ use Bga\Games\Goa\Helpers\Collection;
 use Bga\Games\Goa\Managers\Cards;
 use Bga\Games\Goa\Models\ExplorationCard;
 use Bga\Games\Goa\Models\Player;
+use Bga\Games\Goa\Models\ProgressMarker;
 use Bga\Games\Goa\Models\Tile;
 use Bga\Games\Goa\Models\Token;
 
@@ -216,6 +217,17 @@ class Notifications
         "n" => $amount,
         "icon_money" => clienttranslate('Pardaos'),
         "i18n" => ['icon_money'],
+    ]);
+  }
+
+  
+  public static function progress(Player $player, ProgressMarker $token)
+  {
+    self::notifyAll("progress", clienttranslate('${player_name} progresses on track #${n}'), [
+        "player" => $player,
+        "n" => $token->getTrackIndex(),
+        "token" => $token->getUiData(),
+        'preserve'=>['token'],
     ]);
   }
   
