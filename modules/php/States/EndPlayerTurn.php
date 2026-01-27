@@ -10,6 +10,7 @@ use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Exceptions\PrematureStateChangeException;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Log;
+use Bga\Games\Goa\Helpers\Utils;
 use Bga\Games\Goa\Managers\Players;
 use Bga\Games\Goa\Managers\Tiles;
 use Bga\Games\Goa\Managers\Tokens;
@@ -114,8 +115,11 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
         }
 
         if(isset($prematureStateChange) ){
-            //TODO JSA CHECKPOINT
             Players::changeActive($prematureStateChange->changePlayer->getId());
+            if($activePlayerId != $prematureStateChange->changePlayer->getId()){
+                $idNextState = Utils::getStateIdFromClass($prematureStateChange->nextStateClass);
+                if(isset($idNextState)) Log::addCheckpoint($idNextState);
+            }
             return $prematureStateChange->nextStateClass;
         }
         else if ($turnEnd) {
