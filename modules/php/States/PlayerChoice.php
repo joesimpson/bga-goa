@@ -142,11 +142,33 @@ class PlayerChoice extends GameState
         //Else end
         return ConfirmTurn::class;
     }
- 
+
     function zombie(int $playerId) {
         //TODO JSA Zombie
     }
 
+    
+    /**
+     * Player action : undo ALL
+     *
+     * @throws UnexpectedException
+     */
+    #[PossibleAction]
+    public function actRestart()
+    {
+        ConfirmTurn::processRestartTurn();
+    }
+    
+    /**
+     * Player action : undo last step
+     *
+     * @throws UnexpectedException
+     */
+    #[PossibleAction]
+    public function actUndoLastStep()
+    {
+        ConfirmTurn::processUndoLastStep();
+    }
     ///------------------------------------------------------------
     // CUSTOM FUNCTIONS :
     ///------------------------------------------------------------

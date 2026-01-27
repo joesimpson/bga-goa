@@ -17,17 +17,7 @@ export class ConfirmTurn {
         
         this.bga.statusBar.addActionButton(_('Confirm'), () => this.bga.actions.performAction("actConfirmTurn"), {}); 
         
-        if (args && args.previousChoices && args.previousChoices >= 1) {
-            if (args && args.previousSteps) {
-                let lastStep = Math.max(...args.previousSteps);
-                if (lastStep > 0){
-                    this.bga.statusBar.addActionButton(_('Undo last step'), () => this.bga.actions.performAction("actUndoLastStep",{ }), {id: 'btnTextUndoLastStep', color:'alert', destination: document.getElementById('restartActions')}); 
-                    this.bga.statusBar.addActionButton('<i class="fa fa-undo"></i>', () => this.bga.actions.performAction("actUndoLastStep",{ }), {id: 'btnIconUndoLastStep', color:'alert', destination: document.getElementById('restartActions')}); 
-                }
-            }
-        }
-        this.bga.statusBar.addActionButton(_('Restart turn'), () => this.bga.actions.performAction("actRestart"), {id: 'btnTextRestartTurn', color:'alert', destination: document.getElementById('restartActions')}); 
-        this.bga.statusBar.addActionButton('<i class="fa fa-undo"></i><i class="fa fa-undo"></i>', () => this.bga.actions.performAction("actRestart"), {id: 'btnIconRestartTurn',  color:'alert', destination: document.getElementById('restartActions')}); 
+        this.displayUndoButtons(args);
     }
 
     /**
@@ -44,6 +34,23 @@ export class ConfirmTurn {
      * If your state is not a MULTIPLE_ACTIVE_PLAYER one, you can delete this function.
      */
     onPlayerActivationChange(args, isCurrentPlayerActive) {
+    }
+
+    // ------------------------------------------------------
+    // CUSTOM FUNCTIONS 
+    // ------------------------------------------------------
+    displayUndoButtons(args){
+        if (args && args.previousChoices && args.previousChoices >= 1) {
+            if (args && args.previousSteps) {
+                let lastStep = Math.max(...args.previousSteps);
+                if (lastStep > 0){
+                    this.bga.statusBar.addActionButton(_('Undo last step'), () => this.bga.actions.performAction("actUndoLastStep",{ }), {id: 'btnTextUndoLastStep', color:'alert', destination: document.getElementById('restartActions')}); 
+                    this.bga.statusBar.addActionButton('<i class="fa fa-undo"></i>', () => this.bga.actions.performAction("actUndoLastStep",{ }), {id: 'btnIconUndoLastStep', color:'alert', destination: document.getElementById('restartActions')}); 
+                }
+            }
+            this.bga.statusBar.addActionButton(_('Restart turn'), () => this.bga.actions.performAction("actRestart"), {id: 'btnTextRestartTurn', color:'alert', destination: document.getElementById('restartActions')}); 
+            this.bga.statusBar.addActionButton('<i class="fa fa-undo"></i><i class="fa fa-undo"></i>', () => this.bga.actions.performAction("actRestart"), {id: 'btnIconRestartTurn',  color:'alert', destination: document.getElementById('restartActions')}); 
+        }
     }
 
     

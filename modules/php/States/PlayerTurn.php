@@ -183,6 +183,28 @@ class PlayerTurn extends GameState
         // at the end of the action, move to the next state
         return ConfirmTurn::class;
     }
+    
+    /**
+     * Player action : undo ALL
+     *
+     * @throws UnexpectedException
+     */
+    #[PossibleAction]
+    public function actRestart()
+    {
+        ConfirmTurn::processRestartTurn();
+    }
+    
+    /**
+     * Player action : undo last step
+     *
+     * @throws UnexpectedException
+     */
+    #[PossibleAction]
+    public function actUndoLastStep()
+    {
+        ConfirmTurn::processUndoLastStep();
+    }
 
     /**
      * This method is called each time it is the turn of a player who has quit the game (= "zombie" player).

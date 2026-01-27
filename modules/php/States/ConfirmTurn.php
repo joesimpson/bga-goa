@@ -78,13 +78,7 @@ class ConfirmTurn extends GameState
     #[PossibleAction]
     public function actRestart()
     {
-        $player = Players::getCurrent();
-        $pId = $player->getId();
-        if (Globals::getChoices($pId) < 1) {
-            throw new UnexpectedException(404,'No choice to undo. You may need to reload the page.');
-        }
-        Log::undoTurn();
-        Notifications::restartTurn($player);
+        ConfirmTurn::processRestartTurn();
     }
     
     /**
@@ -95,6 +89,36 @@ class ConfirmTurn extends GameState
     #[PossibleAction]
     public function actUndoLastStep()
     {
+        ConfirmTurn::processUndoLastStep();
+    }
+
+    function zombie(int $playerId) {
+        //TODO JSA ZOMBIE 
+    }
+    
+    ///------------------------------------------------------------
+    // CUSTOM FUNCTIONS :
+    ///------------------------------------------------------------
+    /**
+     * undo ALL player steps
+     *
+     * @throws UnexpectedException
+     */
+    public static function processRestartTurn(){
+        $player = Players::getCurrent();
+        $pId = $player->getId();
+        if (Globals::getChoices($pId) < 1) {
+            throw new UnexpectedException(404,'No choice to undo. You may need to reload the page.');
+        }
+        Log::undoTurn();
+        Notifications::restartTurn($player);
+    }
+    /**
+     * undo last step
+     *
+     * @throws UnexpectedException
+     */
+    public static function processUndoLastStep(){
         $player = Players::getCurrent();
         $pId = $player->getId();
         $steps = Log::getUndoableSteps($pId);
@@ -104,23 +128,5 @@ class ConfirmTurn extends GameState
         $stepId = array_shift($steps);
         Log::undoToStep($stepId);
         Notifications::undoStep($player, $stepId);
-    }
-    /*
-    #[PossibleAction]
-    public function actUndoToStep(int $stepId,)
-    {
-        $player = Players::getCurrent();
-        $pId = $player->getId();
-        $steps = Log::getUndoableSteps($pId);
-        if(!in_array($stepId,$steps)){
-            throw new UnexpectedException(404,'This step is not undoable anymore. You may need to reload the page.');
-        }
-        Log::undoToStep($stepId);
-        Notifications::undoStep($player, $stepId);
-    }
-    */
-
-    function zombie(int $playerId) {
-        //TODO JSA ZOMBIE 
     }
 }

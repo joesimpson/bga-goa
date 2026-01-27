@@ -114,6 +114,7 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
         }
 
         if(isset($prematureStateChange) ){
+            //TODO JSA CHECKPOINT
             Players::changeActive($prematureStateChange->changePlayer->getId());
             return $prematureStateChange->nextStateClass;
         }

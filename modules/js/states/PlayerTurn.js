@@ -118,6 +118,7 @@ export class PlayerTurn {
             }
 
         }
+        if(isCurrentPlayerActive) this.game.confirmTurn.displayUndoButtons(args);
     }
 
     /**

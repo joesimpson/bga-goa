@@ -48,6 +48,7 @@ export class PlayerChoice {
             }
 
         }
+        if(isCurrentPlayerActive) this.game.confirmTurn.displayUndoButtons(args);
     }
 
     /**
