@@ -198,7 +198,9 @@ class PlayerTurn extends GameState
         }
         Log::addStep();
         $player = Players::get($activePlayerId);
-        $amount = 12;//TODO JSA
+
+        $taxesMarker = Tokens::getProgressMarkerByType(TOKEN_TYPE_PROGRESS_MARKER_TAXES,$activePlayerId);
+        $amount = PROGRESS_TAXES_GAINS[$taxesMarker->getRow() - 1];
         Notifications::getMoney($player, $amount);
 
         return ConfirmTurn::class;

@@ -164,6 +164,8 @@ const TOKEN_TYPE_PROGRESS_MARKERS = [
    TOKEN_TYPE_PROGRESS_MARKER_OUTPOST,
 ];
 
+const PROGRESS_TAXES_GAINS = [ 4,6,8,10,12];
+
 /////////////////////////////////////////////////////////
 //          Game options
 /////////////////////////////////////////////////////////  
@@ -255,4 +257,11 @@ CONST ALL_MY_UI_CONSTANTS= [
    'CARD_ACTION_2_SHIPS'                 =>  CARD_ACTION_2_SHIPS                 ,
    'CARD_ACTION_5_COINS'                 =>  CARD_ACTION_5_COINS                 ,
    'CARD_ACTION_PROGRESS_WITH_COINS'     =>  CARD_ACTION_PROGRESS_WITH_COINS     ,
+   
+   'TOKEN_SUBTTYPE_PROGRESS_MARKER' =>          TOKEN_SUBTTYPE_PROGRESS_MARKER,
+   'TOKEN_SUBTTYPE_AUCTION_MARKER' =>           TOKEN_SUBTTYPE_AUCTION_MARKER,
+   'TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER' =>      TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER,
+   'TOKEN_SUBTTYPE_SPICE' =>                    TOKEN_SUBTTYPE_SPICE,
+
+   'PROGRESS_TAXES_GAINS' => PROGRESS_TAXES_GAINS,
 ] ;

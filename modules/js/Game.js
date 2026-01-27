@@ -66,11 +66,6 @@ const TOKEN_LOCATION_BOARD = 'board';
 const TOKEN_LOCATION_PLAYER_BOARD = 'p_board';
 const TOKEN_LOCATION_TILE = 'tile-';
 
-const TOKEN_SUBTTYPE_PROGRESS_MARKER = 1;
-const TOKEN_SUBTTYPE_AUCTION_MARKER = 2;
-const TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER = 3;
-const TOKEN_SUBTTYPE_SPICE = 4;
-
 import { ConfirmTurn } from "./states/ConfirmTurn.js";
 import { PlayerChoice, ClientSelectTileAction } from "./states/PlayerChoice.js";
 import { PlayerTurn } from "./states/PlayerTurn.js";
@@ -1390,24 +1385,24 @@ export class Game {
     }
     getTokenContainer(token) { 
         if( TOKEN_LOCATION_PLAYER_BOARD == token.location) {
-            if(token.subtype == TOKEN_SUBTTYPE_PROGRESS_MARKER){
-                return `goa_progress_track_space_${token.track}_${token.state}_${token.pId}`;
+            if(token.subtype == this.const.TOKEN_SUBTTYPE_PROGRESS_MARKER){
+                return `goa_progress_track_space_${token.track}_${token.row}_${token.pId}`;
             }
-            if(token.subtype == TOKEN_SUBTTYPE_AUCTION_MARKER){
+            if(token.subtype == this.const.TOKEN_SUBTTYPE_AUCTION_MARKER){
                 return `goa_player_auction_markers-${token.pId}`;
             }
-            if(token.subtype == TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER){
+            if(token.subtype == this.const.TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER){
                 //return `goa_player_auction_markers-${token.pId}`;
                 return `goa_first_player_container_${token.pId}`;
             }
         } 
         if( TOKEN_LOCATION_BOARD == token.location) {
-            if(token.subtype == TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER){
+            if(token.subtype == this.const.TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER){
                 if(token.row>=0 && token.col>=0 && token.row<=1+MARKET_GRID_SIZE && token.col<=1+MARKET_GRID_SIZE ){
                     return `goa_market_grid_space-${token.row}-${token.col}`;
                 }
             }
-            if(token.subtype == TOKEN_SUBTTYPE_AUCTION_MARKER){
+            if(token.subtype == this.const.TOKEN_SUBTTYPE_AUCTION_MARKER){
                 if(token.row>=0 && token.col>=0 && token.row<=1+MARKET_GRID_SIZE && token.col<=1+MARKET_GRID_SIZE ){
                     return `goa_market_grid_space-${token.row}-${token.col}`;
                 }
@@ -1432,13 +1427,13 @@ export class Game {
     }
     
     tplToken(token, prefix ='') {
-        if(token.subtype == TOKEN_SUBTTYPE_PROGRESS_MARKER) 
-            return `<div id="goa_token${prefix}-${token.id}" class="goa_token goa_token${prefix} goa_progress_marker" data-track='${token.track}' data-row='${token.state}' data-color='${this.gamedatas.players[token.pId].color}' data-pid='${token.pId}'></div>`;
-        if(token.subtype == TOKEN_SUBTTYPE_AUCTION_MARKER) 
+        if(token.subtype == this.const.TOKEN_SUBTTYPE_PROGRESS_MARKER) 
+            return `<div id="goa_token${prefix}-${token.id}" class="goa_token goa_token${prefix} goa_progress_marker" data-track='${token.track}' data-row='${token.row}' data-color='${this.gamedatas.players[token.pId].color}' data-pid='${token.pId}'></div>`;
+        if(token.subtype == this.const.TOKEN_SUBTTYPE_AUCTION_MARKER) 
             return `<div id="goa_token${prefix}-${token.id}" class="goa_token goa_token${prefix} goa_auction_marker" data-value='${token.auctionOrder}' data-color='${this.gamedatas.players[token.pId].color}' data-pid='${token.pId}'></div>`;
-        if(token.subtype == TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER) 
+        if(token.subtype == this.const.TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER) 
             return `<div id="goa_token${prefix}-${token.id}" class="goa_token goa_token${prefix} goa_first_auction_marker" ></div>`;
-        if(token.subtype == TOKEN_SUBTTYPE_SPICE) 
+        if(token.subtype == this.const.TOKEN_SUBTTYPE_SPICE) 
             return `<div id="goa_token${prefix}-${token.id}" class="goa_token goa_token${prefix} goa_spice" data-type="${token.type}" data-pid="${token.pId}" data-state="${token.state}" data-spice="${token.spice}"></div>`;
         return '';
     }
@@ -1483,7 +1478,7 @@ export class Game {
                 break;
             case 3:  
                 action_label = _('Taxes');
-                action_gains = [4,6,8,10,12];
+                action_gains = this.const.PROGRESS_TAXES_GAINS;
                 action_desc = this.bga.gameui.format_string(
                             _("Take n ${resource_name} ${icon_resource} where n is indicated on the row of your progress marker on this column.")
                             ,{

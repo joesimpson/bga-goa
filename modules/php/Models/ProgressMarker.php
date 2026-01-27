@@ -11,7 +11,7 @@ class ProgressMarker extends Token
     {
         $data = parent::getUiData();
         $data['subtype'] = TOKEN_SUBTTYPE_PROGRESS_MARKER;
-        $data['track'] = $this->getTrackIndex();
+        $data['track'] = $this->getTrackIndex();//we y use col now instead
         return $data;
     }
 

@@ -242,6 +242,16 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
     }
     return null;
   }
+  
+  public static function getProgressMarkerByType(int $progressType, int $playerId) : ProgressMarker
+  {
+    return self::DB()
+      ->where('type', $progressType)
+      ->where('subtype', TOKEN_SUBTTYPE_PROGRESS_MARKER)
+      ->wherePlayer($playerId)
+      ->get()->first();
+  }
+
   ///////////////////////////////////////////////////////////////////////////////
   
   /** Creation of the tokens */
@@ -276,7 +286,8 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
           'subtype' => TOKEN_SUBTTYPE_PROGRESS_MARKER,
           'player_id' => $pId,
           'nbr' => 1,
-          'state' =>1,//row 1
+          'row' => 1,
+          'col' => $k+1,
         ];
       }
     }

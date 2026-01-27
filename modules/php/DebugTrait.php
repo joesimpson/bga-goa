@@ -219,7 +219,7 @@ trait DebugTrait
                 'nbr' => 1,
             ];*/
             
-            for($k = 0; $k < count(TOKEN_TYPE_PROGRESS_MARKERS); $k++){
+            for($k = 0; $k < count(TOKEN_TYPE_AUCTION_MARKERS); $k++){
                 $tokens[] = [
                     'location' => TOKEN_LOCATION_BOARD,
                     'type' => TOKEN_TYPE_AUCTION_MARKERS[$k],
