@@ -95,6 +95,7 @@ class PlayerTurn extends GameState
                 }
                 break;
             case ROUND_STEP_PLAYER_ACTIONS:
+                $args['possibleActions'][] = 'actProgress';//TODO JSA CHECK PRogress not maxed
                 $args['possibleActions'][] = 'actBuildShips';
                 $args['possibleActions'][] = 'actTaxes';
                 //TODO JSA REMOVE DEBUG when real actions ready
@@ -188,7 +189,23 @@ class PlayerTurn extends GameState
     }
     
     /**
-     * Player action : turn ACTION #1 take ships
+     * Player action : turn ACTION #1 PROGRESS
+     */
+    #[PossibleAction]
+    public function actProgress(int $activePlayerId, array $args)
+    { 
+        $possibleActions = $args['possibleActions'];
+        if(!in_array('actProgress',$possibleActions)){
+            throw new UnexpectedException(110,"Invalid action actProgress, see ".json_encode($possibleActions));
+        }
+        Log::addStep();
+        $player = Players::get($activePlayerId);
+
+
+        return ConfirmTurn::class;
+    }
+    /**
+     * Player action : turn ACTION #2 take ships
      */
     #[PossibleAction]
     public function actBuildShips(int $activePlayerId, array $args)
@@ -207,7 +224,7 @@ class PlayerTurn extends GameState
         return ConfirmTurn::class;
     }
     /**
-     * Player action : turn ACTION #3 take taxes
+     * Player action : turn ACTION #4 take taxes
      */
     #[PossibleAction]
     public function actTaxes(int $activePlayerId, array $args)

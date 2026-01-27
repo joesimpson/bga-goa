@@ -462,6 +462,11 @@ Icon extract in sprite with differents layers size (so % is not useful).
   grid-template-rows: repeat(5, 1fr);
   display: grid;
 }
+.goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_progress_tracks .goa_progress_track.selectable {
+  cursor: pointer;
+  box-shadow: 0px 0px 0px 5px blue;
+  border-radius: 5%;
+}
 .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_progress_tracks .goa_progress_track .goa_progress_track_space {
   position: relative;
   width: 100px;

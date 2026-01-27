@@ -67,6 +67,7 @@ const TOKEN_LOCATION_PLAYER_BOARD = 'p_board';
 const TOKEN_LOCATION_TILE = 'tile-';
 
 import { ConfirmTurn } from "./states/ConfirmTurn.js";
+import { ClientSelectProgress } from "./states/ClientSelectProgress.js";
 import { PlayerChoice, ClientSelectTileAction } from "./states/PlayerChoice.js";
 import { PlayerTurn } from "./states/PlayerTurn.js";
 
@@ -83,8 +84,11 @@ export class Game {
         this.bga.states.register('ConfirmTurn', this.confirmTurn);
         this.playerChoice = new PlayerChoice(this, bga);
         this.bga.states.register('PlayerChoice', this.playerChoice);
+        //CLIENT STATES :
         this.clientSelectTileAction = new ClientSelectTileAction(this, bga);
         this.bga.states.register('ClientSelectTileAction', this.clientSelectTileAction);
+        this.clientSelectProgress = new ClientSelectProgress(this, bga);
+        this.bga.states.register('ClientSelectProgress', this.clientSelectProgress);
 
         // Uncomment the next line to show debug informations about state changes in the console. Remove before going to production!
         this.bga.states.logger = console.log;
@@ -1510,7 +1514,7 @@ export class Game {
                             + '<li>' + this.bga.gameui.format_string( _("The row of your progress marker will give a base number of contracts."),{  } ) + '</li>'
                             + '<li>' + action_gains_desc + '</li>' 
                             + '<li>' + this.bga.gameui.format_string( _("Flip ${n} exploration cards and add their contracts to those on your player board."),{ n: 2 } ) + '</li>'
-                            + '<li>' + this.bga.gameui.format_string( _("You may add ay number of contracts from your hand."),{  } ) + '</li>'
+                            + '<li>' + this.bga.gameui.format_string( _("You may add any number of contracts from your hand."),{  } ) + '</li>'
                             + '<li>' + this.bga.gameui.format_string( _("If you successfully meet the requirement of the chosen outpost, take it and place it on your board, filling the resources spots on it; if not you draw ${n} ${icon_card}"),{ n:1, icon_card: this.formatIcon('contracts') } ) + '</li>'
                         + '</ul>'
                         ;
