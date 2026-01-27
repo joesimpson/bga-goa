@@ -449,7 +449,11 @@ $playerboard_img_height: calc(1 * 796px);
                         box-shadow: 0px 0px 0px 5px blue;
                         border-radius: 5%;
                     }
-
+                    &.selected{
+                        cursor: crosshair;
+                        box-shadow: 0px 0px 0px 8px red;
+                        border-radius: 10%;
+                    }
 
                     .goa_progress_track_space{
                         position: relative;

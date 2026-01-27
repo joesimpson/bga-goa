@@ -268,23 +268,37 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
       ->wherePlayer($playerId)
       ->get();
   }
-  public static function getUpgradableProgressMarkers( Player $player) : Collection
+  public static function getUpgradableProgressMarkers( Player $player) : array
   {
     $allMarkers = Tokens::getProgressMarkers($player->getId());
     $ships = $player->getShips();
     $playerSpices = Tokens::getPlayerSpices($player->getId());
-    $maxProgress = count(PROGRESS_GAINS_SHIPS);
 
-    return $allMarkers->filter(function ($token) use ($maxProgress, $playerSpices, $ships) {
+    return $allMarkers->map(function ($token) { 
+                $map = [
+                  'track' => $token->getTrackIndex(),
+                  'row' => $token->getRow(),
+                ];
+
                 $currentRow = $token->getRow();
-                if($currentRow >= $maxProgress) return false;
-
-                $spiceCosts = PROGRESS_COST_AS_SPICES[$token->getType()][$currentRow+1];
-                if($ships < count($spiceCosts)){
+                $trackSpiceCosts = PROGRESS_COST_AS_SPICES[$token->getType()];
+                if( array_key_exists($currentRow+1, $trackSpiceCosts)){
+                  $spiceCosts = $trackSpiceCosts[$currentRow+1];
+                  $map['costShips'] = count($spiceCosts);
+                  $map['costSpices'] = [];
+                  foreach($spiceCosts as $spice){
+                    $spiceCost = count(array_keys($spiceCosts,$spice));
+                    $map['costSpices'][$spice] = $spiceCost;
+                  }
+                }
+                return $map;
+              })
+            ->filter(function ($tokenDatas) use ($playerSpices, $ships) {
+                if(!isset($tokenDatas['costShips'])) return false;
+                if($ships < $tokenDatas['costShips']){
                   return false;
                 }
-                foreach($spiceCosts as $spice){
-                  $spiceCost = count(array_keys($spiceCosts,$spice));
+                foreach($tokenDatas['costSpices'] as $spice => $spiceCost){
                   $nbPlayerSpices = $playerSpices->filter(function ($playerSpice) use ($spice) {return $spice == $playerSpice->getSpice();})->count();
                   if($nbPlayerSpices < $spiceCost){
                     return false;
@@ -294,7 +308,9 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
                 //TODO JSA FILTER on upgrade cost with exploration cards if 0 used in this turn 
 
                 return true;
-            });
+            })
+          //->map(function ($token) { return $token->getTrackIndex();})
+          ->toArray();
   }
 
   public static function countProgressMarkersBelowRow( int $row) : int

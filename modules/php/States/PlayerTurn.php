@@ -97,7 +97,7 @@ class PlayerTurn extends GameState
                 break;
             case ROUND_STEP_PLAYER_ACTIONS:
                 $args['possibleActions'][] = 'actProgress';
-                $args['progressTracks'] = Tokens::getUpgradableProgressMarkers($player)->map(function ($token) { return $token->getTrackIndex();})->toArray();
+                $args['progressTracks'] = Tokens::getUpgradableProgressMarkers($player);
                 $args['possibleActions'][] = 'actBuildShips';
                 $args['possibleActions'][] = 'actTaxes';
                 //TODO JSA REMOVE DEBUG when real actions ready
@@ -205,7 +205,13 @@ class PlayerTurn extends GameState
             throw new UnexpectedException(110,"Invalid action actProgress, see ".json_encode($possibleActions));
         }
         $progressTracks = $args['progressTracks'];
-        if(!in_array($track,$progressTracks)){
+        $selectedTrack = null;
+        foreach($progressTracks as $progressTrack){
+            if($progressTrack['track'] == $track){
+                $selectedTrack = $progressTrack;
+            }
+        }
+        if(!isset($selectedTrack)){
             throw new UnexpectedException(111,"Invalid track to progress on ($track), see ".json_encode($progressTracks));
         }
 
