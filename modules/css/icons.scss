@@ -16,11 +16,11 @@ $spice_height: 30px;
     position: relative;
     @include goa_icons_sprite(473px,0px,$spice_width,$spice_height,113px,119px);
 }
-.goa_icon_spices_black, .goa_icon_spices_2{
+.goa_icon_spices_black, .goa_icon_spices_3{
     position: relative;
     @include goa_icons_sprite(590px,0px,$spice_width,$spice_height,113px,119px);
 }
-.goa_icon_spices_yellow, .goa_icon_spices_3{
+.goa_icon_spices_yellow, .goa_icon_spices_2{
     position: relative;
     @include goa_icons_sprite(707px,0px,$spice_width,$spice_height,113px,119px);
 }

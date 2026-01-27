@@ -32,15 +32,15 @@ const CHOICE_PICK_SPICE          = 3;
 const CHOICE_REPLACE_TILE        = 4;
 
 const SPICE_WHITE     = 1;
-const SPICE_BLACK     = 2;
-const SPICE_YELLOW    = 3;
+const SPICE_YELLOW    = 2;
+const SPICE_BLACK     = 3;
 const SPICE_PINK      = 4;
 const SPICE_GREEN     = 5;
 
 const SPICES_ALL     = [
    SPICE_WHITE ,
-   SPICE_BLACK ,
    SPICE_YELLOW,
+   SPICE_BLACK ,
    SPICE_PINK  ,
    SPICE_GREEN ,
  ];
