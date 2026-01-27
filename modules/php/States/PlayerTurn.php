@@ -95,6 +95,7 @@ class PlayerTurn extends GameState
                 }
                 break;
             case ROUND_STEP_PLAYER_ACTIONS:
+                $args['possibleActions'][] = 'actBuildShips';
                 $args['possibleActions'][] = 'actTaxes';
                 //TODO JSA REMOVE DEBUG when real actions ready
                 $args['possibleActions'][] = 'actPassBid';
@@ -187,7 +188,26 @@ class PlayerTurn extends GameState
     }
     
     /**
-     * Player action : turn ACTION take taxes
+     * Player action : turn ACTION #1 take ships
+     */
+    #[PossibleAction]
+    public function actBuildShips(int $activePlayerId, array $args)
+    { 
+        $possibleActions = $args['possibleActions'];
+        if(!in_array('actBuildShips',$possibleActions)){
+            throw new UnexpectedException(110,"Invalid action actBuildShips, see ".json_encode($possibleActions));
+        }
+        Log::addStep();
+        $player = Players::get($activePlayerId);
+
+        $progressMarker = Tokens::getProgressMarkerByType(TOKEN_TYPE_PROGRESS_MARKER_SHIPS,$activePlayerId);
+        $amount = PROGRESS_GAINS_SHIPS[$progressMarker->getRow() - 1];
+        Players::giveShips($player, $amount);
+
+        return ConfirmTurn::class;
+    }
+    /**
+     * Player action : turn ACTION #3 take taxes
      */
     #[PossibleAction]
     public function actTaxes(int $activePlayerId, array $args)
@@ -200,8 +220,8 @@ class PlayerTurn extends GameState
         $player = Players::get($activePlayerId);
 
         $taxesMarker = Tokens::getProgressMarkerByType(TOKEN_TYPE_PROGRESS_MARKER_TAXES,$activePlayerId);
-        $amount = PROGRESS_TAXES_GAINS[$taxesMarker->getRow() - 1];
-        Notifications::getMoney($player, $amount);
+        $amount = PROGRESS_GAINS_TAXES[$taxesMarker->getRow() - 1];
+        Players::giveMoney($player, $amount);
 
         return ConfirmTurn::class;
     }

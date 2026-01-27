@@ -1463,7 +1463,7 @@ export class Game {
                                 icon_resource : this.formatIcon('ships')
                             }
                         );
-                action_gains = [1,2,3,5,6];
+                action_gains = this.const.PROGRESS_GAINS_SHIPS;
                 break;
             case 2:  
                 action_label = _('Harvest');
@@ -1478,7 +1478,7 @@ export class Game {
                 break;
             case 3:  
                 action_label = _('Taxes');
-                action_gains = this.const.PROGRESS_TAXES_GAINS;
+                action_gains = this.const.PROGRESS_GAINS_TAXES;
                 action_desc = this.bga.gameui.format_string(
                             _("Take n ${resource_name} ${icon_resource} where n is indicated on the row of your progress marker on this column.")
                             ,{

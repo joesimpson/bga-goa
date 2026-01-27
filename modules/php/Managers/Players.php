@@ -247,6 +247,11 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
     $player->incShips($nb);
     Notifications::getShips($player,$nb);
   }
+  public static function giveMoney(Player $player, int $nb = 1)
+  {
+    $player->incMoney($nb);
+    Notifications::getMoney($player,$nb);
+  }
   public static function giveExtraActionCards(Player $player, int $nb = 1)
   {
     $player->incCompasses($nb);

@@ -113,6 +113,10 @@ export class PlayerTurn {
 
             }
             
+            if(possibleActions.includes('actBuildShips')){
+                this.bga.statusBar.addActionButton(_('Build ships'), () => this.bga.actions.performAction("actBuildShips"), { destination: document.getElementById('customActions') }); 
+                //TODO JSA CLICK ON BOARD section
+            }
             if(possibleActions.includes('actTaxes')){
                 this.bga.statusBar.addActionButton(_('Taxes'), () => this.bga.actions.performAction("actTaxes"), { destination: document.getElementById('customActions') }); 
                 //TODO JSA CLICK ON BOARD section
