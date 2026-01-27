@@ -193,9 +193,20 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
 
   public static function discardTileFromPlayer(Player $player, Tile &$tile)
   {
-    $tile->setLocation(TILE_LOCATION_DISCARD);
     Tokens::removeSpicesOnTile($tile,$player,);
-    Notifications::discardTile($player,$tile);
+
+    if($tile->getPlay_type() == MARKET_TYPE_PLANTATION 
+    //&& $tile->getEnd_Score() > 0
+    ){
+      //KEEP PLANTATION in player tiles zone for end score
+      $tile->setLocation(TILE_LOCATION_PLAYER_BOARD);
+      $tile->setState(0);
+      Notifications::replaceTile($player,$tile);
+    }
+    else {
+      $tile->setLocation(TILE_LOCATION_DISCARD);
+      Notifications::discardTile($player,$tile);
+    }
   }
 
   public static function getPlantations(Player $player) : Collection

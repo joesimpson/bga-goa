@@ -796,6 +796,15 @@ export class Game {
         }
     }
     
+    async notif_replaceTile(notif) {
+        console.log("notif_replaceTile",notif);
+        let tile = notif.tile;
+        
+        let tileDiv = this.addTile(tile);//refresh tile dataset
+        let destinationDiv = document.getElementById(this.getTileContainer(tile));
+        await this.animationManager.slideAndAttach(tileDiv, destinationDiv);
+    }
+    
     async notif_discardTile(notif) {
         console.log("notif_discardTile",notif);
         let tile = notif.tile;
@@ -976,7 +985,7 @@ export class Game {
                 }
             }
             if (tile.location == (TILE_LOCATION_PLAYER_BOARD) ) {
-                if (tile.play_type == MARKET_TYPE_PLANTATION ) {
+                if (tile.play_type == MARKET_TYPE_PLANTATION && [1,2,3,4].includes(tile.state) ) {
                     return `goa_player_plantations-${tile.pId}`;
                 }
                 return `goa_player_tiles-${tile.pId}`;

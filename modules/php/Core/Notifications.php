@@ -163,6 +163,15 @@ class Notifications
         'preserve'=>['tile'],
     ]);
   }
+  public static function replaceTile(Player $player, Tile $tile)
+  {
+    self::notifyAll("replaceTile", clienttranslate('${player_name} replaces the tile ${tile_icon}'), [
+        "player" => $player,
+        "tile" => $tile->getUiData(),
+        "tile_icon" => '',
+        'preserve'=>['tile'],
+    ]);
+  }
 
   public static function discardTile(Player $player, Tile $tile)
   {
