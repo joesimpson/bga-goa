@@ -117,6 +117,7 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
       'location' => TOKEN_LOCATION_TILE.$tile->getId(),
       'player_id' => $player->getId(),
       'state' => $position,
+      'row' => $position,
     ];
     $elt = self::singleCreate($token);
     Notifications::newSpiceOnTile($player,$elt,$tile);
@@ -243,6 +244,13 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
     }
     return null;
   }
+  public static function getPlayerSpices(int $playerId) : Collection
+  {
+    return self::DB()
+      ->where('subtype', TOKEN_SUBTTYPE_SPICE)
+      ->wherePlayer($playerId)
+      ->get();
+  }
   
   public static function getProgressMarkerByType(int $progressType, int $playerId) : ProgressMarker
   {
@@ -260,13 +268,32 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
       ->wherePlayer($playerId)
       ->get();
   }
-  public static function getUpgradableProgressMarkers( int $playerId) : Collection
+  public static function getUpgradableProgressMarkers( Player $player) : Collection
   {
-    $allMarkers = Tokens::getProgressMarkers($playerId);
+    $allMarkers = Tokens::getProgressMarkers($player->getId());
+    $ships = $player->getShips();
+    $playerSpices = Tokens::getPlayerSpices($player->getId());
     $maxProgress = count(PROGRESS_GAINS_SHIPS);
-    return $allMarkers->filter(function ($token) use ($maxProgress) {
-                //TODO JSA FILTER on upgrade cost (depending on cards, ships, spices,)
-                return $token->getRow() < $maxProgress;
+
+    return $allMarkers->filter(function ($token) use ($maxProgress, $playerSpices, $ships) {
+                $currentRow = $token->getRow();
+                if($currentRow >= $maxProgress) return false;
+
+                $spiceCosts = PROGRESS_COST_AS_SPICES[$token->getType()][$currentRow+1];
+                if($ships < count($spiceCosts)){
+                  return false;
+                }
+                foreach($spiceCosts as $spice){
+                  $spiceCost = count(array_keys($spiceCosts,$spice));
+                  $nbPlayerSpices = $playerSpices->filter(function ($playerSpice) use ($spice) {return $spice == $playerSpice->getSpice();})->count();
+                  if($nbPlayerSpices < $spiceCost){
+                    return false;
+                  }
+                }
+
+                //TODO JSA FILTER on upgrade cost with exploration cards if 0 used in this turn 
+
+                return true;
             });
   }
 

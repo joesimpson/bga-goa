@@ -166,6 +166,39 @@ const TOKEN_TYPE_PROGRESS_MARKERS = [
 
 const PROGRESS_GAINS_SHIPS = [1,2,3,5,6];
 const PROGRESS_GAINS_TAXES = [4,6,8,10,12];
+//Cost as ships is 1 per spice, thus no need for another const
+const PROGRESS_COST_AS_SPICES = [
+   TOKEN_TYPE_PROGRESS_MARKER_SHIPS => [
+      2 => [SPICE_WHITE], 
+      3 => [SPICE_WHITE, SPICE_YELLOW], 
+      4 => [SPICE_WHITE, SPICE_YELLOW, SPICE_BLACK], 
+      5 => [SPICE_WHITE, SPICE_WHITE, SPICE_YELLOW, SPICE_BLACK], 
+   ],
+   TOKEN_TYPE_PROGRESS_MARKER_HARVEST => [
+      2 => [SPICE_YELLOW], 
+      3 => [SPICE_YELLOW, SPICE_BLACK], 
+      4 => [SPICE_YELLOW, SPICE_BLACK, SPICE_PINK], 
+      5 => [SPICE_YELLOW, SPICE_YELLOW, SPICE_BLACK, SPICE_PINK], 
+   ],
+   TOKEN_TYPE_PROGRESS_MARKER_TAXES => [
+      2 => [SPICE_BLACK], 
+      3 => [SPICE_BLACK, SPICE_PINK], 
+      4 => [SPICE_BLACK, SPICE_PINK, SPICE_GREEN], 
+      5 => [SPICE_BLACK, SPICE_BLACK, SPICE_PINK, SPICE_GREEN], 
+   ],
+   TOKEN_TYPE_PROGRESS_MARKER_EXP => [
+      2 => [SPICE_PINK], 
+      3 => [SPICE_PINK, SPICE_GREEN], 
+      4 => [SPICE_PINK, SPICE_GREEN, SPICE_WHITE], 
+      5 => [SPICE_PINK, SPICE_PINK, SPICE_GREEN, SPICE_WHITE], 
+   ],
+   TOKEN_TYPE_PROGRESS_MARKER_OUTPOST => [
+      2 => [SPICE_GREEN], 
+      3 => [SPICE_GREEN, SPICE_WHITE], 
+      4 => [SPICE_GREEN, SPICE_WHITE, SPICE_YELLOW], 
+      5 => [SPICE_GREEN, SPICE_GREEN, SPICE_WHITE, SPICE_YELLOW], 
+   ],
+];
 
 /////////////////////////////////////////////////////////
 //          Game options

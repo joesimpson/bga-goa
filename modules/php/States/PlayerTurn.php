@@ -97,7 +97,7 @@ class PlayerTurn extends GameState
                 break;
             case ROUND_STEP_PLAYER_ACTIONS:
                 $args['possibleActions'][] = 'actProgress';
-                $args['progressTracks'] = Tokens::getUpgradableProgressMarkers($player->getId())->map(function ($token) { return $token->getTrackIndex();})->toArray();
+                $args['progressTracks'] = Tokens::getUpgradableProgressMarkers($player)->map(function ($token) { return $token->getTrackIndex();})->toArray();
                 $args['possibleActions'][] = 'actBuildShips';
                 $args['possibleActions'][] = 'actTaxes';
                 //TODO JSA REMOVE DEBUG when real actions ready

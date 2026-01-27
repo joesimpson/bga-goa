@@ -1432,10 +1432,11 @@ export class Game {
     
     addToken(token, location = null) { 
         console.log("addToken",token,location); 
-        let tokenDiv = $(`goa_token-${token.id}`);
+        let tokenDiv = document.getElementById(`goa_token-${token.id}`) ;
         if (!tokenDiv){
             let container = location == null ? this.getTokenContainer(token) : location;
             document.getElementById(container).insertAdjacentHTML('beforeend', this.tplToken(token));
+            tokenDiv = document.getElementById(`goa_token-${token.id}`) ;
         }
         else {
             //refresh dataset if already exists
