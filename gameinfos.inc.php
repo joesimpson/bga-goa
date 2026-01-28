@@ -95,8 +95,11 @@ $gameinfos = [
         //  maximum possible value: 740 (ie: your game interface should fit with a 740px width (correspond to a 1024px screen)
         //  minimum possible value: 320 (the lowest value you specify, the better the display is on mobile)
 
+
         //1650 = 900 for board + 730 for player board but that leads to a very tiny text for side panel / status bar
-        'min' => 900,
+        //'min' => 900,
+        //initial board scale reduced to 60%
+        'min' => 640,
     ],
 
     // Flag to enable 3D mode (adds a 3D button to the menu)

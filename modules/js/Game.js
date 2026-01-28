@@ -272,6 +272,7 @@ export class Game {
             zoomControls: {
                 color: 'white',
             },
+            zoomLevels :[0.5, 0.625, 0.75, 0.875, 1, 1.25, 1.5],
         });
         this.helpManager = new HelpManager(this.gamegui, {
             buttons: [

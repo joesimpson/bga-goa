@@ -14,8 +14,8 @@
  *
  */
 :root {
-  --goa_board_display_scale: 0.90;
-  --goa_playerboard_display_scale: 0.90;
+  --goa_board_display_scale: 0.60;
+  --goa_playerboard_display_scale: 0.60;
   --goa_board_height_offset: -230px;
 }
 
