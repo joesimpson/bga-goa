@@ -1559,6 +1559,8 @@ export class Game {
                 this.explorationHand = new BgaCards.HandStock(this.explorationCardsManager, document.getElementById(`goa_exploration_hand-${currentPlayer.id}`), {
                     //sort: BgaCards.sort('type'),
                     sort: BgaCards.sort('action','contracts'),
+                    //cardOverlap: -25,
+                    //fanShaped: false,
                 });
             }
             this.explorationDeck = new BgaCards.Deck(this.explorationCardsManager, document.getElementById('goa_exploration_deck'), {
@@ -1632,6 +1634,8 @@ export class Game {
             }
 
         }
+        //TODO JSA CALL when remove card
+        this.updateCardsStackCounters();
         return $(`goa_card-${card.id}`);
     }
     
@@ -1767,6 +1771,12 @@ export class Game {
             </div>
         </div>
         `;
+    }
+
+    updateCardsStackCounters() { 
+        console.log("updateCardsStackCounters");
+        let nbCards = this.explorationHand.getCardCount();
+        this.explorationHand.element.parentNode.style.setProperty('--goa_stock_count', nbCards);
     }
     
     /**

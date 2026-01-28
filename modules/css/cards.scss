@@ -19,11 +19,23 @@
 }
 
 .exploration_hand{
+
     //if we don't want the bga-cards rotated style, no need to keep more height
     --bga-cards_hand-stock-height : 210px !important;
     .goa_exploration_card{
         //we need to see the card details
-        --bga-cards_hand-stock-card-overlap: 0px!important;
+        --bga-cards_hand-stock-card-overlap: 0px !important;
+        //or may hide the left part because contracts numbers are useless in hand
+        //margin-right: -220px !important;
+        margin-left: 0px !important;
+    }
+    //margin-left: calc((var(--goa_stock_count) - 1) * -50px);
+    height: inherit !important;
+    .hand-stock:not(.floating){
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        height: inherit !important;
     }
 }
 
