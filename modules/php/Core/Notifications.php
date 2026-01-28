@@ -73,7 +73,9 @@ class Notifications
 
   public static function auctionPlaced(Player $player, int $row, int $col, Token $token)
   {
-    self::notifyAll("auctionPlaced", clienttranslate('${player_name} places the auction marker ${token_icon} on the market (row ${row}, column ${col})'), [
+    //${player_name} places the auction marker ${token_icon} on the market (row ${row}, column ${col}) 
+    //Change message for less verbose because the token is visible in the grid
+    self::notifyAll("auctionPlaced", clienttranslate('${player_name} places the auction marker ${token_icon} on the market'), [
         "player" => $player,
         "row" => $row,
         "col" => $col,

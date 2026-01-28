@@ -322,6 +322,8 @@ export class Game {
 
             if('card' in args && 'card_icon' in args) {
                 args.card_icon = this.tplCard(args.card, '_log');
+                //tooltip won't work because element is not added yet
+                //this.bga.gameui.addTooltipHtmlToClass(`goa_card_log_${args.card.type}`, this.getCardTooltip(args.card));
             }
             if('token' in args && 'token_icon' in args) {
                 args.token_icon = this.tplToken(args.token, '_log');
@@ -1635,7 +1637,7 @@ export class Game {
     
     tplCard(card, prefix ='') {
         if(card.subtype == this.const.CARD_SUBTTYPE_EXPLORATION) 
-            return `<div id="goa_card${prefix}-${card.id}" class="goa_card goa_exploration_card goa_card${prefix}" data-type='${card.type}' data-pid='${card.pId}'></div>`;
+            return `<div id="goa_card${prefix}-${card.id}" class="goa_card goa_exploration_card goa_card${prefix} goa_card${prefix}_${card.type}" data-type='${card.type}' data-pid='${card.pId}'></div>`;
         return '';
     }
     // draw + discard from deck

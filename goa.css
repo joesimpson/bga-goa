@@ -873,6 +873,10 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-position-x: 0;
   background-position-y: 0;
 }
+.goa_auction_marker.goa_token_log {
+  width: 25px;
+  height: 25px;
+}
 .goa_auction_marker[data-value="1"] {
   background-position-y: 0%;
 }
@@ -932,6 +936,14 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-position-y: 0px;
   background-size: 458.0152671756% 129.4117647059%;
 }
+.goa_first_auction_marker.goa_token_log {
+  width: 25px;
+  height: 25px;
+  background-image: url("img/icons.png");
+  background-position-x: -19.2748091603px;
+  background-position-y: 0px;
+  background-size: 458.0152671756% 129.4117647059%;
+}
 
 .goa_first_player_container .goa_first_auction_marker {
   width: 30px;
@@ -987,9 +999,14 @@ Icon extract in sprite with differents layers size (so % is not useful).
   position: relative;
   width: 131px;
   height: 200px;
-  --bga-cards_card-border-radius: 10px;
+  --bga-cards_card-border-radius: 5%;
   border-radius: var(--bga-cards_card-border-radius);
   box-shadow: 0px 0px 0px 2px black;
+}
+.goa_exploration_card.goa_card_log {
+  width: 50px;
+  height: 76px;
+  border-radius: 5%;
 }
 
 .exploration_hand {
@@ -1270,6 +1287,10 @@ Icon extract in sprite with differents layers size (so % is not useful).
   height: 108px;
   border-radius: 6px;
   box-shadow: 0px 0px 0px 2px black;
+}
+.goa_tile.goa_tile_log {
+  width: 40px;
+  height: 40px;
 }
 .goa_tile.selectable {
   cursor: pointer;
@@ -2021,10 +2042,13 @@ body.lockedInterface #restartActions {
 }
 
 .goa_tile_log,
+.goa_card_log,
 .goa_token_log {
   display: inline-block;
   text-align: center;
   vertical-align: middle;
+  margin-left: 2px;
+  margin-right: 2px;
 }
 
 .tundra #dijit__MasterTooltip_0.dijitTooltip .dijitTooltipContainer {

@@ -5,10 +5,17 @@
 
     width: 131px;
     height: 200px;
-    --bga-cards_card-border-radius: 10px;
+    --bga-cards_card-border-radius: 5%;
     border-radius: var(--bga-cards_card-border-radius);
 
     box-shadow: 0px 0px 0px 2px black;
+
+    &.goa_card_log{
+        //REDUCE SIZE
+        width: 50px;
+        height: 76px;
+        border-radius: 5%;
+    }
 }
 
 .exploration_hand{
