@@ -89,6 +89,27 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
   {
     Stats::inc("turns_number_p",$player);
   }
+
+  public static function resetBidPhase()
+  {
+    self::DB()
+      ->update(['passed' => 0])
+      ->run();
+  }
+  public static function resetActionsPhase()
+  {
+    self::DB()
+      ->update(['nbActions' => 0, 'passed' => 0])
+      ->run();
+  }
+  public static function registerNewAction(Player $player)
+  {
+    if($player->getNbActions() >= NB_MIN_ACTIONS_PER_ROUND){
+        Players::giveExtraActionCards($player,-1);
+    }
+    $player->incNbActions();
+  }
+
   /**
    * @param int $pId
    * @param int $score score to add to current score
@@ -155,17 +176,21 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
   
   /**
    * @param int $player_id
-   * @return Player
+   * @param array $tried_pid
+   * @return Player, or null if no one found
    */
-  public static function getNextPlayerNotEliminated(int $player_id) : Player
+  public static function getNextPlayerWithActions(int $player_id, array &$tried_pid = []) : Player |null
   {
     $nextPlayer = Players::getNextPlayer($player_id);
+    if(in_array($nextPlayer->getId(), $tried_pid) ) return null;
     if(isset($nextPlayer) 
-      && $nextPlayer->getZombie() != 1 && $nextPlayer->getEliminated() == 0
+      && $nextPlayer->isPassed() != 1 
+      && ($nextPlayer->getNbActions() <NB_MIN_ACTIONS_PER_ROUND || $nextPlayer->getCompasses() > 0 )
     ){
       return $nextPlayer;
     }
-    return self::getNextPlayerNotEliminated($nextPlayer->getId());
+    $tried_pid[] = $nextPlayer->getId();
+    return self::getNextPlayerWithActions($nextPlayer->getId(), $tried_pid);
   }
   
   /**

@@ -31,11 +31,10 @@ class NewTurn extends \Bga\GameFramework\States\GameState
     function onEnteringState(int $activePlayerId) {
         $this->game->trace("NewTurn.onEnteringState($activePlayerId)");
 
+        Globals::setupNewTurn();
         $turn = Globals::getTurn();
-        $turn++;
-        Globals::setTurn($turn);
         Notifications::newTurn($turn);
-
+        
         // Go to another gamestate
         Log::addStateCheckpoint(NextPlayer::class);
         return NextPlayer::class;

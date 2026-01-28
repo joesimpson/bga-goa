@@ -36,7 +36,7 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
     function onEnteringState(int $activePlayerId) {
         $this->game->trace("EndPlayerTurn.onEnteringState($activePlayerId)");
 
-        $turnEnd = false;
+        $roundEnd = false;
         $prematureStateChange = null;
 
         $player = Players::get($activePlayerId);
@@ -97,19 +97,20 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
                     Tokens::returnAuctionMarkerToPlayer($currentAuctioneer,$auctionToken);
                     Globals::setBidTurns(0);
                     Globals::setCurrentBid(0);
+                    Players::resetBidPhase();
 
                     $nextAuctionTokenToBid = Tokens::getCurrentAuctionToken();
                     if(!isset($nextAuctionTokenToBid)) {
                         //Time to end this step
                         $roundStep = ROUND_STEP_PLAYER_ACTIONS;
                         Globals::setRoundStep($roundStep);
-                        Notifications::newRoundStep($roundStep, clienttranslate('Player Auctions'));
+                        Notifications::newRoundStep($roundStep, clienttranslate('Player Actions'));
                     }
                 }
                 break;
             case ROUND_STEP_PLAYER_ACTIONS:
-                //TODO JSA REMOVE DEBUG when real actions ready
-                $turnEnd = true;
+                $nextPlayer = Players::getNextPlayerWithActions($activePlayerId);
+                $roundEnd = !isset($nextPlayer);
                 break;
             default : break;
         }
@@ -121,9 +122,11 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
             }
             return $prematureStateChange->nextStateClass;
         }
-        else if ($turnEnd) {
-            Log::addStateCheckpoint(EndTurn::class);
-            return EndTurn::class;
+        else if ($roundEnd) {
+            //Log::addStateCheckpoint(EndTurn::class);
+            //return EndTurn::class;
+            Log::addStateCheckpoint(EndRound::class);
+            return EndRound::class;
         } else {
             Log::addStateCheckpoint(NextPlayer::class);
             return NextPlayer::class;

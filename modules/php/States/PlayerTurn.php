@@ -96,12 +96,19 @@ class PlayerTurn extends GameState
                 }
                 break;
             case ROUND_STEP_PLAYER_ACTIONS:
-                $args['possibleActions'][] = 'actProgress';
-                $args['progressTracks'] = Tokens::getUpgradableProgressMarkers($player);
-                $args['possibleActions'][] = 'actBuildShips';
-                $args['possibleActions'][] = 'actTaxes';
-                //TODO JSA REMOVE DEBUG when real actions ready
-                $args['possibleActions'][] = 'actPassBid';
+                $args['nbActions'] = $player->getNbActions();
+                $args['minActions'] = NB_MIN_ACTIONS_PER_ROUND + max(0,$player->getCompasses()-1);
+                if($player->getNbActions() <NB_MIN_ACTIONS_PER_ROUND || $player->getCompasses()>0){
+                    $args['possibleActions'][] = 'actProgress';
+                    $args['progressTracks'] = Tokens::getUpgradableProgressMarkers($player);
+                    $args['possibleActions'][] = 'actBuildShips';
+                    $args['possibleActions'][] = 'actTaxes';
+                }
+                //if($player->getNbActions() >= $args['minActions'] ) {
+                if($player->getNbActions() >= NB_MIN_ACTIONS_PER_ROUND && $player->getCompasses()<=1){
+                    //Game rule : player must keep max 1 compass card
+                    $args['possibleActions'][] = 'actPassAction';
+                }
                 break;
             default : break;
         }
@@ -109,6 +116,21 @@ class PlayerTurn extends GameState
         ConfirmTurn::addArgsForUndo($args);
         return $args;
     }    
+    
+    public function onEnteringState(int $activePlayerId, array $args) {
+        $this->game->trace("PlayerTurn.onEnteringState()");
+
+        $player = Players::get($activePlayerId);
+        $possibleActions = $args['possibleActions'];
+        if($player->isPassed() 
+            || 
+            count($possibleActions)==1 && in_array('actPassAction',$possibleActions) && $player->getCompasses() == 0
+        ) {
+            //AUTO PASS when no more to play
+            //return $this->actPassAction($activePlayerId,$args);
+            //COMMENTED because we should not come here
+        }
+    }
 
     /**
      * Player action in round step 1
@@ -187,12 +209,35 @@ class PlayerTurn extends GameState
         $this->game->trace("actPassBid($activePlayerId)");
         Log::addStep();
         $player = Players::get($activePlayerId);
+        $player->setPassed(true);
         Notifications::passBid($player);
 
         // at the end of the action, move to the next state
         return ConfirmTurn::class;
     }
     
+    /**
+     * Player action : pass the bid
+     */
+    #[PossibleAction]
+    public function actPassAction(int $activePlayerId, array $args)
+    {
+        $this->game->trace("actPassAction($activePlayerId)");
+        
+        $possibleActions = $args['possibleActions'];
+        if(!in_array('actPassAction',$possibleActions)){
+            throw new UnexpectedException(110,"Invalid action actPassAction, see ".json_encode($possibleActions));
+        }
+
+        Log::addStep();
+        $player = Players::get($activePlayerId);
+        $player->setPassed(true);
+        Notifications::passAction($player);
+
+        // at the end of the action, move to the next state
+        return ConfirmTurn::class;
+    }
+
     /**
      * Player action : turn ACTION #1 PROGRESS
      */
@@ -241,6 +286,7 @@ class PlayerTurn extends GameState
             }
         }
         
+        Players::registerNewAction($player);
 
         return ConfirmTurn::class;
     }
@@ -261,6 +307,8 @@ class PlayerTurn extends GameState
         $progressMarker = Tokens::getProgressMarkerByType(TOKEN_TYPE_PROGRESS_MARKER_SHIPS,$activePlayerId);
         $amount = PROGRESS_GAINS_SHIPS[$progressMarker->getRow() - 1];
         Players::giveShips($player, $amount);
+        
+        Players::registerNewAction($player);
 
         return ConfirmTurn::class;
     }
@@ -281,6 +329,8 @@ class PlayerTurn extends GameState
         $taxesMarker = Tokens::getProgressMarkerByType(TOKEN_TYPE_PROGRESS_MARKER_TAXES,$activePlayerId);
         $amount = PROGRESS_GAINS_TAXES[$taxesMarker->getRow() - 1];
         Players::giveMoney($player, $amount);
+        
+        Players::registerNewAction($player);
 
         return ConfirmTurn::class;
     }

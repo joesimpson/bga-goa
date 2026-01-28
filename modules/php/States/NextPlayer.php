@@ -33,11 +33,10 @@ class NextPlayer extends \Bga\GameFramework\States\GameState
     function onEnteringState(int $activePlayerId) {
         $this->game->trace("NextPlayer.onEnteringState($activePlayerId)");
 
-        Globals::setupNewTurn();//TODO JSA CHECK right place ?
-
         $roundStep = Globals::getRoundStep();
         switch($roundStep){
             case ROUND_STEP_TILE_AUCTIONS:
+                //TODO JSA INCREASE OnLY when same player bid again (when multiple bid turns)
                 Globals::incBidTurns();
                 $bidTurns = Globals::getBidTurns();
                 if($bidTurns == 1){
@@ -47,6 +46,21 @@ class NextPlayer extends \Bga\GameFramework\States\GameState
                     $nextPlayer = Players::getNextPlayer($currentAuctioneerId);
                 }
                 break;
+            case ROUND_STEP_PLAYER_ACTIONS: 
+                $activePlayer = Players::get($activePlayerId);
+                //$turnActions = Globals::getActionsTurns();
+                if($activePlayer->getNbActions() == 0) {
+                    //FIRST TURN for player with marker
+                    $firstPlayerToken = Tokens::getFirstPlayerToken();
+                    $nextPlayer = Players::get($firstPlayerToken->getPId());
+                }
+                else {
+                    //FIND NEXT PLAYER with remaining actions
+                    $nextPlayer = Players::getNextPlayerWithActions($activePlayerId);
+                }
+                //$nextPlayer->incNbActions();
+                //TODO JSA INCREASE OnLY when same player act again or remove that global
+                //Globals::incActionsTurns();
             default : 
                 break;
         }

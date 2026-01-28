@@ -24,6 +24,8 @@ ALTER TABLE `player` ADD `ships` int(2) NOT NULL DEFAULT 0 COMMENT 'This player 
 ALTER TABLE `player` ADD `contracts` int(2) NOT NULL DEFAULT 0 COMMENT 'This player total count of contracts on cards';
 ALTER TABLE `player` ADD `compasses` int(2) NOT NULL DEFAULT 0 COMMENT 'This player total count of compasses on cards';
 
+ALTER TABLE `player` ADD `nbActions` int(2) NOT NULL DEFAULT 0 COMMENT 'Current actions turn in current round/step';
+ALTER TABLE `player` ADD `passed` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Player has passed in current round/step';
 
 CREATE TABLE IF NOT EXISTS `cards` (
   `card_id` int(2) NOT NULL AUTO_INCREMENT,

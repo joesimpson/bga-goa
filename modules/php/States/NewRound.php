@@ -10,6 +10,7 @@ use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Log;
 use Bga\Games\Goa\Helpers\Utils;
+use Bga\Games\Goa\Managers\Players;
 
 class NewRound extends \Bga\GameFramework\States\GameState
 {
@@ -37,6 +38,11 @@ class NewRound extends \Bga\GameFramework\States\GameState
         Globals::setRoundStep(ROUND_STEP_PLACE_AUCTIONS);
         Notifications::newRound($round);
         Notifications::newRoundStep(ROUND_STEP_PLACE_AUCTIONS, clienttranslate('Place Auction tokens'));
+
+        Globals::setBidTurns(0);
+        Globals::setCurrentBid(0);
+        Globals::setActionsTurns(0);
+        Players::resetActionsPhase();
 
         // Go to another gamestate
         Log::addStateCheckpoint(NewTurn::class);

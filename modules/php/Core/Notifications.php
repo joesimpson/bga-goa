@@ -54,7 +54,8 @@ class Notifications
 
   public static function newTurn(int $turn)
   {
-    $msg = clienttranslate('Actions turn ${n} begins');
+    //$msg = clienttranslate('Actions turn ${n} begins');
+    $msg = '';
 
     self::notifyAll('newTurn', $msg, [
       'n' => $turn,
@@ -98,6 +99,13 @@ class Notifications
   public static function passBid(Player $player, )
   {
     self::notifyAll("passBid", clienttranslate('${player_name} passes'), [
+        "player" => $player,
+    ]);
+  }
+  
+  public static function passAction(Player $player, )
+  {
+    self::notifyAll("passAction", clienttranslate('${player_name} passes'), [
         "player" => $player,
     ]);
   }

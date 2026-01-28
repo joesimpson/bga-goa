@@ -43,7 +43,10 @@ export class PlayerTurn {
                 );
                 break;
             case this.game.const.ROUND_STEP_PLAYER_ACTIONS: 
-                this.bga.statusBar.setTitle('TODO JSA ROUND_STEP_PLAYER_ACTIONS');
+                //let titleActive =  _('${you} must select an action (${n} done in this round, min ${x} to pass)').replace('${n}', args.nbActions).replace('${x}', args.minActions);
+                let titleActive =  _('${you} must select an action (${n} done in this round)').replace('${n}', args.nbActions);
+                let titleOthers =  _('${actplayer} must select an action (${n} done in this round)').replace('${n}', args.nbActions);
+                this.bga.statusBar.setTitle(isCurrentPlayerActive ? titleActive : titleOthers);
                 break;
             default: 
                 //UNEXPECTED
@@ -141,6 +144,10 @@ export class PlayerTurn {
 
             if(possibleActions.includes('actPassBid')){
                 this.bga.statusBar.addActionButton(_('Pass'), () => this.bga.actions.performAction("actPassBid"), { destination: document.getElementById('restartActions') }); 
+            }
+            
+            if(possibleActions.includes('actPassAction')){
+                this.bga.statusBar.addActionButton(_('Pass'), () => this.bga.actions.performAction("actPassAction"), { destination: document.getElementById('restartActions') }); 
             }
 
         }

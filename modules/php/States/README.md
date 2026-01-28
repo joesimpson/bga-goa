@@ -11,25 +11,23 @@ Visual Diagram (hand made), in order to keep a trace of each possible transition
                     newRound   <-----------------------------\  |
                     |                                        |  |
                     v                                        |  |
-                    newTurn    <-------------------------\   |  |
-                    |                                    |   |  |
-                    v                                    |   |  |
-                    nextPlayer  <---------------------\  |   |  |
-                    |                                 ^  |   |  |
-                    v                                 |  |   |  |
-               playerTurn   -------\                  |  |   |  |
-              |       |            |                  |  |   |  |
-              |       v            |                  |  |   |  |
-              |playerChoice->\     |                  |  |   |  |
-              |       |      |     |                  |  |   |  |
-              v       v      |     |                  |  |   |  |
-              YYYYYYYYY  -->\|     |                  |  |   |  |
-                            ||     |                  |  |   |  |
-                            vv     v                  |  |   |  |
-                            confirm --> endPlayTurn ->/  |   |  |
-                                           |             |   |  |
-                                           v             |   |  |
-                                           endTurn ----->/   |  |
+                    newTurn                                  |  |
+                    |                                        |  |
+                    v                                        |  |
+                    nextPlayer  <---------------------\      |  |
+                    |                                 ^      |  |
+                    v                                 |      |  |
+               playerTurn   -------\                  |      |  |
+              |       |            |                  |      |  |
+              |       v            |                  |      |  |
+              |playerChoice->\     |                  |      |  |
+              |       |      |     |                  |      |  |
+              v       v      |     |                  |      |  |
+              YYYYYYYYY  -->\|     |                  |      |  |
+                            ||     |                  |      |  |
+                            vv     v                  |      |  |
+                            confirm --> endPlayTurn ->/      |  |
+                                           |                 |  |
                                            |                 |  |
                                            v                 |  |
                                            endRound -------->/  |
