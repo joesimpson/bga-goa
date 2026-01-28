@@ -834,7 +834,7 @@ namespace Bga\GameFramework {
          * 
          * @param int|class-string<Bga\GameFramework\States\GameState> $next_state the state id, or class name if using Class states
          */
-        final public function jumpToState(int $next_state): void
+        final public function jumpToState(int|string $next_state): void
         {
             //
         }
@@ -1398,6 +1398,8 @@ namespace Bga\GameFramework {
         /**
          * Get the "active_player", whatever what is the current state type.
          *
+         * **As this function returns the value as a string, it's better to use magical $currentPlayerId, in act functions or getAllDatas, to get the value as an int.**
+         *
          * Note: it does NOT mean that this player is active right now, because state type could be "game" or
          * "multiplayer".
          *
@@ -1405,7 +1407,7 @@ namespace Bga\GameFramework {
          * 
          * @return string the active player id typed as string
          */
-        final public function getActivePlayerId(): string|int
+        final public function getActivePlayerId(): string/*|int*/
         {
             return '0'; 
         }
@@ -1453,13 +1455,15 @@ namespace Bga\GameFramework {
          * Get the "current_player". The current player is the one from which the action originated (the one who sent
          * the request). In general, you shouldn't use this method, unless you are in "multiplayer" state.
          *
-         * **NOTE: This is not necessarily the active player!**
+         * **As this function returns the value as a string, it's better to use magical $currentPlayerId, in act functions or getAllDatas, to get the value as an int.**
+         *
+         * NOTE: This is not necessarily the active player!
          *
          * @see https://en.doc.boardgamearena.com/Main_game_logic:_yourgamename.game.php#File-Structure
          * 
          * @return string the current player id, typed as string
          */
-        final public function getCurrentPlayerId(bool $bReturnNullIfNotLogged = false): string|int
+        final public function getCurrentPlayerId(bool $bReturnNullIfNotLogged = false): string/*|int*/
         {
             return '0';
         }
@@ -2105,12 +2109,7 @@ namespace Bga\GameFramework {
         //abstract protected function getAllDatas(): array;
 
         /**
-         * Get the "current_player" color.
-         *
-         * Note: avoid using this method in a "multiplayer" state because it does not mean anything.
-         * 
-         * @return string the current player color
-         * @throws \BgaSystemException if the current player is not at the table (i.e. spectator).
+         * @deprecated use getPlayerColorById($currentPlayerId) with $currentPlayerId magic param. The player color is probably only useful in the front side anyway.
          */
         final public function getCurrentPlayerColor(): string
         {
@@ -2118,12 +2117,7 @@ namespace Bga\GameFramework {
         }
 
         /**
-         * Get the "current_player" name.
-         *
-         * Note: avoid using this method in a "multiplayer" state because it does not mean anything.
-         *
-         * @return string the current player name.
-         * @throws \BgaSystemException if the current player is not at the table (i.e. spectator).
+         * @deprecated use getPlayerNameById($currentPlayerId) with $currentPlayerId magic param
          */
         final public function getCurrentPlayerName($bReturnEmptyIfNotLogged = false): string
         {

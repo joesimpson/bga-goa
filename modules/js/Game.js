@@ -22,50 +22,6 @@ const [BgaHelp,BgaZoom] = await globalThis.importDojoLibs([g_gamethemeurl + "mod
 //import * as bgz from "./ext/bga-zoom.js";
 //import * as bgh from "./ext/bga-help.js";
 
-//Used Constants copied from PHP file
-const CARD_SUBTTYPE_EXPLORATION = 1;
-
-const TILE_SUBTTYPE_OUTPOST = 1;
-const TILE_SUBTTYPE_MARKET = 2;
-
-const COLONY_KOLLAM    = 1;
-const COLONY_KOCHI     = 2;
-const COLONY_MADRAS    = 3;
-const COLONY_KOZHIKODE = 4;
-
-const ACTION_MONEY               = 1;
-const ACTION_CONTRACT            = 2;
-const ACTION_SHIP                = 3;
-const ACTION_COMPASS             = 4;
-const ACTION_EXPLORATION         = 5;
-const ACTION_SHIPS_OR_CONTRACTS  = 6;
-const ACTION_SPICE               = 7;
-const ACTION_FAVOR               = 8;
-const ACTION_SWAP                = 9;
-const ACTION_RESUPPLY            = 10;
-const ACTION_HARVEST             = 11;
-const ACTION_ESPIONAGE           = 12;
-const ACTION_VICEKING            = 13;
-
-const MARKET_GRID_SIZE = 5;
-
-const MARKET_TYPE_PLANTATION      = 1;
-const MARKET_TYPE_ACTION_REUSEABLE = 2;
-const MARKET_TYPE_ACTION_DIRECT   = 4;
-const MARKET_TYPE_ACTION_ONCE     = 5;
-const MARKET_TYPE_SCORING         = 6;
-
-const CARD_LOCATION_EXP_DISCARD = '1_discard';
-const CARD_LOCATION_HAND = 'hand';
-
-const TILE_LOCATION_BOARD_MARKET = 'market';
-const TILE_LOCATION_BOARD_OUTPOST = 'board_c';
-const TILE_LOCATION_PLAYER_BOARD = 'p_board';
-
-const TOKEN_LOCATION_BOARD = 'board';
-const TOKEN_LOCATION_PLAYER_BOARD = 'p_board';
-const TOKEN_LOCATION_TILE = 'tile-';
-
 import { ConfirmTurn } from "./states/ConfirmTurn.js";
 import { ClientSelectProgress } from "./states/ClientSelectProgress.js";
 import { PlayerChoice, ClientSelectTileAction } from "./states/PlayerChoice.js";
@@ -258,10 +214,12 @@ export class Game {
                 this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_spices_${spice}`, _(`Spices`));
             });
 
+            let playerColoredName = this.bga.gameui.format_string(('${player_name}'), { player_name:this.coloredPlayerName(player.name)}) ;
+            let playerAvatar = ''; // this.bga.players.getPlayerAvatarUrl(player.id, 50);
             // example of adding a div for each player
             document.getElementById('goa_main_zone').insertAdjacentHTML('beforeend', `
                 <div id="goa_player_table-${player.id}" class="goa_player_table whiteblock" data-pid=${player.id} data-color='${player.color}'>
-                    <div class='goa_player_table_title_name' >${this.bga.gameui.format_string(('${player_name}'), { player_name:this.coloredPlayerName(player.name)}) }</div>
+                    <div class='goa_player_table_title_name' >${playerAvatar}${playerColoredName}</div>
                     <div id="goa_player_tiles-${player.id}" class="goa_player_tiles"></div>
                     <div class='goa_resizable_playerboard'>
                         <div class='goa_playerboard_container'>
@@ -927,8 +885,8 @@ export class Game {
         }
         if(init){
             //market Grid cells
-            for(let row=1;row<=MARKET_GRID_SIZE;row++){
-                for(let col=1;col<=MARKET_GRID_SIZE;col++){
+            for(let row=1;row<=this.const.MARKET_GRID_SIZE;row++){
+                for(let col=1;col<=this.const.MARKET_GRID_SIZE;col++){
                     let grid_cell = `goa_market_grid_space-${row}-${col}`;
                     if(!$(grid_cell)) document.getElementById(`goa_board_market_grid`).insertAdjacentHTML('beforeend', this.tplMarketGridSpace({'row':row, 'col':col}));
                     //this.empty(grid_cell);
@@ -936,21 +894,21 @@ export class Game {
             }
             //---------------------------------
             //grid frame
-            for(let col=1;col<=MARKET_GRID_SIZE;col++){
+            for(let col=1;col<=this.const.MARKET_GRID_SIZE;col++){
                 let grid_cell = `goa_market_grid_space-${0}-${col}`;
                 if(!$(grid_cell)) document.getElementById(`goa_board_market_top`).insertAdjacentHTML('beforeend', this.tplMarketGridSpace({'row':0, 'col':col}));
 
-                grid_cell = `goa_market_grid_space-${(MARKET_GRID_SIZE+1)}-${col}`;
-                if(!$(grid_cell)) document.getElementById(`goa_board_market_bottom`).insertAdjacentHTML('beforeend', this.tplMarketGridSpace({'row':(MARKET_GRID_SIZE+1), 'col':col}));
+                grid_cell = `goa_market_grid_space-${(this.const.MARKET_GRID_SIZE+1)}-${col}`;
+                if(!$(grid_cell)) document.getElementById(`goa_board_market_bottom`).insertAdjacentHTML('beforeend', this.tplMarketGridSpace({'row':(this.const.MARKET_GRID_SIZE+1), 'col':col}));
 
 
             }
-            for(let row=1;row<=MARKET_GRID_SIZE;row++){
+            for(let row=1;row<=this.const.MARKET_GRID_SIZE;row++){
                 let grid_cell = `goa_market_grid_space-${row}-${0}`;
                 if(!$(grid_cell)) document.getElementById(`goa_board_market_left`).insertAdjacentHTML('beforeend', this.tplMarketGridSpace({'row':row, 'col':0}));
 
-                grid_cell = `goa_market_grid_space-${row}-${(MARKET_GRID_SIZE+1)}`;
-                if(!$(grid_cell)) document.getElementById(`goa_board_market_right`).insertAdjacentHTML('beforeend', this.tplMarketGridSpace({'row':row, 'col':(MARKET_GRID_SIZE+1)}));
+                grid_cell = `goa_market_grid_space-${row}-${(this.const.MARKET_GRID_SIZE+1)}`;
+                if(!$(grid_cell)) document.getElementById(`goa_board_market_right`).insertAdjacentHTML('beforeend', this.tplMarketGridSpace({'row':row, 'col':(this.const.MARKET_GRID_SIZE+1)}));
             }
             //---------------------------------
             // create a card manager
@@ -999,23 +957,23 @@ export class Game {
         });
     }
     getTileContainer(tile) {
-        if(tile.subtype == TILE_SUBTTYPE_OUTPOST){
-            if (tile.location.startsWith(TILE_LOCATION_BOARD_OUTPOST) ) {
+        if(tile.subtype == this.const.TILE_SUBTTYPE_OUTPOST){
+            if (tile.location.startsWith(this.const.TILE_LOCATION_BOARD_OUTPOST) ) {
                 return `goa_board_outposts_${tile.colony}`;
             }
-            if (tile.location == (TILE_LOCATION_PLAYER_BOARD) ) {
+            if (tile.location == (this.const.TILE_LOCATION_PLAYER_BOARD) ) {
                 return `goa_player_outposts-${tile.pId}`;
             }
         }
         
-        if(tile.subtype == TILE_SUBTTYPE_MARKET){
-            if (tile.location == TILE_LOCATION_BOARD_MARKET ) {
-                if(tile.row>0 && tile.col>0 && tile.row<=MARKET_GRID_SIZE && tile.col<=MARKET_GRID_SIZE ){
+        if(tile.subtype == this.const.TILE_SUBTTYPE_MARKET){
+            if (tile.location == this.const.TILE_LOCATION_BOARD_MARKET ) {
+                if(tile.row>0 && tile.col>0 && tile.row<=this.const.MARKET_GRID_SIZE && tile.col<=this.const.MARKET_GRID_SIZE ){
                     return `goa_market_grid_space-${tile.row}-${tile.col}`;
                 }
             }
-            if (tile.location == (TILE_LOCATION_PLAYER_BOARD) ) {
-                if (tile.play_type == MARKET_TYPE_PLANTATION && [1,2,3,4].includes(tile.state) ) {
+            if (tile.location == (this.const.TILE_LOCATION_PLAYER_BOARD) ) {
+                if (tile.play_type == this.const.MARKET_TYPE_PLANTATION && [1,2,3,4].includes(tile.state) ) {
                     return `goa_player_plantations-${tile.pId}`;
                 }
                 return `goa_player_tiles-${tile.pId}`;
@@ -1063,7 +1021,7 @@ export class Game {
                         }),
              {'x': phaseLabel }
         );
-        if(tile.subtype == TILE_SUBTTYPE_OUTPOST){
+        if(tile.subtype == this.const.TILE_SUBTTYPE_OUTPOST){
             textLine1 = this.bga.gameui.format_string( 
                 _('Requires ${n} ${resource_name} : ${icon_resource}'),
                 {'n': this.getNbContractsForColony(tile.colony) , resource_name: _('Contracts'), icon_resource: this.formatIcon('contracts')}
@@ -1090,15 +1048,15 @@ export class Game {
     }
     formatTileTitle (tile) {
         let descriptionMap = new Map([
-            [MARKET_TYPE_PLANTATION, this.bga.gameui.format_string(_("Plantation"),{ })] ,
-            [MARKET_TYPE_ACTION_REUSEABLE, this.bga.gameui.format_string( _('Multi-use action'),{ } )],
-            [MARKET_TYPE_ACTION_DIRECT, this.bga.gameui.format_string(_("Immediate gain"),{ })] ,
-            [MARKET_TYPE_ACTION_ONCE, this.bga.gameui.format_string(_("Single use Action"),{ })] ,
-            [MARKET_TYPE_SCORING, this.bga.gameui.format_string(_("Scoring"),{ })] ,
+            [this.const.MARKET_TYPE_PLANTATION, this.bga.gameui.format_string(_("Plantation"),{ })] ,
+            [this.const.MARKET_TYPE_ACTION_REUSEABLE, this.bga.gameui.format_string( _('Multi-use action'),{ } )],
+            [this.const.MARKET_TYPE_ACTION_DIRECT, this.bga.gameui.format_string(_("Immediate gain"),{ })] ,
+            [this.const.MARKET_TYPE_ACTION_ONCE, this.bga.gameui.format_string(_("Single use Action"),{ })] ,
+            [this.const.MARKET_TYPE_SCORING, this.bga.gameui.format_string(_("Scoring"),{ })] ,
             
         ]);
         let description = ''; 
-        if(tile.subtype == TILE_SUBTTYPE_OUTPOST){
+        if(tile.subtype == this.const.TILE_SUBTTYPE_OUTPOST){
             return this.bga.gameui.format_string(_("Outpost : ${name}"),{ name : this.getColonyName(tile.colony)});
         }
         else description = descriptionMap.get(tile.play_type);
@@ -1109,15 +1067,15 @@ export class Game {
         let descriptionMap;
         switch (tile.subtype )
         {
-            case TILE_SUBTTYPE_OUTPOST:
+            case this.const.TILE_SUBTTYPE_OUTPOST:
                 return this.bga.gameui.format_string(_("When you found an outpost, place the outpost tile on the matching space of your personal board. After founding an outpost, fill it with the appropriate spices from the supply. To found an outpost with the appropriate action, a player needs to recruit a minimum number of contracts: ${n} contracts for this one."),{ n : this.getNbContractsForColony(tile.colony) });
-            case TILE_SUBTTYPE_MARKET: 
+            case this.const.TILE_SUBTTYPE_MARKET: 
                 descriptionMap = new Map([
-                    [MARKET_TYPE_PLANTATION, this.bga.gameui.format_string(_("When you build a plantation, put it face up in one of the upper spaces of your personal board. Plantations have 1 to 3 spice fields; this one have ${x}. After building a plantation, fill the field(s) with the appropriate spice token(s). If you already own 4 plantations on your personal board, you must first discard 1 plantation, and any spice tokens still on it, before placing the 5th one. If the discarded plantation has a scoring symbol on it, keep the plantation face down in your play area. This plantation is worth ${n} points at the end of the game, whether it is face up on your personal board or face down in your play area."),{ x: tile.spice_slots.length , n : tile.end_score })] ,
-                    [MARKET_TYPE_ACTION_REUSEABLE, this.bga.gameui.format_string( _(' For this tile, players must put it face up in their play area. They can use it before, during or after their action. This tile can be played during a future action, but only once per round. After using it, the player must flip it and may no longer use it for the rest of the round. At the beginning of the following round, players flip the tile face up and can use it again.'),{ } )],
-                    [MARKET_TYPE_ACTION_DIRECT, this.bga.gameui.format_string(_("When a player acquires this tile, they immediately take the appropriate resources. After being used, the tile is discarded."),{ })] ,
-                    [MARKET_TYPE_ACTION_ONCE, this.bga.gameui.format_string(_("This tile may only be used once during the game. Once used, the tile is discarded."),{ })] ,
-                    [MARKET_TYPE_SCORING, this.formatScoringTileText(tile)] ,
+                    [this.const.MARKET_TYPE_PLANTATION, this.bga.gameui.format_string(_("When you build a plantation, put it face up in one of the upper spaces of your personal board. Plantations have 1 to 3 spice fields; this one have ${x}. After building a plantation, fill the field(s) with the appropriate spice token(s). If you already own 4 plantations on your personal board, you must first discard 1 plantation, and any spice tokens still on it, before placing the 5th one. If the discarded plantation has a scoring symbol on it, keep the plantation face down in your play area. This plantation is worth ${n} points at the end of the game, whether it is face up on your personal board or face down in your play area."),{ x: tile.spice_slots.length , n : tile.end_score })] ,
+                    [this.const.MARKET_TYPE_ACTION_REUSEABLE, this.bga.gameui.format_string( _(' For this tile, players must put it face up in their play area. They can use it before, during or after their action. This tile can be played during a future action, but only once per round. After using it, the player must flip it and may no longer use it for the rest of the round. At the beginning of the following round, players flip the tile face up and can use it again.'),{ } )],
+                    [this.const.MARKET_TYPE_ACTION_DIRECT, this.bga.gameui.format_string(_("When a player acquires this tile, they immediately take the appropriate resources. After being used, the tile is discarded."),{ })] ,
+                    [this.const.MARKET_TYPE_ACTION_ONCE, this.bga.gameui.format_string(_("This tile may only be used once during the game. Once used, the tile is discarded."),{ })] ,
+                    [this.const.MARKET_TYPE_SCORING, this.formatScoringTileText(tile)] ,
                 ]);
                 break;
             default : return '';
@@ -1172,47 +1130,47 @@ export class Game {
         let description = '';
         switch (tile.subtype )
         {
-            case TILE_SUBTTYPE_OUTPOST:
+            case this.const.TILE_SUBTTYPE_OUTPOST:
                 return this.formatTileSpicesText(tile);
-            case TILE_SUBTTYPE_MARKET: 
+            case this.const.TILE_SUBTTYPE_MARKET: 
                 switch(this.gamedatas.material.tiles[tile.subtype][tile.type].play_type){
-                    case MARKET_TYPE_PLANTATION:
+                    case this.const.MARKET_TYPE_PLANTATION:
                         return this.formatTileSpicesText(tile);
-                    case MARKET_TYPE_ACTION_REUSEABLE:
-                    case MARKET_TYPE_ACTION_DIRECT: 
+                    case this.const.MARKET_TYPE_ACTION_REUSEABLE:
+                    case this.const.MARKET_TYPE_ACTION_DIRECT: 
                         let  returnAfterThis = false;
                         Object.entries( this.gamedatas.material.tiles[tile.subtype][tile.type].actions ).forEach(([action_type,number]) => {
                             let resource_name = '', icon_name='';
                             let number_label = number;
                             switch(parseInt(action_type)){
-                                case ACTION_SPICE:
+                                case this.const.ACTION_SPICE:
                                     returnAfterThis = true;
                                     description = this.formatTileSpicesText(tile);
-                                case ACTION_MONEY:
+                                case this.const.ACTION_MONEY:
                                     resource_name = _('Gold Pardau cards');
                                     icon_name = this.formatIcon('money');
                                     break;
-                                case ACTION_CONTRACT:
+                                case this.const.ACTION_CONTRACT:
                                     resource_name = _('Contracts');
                                     icon_name = this.formatIcon('contracts');
                                     break;
-                                case ACTION_SHIP:
+                                case this.const.ACTION_SHIP:
                                     resource_name = _('Ships');
                                     icon_name = this.formatIcon('ships');
                                     break;
-                                case ACTION_COMPASS:
+                                case this.const.ACTION_COMPASS:
                                     resource_name = _('Compass cards');
                                     icon_name = this.formatIcon('compasses');
                                     break;
-                                case ACTION_EXPLORATION:
+                                case this.const.ACTION_EXPLORATION:
                                     resource_name = _('Exploration cards');
                                     icon_name = this.formatIcon('exploration_card');
                                     break;
-                                case ACTION_SHIPS_OR_CONTRACTS:
+                                case this.const.ACTION_SHIPS_OR_CONTRACTS:
                                     resource_name = _('Ships or Contracts');
                                     icon_name = this.formatIcon('ships') + ' '+  this.formatIcon('contracts');
                                     break;
-                                case ACTION_FAVOR: 
+                                case this.const.ACTION_FAVOR: 
                                     description = this.bga.gameui.format_string(
                                         _("Look through the ${n} tiles that were returned to the box during setup for phases Day and Night. Take the tile of your choice among them. You may use it immediately if the tile allows it.")
                                         ,{n: 8}
@@ -1230,18 +1188,18 @@ export class Game {
                             }
                         });
                         break;
-                    case MARKET_TYPE_ACTION_ONCE: 
+                    case this.const.MARKET_TYPE_ACTION_ONCE: 
                         let actionDescriptionMap = new Map([
-                                [ACTION_SWAP, this.bga.gameui.format_string(_('When you buy the Swap tile, place it face up in your play area. During one of your later action turns, you may take 1 tile of your choice from the board and put it face up in your play area. Put the Swap tile, face up, in the space previously occupied by the tile you just took. You may use the tile that you obtained with the Swap tile as soon as you acquire it or later in the game. The Swap tile can be auctioned again, as per the normal rules. '),{}) + '<br/>' + _('Bonanza variant: If the Swap tile is used in one of the corners, you also take the Bonanza tile.') ],
-                                [ACTION_RESUPPLY, this.bga.gameui.format_string(_('Reveal ${n} Exploration cards and add the contracts shown on these cards. Then, take this sum in spices, contracts or ships. You choose the resource type after seeing the result. You can only choose one type of resource. Discard the Exploration cards after.'),{n:2})],
-                                [ACTION_HARVEST, this.bga.gameui.format_string(_('Fill up to ${n} of your plantations and/or outposts with the appropriate spices.'),{n :3})],
-                                [ACTION_ESPIONAGE, this.bga.gameui.format_string(
+                                [this.const.ACTION_SWAP, this.bga.gameui.format_string(_('When you buy the Swap tile, place it face up in your play area. During one of your later action turns, you may take 1 tile of your choice from the board and put it face up in your play area. Put the Swap tile, face up, in the space previously occupied by the tile you just took. You may use the tile that you obtained with the Swap tile as soon as you acquire it or later in the game. The Swap tile can be auctioned again, as per the normal rules. '),{}) + '<br/>' + _('Bonanza variant: If the Swap tile is used in one of the corners, you also take the Bonanza tile.') ],
+                                [this.const.ACTION_RESUPPLY, this.bga.gameui.format_string(_('Reveal ${n} Exploration cards and add the contracts shown on these cards. Then, take this sum in spices, contracts or ships. You choose the resource type after seeing the result. You can only choose one type of resource. Discard the Exploration cards after.'),{n:2})],
+                                [this.const.ACTION_HARVEST, this.bga.gameui.format_string(_('Fill up to ${n} of your plantations and/or outposts with the appropriate spices.'),{n :3})],
+                                [this.const.ACTION_ESPIONAGE, this.bga.gameui.format_string(
                                     bga_format( _("Choose an opponent and do one of these actions, using the position of this player's Progress marker in the appropriate column: _*Build ships,* *Harvest,* *Taxes,* *Found an outpost*_ "), {
                                         '*': (t) => '<li>' + t + '</li>',
                                         '_': (t) => '<ul>' + t + '</ul>',
                                     })
                                     ,{ }) + '<br/>' + _('That tile cannot be used to obtain Exploration cards.')],
-                                [ACTION_VICEKING, this.bga.gameui.format_string(_('Without paying any resources, move your least advanced Progress marker (the one closest to the top) down on your Development board. If you have more than one marker in this row, move one of these markers, your choice.'),{})],
+                                [this.const.ACTION_VICEKING, this.bga.gameui.format_string(_('Without paying any resources, move your least advanced Progress marker (the one closest to the top) down on your Development board. If you have more than one marker in this row, move one of these markers, your choice.'),{})],
                             ]);
                         Object.entries( this.gamedatas.material.tiles[tile.subtype][tile.type].actions ).forEach(([action_type,number]) => {
                             description += actionDescriptionMap.get(parseInt(action_type));
@@ -1255,11 +1213,11 @@ export class Game {
         return description;
     }
     tplTile(tile, prefix ='') {
-        if(tile.subtype == TILE_SUBTTYPE_OUTPOST) 
+        if(tile.subtype == this.const.TILE_SUBTTYPE_OUTPOST) 
             return `<div class="goa_tile goa_tile${prefix} goa_outpost" id="goa_tile${prefix}-${tile.id}" data-id="${tile.id}" data-type="${tile.type}"
                 data-colony="${tile.colony}" data-spots="${tile.spice_slots ? tile.spice_slots.length : 0}">
             </div>`;
-        if(tile.subtype == TILE_SUBTTYPE_MARKET) 
+        if(tile.subtype == this.const.TILE_SUBTTYPE_MARKET) 
             return `<div class="goa_tile goa_tile${prefix} goa_market" id="goa_tile${prefix}-${tile.id}" data-id="${tile.id}" data-type="${tile.type}"
                 data-play_type="${tile.play_type}" data-state="${tile.state}" data-spots="${tile.spice_slots ? tile.spice_slots.length : 0}"
                 data-end_score="${tile.end_score}" 
@@ -1271,8 +1229,8 @@ export class Game {
     tplTileFromType(tileType, prefix ='') {
         let tileDatas = {};
         tileDatas.type = parseInt(tileType);
-        //SUPPOSE ALL TILE_SUBTTYPE_MARKET
-        let material = this.gamedatas.material.tiles[TILE_SUBTTYPE_MARKET][tileDatas.type];
+        //SUPPOSE ALL this.const.TILE_SUBTTYPE_MARKET
+        let material = this.gamedatas.material.tiles[this.const.TILE_SUBTTYPE_MARKET][tileDatas.type];
         tileDatas = material;
 
         return this.tplTile(tileDatas, prefix);
@@ -1287,12 +1245,12 @@ export class Game {
     formatTilesHelp(){
         let list1 = "";
         let j = 0;
-        Object.entries(this.gamedatas.material.tiles[TILE_SUBTTYPE_MARKET]).forEach(([type,tile_type]) => {
+        Object.entries(this.gamedatas.material.tiles[this.const.TILE_SUBTTYPE_MARKET]).forEach(([type,tile_type]) => {
             let resourceDatas = tile_type;
             resourceDatas.id = 0;
             resourceDatas.state = 0;
             resourceDatas.type = parseInt(type);
-            resourceDatas.subtype = TILE_SUBTTYPE_MARKET;
+            resourceDatas.subtype = this.const.TILE_SUBTTYPE_MARKET;
             if(j>0){
                 list1 = list1.concat('<hr>');
             }
@@ -1301,12 +1259,12 @@ export class Game {
         });
         let list2 = "";
         let k = 0;
-        Object.entries(this.gamedatas.material.tiles[TILE_SUBTTYPE_OUTPOST]).forEach(([type,tile_type]) => {
+        Object.entries(this.gamedatas.material.tiles[this.const.TILE_SUBTTYPE_OUTPOST]).forEach(([type,tile_type]) => {
             let resourceDatas = tile_type;
             resourceDatas.id = 0;
             resourceDatas.state = 0;
             resourceDatas.type = parseInt(type);
-            resourceDatas.subtype = TILE_SUBTTYPE_OUTPOST;
+            resourceDatas.subtype = this.const.TILE_SUBTTYPE_OUTPOST;
             if(k>0){
                 list2 = list2.concat('<hr>');
             }
@@ -1343,19 +1301,19 @@ export class Game {
 
     getNbContractsForColony(colony){
         switch(colony){
-            case COLONY_KOLLAM: return 6;
-            case COLONY_KOCHI:  return 8;
-            case COLONY_MADRAS: return 10;
-            case COLONY_KOZHIKODE: return 12;
+            case this.const.COLONY_KOLLAM: return 6;
+            case this.const.COLONY_KOCHI:  return 8;
+            case this.const.COLONY_MADRAS: return 10;
+            case this.const.COLONY_KOZHIKODE: return 12;
             default: return 0;
         }
     }
     getColonyName(colony){
         switch(colony){
-            case COLONY_KOLLAM: return _('Kollam');
-            case COLONY_KOCHI:  return _('Kochi');
-            case COLONY_MADRAS: return _('Madras');
-            case COLONY_KOZHIKODE: return _('Kozhikode');
+            case this.const.COLONY_KOLLAM: return _('Kollam');
+            case this.const.COLONY_KOCHI:  return _('Kochi');
+            case this.const.COLONY_MADRAS: return _('Madras');
+            case this.const.COLONY_KOZHIKODE: return _('Kozhikode');
             default: return '';
         }
     }
@@ -1397,7 +1355,7 @@ export class Game {
         });
     }
     getTokenContainer(token) { 
-        if( TOKEN_LOCATION_PLAYER_BOARD == token.location) {
+        if( this.const.TOKEN_LOCATION_PLAYER_BOARD == token.location) {
             if(token.subtype == this.const.TOKEN_SUBTTYPE_PROGRESS_MARKER){
                 return `goa_progress_track_space_${token.track}_${token.row}_${token.pId}`;
             }
@@ -1409,19 +1367,19 @@ export class Game {
                 return `goa_first_player_container_${token.pId}`;
             }
         } 
-        if( TOKEN_LOCATION_BOARD == token.location) {
+        if( this.const.TOKEN_LOCATION_BOARD == token.location) {
             if(token.subtype == this.const.TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER){
-                if(token.row>=0 && token.col>=0 && token.row<=1+MARKET_GRID_SIZE && token.col<=1+MARKET_GRID_SIZE ){
+                if(token.row>=0 && token.col>=0 && token.row<=1+this.const.MARKET_GRID_SIZE && token.col<=1+this.const.MARKET_GRID_SIZE ){
                     return `goa_market_grid_space-${token.row}-${token.col}`;
                 }
             }
             if(token.subtype == this.const.TOKEN_SUBTTYPE_AUCTION_MARKER){
-                if(token.row>=0 && token.col>=0 && token.row<=1+MARKET_GRID_SIZE && token.col<=1+MARKET_GRID_SIZE ){
+                if(token.row>=0 && token.col>=0 && token.row<=1+this.const.MARKET_GRID_SIZE && token.col<=1+this.const.MARKET_GRID_SIZE ){
                     return `goa_market_grid_space-${token.row}-${token.col}`;
                 }
             }
         } 
-        if( token.location.startsWith(TOKEN_LOCATION_TILE)) {
+        if( token.location.startsWith(this.const.TOKEN_LOCATION_TILE)) {
             let tile_id = token.location.split('-')[1];
             return `goa_tile-${tile_id}`;
         }
@@ -1636,11 +1594,11 @@ export class Game {
     }
 
     getCardContainer(card) {
-        if(card.subtype == CARD_SUBTTYPE_EXPLORATION){
-            if (card.location == (CARD_LOCATION_EXP_DISCARD) ) {
+        if(card.subtype == this.const.CARD_SUBTTYPE_EXPLORATION){
+            if (card.location == (this.const.CARD_LOCATION_EXP_DISCARD) ) {
                 return `goa_exploration_discard`;
             }
-            if (card.location == (CARD_LOCATION_HAND) ) {
+            if (card.location == (this.const.CARD_LOCATION_HAND) ) {
                 return `goa_exploration_hand`;
             }
         }
@@ -1675,7 +1633,7 @@ export class Game {
     }
     
     tplCard(card, prefix ='') {
-        if(card.subtype == CARD_SUBTTYPE_EXPLORATION) 
+        if(card.subtype == this.const.CARD_SUBTTYPE_EXPLORATION) 
             return `<div id="goa_card${prefix}-${card.id}" class="goa_card goa_exploration_card goa_card${prefix}" data-type='${card.type}' data-pid='${card.pId}'></div>`;
         return '';
     }
@@ -1691,7 +1649,7 @@ export class Game {
         let textLine1 = ''
         let title = '';
         let textSymbols = '';
-        if(cardDatas.subtype == CARD_SUBTTYPE_EXPLORATION){
+        if(cardDatas.subtype == this.const.CARD_SUBTTYPE_EXPLORATION){
             let iconsContracts = this.formatIcon('contracts');
             for(let k=2;k<=cardDatas.contracts;k++) iconsContracts += this.formatIcon('contracts');
             textLine1 = this.bga.gameui.format_string( 
@@ -1782,12 +1740,12 @@ export class Game {
     formatCardsHelp(){
         let list1 = "";
         let j = 0;
-        Object.entries(this.gamedatas.material.cards[CARD_SUBTTYPE_EXPLORATION]).forEach(([type,card_type]) => {
+        Object.entries(this.gamedatas.material.cards[this.const.CARD_SUBTTYPE_EXPLORATION]).forEach(([type,card_type]) => {
             let resourceDatas = card_type;
             resourceDatas.id = 0;
             resourceDatas.state = 0;
             resourceDatas.type = parseInt(type);
-            resourceDatas.subtype = CARD_SUBTTYPE_EXPLORATION;
+            resourceDatas.subtype = this.const.CARD_SUBTTYPE_EXPLORATION;
             if(j>0){
                 list1 = list1.concat('<hr>');
             }
