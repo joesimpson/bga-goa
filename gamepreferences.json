@@ -10,7 +10,7 @@
                 "name": "Disabled"
             }
         },
-        "default": 1
+        "default": 0
     }
     ,"102": {
         "name": "Undo buttons style",
