@@ -19,7 +19,7 @@ export class ClientSelectProgress {
             let track = trackData.track;
             let costShips = trackData.costShips;
             let costSpices = trackData.costSpices;
-            let spicesSets = [[1022,1027],[1022,1028],[1023,1027],[1023,1028]];// TODO JSA SERVER SIDE
+            let spicesSets = trackData.spicesSets;// [[1022,1027],[1022,1028],[1023,1027],[1023,1028]];
                 
             let spicesIcons = '';
             let allSpicesIds = [];

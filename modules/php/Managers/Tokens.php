@@ -5,7 +5,9 @@ namespace Bga\Games\Goa\Managers;
 use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Exceptions\UnexpectedException;
+use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Collection;
+use Bga\Games\Goa\Helpers\Utils;
 use Bga\Games\Goa\Models\AuctionMarker;
 use Bga\Games\Goa\Models\FirstAuctionMarker;
 use Bga\Games\Goa\Models\Player;
@@ -295,29 +297,33 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
                   $spiceCosts = $trackSpiceCosts[$currentRow+1];
                   $map['costShips'] = count($spiceCosts);
                   $map['costSpices'] = [];
+                  $map['spicesSets'] = [];//[[1022,1027],[1022,1028],[1023,1027],[1023,1028]];
                   foreach($spiceCosts as $spice){
                     $spiceCost = count(array_keys($spiceCosts,$spice));
+                    /*
                     $spicesFromTilesIds = $playerSpices->filter(function ($playerSpice) use ($spice) {return $spice == $playerSpice->getSpice();})
                                                       ->filter(function ($token) { return null !== ($token->getTileId()); })
                                                       ->map(function ($token) { return $token->getTileId(); })
                                                       //->toUniqueArray()
                                                       ->toArray()
                                                       ;
-                    $spicesFromTokenIds = $playerSpices->getIds();
+                    */
+                    $spicesFromTokenIds = $playerSpices->filter(function ($playerSpice) use ($spice) {return $spice == $playerSpice->getSpice();})->getIds();
 
                     $map['costSpices'][$spice] = ['n' => $spiceCost, 'from' => $spicesFromTokenIds];
                   }
+
                 }
                 return $map;
               })
-            ->filter(function ($tokenDatas) use ($playerSpices, $ships) {
+            ->filter(function ($tokenDatas) use ($ships) {
                 if(!isset($tokenDatas['costShips'])) return false;
                 if($ships < $tokenDatas['costShips']){
                   return false;
                 }
                 foreach($tokenDatas['costSpices'] as $spice => $costDatas){
                   $spiceCost = $costDatas['n'];
-                  $nbPlayerSpices = $playerSpices->filter(function ($playerSpice) use ($spice) {return $spice == $playerSpice->getSpice();})->count();
+                  $nbPlayerSpices = count($costDatas['from']);
                   if($nbPlayerSpices < $spiceCost){
                     return false;
                   }
@@ -326,6 +332,60 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
                 //TODO JSA FILTER on upgrade cost with exploration cards if 0 used in this turn 
 
                 return true;
+            })
+            ->map(function ($map){
+
+              $possibleSets = [];
+              //Save each possible set of spices to pay this progress
+              foreach($map['costSpices'] as $spice => $datas){
+                $possibleSets[$spice] = [];
+                $perms = Utils::computePermutations(array_values($datas['from']));
+                //take n elements from array of each entry
+                foreach($perms as $p){
+                  $possibleSets[$spice][] = array_values(array_slice($p,0,$datas['n']));
+                }
+                $possibleSets[$spice] = Utils::array_of_uniquearrays($possibleSets[$spice]);
+                
+              }
+
+              Game::get()->trace(__FUNCTION__.'() : possibleSets = '.json_encode($possibleSets));
+
+              $multiplyOthers = function($i, $array2) use($possibleSets) {
+                
+                Game::get()->trace("multiplyOthers() : array BEFORE $i= ".json_encode($array2));
+
+                $array = [];
+                foreach($possibleSets as $j => $sets){
+                  if($j == $i) continue;
+                  foreach($sets as $set){
+                    $array[] = array_values(array_merge($set,$array2));
+                  }
+                }
+                sort($array);
+                Game::get()->trace("multiplyOthers() : array AFTER $i= ".json_encode($array));
+                return $array;
+              };
+              $map['spicesSets'] = [];
+              foreach($possibleSets as $spice => $sets){
+                /*
+                $map['spicesSets'] = Utils::array_cartesian(
+                      $map['spicesSets'], $sets
+                  );*/
+                foreach($sets as $set){
+
+                  $map['spicesSets'][] = $multiplyOthers($spice,$set);
+                }
+                
+              }
+              //flatten the array
+              $map['spicesSets'] = array_merge(...$map['spicesSets']);
+              foreach($map['spicesSets'] as &$set){
+                sort($set);
+              }
+              $map['spicesSets'] = Utils::array_of_uniquearrays($map['spicesSets']);
+              Game::get()->trace(__FUNCTION__.'() : spicesSets = '.json_encode($map['spicesSets']));
+
+              return $map;
             })
           //->map(function ($token) { return $token->getTrackIndex();})
           ->toArray();
