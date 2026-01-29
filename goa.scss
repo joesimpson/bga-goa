@@ -77,12 +77,40 @@
     .goa_player_table_title_name{
         text-align: center;
         margin: 5px;
+        top: -25px;
+        margin-bottom: -15px;
+        position: relative;
+        cursor: default;
+        display: block;
+        text-align: center;
+        >div{
+            text-align: center;
+            position: relative;
+            font-size: 20px;
+            .goa_player_table_title_content{
+                background-color: white;
+                outline: 3px solid black;
+                border-radius: 20px;
+                padding: 5px 15px;
+            }
+        }
     }
 }
 
 .goa_no_display{
     display: none !important;
 }
+
+.goa_player_avatar{
+    width: 32px;
+    height: 32px;
+    border-radius: 25px;
+    overflow: hidden;
+    vertical-align: middle;
+    margin-right: 10px;
+    outline: 3px solid black;
+}
+
 
 // ------------------------------------------------------------------------------
 // BUTTONS

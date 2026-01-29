@@ -593,11 +593,17 @@ $playerboard_img_height: calc(1 * 796px);
         .goa_playerboard_background{
             background-image: url('img/boards/player_1.jpg');
         }
+        .goa_player_avatar, .goa_player_table_title_content{
+            outline-color: #0090ba !important;
+        }
     }
     &[data-color="84cba2"]{//Green
         box-shadow: 0px 0px 0px 3px #84cba2;
         .goa_playerboard_background{
             background-image: url('img/boards/player_2.jpg');
+        }
+        .goa_player_avatar, .goa_player_table_title_content{
+            outline-color: #84cba2 !important;
         }
     }
     &[data-color="e14a9b"]{//Purple
@@ -605,11 +611,17 @@ $playerboard_img_height: calc(1 * 796px);
         .goa_playerboard_background{
             background-image: url('img/boards/player_3.jpg');
         }
+        .goa_player_avatar, .goa_player_table_title_content{
+            outline-color: #e14a9b !important;
+        }
     }
     &[data-color="feb713"]{//Yellow
         box-shadow: 0px 0px 0px 3px #feb713;
         .goa_playerboard_background{
             background-image: url('img/boards/player_4.jpg');
+        }
+        .goa_player_avatar, .goa_player_table_title_content{
+            outline-color: #feb713 !important;
         }
     }
 }
