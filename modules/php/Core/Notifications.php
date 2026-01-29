@@ -279,18 +279,36 @@ class Notifications
   
     /**
    * @param Player $player
+   * @param Collection $tokens
+   */
+  public static function removeSpices(Player $player,Collection $tokens)
+  {
+    $nTokens = $tokens->count();
+    if($nTokens == 0) return;
+    $msg = clienttranslate('${player_name} removes ${n} spices tokens from their tiles');
+    //TODO JSA ICONS
+    self::notifyAll('removeSpices', $msg, [
+      'player' => $player,
+      'n' => $nTokens,
+      'tokens' => $tokens->ui(),
+      'preserve'=>['tokens',],
+    ]);
+  }
+
+    /**
+   * @param Player $player
    * @param Tile $tile
    * @param Collection $tokens
    */
-  public static function removeSpices(Player $player,Tile $tile, Collection $tokens)
+  public static function removeTileSpices(Player $player,Tile $tile, Collection $tokens)
   {
-    $nTiles = $tokens->count();
-    if($nTiles == 0) return;
+    $nTokens = $tokens->count();
+    if($nTokens == 0) return;
     $msg = clienttranslate('${player_name} removes ${n} spices tokens from their tile');
 
-    self::notifyAll('removeSpices', $msg, [
+    self::notifyAll('removeTileSpices', $msg, [
       'player' => $player,
-      'n' => $nTiles,
+      'n' => $nTokens,
       'tokens' => $tokens->ui(),
       'tile_id' => $tile->getId(),
       'preserve'=>['tokens','tile_id'],

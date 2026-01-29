@@ -24,6 +24,7 @@ const [BgaHelp,BgaZoom] = await globalThis.importDojoLibs([g_gamethemeurl + "mod
 
 import { ConfirmTurn } from "./states/ConfirmTurn.js";
 import { ClientSelectProgress } from "./states/ClientSelectProgress.js";
+import { ClientSelectSpices } from "./states/ClientSelectSpices.js";
 import { PlayerChoice, ClientSelectTileAction } from "./states/PlayerChoice.js";
 import { PlayerTurn } from "./states/PlayerTurn.js";
 
@@ -45,6 +46,8 @@ export class Game {
         this.bga.states.register('ClientSelectTileAction', this.clientSelectTileAction);
         this.clientSelectProgress = new ClientSelectProgress(this, bga);
         this.bga.states.register('ClientSelectProgress', this.clientSelectProgress);
+        this.clientSelectSpices = new ClientSelectSpices(this, bga);
+        this.bga.states.register('ClientSelectSpices', this.clientSelectSpices);
 
         // Uncomment the next line to show debug informations about state changes in the console. Remove before going to production!
         this.bga.states.logger = console.log;
@@ -395,8 +398,8 @@ export class Game {
         container.innerHTML = '';
     }
     
-    clearSelection() {
-        console.log('clearSelection()' );
+    clearSelection(withClientState = false) {
+        console.log('clearSelection()' , withClientState);
         this._connections.forEach((i) => {
             let node = i[0];
             let action = i[1];
@@ -421,6 +424,13 @@ export class Game {
                 $(node).classList.remove('selected')
             }
         });
+        if(withClientState) {
+            [...document.getElementsByClassName('selected_for_client_state')].forEach((node) => {
+                if ($(node)){
+                    $(node).classList.remove('selected_for_client_state')
+                }
+            });
+        }
         this.empty(document.getElementById('goa_top_zone'));
         document.getElementById('goa_top_zone').classList.add('goa_no_display');
     }
@@ -464,7 +474,7 @@ export class Game {
             this.bga.statusBar.addActionButton( _('Clear selection'), () => {
                 selectedElements = [];
                 updateStatus();
-            }, { id:'btnCancelChoice', 'color':'secondary'});
+            }, { id:'btnCancelChoice', 'color':'secondary',destination: document.getElementById('restartActions')},);
         }
 
         Object.keys(elements).forEach((id) => {
@@ -916,8 +926,8 @@ export class Game {
         this._counters[notif.player_id]['spices_'+spice_type ].incValue(1);
         
     }
-    async notif_removeSpices(notif) {
-        console.log("notif_removeSpices",notif);
+    async notif_removeTileSpices(notif) {
+        console.log("notif_removeTileSpices",notif);
         let tile_id = notif.tile_id;
         let tileDiv = document.getElementById(`goa_tile-${tile_id}`);
         if(tileDiv){
@@ -930,6 +940,22 @@ export class Game {
             }));
             await this.animationManager.playInterval(animationsCleanTile);
         }
+    }
+    async notif_removeSpices(notif) {
+        console.log("notif_removeSpices",notif);
+        let tokens = notif.tokens;
+        let tokenDivs = [];
+        Object.values(tokens).forEach((token) => {
+            tokenDivs.push( $(`goa_token-${token.id}`) );
+        });
+        let voidDiv = document.getElementById('goa_top_zone');
+        let animationsCleanTile = tokenDivs.map(tokenDiv => (() => {
+            let spice_type = tokenDiv.dataset.spice;
+            this._counters[notif.player_id]['spices_'+spice_type ].incValue(-1);
+            this.animationManager.slideOutAndDestroy(tokenDiv, voidDiv, {duration: 1000});
+        }));
+        await this.animationManager.playInterval(animationsCleanTile);
+
     }
 
     async notif_reshuffleExplorationDeck(notif) {

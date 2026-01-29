@@ -124,6 +124,14 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
     return $elt;
   }
   
+  public static function removeSpices(Collection $tokens,Player $player,)
+  { 
+    foreach($tokens as $spice){
+      self::DB()->delete($spice->getId());
+    }
+    Notifications::removeSpices($player, $tokens);
+  }
+
   public static function removeSpicesOnTile(Tile $tile,Player $player,)
   { 
     $tokens = self::DB()
@@ -133,7 +141,7 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
     foreach($tokens as $token){
       self::DB()->delete($token->getId());
     } 
-    Notifications::removeSpices($player,$tile, $tokens);
+    Notifications::removeTileSpices($player,$tile, $tokens);
   }
   
   public static function removeSpicesOnAllTiles()

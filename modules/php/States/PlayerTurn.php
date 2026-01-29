@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Bga\Games\Goa\States;
 
+use Bga\GameFramework\Actions\Types\IntArrayParam;
 use Bga\GameFramework\StateType;
 use Bga\GameFramework\States\GameState;
 use Bga\GameFramework\States\PossibleAction;
@@ -242,7 +243,7 @@ class PlayerTurn extends GameState
      * Player action : turn ACTION #1 PROGRESS
      */
     #[PossibleAction]
-    public function actProgress(int $track, int $activePlayerId, array $args)
+    public function actProgress(int $track, #[IntArrayParam] array $t_ids,  int $activePlayerId, array $args)
     { 
         $this->game->trace("actProgress($track,$activePlayerId)");
         $possibleActions = $args['possibleActions'];
@@ -259,7 +260,6 @@ class PlayerTurn extends GameState
         if(!isset($selectedTrack)){
             throw new UnexpectedException(111,"Invalid track to progress on ($track), see ".json_encode($progressTracks));
         }
-
         $player = Players::get($activePlayerId);
         Log::addStep();
 
@@ -267,10 +267,16 @@ class PlayerTurn extends GameState
         $costSpices = $selectedTrack['costSpices'];
         foreach($costSpices as $datas){
             $costSpices = $datas['n'];
-            $fromTiles = $datas['from'];
+            $fromTokens = $datas['from'];
         }
-        //TODO JSA PAY COST in spices (+sometimes 1 exploration card)
+        //TODO JSA check t_ids
+        $playerSpices = Tokens::getPlayerSpices($player->getId());
+        $tokens = $playerSpices->filter(function($t) use ($t_ids){
+            return in_array($t->getId(), $t_ids);
+        });
+
         Players::giveShips($player,-$costShips);
+        Tokens::removeSpices($tokens, $player);
 
         $upgradedToken = Tokens::progressOnTrack($track, $activePlayerId);
         

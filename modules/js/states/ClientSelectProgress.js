@@ -41,26 +41,12 @@ export class ClientSelectProgress {
                 //refresh selection
                 [...document.getElementsByClassName('goa_progress_track')].forEach( a => a.classList.remove('selected'));
                 progressTrack.classList.add('selected');
-                //refresh button text
-                /*
-                let button = document.getElementById('goa_button_progress');
-                if(button) this.game.destroy(button);
-                this.bga.statusBar.addActionButton( 
-                    this.bga.gameui.format_string( 
-                        _('Spend ${n} ${icon_ship} and ${spices}'), 
-                        {'n':costShips, 'icon_ship':this.game.formatIcon('ships'), 'spices': spicesIcons  }),
-                    () => { 
-                        //this.bga.actions.performAction("actProgress", {'track': track});
-                       
-                    }
-                , { id:'goa_button_progress',destination: document.getElementById('customActions') }); 
-                */
-        
-                this.game.onSelectN(spicesDivs, costShips, (selectedSpices) => {
-                    this.bga.actions.performAction('actProgress', { 'track': track, t_ids: selectedSpices.join(',')});
-                }, spicesSets, true, this.bga.gameui.format_string( 
-                        _('Spend ${n} ${icon_ship} and ${spices}'), 
-                        {'n':costShips, 'icon_ship':this.game.formatIcon('ships'), 'spices': spicesIcons  }));
+                progressTrack.classList.add('selected_for_client_state');
+                
+                this.bga.states.setClientState("ClientSelectSpices", {
+                        descriptionmyturn: _("${you} must select spices ${icons} to discard and progress on track ${n}").replace('${icons}',spicesIcons).replace('${n}',track),
+                        args: {'track':track, 'spices_ids': allSpicesIds, 'nbSpices':costShips, 'spicesSets': spicesSets },
+                    });
             });
         });
         
