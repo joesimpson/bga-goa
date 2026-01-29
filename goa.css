@@ -1019,6 +1019,13 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-position-y: 0px;
   background-size: 1061.9469026549% 277.3109243697%;
 }
+.goa_spice.selectable {
+  cursor: pointer;
+  outline: 5px dashed blue;
+}
+.goa_spice.selected {
+  outline: 8px solid red;
+}
 
 .goa_exploration_card {
   position: relative;

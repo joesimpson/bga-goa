@@ -16,5 +16,17 @@ class TokenSpice extends Token
         $data['subtype'] = TOKEN_SUBTTYPE_SPICE;
         return $data;
     }
+    
+
+    /**
+     * @return int id of tile if this spice is on a tile, null otherwise
+     */
+    public function getTileId() : int |null
+    {
+        if (preg_match("/^" . TOKEN_LOCATION_TILE . "(?P<tile>\d+)$/", $this->getLocation(), $matches) == 1) {
+            return $matches['tile'];
+        }
+        return null;
+    }
    
 }

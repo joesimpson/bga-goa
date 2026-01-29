@@ -19,19 +19,30 @@ export class ClientSelectProgress {
             let track = trackData.track;
             let costShips = trackData.costShips;
             let costSpices = trackData.costSpices;
+            let spicesSets = [[1022,1027],[1022,1028],[1023,1027],[1023,1028]];// TODO JSA SERVER SIDE
                 
             let spicesIcons = '';
+            let allSpicesIds = [];
             Object.entries(costSpices).forEach( ([spice, cost]) => {
-                new Array(cost).fill(0).forEach( x => { 
+                Object.values(cost.from).forEach((tId) => {
+                    allSpicesIds.push(tId);
+                });
+                new Array(cost.n).fill(0).forEach( x => { 
                     spicesIcons += this.game.formatIcon('spices_'+spice);
                 });
             });
+            let spicesDivs = [];
+            Object.values(allSpicesIds).forEach((tId) => {
+                spicesDivs[tId] = $(`goa_token-${tId}`);
+            });
+
             let progressTrack = document.getElementById(`goa_progress_track_${track}_${activePlayer}`);
             this.game.onClick(progressTrack,() => {
                 //refresh selection
                 [...document.getElementsByClassName('goa_progress_track')].forEach( a => a.classList.remove('selected'));
                 progressTrack.classList.add('selected');
                 //refresh button text
+                /*
                 let button = document.getElementById('goa_button_progress');
                 if(button) this.game.destroy(button);
                 this.bga.statusBar.addActionButton( 
@@ -39,10 +50,17 @@ export class ClientSelectProgress {
                         _('Spend ${n} ${icon_ship} and ${spices}'), 
                         {'n':costShips, 'icon_ship':this.game.formatIcon('ships'), 'spices': spicesIcons  }),
                     () => { 
-                        //TODO JSA ANOTHER CLIENT STATE to select where we pick spices to spend
-                        this.bga.actions.performAction("actProgress", {'track': track})
+                        //this.bga.actions.performAction("actProgress", {'track': track});
+                       
                     }
                 , { id:'goa_button_progress',destination: document.getElementById('customActions') }); 
+                */
+        
+                this.game.onSelectN(spicesDivs, costShips, (selectedSpices) => {
+                    this.bga.actions.performAction('actProgress', { 'track': track, t_ids: selectedSpices.join(',')});
+                }, spicesSets, true, this.bga.gameui.format_string( 
+                        _('Spend ${n} ${icon_ship} and ${spices}'), 
+                        {'n':costShips, 'icon_ship':this.game.formatIcon('ships'), 'spices': spicesIcons  }));
             });
         });
         

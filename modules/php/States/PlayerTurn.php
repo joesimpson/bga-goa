@@ -263,7 +263,14 @@ class PlayerTurn extends GameState
         $player = Players::get($activePlayerId);
         Log::addStep();
 
-        //TODO JSA PAY COST in SHIPS + spices (+sometimes 1 exploration card)
+        $costShips = $selectedTrack['costShips'];
+        $costSpices = $selectedTrack['costSpices'];
+        foreach($costSpices as $datas){
+            $costSpices = $datas['n'];
+            $fromTiles = $datas['from'];
+        }
+        //TODO JSA PAY COST in spices (+sometimes 1 exploration card)
+        Players::giveShips($player,-$costShips);
 
         $upgradedToken = Tokens::progressOnTrack($track, $activePlayerId);
         

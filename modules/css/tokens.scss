@@ -99,4 +99,12 @@
     &[data-type="35"]{//TOKEN_TYPE_SPICE_GREEN
         @include goa_icons_sprite(940px,0px, $spice_width,$spice_height,113px,119px);
     }
+
+    &.selectable{
+        cursor: pointer;
+        outline: 5px dashed blue;
+    }
+    &.selected{
+        outline: 8px solid red;
+    }
 }

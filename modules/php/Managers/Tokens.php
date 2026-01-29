@@ -273,8 +273,9 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
     $allMarkers = Tokens::getProgressMarkers($player->getId());
     $ships = $player->getShips();
     $playerSpices = Tokens::getPlayerSpices($player->getId());
+    //$spicesFromTilesIds = $playerSpices->filter(function ($token) { return isset($token->getTileId()); })->map(function ($token) { return $token->getTileId(); });
 
-    return $allMarkers->map(function ($token) { 
+    return $allMarkers->map(function ($token) use ($playerSpices){ 
                 $map = [
                   'track' => $token->getTrackIndex(),
                   'row' => $token->getRow(),
@@ -288,7 +289,15 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
                   $map['costSpices'] = [];
                   foreach($spiceCosts as $spice){
                     $spiceCost = count(array_keys($spiceCosts,$spice));
-                    $map['costSpices'][$spice] = $spiceCost;
+                    $spicesFromTilesIds = $playerSpices->filter(function ($playerSpice) use ($spice) {return $spice == $playerSpice->getSpice();})
+                                                      ->filter(function ($token) { return null !== ($token->getTileId()); })
+                                                      ->map(function ($token) { return $token->getTileId(); })
+                                                      //->toUniqueArray()
+                                                      ->toArray()
+                                                      ;
+                    $spicesFromTokenIds = $playerSpices->getIds();
+
+                    $map['costSpices'][$spice] = ['n' => $spiceCost, 'from' => $spicesFromTokenIds];
                   }
                 }
                 return $map;
@@ -298,7 +307,8 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
                 if($ships < $tokenDatas['costShips']){
                   return false;
                 }
-                foreach($tokenDatas['costSpices'] as $spice => $spiceCost){
+                foreach($tokenDatas['costSpices'] as $spice => $costDatas){
+                  $spiceCost = $costDatas['n'];
                   $nbPlayerSpices = $playerSpices->filter(function ($playerSpice) use ($spice) {return $spice == $playerSpice->getSpice();})->count();
                   if($nbPlayerSpices < $spiceCost){
                     return false;
