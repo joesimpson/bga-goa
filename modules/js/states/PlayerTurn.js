@@ -141,6 +141,22 @@ export class PlayerTurn {
                 let progressMarker = progressTrack.getElementsByClassName('goa_progress_marker')[0];
                 this.game.onClick(progressMarker.parentNode,() => this.bga.actions.performAction("actTaxes"));
             }
+            
+            if(possibleActions.includes('actFoundOutpost') && args.outpostsToFound.length>0){
+                let baseContractsWithActions = 2;//TODO JSA this.getNbContractsForColony(tile.colony)
+                let goToNext = () => {
+                    this.bga.states.setClientState("ClientFoundOutpost", {
+                        descriptionmyturn: _("${you} must select a new outpost to found with a base of ${n} ${icon_contracts}").replace('${icon_contracts}', this.game.formatIcon('contracts')).replace('${n}', baseContractsWithActions),
+                        args: {'outpostsToFound': args.outpostsToFound },
+                    });
+                };
+                this.bga.statusBar.addActionButton(_('Found Outpost'), () => goToNext()
+                    , { destination: document.getElementById('customActions') }); 
+                //+ CLICK ON BOARD section
+                let progressTrack = document.getElementById(`goa_progress_track_${5}_${activePlayer}`);
+                let progressMarker = progressTrack.getElementsByClassName('goa_progress_marker')[0];
+                this.game.onClick(progressMarker.parentNode,() => goToNext());
+            }
 
             if(possibleActions.includes('actPassBid')){
                 this.bga.statusBar.addActionButton(_('Pass'), () => this.bga.actions.performAction("actPassBid"), { destination: document.getElementById('restartActions') }); 

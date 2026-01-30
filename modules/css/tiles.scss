@@ -33,6 +33,8 @@
     .goa_outpost-front, .goa_outpost-back //for bga-cards manager 
     { 
         --bga-cards_card-border-radius: 6px;
+        --bga-cards_selectable-card_outline-color: blue;
+        --bga-cards_selected-card_outline-color: red;
 
         //sprite positions
         background-size: 500% 400%;

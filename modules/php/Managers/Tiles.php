@@ -304,6 +304,27 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
       ->get();
   }
 
+  public static function getPlayerOutposts(Player $player){
+    return self::DB()
+      ->where('subtype', TILE_SUBTTYPE_OUTPOST)
+      ->where( static::$prefix . 'location', TILE_LOCATION_PLAYER_BOARD)
+      ->wherePlayer($player->getId())
+      ->get();
+  }
+  public static function getFoundableOutposts(Player $player): Collection{
+    $playerTiles = self::getPlayerOutposts($player);
+    $playerColonies = $playerTiles->filter(function($tile) {return ($tile instanceof OutpostTile);})
+          ->map(function($tile) {return $tile->getColony();})
+          ->toArray();
+
+    $newOutposts = new Collection([]);
+    foreach(TILE_LOCATION_BOARD_OUTPOSTS as $colony => $location) {
+      if(in_array($colony, $playerColonies)) continue;
+      $newOutposts = $newOutposts->merge(self::getInLocation($location));
+    }
+    return $newOutposts;
+  }
+
   ///////////////////////////////////////////////////////////////////////////////
   
   /** Creation of the Tiles */

@@ -1349,6 +1349,8 @@ Icon extract in sprite with differents layers size (so % is not useful).
 .goa_tile.goa_outpost,
 .goa_outpost-front, .goa_outpost-back {
   --bga-cards_card-border-radius: 6px;
+  --bga-cards_selectable-card_outline-color: blue;
+  --bga-cards_selected-card_outline-color: red;
   background-size: 500% 400%;
   background-image: url("img/outposts.jpg");
 }

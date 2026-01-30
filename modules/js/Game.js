@@ -25,6 +25,7 @@ const [BgaHelp,BgaZoom] = await globalThis.importDojoLibs([g_gamethemeurl + "mod
 import { ConfirmTurn } from "./states/ConfirmTurn.js";
 import { ClientSelectProgress } from "./states/ClientSelectProgress.js";
 import { ClientSelectSpices } from "./states/ClientSelectSpices.js";
+import { ClientFoundOutpost } from "./states/ClientFoundOutpost.js";
 import { PlayerChoice, ClientSelectTileAction } from "./states/PlayerChoice.js";
 import { PlayerTurn } from "./states/PlayerTurn.js";
 
@@ -48,6 +49,8 @@ export class Game {
         this.bga.states.register('ClientSelectProgress', this.clientSelectProgress);
         this.clientSelectSpices = new ClientSelectSpices(this, bga);
         this.bga.states.register('ClientSelectSpices', this.clientSelectSpices);
+        this.clientFoundOutpost = new ClientFoundOutpost(this, bga);
+        this.bga.states.register('ClientFoundOutpost', this.clientFoundOutpost);
 
         // Uncomment the next line to show debug informations about state changes in the console. Remove before going to production!
         this.bga.states.logger = console.log;
@@ -431,6 +434,9 @@ export class Game {
                 }
             });
         }
+        this.outpostsTilesStocks.forEach((stock) => { 
+            stock.setSelectionMode('none');
+        });
         this.empty(document.getElementById('goa_top_zone'));
         document.getElementById('goa_top_zone').classList.add('goa_no_display');
     }
@@ -1053,6 +1059,7 @@ export class Game {
                 getId: (card) => card.id,
                 setupFrontDiv: (card, div) => {
                     div.dataset.type = card.type; 
+                    div.dataset.colony = card.colony; 
                     this.bga.gameui.addTooltipHtml(div.id, this.getTileTooltip(card));
                 },
                 cardWidth: 108,
@@ -1435,7 +1442,7 @@ export class Game {
     }
 
     getNbContractsForColony(colony){
-        switch(colony){
+        switch(parseInt(colony)){
             case this.const.COLONY_KOLLAM: return 6;
             case this.const.COLONY_KOCHI:  return 8;
             case this.const.COLONY_MADRAS: return 10;
@@ -1444,7 +1451,7 @@ export class Game {
         }
     }
     getColonyName(colony){
-        switch(colony){
+        switch(parseInt(colony)){
             case this.const.COLONY_KOLLAM: return _('Kollam');
             case this.const.COLONY_KOCHI:  return _('Kochi');
             case this.const.COLONY_MADRAS: return _('Madras');

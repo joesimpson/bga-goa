@@ -18,6 +18,7 @@ use Bga\Games\Goa\Helpers\Log;
 use Bga\Games\Goa\Helpers\Utils;
 use Bga\Games\Goa\Managers\Cards;
 use Bga\Games\Goa\Managers\Players;
+use Bga\Games\Goa\Managers\Tiles;
 use Bga\Games\Goa\Managers\Tokens;
 
 class PlayerTurn extends GameState
@@ -104,6 +105,8 @@ class PlayerTurn extends GameState
                     $args['progressTracks'] = Tokens::getUpgradableProgressMarkers($player);
                     $args['possibleActions'][] = 'actBuildShips';
                     $args['possibleActions'][] = 'actTaxes';
+                    $args['possibleActions'][] = 'actFoundOutpost';
+                    $args['outpostsToFound'] = Tiles::getFoundableOutposts($player)->getIds();
                 }
                 //if($player->getNbActions() >= $args['minActions'] ) {
                 if($player->getNbActions() >= NB_MIN_ACTIONS_PER_ROUND && $player->getCompasses()<=1){
