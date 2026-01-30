@@ -1629,7 +1629,12 @@ export class Game {
                             _("Draw Exploration cards from the supply. Each row of the Exploration column shows two numbers. The number on the left is the maximum number of cards a player can draw whereas the one on the right is the player's hand limit, i.e., the maximum number of Exploration cards a player can have in their hand at any time when doing the Exploration action.")
                             ,{ }
                         );
-                action_gains = ['1 -> 1','1 -> 2','2 -> 3','2 -> 4','3 -> 5'];
+                //['1 -> 1','1 -> 2','2 -> 3','2 -> 4','3 -> 5']
+                action_gains = [];
+                this.const.PROGRESS_GAINS_EXPLO.forEach(element => {
+                    action_gains.push('<span class="goa_plus">'+element.plus+'</span>' 
+                                    +'-> <span class="goa_max">'+element.max+'</span>');
+                });
                 break;
             case 5: 
                 action_label = _('Found Outpost');

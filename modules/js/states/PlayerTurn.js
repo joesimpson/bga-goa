@@ -158,6 +158,19 @@ export class PlayerTurn {
                 let progressMarker = progressTrack.getElementsByClassName('goa_progress_marker')[0];
                 this.game.onClick(progressMarker.parentNode,() => goToNext());
             }
+            
+            if(possibleActions.includes('actExploration') && args.nbCardsExploration>0){
+                this.bga.statusBar.addActionButton(
+                    this.bga.gameui.format_string( 
+                        _('Explore : +${n} ${icon_explo}'),
+                        {'n' : args.nbCardsExploration, 'icon_explo': this.game.formatIcon('exploration_card')},
+                    ), () => this.bga.actions.performAction("actExploration"), { destination: document.getElementById('customPrimary') }); 
+                //+ CLICK ON BOARD section
+                let progressTrack = document.getElementById(`goa_progress_track_${4}_${activePlayer}`);
+                let progressMarker = progressTrack.getElementsByClassName('goa_progress_marker')[0];
+                this.game.onClick(progressMarker.parentNode,() => this.bga.actions.performAction("actExploration"));
+                //TODO JSA : player should be able to discard cards before this action
+            }
 
             if(possibleActions.includes('actPassBid')){
                 this.bga.statusBar.addActionButton(_('Pass'), () => this.bga.actions.performAction("actPassBid"), { destination: document.getElementById('customSecondary') }); 

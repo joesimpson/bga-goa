@@ -170,6 +170,14 @@ const TOKEN_TYPE_PROGRESS_MARKERS = [
 const PROGRESS_GAINS_SHIPS = [1,2,3,5,6];
 const PROGRESS_GAINS_TAXES = [4,6,8,10,12];
 const PROGRESS_GAINS_OUTPOST = [0,2,4,5,6];
+const PROGRESS_GAINS_EXPLO = [
+   ['plus' => 1, 'max' => 1],
+   ['plus' => 1, 'max' => 2],
+   ['plus' => 2, 'max' => 3],
+   ['plus' => 2, 'max' => 4],
+   ['plus' => 3, 'max' => 5],
+];
+
 //Cost as ships is 1 per spice, thus no need for another const
 const PROGRESS_COST_AS_SPICES = [
    TOKEN_TYPE_PROGRESS_MARKER_SHIPS => [
@@ -336,4 +344,5 @@ CONST ALL_MY_UI_CONSTANTS= [
    'PROGRESS_GAINS_TAXES' => PROGRESS_GAINS_TAXES,
    'PROGRESS_GAINS_SHIPS' => PROGRESS_GAINS_SHIPS,
    'PROGRESS_GAINS_OUTPOST' => PROGRESS_GAINS_OUTPOST,
+   'PROGRESS_GAINS_EXPLO'  => PROGRESS_GAINS_EXPLO,
 ] ;

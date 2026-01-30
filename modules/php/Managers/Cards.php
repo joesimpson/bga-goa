@@ -86,13 +86,25 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
       ->wherePlayer($pId)
       ->get();
   }
-  public static function countInExplorationHand(int $playerId)
+  public static function countInExplorationHand(int $playerId) : int
   {
     return self::DB()
       ->where( 'subType', CARD_SUBTTYPE_EXPLORATION)
       ->where(static::$prefix . 'location', CARD_LOCATION_HAND)
       ->wherePlayer($playerId)
       ->count();
+  }
+  
+  public static function maxExplorationToDraw(Player $player) :int
+  {
+    $playerId = $player->getId();
+    $nbCardsInHand = Cards::countInExplorationHand($playerId);
+    $progressMarker = Tokens::getProgressMarkerByType(TOKEN_TYPE_PROGRESS_MARKER_EXP,$playerId);
+    $gains = PROGRESS_GAINS_EXPLO[$progressMarker->getRow() - 1];
+    $nbMaxInHand = $gains['max'];
+    $delta = $gains['plus'];
+    $possibleDelta = $nbMaxInHand - $nbCardsInHand;
+    return max( 0, min($delta, $possibleDelta));
   }
   
   public static function getPrivateDatas(int $pId)

@@ -110,6 +110,8 @@ class PlayerTurn extends GameState
                     $outpostMarker = Tokens::getProgressMarkerByType(TOKEN_TYPE_PROGRESS_MARKER_OUTPOST, $player->getId());
                     $args['playerBaseContracts'] = PROGRESS_GAINS_OUTPOST[$outpostMarker->getRow() - 1];
                     $args['outpostsToFound'] = Tiles::getFoundableOutposts($player)->getIds();
+                    $args['nbCardsExploration'] = Cards::maxExplorationToDraw($player);
+                    $args['possibleActions'][] = 'actExploration';
                 }
                 //if($player->getNbActions() >= $args['minActions'] ) {
                 if($player->getNbActions() >= NB_MIN_ACTIONS_PER_ROUND && $player->getCompasses()<=1){
@@ -370,6 +372,28 @@ class PlayerTurn extends GameState
         return ConfirmTurn::class;
     }
     
+    /**
+     * Player action : turn ACTION #5 explore : draw some cards
+     */
+    #[PossibleAction]
+    public function actExploration(int $activePlayerId, array $args)
+    { 
+        $this->game->trace("actExploration($activePlayerId)");
+        $possibleActions = $args['possibleActions'];
+        if(!in_array('actExploration',$possibleActions)){
+            throw new UnexpectedException(110,"Invalid action actExploration, see ".json_encode($possibleActions));
+        }
+        Log::addStep();
+        $player = Players::get($activePlayerId);
+
+        $amount = $args['nbCardsExploration'];
+        Cards::drawExplorationCardsToPlayer($player,$amount);
+        
+        Players::registerNewAction($player);
+
+        Log::addStateCheckpoint(ConfirmTurn::class);
+        return ConfirmTurn::class;
+    }
     /**
      * Player action : turn ACTION #6 try to found an outpost
      */
