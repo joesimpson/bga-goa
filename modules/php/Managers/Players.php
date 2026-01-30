@@ -264,6 +264,7 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
 
   public static function giveContracts(Player $player, int $nb = 1)
   {
+    if($nb ==0) return;
     $player->incContracts($nb);
     Notifications::getContracts($player,$nb);
   }

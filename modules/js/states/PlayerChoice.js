@@ -18,6 +18,7 @@ export class PlayerChoice {
         let possibleActions = args.possibleActions;
         let tiles_choices = args.tiles_choices;
         let tiles = args.tiles;
+        let directState = false;
 
         this.bga.statusBar.setTitle(isCurrentPlayerActive ? 
             _('${you} must choose a tile action'):
@@ -32,7 +33,7 @@ export class PlayerChoice {
                     Object.entries(tile_choice_entry).forEach( ([tile_choice_entry_index,tile_choice])  => {
                         let tile_id = tile_choice.tile_id;
                         let tile = tiles[tile_id];
-                        let directState = (Object.entries(tiles_choices).length == 1) && (Object.entries(tile_choice_entry).length == 1);
+                        directState = (Object.entries(tiles_choices).length == 1) && (Object.entries(tile_choice_entry).length == 1);
                         if(tile){
                             let tile_icon = this.game.tplTile(tile, '_log');
                             let nextState = function (bga) {
@@ -40,7 +41,7 @@ export class PlayerChoice {
                                     descriptionmyturn: _("${you} must select one of these"),
                                     description : _("${actplayer} must select one of these"),
                                     args: { 'tile_choice':tile_choice, 'tile':tile, 'choice_index': tile_choice_entry_index
-                                        , 'cancelable' : !directState
+                                        , 'cancelable' : !directState, 'undo': args.undo,
                                     },
                                 });
                             };
@@ -58,7 +59,7 @@ export class PlayerChoice {
             }
 
         }
-        if(isCurrentPlayerActive) this.game.confirmTurn.displayUndoButtons(args);
+        if(isCurrentPlayerActive && !directState) this.game.confirmTurn.displayUndoButtons(args);
     }
 
     /**
@@ -208,6 +209,7 @@ export class ClientSelectTileAction {
                 this.bga.states.restoreServerGameState();
             }, { 'color':'secondary',destination: document.getElementById('customActions') }); 
         }
+        if(isCurrentPlayerActive) this.game.confirmTurn.displayUndoButtons(args);
 
     }
 

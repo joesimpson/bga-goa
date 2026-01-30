@@ -215,10 +215,16 @@ class Notifications
   
   public static function resultFoundOutpost(Player $player, int $nbContracts)
   {
-    self::notifyAll("tryFoundOutpost", clienttranslate('Cards revealed ${n} ${icon_contracts} to found the outpost'), [
+    self::notifyAll("resultFoundOutpost", clienttranslate('Cards revealed ${n} ${icon_contracts} to found the outpost'), [
         "player" => $player,
         "n" => $nbContracts,
         "icon_contracts" => clienttranslate('Contracts'),
+    ]);
+  }
+  public static function abandonOutpost(Player $player, Tile $tile)
+  {
+    self::notifyAll("abandonOutpost", clienttranslate('${player_name} chooses not to found the outpost'), [
+        "player" => $player,
     ]);
   }
 

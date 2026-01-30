@@ -44,8 +44,11 @@ class ConfirmTurn extends GameState
      */
     public static function addArgsForUndo(&$args)
     {
-        $args['previousSteps'] = Log::getUndoableSteps();
-        $args['previousChoices'] = Globals::getChoices();
+        $args['undo'] = [
+            'previousSteps' => Log::getUndoableSteps(),
+            'previousChoices' => Globals::getChoices(),
+        ];
+        
     }
 
     public function onEnteringState(int $activePlayerId) {

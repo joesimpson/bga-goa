@@ -9,6 +9,7 @@ use Bga\GameFramework\States\GameState;
 use Bga\GameFramework\States\PossibleAction;
 use Bga\GameFramework\UserException;
 use Bga\Games\Goa\Core\Globals;
+use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Exceptions\PrematureStateChangeException;
 use Bga\Games\Goa\Exceptions\UnexpectedException;
 use Bga\Games\Goa\Game;
@@ -122,6 +123,7 @@ class PlayerChoice extends GameState
                             Players::directGain($player,$choice, $foundChoice['n'], $tile );
                             break;
                         case ACTION_FOUND_ABANDON:
+                            Notifications::abandonOutpost($player,$tile);
                             Players::giveContracts($player, 1);
                             break;
                         case ACTION_FOUND_FORWARD:
