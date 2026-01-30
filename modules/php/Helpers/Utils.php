@@ -75,7 +75,7 @@ abstract class Utils {
      * @source https://stackoverflow.com/questions/10222835/get-all-permutations-of-a-php-array & https://docstore.mik.ua/orelly/webprog/pcook/ch04_26.htm
      */
     public static function computePermutations(array $set) : array{
-        Game::get()->trace(__FUNCTION__.'() : '.json_encode($set));
+        //Game::get()->trace(__FUNCTION__.'() : '.json_encode($set));
         $size = count($set) - 1;
         //if($size == 0) return [];
         $perm = range(0, $size);
@@ -89,7 +89,7 @@ abstract class Utils {
             }
         } while ($perm = self::pc_next_permutation($perm, $size) and ++$j);
 
-        Game::get()->trace(__FUNCTION__.'() : RESULT = '.json_encode($perms));
+        //Game::get()->trace(__FUNCTION__.'() : RESULT = '.json_encode($perms));
         return $perms;
     }
 
@@ -99,6 +99,7 @@ abstract class Utils {
     public static function array_cartesian(array $possibleSets) : array {
         $allSets = [];
 
+        /*
         $multiplyOthers = function($i, $array2) use($possibleSets) {
             
             //Game::get()->trace("multiplyOthers() : array BEFORE $i= ".json_encode($array2));
@@ -108,6 +109,7 @@ abstract class Utils {
                 if($j == $i) continue;
                 foreach($sets as $set){
                     $array[] = array_values(array_merge($set,$array2));
+                    //else  $array[] = array_values(array_merge([$set],[$array2]));
                 }
             }
             sort($array);
@@ -126,9 +128,101 @@ abstract class Utils {
         foreach($allSets as &$set){
             sort($set);
         }
+        */
+        $allSets = Utils::array_cartesian_productV3($possibleSets);
+        foreach($allSets as &$set){
+            $set = array_merge(...$set);
+            sort($set);
+        }
         $allSets = Utils::array_of_uniquearrays($allSets);
         return $allSets;
     }
+
+    /**
+     * @source https://gist.github.com/bdelespierre/0980c0f93cc63b883376a65865f44017
+     */
+    /*
+    static function array_cartesian_product(...$items): array
+    {
+        if (empty($items)) {
+            return [];
+        }
+
+        if (count($items) == 1) {
+            foreach ((array) $items[0] as $value) {
+                $result[] = (array) $value;
+            }
+        } else {
+            foreach ((array) $items[0] as $value) {
+                foreach (self::array_cartesian_product(...array_slice($items, 1)) as $values) {
+                    array_unshift($values, $value);
+                    $result[] = $values;
+                }
+            }
+        }
+
+        return $result ?? [];
+    }
+    */
+
+    /**
+     * @source https://stackoverflow.com/questions/6311779/finding-cartesian-product-with-php-associative-arrays
+     *  */
+    static function array_cartesian_productV3($input) {
+        $result = array();
+
+        foreach ($input as $key => $values) {
+            // If a sub-array is empty, it doesn't affect the cartesian product
+            if (empty($values)) {
+                continue;
+            }
+
+            // Seeding the product array with the values from the first sub-array
+            if (empty($result)) {
+                foreach($values as $value) {
+                    $result[] = array($key => $value);
+                }
+            }
+            else {
+                // Second and subsequent input sub-arrays work like this:
+                //   1. In each existing array inside $product, add an item with
+                //      key == $key and value == first item in input sub-array
+                //   2. Then, for each remaining item in current input sub-array,
+                //      add a copy of each existing array inside $product with
+                //      key == $key and value == first item of input sub-array
+
+                // Store all items to be added to $product here; adding them
+                // inside the foreach will result in an infinite loop
+                $append = array();
+
+                foreach($result as &$product) {
+                    // Do step 1 above. array_shift is not the most efficient, but
+                    // it allows us to iterate over the rest of the items with a
+                    // simple foreach, making the code short and easy to read.
+                    $product[$key] = array_shift($values);
+                    
+                    // $product is by reference (that's why the key we added above
+                    // will appear in the end result), so make a copy of it here
+                    $copy = $product;
+
+                    // Do step 2 above.
+                    foreach($values as $item) {
+                        $copy[$key] = $item;
+                        $append[] = $copy;
+                    }
+
+                    // Undo the side effecst of array_shift
+                    array_unshift($values, $product[$key]);
+                }
+
+                // Out of the foreach, we can add to $results now
+                $result = array_merge($result, $append);
+            }
+        }
+
+        return $result;
+    }
+
 
 
     

@@ -6,6 +6,7 @@ use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Core\Stats;
 use Bga\Games\Goa\Helpers\Log;
 use Bga\Games\Goa\Helpers\QueryBuilder;
+use Bga\Games\Goa\Helpers\Utils;
 use Bga\Games\Goa\Managers\Cards;
 use Bga\Games\Goa\Managers\Players;
 use Bga\Games\Goa\Managers\Tiles;
@@ -370,6 +371,42 @@ trait DebugTrait
         $players = Players::getAll()->toArray();
         //Notifications::winsAuction($players[0], 12,$players[1]);
         Notifications::winsAuction($players[0], 15,);
+    }
+
+    //TEst different utils functions at a time
+    function debug_Utils(){
+        $possibleSets[1] =  [[15],];
+        $sets = Utils::array_cartesian($possibleSets);
+        Notifications::message("debug_Utils 1: ".json_encode($sets),['sets'=>$sets]);
+        $possibleSets[2] =  [[50],[52]];
+        $sets = Utils::array_cartesian($possibleSets);
+        Notifications::message("debug_Utils 2: ".json_encode($sets),['sets'=>$sets]);
+        $possibleSets[3] =  [[1034,1032,],[1035,1032],[1035,1034]];
+        $sets = Utils::array_cartesian($possibleSets);
+        Notifications::message("debug_Utils 3: ".json_encode($sets),['sets'=>$sets]);
+        
+        /*
+        $possibleSets = [];
+        $possibleSets[1] =  [[15],];
+        $sets = Utils::array_cartesian_product($possibleSets);
+        Notifications::message("debug_Utils A2: ".json_encode($sets),['sets'=>$sets]);
+        $possibleSets[2] =  [[50],[52]];
+        $sets = Utils::array_cartesian_product($possibleSets);
+        Notifications::message("debug_Utils B2: ".json_encode($sets),['sets'=>$sets]);
+        $possibleSets[3] =  [[1034,1032,],[1035,1032],[1035,1034]];
+        $sets = Utils::array_cartesian_product($possibleSets);
+        Notifications::message("debug_Utils C2: ".json_encode($sets),['sets'=>$sets]);
+        */
+        $possibleSets = [];
+        $possibleSets[1] =  [[15],];
+        $sets = Utils::array_cartesian_productV3($possibleSets);
+        Notifications::message("debug_Utils A3: ".json_encode($sets),['sets'=>$sets]);
+        $possibleSets[2] =  [[50],[52]];
+        $sets = Utils::array_cartesian_productV3($possibleSets);
+        Notifications::message("debug_Utils B3: ".json_encode($sets),['sets'=>$sets]);
+        $possibleSets[3] =  [[1034,1032,],[1035,1032],[1035,1034]];
+        $sets = Utils::array_cartesian_productV3($possibleSets);
+        Notifications::message("debug_Utils C3: ".json_encode($sets),['sets'=>$sets]);
     }
 
     ////////////////////////////////////////////////////

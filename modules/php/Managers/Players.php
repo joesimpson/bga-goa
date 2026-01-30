@@ -102,6 +102,9 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
       ->update(['nbActions' => 0, 'passed' => 0])
       ->run();
   }
+  /**
+   * Save the information that the player played one of their authorized actions
+   */
   public static function registerNewAction(Player $player)
   {
     if($player->getNbActions() >= NB_MIN_ACTIONS_PER_ROUND){
