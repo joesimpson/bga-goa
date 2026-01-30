@@ -32,15 +32,25 @@ export class PlayerChoice {
                     Object.entries(tile_choice_entry).forEach( ([tile_choice_entry_index,tile_choice])  => {
                         let tile_id = tile_choice.tile_id;
                         let tile = tiles[tile_id];
+                        let directState = (Object.entries(tiles_choices).length == 1) && (Object.entries(tile_choice_entry).length == 1);
                         if(tile){
                             let tile_icon = this.game.tplTile(tile, '_log');
-                            this.bga.statusBar.addActionButton( tile_icon, () => {
-                                this.bga.states.setClientState("ClientSelectTileAction", {
+                            let nextState = function (bga) {
+                                bga.states.setClientState("ClientSelectTileAction", {
                                     descriptionmyturn: _("${you} must select one of these"),
                                     description : _("${actplayer} must select one of these"),
-                                    args: { 'tile_choice':tile_choice, 'tile':tile, 'choice_index': tile_choice_entry_index},
+                                    args: { 'tile_choice':tile_choice, 'tile':tile, 'choice_index': tile_choice_entry_index
+                                        , 'cancelable' : !directState
+                                    },
                                 });
+                            };
+                            this.bga.statusBar.addActionButton( tile_icon, () => {
+                                nextState(this.bga);
                             }, {  destination: document.getElementById('customActions') }); 
+                            if(directState){
+                                //UNIQUE CHOICE => go for it
+                                nextState(this.bga);
+                            }
                         }
                     });
                 });
@@ -193,9 +203,11 @@ export class ClientSelectTileAction {
             }
         });
 
-        this.bga.statusBar.addActionButton( _('Cancel'), () => {
-            this.bga.states.restoreServerGameState();
-        }, { 'color':'secondary',destination: document.getElementById('customActions') }); 
+        if(args.cancelable){
+            this.bga.statusBar.addActionButton( _('Cancel'), () => {
+                this.bga.states.restoreServerGameState();
+            }, { 'color':'secondary',destination: document.getElementById('customActions') }); 
+        }
 
     }
 
