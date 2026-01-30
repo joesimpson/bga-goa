@@ -92,7 +92,10 @@ export class Game {
         // add a div on the game area
         this.bga.gameArea.getElement().insertAdjacentHTML('beforeend', `
             <div id="goa_overall_background"></div>
-            <div id="goa_top_zone" class="whiteblock goa_no_display"></div>
+            <div id="goa_top_zone" class="whiteblock">
+                <div></div>
+                <div id="goa_top_zone_content" ></div>
+            </div>
             <div id="goa_game_container">
                 <div id="goa_main_zone">
                     <div id='goa_resizable_board'>
@@ -440,8 +443,9 @@ export class Game {
             stock.setSelectionMode('none');
             stock.removeLastPlayedCardsClass();
         });
-        this.empty(document.getElementById('goa_top_zone'));
-        document.getElementById('goa_top_zone').classList.add('goa_no_display');
+        document.getElementById('goa_top_zone').classList.remove('goa_display');
+        //Empty it only when displayed again in order to have smooth transition
+        //this.empty(document.getElementById('goa_top_zone_content'));
     }
 
     onClick(node, callback) {

@@ -2019,6 +2019,19 @@ https://github.com/thoun/bga-zoom/blob/main/bga-zoom.css
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  display: grid;
+  grid-template-rows: min-content 0fr;
+  transition: grid-template-rows 500ms;
+}
+#goa_top_zone #goa_top_zone_content {
+  overflow: hidden;
+}
+#goa_top_zone:not(.goa_display) {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+#goa_top_zone.goa_display {
+  grid-template-rows: min-content 1fr !important;
 }
 #goa_top_zone #goa_bid_hints {
   width: 100%;
@@ -2073,7 +2086,10 @@ https://github.com/thoun/bga-zoom/blob/main/bga-zoom.css
 }
 
 .goa_no_display {
-  display: none !important;
+  height: 0 !important;
+  visibility: hidden !important;
+  margin: 0 !important;
+  opacity: 0 !important;
 }
 
 .goa_player_avatar {

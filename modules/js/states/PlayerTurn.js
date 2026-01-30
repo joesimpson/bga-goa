@@ -76,8 +76,9 @@ export class PlayerTurn {
                 let hintLineMin = this.bga.gameui.format_string(  _('Minimum bid : ${n} ${icon_money}') ,{ n:args.minBid , icon_money: icon_money});
                 let hintLineMax = this.bga.gameui.format_string(  _('Maximum bid : ${n} ${icon_money}') ,{ n:args.maxBid , icon_money:  icon_money});
 
-                document.getElementById('goa_top_zone').classList.remove('goa_no_display');
-                document.getElementById('goa_top_zone').insertAdjacentHTML('beforeend', `
+                document.getElementById('goa_top_zone').classList.add('goa_display');
+                this.game.empty(document.getElementById('goa_top_zone_content'));
+                document.getElementById('goa_top_zone_content').insertAdjacentHTML('beforeend', `
                         <div id="goa_bid_hints">
                             <span>${hintLine1 }</span>
                             <div id='goa_bid_reset_min'></div>
