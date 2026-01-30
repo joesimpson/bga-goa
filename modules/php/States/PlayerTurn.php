@@ -265,18 +265,34 @@ class PlayerTurn extends GameState
 
         $costShips = $selectedTrack['costShips'];
         $costSpices = $selectedTrack['costSpices'];
+        $totalSpicesExpected = 0;
         foreach($costSpices as $datas){
             $costSpices = $datas['n'];
-            $fromTokens = $datas['from'];
+            $totalSpicesExpected+= $costSpices;
         }
-        //TODO JSA check t_ids
+        if ($totalSpicesExpected != count($t_ids)) {
+            throw new UnexpectedException(120,"You must select $totalSpicesExpected tokens");
+        }
+        $foundMatch = false;
+        $possibleTokensIdsArrays = $selectedTrack['spicesSets'];
+        foreach($possibleTokensIdsArrays as $possibleTokensIdsArray){
+            $diff = array_diff($t_ids, $possibleTokensIdsArray);
+            if (count($diff) == 0){
+                $foundMatch = true;
+                break;
+            }
+        }
+        if (!$foundMatch) {
+            throw new UnexpectedException(121,("These tokens are not a valid set"));
+        }
+
         $playerSpices = Tokens::getPlayerSpices($player->getId());
         $tokens = $playerSpices->filter(function($t) use ($t_ids){
             return in_array($t->getId(), $t_ids);
         });
 
-        Players::giveShips($player,-$costShips);
         Tokens::removeSpices($tokens, $player);
+        Players::giveShips($player,-$costShips);
 
         $upgradedToken = Tokens::progressOnTrack($track, $activePlayerId);
         
