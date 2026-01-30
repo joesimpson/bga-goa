@@ -574,12 +574,16 @@ $playerboard_img_height: calc(1 * 796px);
             .goa_tile{
                 .goa_token {
                     position: absolute;
-                    transition: margin .5s;
+                    transition: margin 0.5s;
                 }
-                &:hover .goa_token{
+                //&:hover .goa_token{
+                .goa_token.selectable:hover {
                     //View behind token on tile (spices): 
+                    opacity: 0.2;
+                }
+                &:hover .goa_token:not(.selectable){
+                    margin-top: -25%;
                     opacity: 0.7;
-                    margin-top: -50%;
                 }
             }
         }
