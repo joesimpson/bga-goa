@@ -94,19 +94,39 @@ abstract class Utils {
     }
 
     /**
-     * @return array Permutations of multiples arrays in arguments
-     * @source https://stackoverflow.com/questions/28188739/permutation-with-two-array-in-php
+     * @return array Cartesian product of multiples arrays in arguments
      */
-    public static function array_cartesian() {
-        $_ = func_get_args();
-        if(count($_) == 0)
-            return array(array());
-        $a = array_shift($_);
-        $c = call_user_func_array(__FUNCTION__, $_);
-        $r = array();
-        foreach($a as $v)
-            foreach($c as $p)
-                $r[] = array_merge(array($v), $p);
-        return $r;
+    public static function array_cartesian(array $possibleSets) : array {
+        $allSets = [];
+
+        $multiplyOthers = function($i, $array2) use($possibleSets) {
+            
+            //Game::get()->trace("multiplyOthers() : array BEFORE $i= ".json_encode($array2));
+
+            $array = [];
+            foreach($possibleSets as $j => $sets){
+                if($j == $i) continue;
+                foreach($sets as $set){
+                    $array[] = array_values(array_merge($set,$array2));
+                }
+            }
+            sort($array);
+            //Game::get()->trace("multiplyOthers() : array AFTER $i= ".json_encode($array));
+            return $array;
+        };
+        
+        foreach($possibleSets as $key => $sets){
+            foreach($sets as $set){
+                $allSets[] = $multiplyOthers($key,$set);
+            }
+            
+        }
+        //flatten the array
+        $allSets = array_merge(...$allSets);
+        foreach($allSets as &$set){
+            sort($set);
+        }
+        $allSets = Utils::array_of_uniquearrays($allSets);
+        return $allSets;
     }
 }
