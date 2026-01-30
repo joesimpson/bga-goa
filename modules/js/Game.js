@@ -274,8 +274,9 @@ export class Game {
 
         this.setupRoundMarker();
 
-        document.getElementById(`generalactions`).insertAdjacentHTML('afterend', "<div id='customActions' style='display:inline-block'></div>");
-        document.getElementById(`customActions`).insertAdjacentHTML('afterend', "<div id='restartActions' style='display:inline-block'></div>");
+        document.getElementById(`generalactions`).insertAdjacentHTML('afterend', "<div id='customPrimary' style='display:inline-block'></div>");
+        document.getElementById(`customPrimary`).insertAdjacentHTML('afterend', "<div id='customSecondary' style='display:inline-block'></div>");
+        document.getElementById(`customSecondary`).insertAdjacentHTML('afterend', "<div id='restartActions' style='display:inline-block'></div>");
 
         this.zoomManager = new ZoomManager({
             element: document.getElementById('goa_game_container'),
@@ -366,7 +367,8 @@ export class Game {
     }
     
     removeAllActionButtons() {
-        this.empty('customActions');
+        this.empty('customPrimary');
+        this.empty('customSecondary');
         this.empty('restartActions');
     }
     
@@ -481,7 +483,7 @@ export class Game {
             this.bga.statusBar.addActionButton( _('Clear selection'), () => {
                 selectedElements = [];
                 updateStatus();
-            }, { id:'btnCancelChoice', 'color':'secondary',destination: document.getElementById('restartActions')},);
+            }, { id:'btnCancelChoice', 'color':'secondary',destination: document.getElementById('customSecondary')},);
         }
 
         Object.keys(elements).forEach((id) => {

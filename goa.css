@@ -2096,7 +2096,8 @@ html.goa_undo_style_icon #btnTextRestartTurn {
   display: none !important;
 }
 
-body.lockedInterface #customActions,
+body.lockedInterface #customPrimary,
+body.lockedInterface #customSecondary,
 body.lockedInterface #restartActions {
   pointer-events: none;
 }

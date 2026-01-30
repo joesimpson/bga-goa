@@ -27,7 +27,7 @@ export class ClientSelectSpices {
     
         this.bga.statusBar.addActionButton( _('Cancel'), () => {
             this.bga.states.restoreServerGameState();
-        }, { 'color':'secondary',destination: document.getElementById('restartActions') }); 
+        }, { 'color':'secondary',destination: document.getElementById('customSecondary') }); 
 
     }
 

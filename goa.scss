@@ -133,7 +133,8 @@ html.goa_undo_style_icon{//PREF_UNDO_STYLE_ICON
 
 body.lockedInterface{
 
-    #customActions,
+    #customPrimary,
+    #customSecondary,
     #restartActions{
         pointer-events: none;
     }
