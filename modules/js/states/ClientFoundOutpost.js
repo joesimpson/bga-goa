@@ -36,8 +36,6 @@ export class ClientFoundOutpost {
                         _('Found ${name} : requires ${n} ${icon_contracts}'), 
                         {'name': colonyName, 'n':outpostMinContractsNeeded, 'icon_contracts':this.game.formatIcon('contracts'), }),
                     () => { 
-                        //TODO JSA top zone to spend contracts from hand AFTER result + button ABANDON to receive +1 contract
-                
                         this.bga.actions.performAction('actFoundOutpost', { 'tile_id': outpostId,});
                     }
                 , { id:'goa_button_found',destination: document.getElementById('customActions') }); 

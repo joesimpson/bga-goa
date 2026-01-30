@@ -79,8 +79,10 @@ class PlayerChoice extends GameState
         $tile = Tiles::get($tile_id);
         $tile_choices = $args['tiles_choices'][$tile_id];
         $this->game->trace("actTileChoice()... tiles_choices= ".json_encode($tile_choices));
+        if ( !in_array($choice_index,array_keys($tile_choices))) {
+            throw new UnexpectedException(504,"Invalid tile choice $choice_index");
+        } 
         $tile_choice = $tile_choices[$choice_index];
-        //TODO JSA check choice_index ?
         
         Log::addStep();
         $player = Players::get($activePlayerId);

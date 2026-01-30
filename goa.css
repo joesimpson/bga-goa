@@ -1354,6 +1354,11 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-size: 500% 400%;
   background-image: url("img/outposts.jpg");
 }
+.goa_tile.goa_outpost.bga-cards_last-played-card,
+.goa_outpost-front.bga-cards_last-played-card, .goa_outpost-back.bga-cards_last-played-card {
+  cursor: crosshair;
+  outline: 8px solid var(--bga-cards_selected-card_outline-color) !important;
+}
 .goa_tile.goa_outpost.goa_outpost-back,
 .goa_outpost-front.goa_outpost-back, .goa_outpost-back.goa_outpost-back {
   background-position-x: 100%;

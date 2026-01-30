@@ -436,6 +436,7 @@ export class Game {
         }
         this.outpostsTilesStocks.forEach((stock) => { 
             stock.setSelectionMode('none');
+            stock.removeLastPlayedCardsClass();
         });
         this.empty(document.getElementById('goa_top_zone'));
         document.getElementById('goa_top_zone').classList.add('goa_no_display');
@@ -889,10 +890,18 @@ export class Game {
         let tile = notif.tile;
         
         let tileDiv = document.getElementById(`goa_tile-${tile.id}`);
+        let isOutpost = tile.subtype == this.const.TILE_SUBTTYPE_OUTPOST;
+        if(isOutpost){
+            tileDiv = document.getElementById(`goa_outpost-${tile.id}`);
+        }
         if(! tileDiv){
             tileDiv = this.addTile(tile);
             let voidDiv = document.getElementById('goa_top_zone');
             await this.animationManager.slideIn(tileDiv, voidDiv, {duration: 1000});
+        } else if(isOutpost) {
+            let stock = this.outpostsTilesStocks[tile.colony];
+            tileDiv = this.addTile(tile);
+            await this.animationManager.slideIn(tileDiv, stock.element, {duration: 800});
         } else {
             tileDiv = this.addTile(tile);//refresh tile dataset
             let destinationDiv = document.getElementById(this.getTileContainer(tile));

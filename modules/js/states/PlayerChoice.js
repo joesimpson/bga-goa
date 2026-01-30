@@ -82,6 +82,7 @@ export class ClientSelectTileAction {
         let tile_choice = args.tile_choice;
         let tile_id = args.tile.id;
         let icon_contracts = this.game.formatIcon('contracts');
+        let isOutpost = args.tile.subtype == this.game.const.TILE_SUBTTYPE_OUTPOST;
       
         Object.entries(tile_choice.choices).forEach( ([choice_id,choice])  => {
             switch(tile_choice.selectType){
@@ -130,7 +131,8 @@ export class ClientSelectTileAction {
                     break;
                 case this.game.const.CHOICE_PICK_SPICE:
                     let tileToFill = document.getElementById(`goa_tile-${tile_id}`);
-                    tileToFill.classList.add('selected');
+                    //if(!tileToFill && isOutpost) tileToFill = document.getElementById(`goa_outpost-${tile_id}`);
+                    if(tileToFill) tileToFill.classList.add('selected');
                     let spice_icon = this.game.formatIcon('spices_'+choice);
                     this.bga.statusBar.addActionButton( spice_icon, () => {
                         this.bga.actions.performAction("actTileChoice", { 
@@ -159,9 +161,12 @@ export class ClientSelectTileAction {
                     let missingContracts = tile_choice.n;
                     this.bga.statusBar.setTitle(isCurrentPlayerActive ? 
                         _('${you} must found the outpost by spending ${n} ${icon_contracts} or abandon and receive ${x} ${icon_contracts}').replaceAll('${icon_contracts}', icon_contracts).replace('${n}', missingContracts).replace('${x}', 1): 
-                        _('${actplayer} must ')//TODO JSA 
+                        _('${actplayer} must found the outpost by spending ${n} ${icon_contracts} or abandon and receive ${x} ${icon_contracts}').replaceAll('${icon_contracts}', icon_contracts).replace('${n}', missingContracts).replace('${x}', 1)
                     );
-                    
+                    let tileToFound= document.getElementById(`goa_outpost-${tile_id}-front`);
+                    let colony = tileToFound.dataset.colony;
+                    let stock = this.game.outpostsTilesStocks[colony];
+                    stock.setLastPlayedCards([args.tile]);
                     
                     switch(choice){
                         case this.game.const.ACTION_FOUND_ABANDON: 

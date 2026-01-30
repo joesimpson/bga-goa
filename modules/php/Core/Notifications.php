@@ -8,6 +8,7 @@ use Bga\Games\Goa\Helpers\Collection;
 use Bga\Games\Goa\Helpers\Utils;
 use Bga\Games\Goa\Managers\Cards;
 use Bga\Games\Goa\Models\ExplorationCard;
+use Bga\Games\Goa\Models\OutpostTile;
 use Bga\Games\Goa\Models\Player;
 use Bga\Games\Goa\Models\ProgressMarker;
 use Bga\Games\Goa\Models\Tile;
@@ -168,7 +169,9 @@ class Notifications
   }
   public static function giveTile(Player $player, Tile $tile)
   {
-    self::notifyAll("giveTile", clienttranslate('${player_name} gets the tile ${tile_icon}'), [
+    $notifId = "giveTile";
+    //if($tile instanceof OutpostTile) $notifId = "giveOutpost";
+    self::notifyAll($notifId, clienttranslate('${player_name} gets the tile ${tile_icon}'), [
         "player" => $player,
         "tile" => $tile->getUiData(),
         "tile_icon" => '',

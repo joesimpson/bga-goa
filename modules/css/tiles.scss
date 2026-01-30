@@ -40,6 +40,11 @@
         background-size: 500% 400%;
         background-image: url("img/outposts.jpg");
         
+        &.bga-cards_last-played-card{
+            cursor: crosshair;
+            outline: 8px solid var(--bga-cards_selected-card_outline-color) !important;
+        }
+
         &.goa_outpost-back{
             //back tile
             background-position-x: 100%;
