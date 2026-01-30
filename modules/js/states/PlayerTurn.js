@@ -143,10 +143,10 @@ export class PlayerTurn {
             }
             
             if(possibleActions.includes('actFoundOutpost') && args.outpostsToFound.length>0){
-                let baseContractsWithActions = 2;//TODO JSA this.getNbContractsForColony(tile.colony)
+                let baseContractsWithAction = args.playerBaseContracts;
                 let goToNext = () => {
                     this.bga.states.setClientState("ClientFoundOutpost", {
-                        descriptionmyturn: _("${you} must select a new outpost to found with a base of ${n} ${icon_contracts}").replace('${icon_contracts}', this.game.formatIcon('contracts')).replace('${n}', baseContractsWithActions),
+                        descriptionmyturn: _("${you} must select a new outpost to found with a base of ${n} ${icon_contracts}").replace('${icon_contracts}', this.game.formatIcon('contracts')).replace('${n}', baseContractsWithAction),
                         args: {'outpostsToFound': args.outpostsToFound },
                     });
                 };

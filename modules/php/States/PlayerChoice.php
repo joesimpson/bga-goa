@@ -80,6 +80,7 @@ class PlayerChoice extends GameState
         $tile_choices = $args['tiles_choices'][$tile_id];
         $this->game->trace("actTileChoice()... tiles_choices= ".json_encode($tile_choices));
         $tile_choice = $tile_choices[$choice_index];
+        //TODO JSA check choice_index ?
         
         Log::addStep();
         $player = Players::get($activePlayerId);
@@ -117,6 +118,14 @@ class PlayerChoice extends GameState
                         case ACTION_SHIP:
                         case ACTION_CONTRACT:
                             Players::directGain($player,$choice, $foundChoice['n'], $tile );
+                            break;
+                        case ACTION_FOUND_ABANDON:
+                            Players::giveContracts($player, 1);
+                            break;
+                        case ACTION_FOUND_FORWARD:
+                            $amount = $foundChoice['n'];
+                            Players::giveContracts($player, -$amount);
+                            Tiles::giveOutpostToPlayer($player,$tile);
                             break;
                         default: break;
                     }

@@ -1442,6 +1442,7 @@ export class Game {
     }
 
     getNbContractsForColony(colony){
+        //TODO JSA reuse server side as const array
         switch(parseInt(colony)){
             case this.const.COLONY_KOLLAM: return 6;
             case this.const.COLONY_KOCHI:  return 8;
@@ -1617,7 +1618,7 @@ export class Game {
                 break;
             case 5: 
                 action_label = _('Found Outpost');
-                action_gains = [0,2,4,5,6];
+                action_gains = this.const.PROGRESS_GAINS_OUTPOST;
 
                 let action_gains_desc = '<ul>';
                 action_gains.forEach(element => {

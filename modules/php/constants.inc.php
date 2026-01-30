@@ -26,11 +26,14 @@ const ACTION_RESUPPLY            = 10;
 const ACTION_HARVEST             = 11;
 const ACTION_ESPIONAGE           = 12;
 const ACTION_VICEKING            = 13;
+const ACTION_FOUND_ABANDON       = 30;
+const ACTION_FOUND_FORWARD       = 31;
 
 const CHOICE_PICK_ACTION         = 1;
 const CHOICE_PICK_TILE           = 2;
 const CHOICE_PICK_SPICE          = 3;
 const CHOICE_REPLACE_TILE        = 4;
+const CHOICE_FOUND_TILE          = 5;
 
 const SPICE_WHITE     = 1;
 const SPICE_YELLOW    = 2;
@@ -166,6 +169,7 @@ const TOKEN_TYPE_PROGRESS_MARKERS = [
 
 const PROGRESS_GAINS_SHIPS = [1,2,3,5,6];
 const PROGRESS_GAINS_TAXES = [4,6,8,10,12];
+const PROGRESS_GAINS_OUTPOST = [0,2,4,5,6];
 //Cost as ships is 1 per spice, thus no need for another const
 const PROGRESS_COST_AS_SPICES = [
    TOKEN_TYPE_PROGRESS_MARKER_SHIPS => [
@@ -268,11 +272,14 @@ CONST ALL_MY_UI_CONSTANTS= [
    'ACTION_HARVEST'           => ACTION_HARVEST             ,  
    'ACTION_ESPIONAGE'         => ACTION_ESPIONAGE           ,  
    'ACTION_VICEKING'          => ACTION_VICEKING            ,  
+   'ACTION_FOUND_FORWARD'     => ACTION_FOUND_FORWARD            ,  
+   'ACTION_FOUND_ABANDON'     => ACTION_FOUND_ABANDON            ,  
 
    'CHOICE_PICK_ACTION'       => CHOICE_PICK_ACTION          ,  
    'CHOICE_PICK_TILE'         => CHOICE_PICK_TILE            ,  
    'CHOICE_PICK_SPICE'        => CHOICE_PICK_SPICE           ,  
    'CHOICE_REPLACE_TILE'      => CHOICE_REPLACE_TILE         ,  
+   'CHOICE_FOUND_TILE'        => CHOICE_FOUND_TILE         ,  
 
    'SPICES_ALL' =>   SPICES_ALL,
 
@@ -328,4 +335,5 @@ CONST ALL_MY_UI_CONSTANTS= [
 
    'PROGRESS_GAINS_TAXES' => PROGRESS_GAINS_TAXES,
    'PROGRESS_GAINS_SHIPS' => PROGRESS_GAINS_SHIPS,
+   'PROGRESS_GAINS_OUTPOST' => PROGRESS_GAINS_OUTPOST,
 ] ;

@@ -127,7 +127,7 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
     //TODO JSA CHECKPOINT !
     return $cards;
   }
-  public static function drawAndDiscardExploration(Player $player,int $nb)
+  public static function drawAndDiscardExploration(Player $player,int $nb): Collection
   {
     $nbDeckBefore = Cards::countInExplorationDeck();
 
@@ -143,7 +143,7 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
     foreach($cards as $card){
       Notifications::drawAndDiscardExploration($player->getId(), $card);
     }
-
+    return $cards;
   }
    
   ///////////////////////////////////////////////////////////////////////////////////////

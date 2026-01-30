@@ -11,6 +11,7 @@ use Bga\GameFramework\States\PossibleAction;
 use Bga\GameFramework\UserException;
 use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Core\Notifications;
+use Bga\Games\Goa\Exceptions\PrematureStateChangeException;
 use Bga\Games\Goa\Exceptions\UnexpectedException;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\GridUtils;
@@ -106,6 +107,8 @@ class PlayerTurn extends GameState
                     $args['possibleActions'][] = 'actBuildShips';
                     $args['possibleActions'][] = 'actTaxes';
                     $args['possibleActions'][] = 'actFoundOutpost';
+                    $outpostMarker = Tokens::getProgressMarkerByType(TOKEN_TYPE_PROGRESS_MARKER_OUTPOST, $player->getId());
+                    $args['playerBaseContracts'] = PROGRESS_GAINS_OUTPOST[$outpostMarker->getRow() - 1];
                     $args['outpostsToFound'] = Tiles::getFoundableOutposts($player)->getIds();
                 }
                 //if($player->getNbActions() >= $args['minActions'] ) {
@@ -365,6 +368,53 @@ class PlayerTurn extends GameState
         Players::registerNewAction($player);
 
         return ConfirmTurn::class;
+    }
+    
+    /**
+     * Player action : turn ACTION #6 try to found an outpost
+     */
+    #[PossibleAction]
+    public function actFoundOutpost(int $tile_id,int $activePlayerId, array $args)
+    { 
+        $this->game->trace("actFoundOutpost($activePlayerId)");
+        $possibleActions = $args['possibleActions'];
+        if(!in_array('actFoundOutpost',$possibleActions)){
+            throw new UnexpectedException(110,"Invalid action actFoundOutpost, see ".json_encode($possibleActions));
+        }
+        $outpostsToFound =  $args['outpostsToFound'];
+        if(!in_array($tile_id,$outpostsToFound)){
+            throw new UnexpectedException(111,"Invalid outpost $tile_id, see ".json_encode($outpostsToFound));
+        }
+        
+        Log::addStep();
+        $player = Players::get($activePlayerId);
+        $tile = Tiles::get($tile_id);
+        $nbNeededContracts = Utils::getNbContractsForColony($tile->getColony());
+        Notifications::tryFoundOutpost($player, $tile, $nbNeededContracts);
+        $cards = Cards::drawAndDiscardExploration($player, 2);
+        $base = $args['playerBaseContracts'];
+        $sum = 0;
+        foreach($cards as $card){
+            $sum += $card->getContracts();
+        }
+        Notifications::resultFoundOutpost($player, $sum);
+        $sum+= $base;
+        $missingContracts = max(0,$nbNeededContracts - $sum);
+        $canSpendContracts = $player->getContracts() >= $missingContracts;
+
+        $playerChoices = [];
+        if($missingContracts == 0 || $canSpendContracts){
+            $playerChoices[] = ACTION_FOUND_FORWARD;
+        }
+        $playerChoices[] = ACTION_FOUND_ABANDON;//always possible
+
+        Globals::addChoiceTile($tile,CHOICE_FOUND_TILE, $missingContracts, $playerChoices, CHOICE_FOUND_TILE);
+        
+        Players::registerNewAction($player);
+        
+        //CHECKPOINT because draw cards
+        Log::addStateCheckpoint(PlayerChoice::class);
+        return PlayerChoice::class;
     }
     
     /**

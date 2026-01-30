@@ -81,6 +81,7 @@ export class ClientSelectTileAction {
         
         let tile_choice = args.tile_choice;
         let tile_id = args.tile.id;
+        let icon_contracts = this.game.formatIcon('contracts');
       
         Object.entries(tile_choice.choices).forEach( ([choice_id,choice])  => {
             switch(tile_choice.selectType){
@@ -153,6 +154,36 @@ export class ClientSelectTileAction {
                                 'choice_index':args.choice_index,
                             });
                         });
+                    break;
+                case this.game.const.CHOICE_FOUND_TILE:
+                    let missingContracts = tile_choice.n;
+                    this.bga.statusBar.setTitle(isCurrentPlayerActive ? 
+                        _('${you} must found the outpost by spending ${n} ${icon_contracts} or abandon and receive ${x} ${icon_contracts}').replaceAll('${icon_contracts}', icon_contracts).replace('${n}', missingContracts).replace('${x}', 1): 
+                        _('${actplayer} must ')//TODO JSA 
+                    );
+                    
+                    
+                    switch(choice){
+                        case this.game.const.ACTION_FOUND_ABANDON: 
+                            this.bga.statusBar.addActionButton( _("Abandon Outpost"), () => {
+                            this.bga.actions.performAction("actTileChoice", { 
+                                    'tile_id' : tile_id,
+                                    'choice': choice,
+                                    'choice_index':args.choice_index,
+                                })
+                        }, {destination: document.getElementById('customActions') }); 
+                        break;
+                        case this.game.const.ACTION_FOUND_FORWARD: 
+                            this.bga.statusBar.addActionButton( _("Found Outpost"), () => {
+                                this.bga.actions.performAction("actTileChoice", { 
+                                        'tile_id' : tile_id,
+                                        'choice': choice,
+                                        'choice_index':args.choice_index,
+                                    })
+                            }, {destination: document.getElementById('customActions') }); 
+                        break;
+                    }
+                    
                     break;
             }
         });

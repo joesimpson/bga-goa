@@ -38,7 +38,7 @@ export class ClientFoundOutpost {
                     () => { 
                         //TODO JSA top zone to spend contracts from hand AFTER result + button ABANDON to receive +1 contract
                 
-                        this.bga.actions.performAction('actFoundOutpost', { 't': outpostId,});
+                        this.bga.actions.performAction('actFoundOutpost', { 'tile_id': outpostId,});
                     }
                 , { id:'goa_button_found',destination: document.getElementById('customActions') }); 
             });

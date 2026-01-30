@@ -148,23 +148,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
 
           $tile->setState($nextAvailableSpaceOnPlayerBoard);
           Notifications::giveTile($player,$tile);
-          //FILL tile spices_slots
-          $slots = $tile->spice_slots;
-          $slotPosition = 0;
-          foreach($slots as $spice){
-            $slotPosition++;
-            
-            if(SPICES_ALL == $spice){
-              //IF WILD SPICE, ASK PLAYER choice ! 
-              //Save datas for next state
-              Globals::addChoiceTile($tile,ACTION_SPICE, $slotPosition, SPICES_ALL, CHOICE_PICK_SPICE);
-              $stateExc = new PrematureStateChangeException (3,PlayerChoice::class, $player);
-            }
-            else {
-              $spiceTokenType = Tokens::getTokenSpiceTypeFromSpice($spice);
-              Tokens::addSpiceOnTile($tile, $player, $spiceTokenType, $slotPosition);
-            }
-          }
+          Tiles::fillPlayerTileWithSpices($player,$tile);
           break;
         case MARKET_TYPE_ACTION_DIRECT:
           $updateTileDatas($player,$tile);
@@ -189,6 +173,58 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
     if(isset($stateExc)) {
         throw $stateExc;
     }
+  }
+  
+  
+  /**
+   * Get the selected outpost tile
+   * then give it to player
+   * @throws PrematureStateChangeException when caller will need to go to another state than default one
+   * */
+  public static function giveOutpostToPlayer(Player $player, OutpostTile &$tile) :void
+  {
+    $updateTileDatas = function ( $player, &$tile,) {
+      $tile->setPId($player->getId());
+      $tile->setRow(null);
+      $tile->setCol(null);
+      $tile->setLocation(TILE_LOCATION_PLAYER_BOARD);
+      $tile->setState(null);
+    };
+
+    $updateTileDatas($player,$tile);
+
+    Notifications::giveTile($player,$tile);
+    Tiles::fillPlayerTileWithSpices($player,$tile);
+  }
+  
+  /**
+   * @throws PrematureStateChangeException when caller will need to go to another state than default one
+   * */
+  public static function fillPlayerTileWithSpices(Player $player, Tile &$tile)
+  {
+    $stateExc = null;  
+    //FILL tile spices_slots
+    $slots = $tile->getSpice_slots();
+    $slotPosition = 0;
+    foreach($slots as $spice){
+      $slotPosition++;
+      
+      if(is_array($spice)){
+        //IF WILD SPICE, ASK PLAYER choice ! 
+        //Save datas for next state
+        Globals::addChoiceTile($tile,ACTION_SPICE, $slotPosition, $spice, CHOICE_PICK_SPICE);
+        $stateExc = new PrematureStateChangeException (3,PlayerChoice::class, $player);
+      }
+      else {
+        $spiceTokenType = Tokens::getTokenSpiceTypeFromSpice($spice);
+        Tokens::addSpiceOnTile($tile, $player, $spiceTokenType, $slotPosition);
+      }
+    }
+    
+    if(isset($stateExc)) {
+      throw $stateExc;
+    }
+
   }
 
   public static function discardTileFromPlayer(Player $player, Tile &$tile)

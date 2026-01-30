@@ -129,4 +129,25 @@ abstract class Utils {
         $allSets = Utils::array_of_uniquearrays($allSets);
         return $allSets;
     }
+
+
+    
+    public static function getNbContractsForColony(int $colony){
+        switch(($colony)){
+            case COLONY_KOLLAM: return 6;
+            case COLONY_KOCHI:  return 8;
+            case COLONY_MADRAS: return 10;
+            case COLONY_KOZHIKODE: return 12;
+            default: return 0;
+        }
+    }
+    public static function getColonyName(int $colony){
+        switch(($colony)){
+            case COLONY_KOLLAM: return clienttranslate('Kollam');
+            case COLONY_KOCHI:  return clienttranslate('Kochi');
+            case COLONY_MADRAS: return clienttranslate('Madras');
+            case COLONY_KOZHIKODE: return clienttranslate('Kozhikode');
+            default: return '';
+        }
+    }
 }
