@@ -17,7 +17,7 @@ export class PlayerTurn {
         
         let roundStep = args.roundStep;
         let possibleActions = args.possibleActions;
-        let icon_money = this.game.formatIcon('money');
+        let icon_money = this.game.formatIcon('money',_('Coins'));
         let activePlayer = this.bga.players.getActivePlayerId();
 
         switch(roundStep){
@@ -147,7 +147,7 @@ export class PlayerTurn {
                 let baseContractsWithAction = args.playerBaseContracts;
                 let goToNext = () => {
                     this.bga.states.setClientState("ClientFoundOutpost", {
-                        descriptionmyturn: _("${you} must select a new outpost to found with a base of ${n} ${icon_contracts}").replace('${icon_contracts}', this.game.formatIcon('contracts')).replace('${n}', baseContractsWithAction),
+                        descriptionmyturn: _("${you} must select a new outpost to found with a base of ${n} ${icon_contracts}").replace('${icon_contracts}', this.game.formatIcon('contracts',_('Contracts'))).replace('${n}', baseContractsWithAction),
                         args: {'outpostsToFound': args.outpostsToFound },
                     });
                 };
@@ -163,7 +163,7 @@ export class PlayerTurn {
                 this.bga.statusBar.addActionButton(
                     this.bga.gameui.format_string( 
                         _('Explore : +${n} ${icon_explo}'),
-                        {'n' : args.nbCardsExploration, 'icon_explo': this.game.formatIcon('exploration_card')},
+                        {'n' : args.nbCardsExploration, 'icon_explo': this.game.formatIcon('exploration_card',_('Exploration card'))},
                     ), () => this.bga.actions.performAction("actExploration"), { destination: document.getElementById('customPrimary') }); 
                 //+ CLICK ON BOARD section
                 let progressTrack = document.getElementById(`goa_progress_track_${4}_${activePlayer}`);
@@ -237,7 +237,7 @@ export class PlayerTurn {
     refreshBidButton(){
         let button = document.getElementById('goa_button_bid');
         if(button) this.game.destroy(button);
-        let icon_money = this.game.formatIcon('money');
+        let icon_money = this.game.formatIcon('money',_('Coins'));
 
         this.bga.statusBar.addActionButton(this.bga.gameui.format_string(  _('Bid ${n} ${icon_money} => ${m} ${icon_money}') ,
                     { 'n': this.selectedBid, m: (this.currentBid + this.selectedBid), icon_money: icon_money}), 

@@ -154,29 +154,29 @@ export class Game {
             this.bga.playerPanels.getElement(player.id).insertAdjacentHTML('beforeend', `
                 <div class='goa_panel'>
                     <div class='goa_player_counters_line'>
-                        ${this.tplResourceCounter(player,'exploration_hand_size')}
-                        ${this.tplResourceCounter(player,'money')}
-                        ${this.tplResourceCounter(player,'ships')}
-                        ${this.tplResourceCounter(player,'contracts')}
-                        ${this.tplResourceCounter(player,'compasses')}
+                        ${this.tplResourceCounter(player,'exploration_hand_size',_('Exploration card'))}
+                        ${this.tplResourceCounter(player,'money',_('Coins'))}
+                        ${this.tplResourceCounter(player,'ships',_('Ships'))}
+                        ${this.tplResourceCounter(player,'contracts',_('Contracts'))}
+                        ${this.tplResourceCounter(player,'compasses',_('Compasses'))}
                     </div>
                     <div class='goa_player_counters_line'>
-                        ${this.tplResourceCounter(player,'spices_1')}
-                        ${this.tplResourceCounter(player,'spices_2')}
-                        ${this.tplResourceCounter(player,'spices_3')}
-                        ${this.tplResourceCounter(player,'spices_4')}
-                        ${this.tplResourceCounter(player,'spices_5')}
+                        ${this.tplResourceCounter(player,'spices_1',_('Spices'))}
+                        ${this.tplResourceCounter(player,'spices_2',_('Spices'))}
+                        ${this.tplResourceCounter(player,'spices_3',_('Spices'))}
+                        ${this.tplResourceCounter(player,'spices_4',_('Spices'))}
+                        ${this.tplResourceCounter(player,'spices_5',_('Spices'))}
                     </div>
                     <div class='goa_player_counters_line'  ${ (currentPlayer && player.id == currentPlayer.id) ? '': 'style="display:none;"'}>
-                        ${this.tplResourceCounter(player,'explo_symbol_tiny_1')}
-                        ${this.tplResourceCounter(player,'explo_symbol_tiny_2')}
-                        ${this.tplResourceCounter(player,'explo_symbol_tiny_3')}
-                        ${this.tplResourceCounter(player,'explo_symbol_tiny_4')}
-                        ${this.tplResourceCounter(player,'explo_symbol_tiny_5')}
-                        ${this.tplResourceCounter(player,'explo_symbol_tiny_6')}
+                        ${this.tplResourceCounter(player,'explo_symbol_tiny_1',this.getCardSymbolName(1))}
+                        ${this.tplResourceCounter(player,'explo_symbol_tiny_2',this.getCardSymbolName(2))}
+                        ${this.tplResourceCounter(player,'explo_symbol_tiny_3',this.getCardSymbolName(3))}
+                        ${this.tplResourceCounter(player,'explo_symbol_tiny_4',this.getCardSymbolName(4))}
+                        ${this.tplResourceCounter(player,'explo_symbol_tiny_5',this.getCardSymbolName(5))}
+                        ${this.tplResourceCounter(player,'explo_symbol_tiny_6',this.getCardSymbolName(6))}
                     </div>
                     <div class='goa_player_counters_line goa_player_counters_lastline'>
-                        <div id="goa_first_player_container_${player.id}" class="goa_first_player_container"></div>
+                        <div id="goa_first_player_container_${player.id}" class="goa_first_player_container" alt="${_('Starting player')}" title="${_('Starting player')}"></div>
                     </div>
                 </div>
             `);
@@ -347,19 +347,19 @@ export class Game {
                 args.tile_icon = this.tplTile(args.tile, '_log');
             }
             if('icon_money' in args) {
-                args.icon_money = this.formatIcon('money');
+                args.icon_money = this.formatIcon('money', _('Gold'));
             }
             if('icon_ships' in args) {
-                args.icon_ships = this.formatIcon('ships');
+                args.icon_ships = this.formatIcon('ships', _('Ships'));
             }
             if('icon_contracts' in args) {
-                args.icon_contracts = this.formatIcon('contracts');
+                args.icon_contracts = this.formatIcon('contracts', _('Contracts'));
             }
             if('icon_compass' in args) {
-                args.icon_compass = this.formatIcon('compasses');
+                args.icon_compass = this.formatIcon('compasses', _('Compass card'));
             }
             if('icon_explo' in args) {
-                args.icon_explo = this.formatIcon('exploration_hand_size');
+                args.icon_explo = this.formatIcon('exploration_hand_size', _('Exploration card'));
             }
         }
       } catch (e) {
@@ -575,20 +575,21 @@ export class Game {
         }
     }
     
-    formatIcon(name, n = null) {
+    formatIcon(name, alt = null, n = null) {
         let type = name;
+        let altText = alt == null ? '' : `alt="${alt}" title="${alt}"`;
         let text = n == null ? '' : `<span class='goa_icon_qty' data-value="${n}">${n}</span>`;
         return `<div class="goa_icon_container goa_icon_container_${type}">
-            <div class="goa_icon goa_icon_${type}">${text}</div>
+            <div class="goa_icon goa_icon_${type}" ${altText}>${text}</div>
             </div>`;
     }
     /**
      * Use this tpl for any counters that represent qty of tokens
      */
-    tplResourceCounter(player, res) {
+    tplResourceCounter(player, res, altText = null, ) {
         return `
             <div class='goa_player_resource goa_resource_holder_${res}'>
-                ${this.formatIcon(res, null)}
+                ${this.formatIcon(res, altText, null)}
                 <span id='goa_counter_${player.id}_${res}' class='goa_resource_${res}'></span>
                 <div class='goa_reserve' id='goa_reserve_${player.id}_${res}'></div>
             </div>
@@ -1181,7 +1182,7 @@ export class Game {
         if(tile.subtype == this.const.TILE_SUBTTYPE_OUTPOST){
             textLine1 = this.bga.gameui.format_string( 
                 _('Requires ${n} ${resource_name} : ${icon_resource}'),
-                {'n': this.getNbContractsForColony(tile.colony) , resource_name: _('Contracts'), icon_resource: this.formatIcon('contracts')}
+                {'n': this.getNbContractsForColony(tile.colony) , resource_name: _('Contracts'), icon_resource: this.formatIcon('contracts', _('Contracts'))}
             );
         }
         let textAction = this.formatTileActionText( tile );
@@ -1255,7 +1256,7 @@ export class Game {
         let icons = '';
         let treatArray = null;
         Object.values( tile.spice_slots ).forEach((spice_type) => {
-            icons += this.formatIcon('spices_'+spice_type);
+            icons += this.formatIcon('spices_'+spice_type, _('Spices'));
             if(Array.isArray(spice_type)){
                 treatArray = spice_type;
             }
@@ -1265,7 +1266,7 @@ export class Game {
             Object.values( tile.spice_slots ).forEach((spice_type) => {
                 icons = '';
                 Object.values( spice_type ).forEach((spice_type_listElement) => {
-                    icons += this.formatIcon('spices_'+spice_type_listElement);
+                    icons += this.formatIcon('spices_'+spice_type_listElement, _('Spices'));
                 });
                 text += '<li>' + this.bga.gameui.format_string(
                     _("Take ${n} ${resource_name} : ${icon_resource}.")
@@ -1305,27 +1306,27 @@ export class Game {
                                     description = this.formatTileSpicesText(tile);
                                 case this.const.ACTION_MONEY:
                                     resource_name = _('Gold Pardau cards');
-                                    icon_name = this.formatIcon('money');
+                                    icon_name = this.formatIcon('money', resource_name);
                                     break;
                                 case this.const.ACTION_CONTRACT:
                                     resource_name = _('Contracts');
-                                    icon_name = this.formatIcon('contracts');
+                                    icon_name = this.formatIcon('contracts', resource_name);
                                     break;
                                 case this.const.ACTION_SHIP:
                                     resource_name = _('Ships');
-                                    icon_name = this.formatIcon('ships');
+                                    icon_name = this.formatIcon('ships',resource_name);
                                     break;
                                 case this.const.ACTION_COMPASS:
                                     resource_name = _('Compass cards');
-                                    icon_name = this.formatIcon('compasses');
+                                    icon_name = this.formatIcon('compasses',resource_name);
                                     break;
                                 case this.const.ACTION_EXPLORATION:
                                     resource_name = _('Exploration cards');
-                                    icon_name = this.formatIcon('exploration_card');
+                                    icon_name = this.formatIcon('exploration_card',resource_name);
                                     break;
                                 case this.const.ACTION_SHIPS_OR_CONTRACTS:
                                     resource_name = _('Ships or Contracts');
-                                    icon_name = this.formatIcon('ships') + ' '+  this.formatIcon('contracts');
+                                    icon_name = this.formatIcon('ships', _('Ships')) + ' '+  this.formatIcon('contracts', _('Contracts'));
                                     break;
                                 case this.const.ACTION_FAVOR: 
                                     description = this.bga.gameui.format_string(
@@ -1596,7 +1597,7 @@ export class Game {
                             ,{
                                 //n:_('n (n is the indicated on the row of your progress marker on this column)'),
                                 'resource_name': _('Ships'), 
-                                icon_resource : this.formatIcon('ships')
+                                icon_resource : this.formatIcon('ships',_('Ships'))
                             }
                         );
                 action_gains = this.const.PROGRESS_GAINS_SHIPS;
@@ -1619,7 +1620,7 @@ export class Game {
                             _("Take n ${resource_name} ${icon_resource} where n is indicated on the row of your progress marker on this column.")
                             ,{
                                 'resource_name': _('Coins'), 
-                                icon_resource : this.formatIcon('money')
+                                icon_resource : this.formatIcon('money',_('Coins'))
                             }
                         );
                 break;
@@ -1652,7 +1653,7 @@ export class Game {
                             + '<li>' + action_gains_desc + '</li>' 
                             + '<li>' + this.bga.gameui.format_string( _("Flip ${n} exploration cards and add their contracts to those on your player board."),{ n: 2 } ) + '</li>'
                             + '<li>' + this.bga.gameui.format_string( _("You may add any number of contracts from your hand."),{  } ) + '</li>'
-                            + '<li>' + this.bga.gameui.format_string( _("If you successfully meet the requirement of the chosen outpost, take it and place it on your board, filling the resources spots on it; if not you draw ${n} ${icon_card}"),{ n:1, icon_card: this.formatIcon('contracts') } ) + '</li>'
+                            + '<li>' + this.bga.gameui.format_string( _("If you successfully meet the requirement of the chosen outpost, take it and place it on your board, filling the resources spots on it; if not you draw ${n} ${icon_card}"),{ n:1, icon_card: this.formatIcon('contracts',_('Contracts')) } ) + '</li>'
                         + '</ul>'
                         ;
 
@@ -1817,8 +1818,8 @@ export class Game {
         let title = '';
         let textSymbols = '';
         if(cardDatas.subtype == this.const.CARD_SUBTTYPE_EXPLORATION){
-            let iconsContracts = this.formatIcon('contracts');
-            for(let k=2;k<=cardDatas.contracts;k++) iconsContracts += this.formatIcon('contracts');
+            let iconsContracts = this.formatIcon('contracts',_('Contracts'));
+            for(let k=2;k<=cardDatas.contracts;k++) iconsContracts += this.formatIcon('contracts',_('Contracts'));
             textLine1 = this.bga.gameui.format_string( 
                 _('When revealing and discarding this card to found an oupost, this gives ${n} ${resource_name} : ${icon_resource}'),
                 {'n': cardDatas.contracts , resource_name: _('Contracts'), icon_resource: iconsContracts}
@@ -1826,7 +1827,7 @@ export class Game {
             title = _('Exploration card');
             textSymbols = this.bga.gameui.format_string( 
                 _('Gives the symbol ${s_icon} (${s_name})'),
-                { s_name: this.getCardSymbolName( cardDatas.symbol ), s_icon: this.formatIcon('explo_symbol_'+cardDatas.symbol)}
+                { s_name: this.getCardSymbolName( cardDatas.symbol ), s_icon: this.formatIcon('explo_symbol_'+cardDatas.symbol,this.getCardSymbolName( cardDatas.symbol ))}
             );
             textSymbols += '<br>'+_('Victory points at the end of the game (if not played) : ');
             textSymbols += '<ul>';
@@ -1869,21 +1870,21 @@ export class Game {
             case this.const.CARD_ACTION_2_CONTRACTS          : return this.bga.gameui.format_string(_('Type ${x} : ${gain}') ,
                     { 'x':'g', 'gain': this.bga.gameui.format_string(
                             _("Take ${n} ${resource_name} : ${icon_resource}.")
-                            ,{n:2, 'resource_name': _('Contracts'), icon_resource : this.formatIcon('contracts')}
+                            ,{n:2, 'resource_name': _('Contracts'), icon_resource : this.formatIcon('contracts',_('Contracts'))}
                         )
                     }
                 );
             case this.const.CARD_ACTION_2_SHIPS              : return this.bga.gameui.format_string(_('Type ${x} : ${gain}') ,
                     { 'x':'h', 'gain': this.bga.gameui.format_string(
                             _("Take ${n} ${resource_name} : ${icon_resource}.")
-                            ,{n:2, 'resource_name': _('Ships'), icon_resource : this.formatIcon('ships')}
+                            ,{n:2, 'resource_name': _('Ships'), icon_resource : this.formatIcon('ships',_('Ships'))}
                         )
                     }
                 );
             case this.const.CARD_ACTION_5_COINS              : return this.bga.gameui.format_string(_('Type ${x} : ${gain}') ,
              { 'x':'i', 'gain': this.bga.gameui.format_string(
                     _("Take ${n} ${resource_name} : ${icon_resource}.")
-                    ,{n:5, 'resource_name': _('Coins'), icon_resource : this.formatIcon('money')}
+                    ,{n:5, 'resource_name': _('Coins'), icon_resource : this.formatIcon('money',_('Coins'))}
                 )
              }
             );

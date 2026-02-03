@@ -28,7 +28,7 @@ export class ClientSelectProgress {
                     allSpicesIds.push(tId);
                 });
                 new Array(cost.n).fill(0).forEach( x => { 
-                    spicesIcons += this.game.formatIcon('spices_'+spice);
+                    spicesIcons += this.game.formatIcon('spices_'+spice,_('Spices'));
                 });
             });
             let spicesDivs = [];

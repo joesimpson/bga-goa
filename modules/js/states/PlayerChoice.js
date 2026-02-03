@@ -92,7 +92,7 @@ export class ClientSelectTileAction {
         
         let tile_choice = args.tile_choice;
         let tile_id = args.tile.id;
-        let icon_contracts = this.game.formatIcon('contracts');
+        let icon_contracts = this.game.formatIcon('contracts',_('Contracts'));
         let isOutpost = args.tile.subtype == this.game.const.TILE_SUBTTYPE_OUTPOST;
       
         Object.entries(tile_choice.choices).forEach( ([choice_id,choice])  => {
@@ -103,7 +103,7 @@ export class ClientSelectTileAction {
                         case this.game.const.ACTION_SHIP:
                             let buttonText = this.bga.gameui.format_string(
                                         _("Take ${n} ${resource_name} : ${icon_resource}")
-                                        ,{n:tile_choice.n, 'resource_name': _('Ships'), icon_resource : this.game.formatIcon('ships')}
+                                        ,{n:tile_choice.n, 'resource_name': _('Ships'), icon_resource : this.game.formatIcon('ships',_('Ships'))}
                                     );
                             this.bga.statusBar.addActionButton( buttonText, () => {
                                 this.bga.actions.performAction("actTileChoice", { 
@@ -116,7 +116,7 @@ export class ClientSelectTileAction {
                         case this.game.const.ACTION_CONTRACT:
                             let buttonText1 = this.bga.gameui.format_string(
                                         _("Take ${n} ${resource_name} : ${icon_resource}")
-                                        ,{n:tile_choice.n, 'resource_name': _('Contracts'), icon_resource : this.game.formatIcon('contracts')}
+                                        ,{n:tile_choice.n, 'resource_name': _('Contracts'), icon_resource : this.game.formatIcon('contracts',_('Contracts'))}
                                     );
                             this.bga.statusBar.addActionButton( buttonText1, () => {
                                 this.bga.actions.performAction("actTileChoice", { 
@@ -144,7 +144,7 @@ export class ClientSelectTileAction {
                     let tileToFill = document.getElementById(`goa_tile-${tile_id}`);
                     //if(!tileToFill && isOutpost) tileToFill = document.getElementById(`goa_outpost-${tile_id}`);
                     if(tileToFill) tileToFill.classList.add('selected');
-                    let spice_icon = this.game.formatIcon('spices_'+choice);
+                    let spice_icon = this.game.formatIcon('spices_'+choice,_('Spices'));
                     this.bga.statusBar.addActionButton( spice_icon, () => {
                         this.bga.actions.performAction("actTileChoice", { 
                                 'tile_id' : tile_id,

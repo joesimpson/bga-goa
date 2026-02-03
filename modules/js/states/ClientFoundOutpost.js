@@ -34,7 +34,7 @@ export class ClientFoundOutpost {
                 this.bga.statusBar.addActionButton( 
                     this.bga.gameui.format_string( 
                         _('Found ${name} : requires ${n} ${icon_contracts}'), 
-                        {'name': colonyName, 'n':outpostMinContractsNeeded, 'icon_contracts':this.game.formatIcon('contracts'), }),
+                        {'name': colonyName, 'n':outpostMinContractsNeeded, 'icon_contracts':this.game.formatIcon('contracts',_('Contracts')), }),
                     () => { 
                         this.bga.actions.performAction('actFoundOutpost', { 'tile_id': outpostId,});
                     }
