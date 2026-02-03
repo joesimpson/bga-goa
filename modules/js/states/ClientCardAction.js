@@ -14,6 +14,8 @@ export class ClientCardAction {
         let div = document.getElementById(`goa_exploration_card-${card_id}`);
         div.classList.add('selected');
         //div.classList.add('bga-cards_selected-card');
+        //let selection in case we want to click on another card instead
+        this.game.explorationHand.setSelectionMode('single');
         this.game.explorationHand.setLastPlayedCards([args.card]);
 
         if(args.isPlayableCard){
@@ -25,6 +27,7 @@ export class ClientCardAction {
         }
 
         this.bga.statusBar.addActionButton( _('Cancel'), () => {
+            this.game.explorationHand.setSelectionMode('none');
             this.bga.states.restoreServerGameState();
         }, { 'color':'secondary','title':_('Cancel'), destination: document.getElementById('customSecondary') }); 
 
@@ -36,7 +39,7 @@ export class ClientCardAction {
         let div = document.getElementById(`goa_exploration_card-${card_id}`);
         //div.classList.remove('bga-cards_selected-card');
         this.game.explorationHand.removeLastPlayedCardsClass();
-        this.game.explorationHand.setSelectionMode('none');
+        //this.game.explorationHand.setSelectionMode('none');
         this.game.clearSelection();
         this.game.removeAllActionButtons();
     }

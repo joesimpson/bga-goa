@@ -193,6 +193,7 @@ export class PlayerTurn {
             this.game.explorationHand.onSelectionChange = (x, card) => {
                 console.log("HAND onSelectionChange",card);
                 let isSelected = this.game.explorationHand.isSelected(card);
+                this.game.explorationHand.removeLastPlayedCardsClass();
                 if(!card) return;
                 let card_id = card.id;
                 let cardDatas = card;
