@@ -52,7 +52,7 @@ class Log
      */
     public static function addStep()
     {
-        $stepId = Log::step(Game::get()->gamestate->state_id());
+        $stepId = Log::step(Game::get()->gamestate->getCurrentMainStateId());
         Globals::incChoices();
     }
 
