@@ -2,7 +2,7 @@
 namespace Bga\Games\Goa\Helpers;
 use Bga\Games\Goa\Game;
 
-class DB_Manager extends \APP_DbObject
+class DB_Manager
 {
     protected static $table = null;
     protected static $primary = null;
