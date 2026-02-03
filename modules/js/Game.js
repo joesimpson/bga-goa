@@ -482,7 +482,7 @@ export class Game {
         if (selectedElements.length == n) {
             this.bga.statusBar.addActionButton( confirmText, () => {
                 endSelection();
-            }, { id:'btnConfirmChoice', 'title':confirmText});
+            }, { id:'btnConfirmChoice', 'title':confirmText,destination: document.getElementById('customPrimary')});
         }
 
         if ($('btnCancelChoice')) $('btnCancelChoice').remove();

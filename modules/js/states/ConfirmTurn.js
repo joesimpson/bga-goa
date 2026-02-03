@@ -15,7 +15,7 @@ export class ConfirmTurn {
       
         if(!isCurrentPlayerActive) return;
         
-        this.bga.statusBar.addActionButton(_('Confirm'), () => this.bga.actions.performAction("actConfirmTurn"), {'title':_('Confirm'), }); 
+        this.bga.statusBar.addActionButton(_('Confirm'), () => this.bga.actions.performAction("actConfirmTurn"), {'title':_('Confirm'),destination: document.getElementById('customPrimary') }); 
         
         this.displayUndoButtons(args);
     }
