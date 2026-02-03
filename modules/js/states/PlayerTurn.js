@@ -183,35 +183,40 @@ export class PlayerTurn {
                 this.game.onClick(progressMarker.parentNode,() => this.bga.actions.performAction("actExploration"));
                 progressMarker.parentNode.setAttribute("title",actionHint);
             }
-
-            /*
-            if(possibleActions.includes('actDiscard')){
-                this.bga.statusBar.addActionButton(_('Discard card'), () => this.bga.actions.performAction("actDiscard"), { 'title':_('Discard this card'),destination: document.getElementById('customSecondary') }); 
-            }
-            */
             
-            //Manage various actions on same cards :
-            let handCards = [...this.game.explorationHand.element.getElementsByClassName("goa_exploration_card")];
+            //Manage various actions on hand cards with a unique handler
             let possibleDiscards = args.possibleDiscards; 
             let playableCards = args.possiblePlayCards; 
-            handCards.forEach( (div) => {
-                let card_id = div.dataset.id;
-                let cardDatas = { 'id': parseInt(card_id), 'type': parseInt(div.dataset.type), };
-                let isDiscardableCard = (possibleActions.includes('actDiscard') && Object.values(possibleDiscards).indexOf(card_id)>=0) ? true : false;
-                let isPlayableCard = (possibleActions.includes('actPlayCard') && Object.keys(playableCards).indexOf(card_id)>=0) ? true : false;
-                //If nothing to do with the card, no event to add
-                if(!isDiscardableCard && !isPlayableCard) return;
+            this.game.explorationHand.setSelectionMode('single');
+            this.game.explorationHand.setSelectableCards(this.game.explorationHand.getCards().filter((card, index) => possibleDiscards.includes(card.id) || playableCards.includes(card.id) ));
 
+            this.game.explorationHand.onSelectionChange = (x, card) => {
+                console.log("HAND onSelectionChange",card);
+                let isSelected = this.game.explorationHand.isSelected(card);
+                if(!card) return;
+                let card_id = card.id;
+                let cardDatas = card;
+                let isDiscardableCard = (possibleActions.includes('actDiscard') && possibleDiscards.includes(card_id)) ? true : false;
+                let isPlayableCard = (possibleActions.includes('actPlayCard') && playableCards.includes(card_id)) ? true : false;
                 let callbackCardSelection = (evt) => {
-                    this.clientState('cardActionSelection',  _('Select an action for this card'), {
-                        'card': cardDatas,
-                        'isPlayableCard': isPlayableCard,
-                        'isDiscardableCard': isDiscardableCard,
+                    this.bga.states.setClientState("ClientCardAction", {
+                        descriptionmyturn: _("Select an action for this card"),
+                        args: { 
+                            'card': cardDatas,
+                            'isPlayableCard': isPlayableCard,
+                            'isDiscardableCard': isDiscardableCard,
+                        },
                     });
                 };
-                this.game.onClick(`${div.id}`, callbackCardSelection);
-                div.setAttribute("title",_("Select this card"));
-            });
+                if(isSelected){
+                    if(isDiscardableCard || isPlayableCard) {
+                        callbackCardSelection();
+                    }
+                }
+                else {
+                    this.bga.states.restoreServerGameState();
+                }
+            };
 
             if(possibleActions.includes('actPassBid')){
                 this.bga.statusBar.addActionButton(_('Pass'), () => this.bga.actions.performAction("actPassBid"), { 'title':_('Pass the bid'),destination: document.getElementById('customSecondary') }); 

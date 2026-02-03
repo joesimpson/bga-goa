@@ -23,6 +23,7 @@ const [BgaHelp,BgaZoom] = await globalThis.importDojoLibs([g_gamethemeurl + "mod
 //import * as bgh from "./ext/bga-help.js";
 
 import { ConfirmTurn } from "./states/ConfirmTurn.js";
+import { ClientCardAction } from "./states/ClientCardAction.js";
 import { ClientSelectProgress } from "./states/ClientSelectProgress.js";
 import { ClientSelectSpices } from "./states/ClientSelectSpices.js";
 import { ClientFoundOutpost } from "./states/ClientFoundOutpost.js";
@@ -43,6 +44,8 @@ export class Game {
         this.playerChoice = new PlayerChoice(this, bga);
         this.bga.states.register('PlayerChoice', this.playerChoice);
         //CLIENT STATES :
+        this.clientCardAction = new ClientCardAction(this, bga);
+        this.bga.states.register('ClientCardAction', this.clientCardAction);
         this.clientSelectTileAction = new ClientSelectTileAction(this, bga);
         this.bga.states.register('ClientSelectTileAction', this.clientSelectTileAction);
         this.clientSelectProgress = new ClientSelectProgress(this, bga);
@@ -268,12 +271,15 @@ export class Game {
             }
             $(`goa_player_table-${player.id}`).style.order = order;
         });
-        
-        // TODO: Set up your game interface here, according to "gamedatas"
-        
-        this.setupTiles();
-        this.setupTokens();
-        this.setupCards();
+       
+        Promise.all (
+            [   this.setupTiles(), 
+                this.setupTokens(), 
+                this.setupCards(),
+            ]      
+        ).then( 
+            console.log("SETUP phases")
+        );
 
         this.setupRoundMarker();
 
@@ -446,6 +452,7 @@ export class Game {
             stock.setSelectionMode('none');
             stock.removeLastPlayedCardsClass();
         });
+
         document.getElementById('goa_top_zone').classList.remove('goa_display');
         //Empty it only when displayed again in order to have smooth transition
         //this.empty(document.getElementById('goa_top_zone_content'));
@@ -1749,16 +1756,17 @@ export class Game {
         
         // This function is refreshUI compatible
         //destroy previous cards
-        if(this.explorationHand) this.explorationHand.removeAll();
-        this.explorationDiscard.removeAll();
+        if(this.explorationHand) await this.explorationHand.removeAll();
+        await this.explorationDiscard.removeAll();
         document.querySelectorAll('.goa_card[id^="goa_card-"]').forEach((pCard) => {
             this.destroy(pCard);
         });
         
-        let cardIds = this.gamedatas.cards.all.map((card) => {
-            this.addCard(card);
-            return card.id;
-        });
+        await Promise.all (
+            this.gamedatas.cards.all.map( async (card) => {
+                await this.addCard(card);
+            }),
+        );
         let hand = Object.values( [] );
         if(init){
             hand = Object.values(this.gamedatas.cards.private.hand);
@@ -1766,9 +1774,11 @@ export class Game {
         else if(this.gamedatas._private && this.gamedatas._private.private){
             hand = Object.values(this.gamedatas._private.private.hand);
         }
-        hand.forEach((card) => {
-            this.addCard(card);
-        });
+        await Promise.all (
+            hand.map( async (card) => {
+                await this.addCard(card);
+            }),
+        );
     }
 
     getCardContainer(card) {
@@ -1786,17 +1796,17 @@ export class Game {
     }
     
     
-    addCard(card, location = null) {
+    async addCard(card, location = null) {
         console.log('addCard',card,location);
         if (!$(`goa_card-${card.id}`)){
             let container = location == null ? this.getCardContainer(card) : location;
             
             if(container == `goa_exploration_discard`){
                 //use bga-cards stock
-                this.explorationDiscard.addCard(card);
+                await this.explorationDiscard.addCard(card);
             } else if(container.startsWith(`goa_exploration_hand`)){
                 //use bga-cards stock
-                this.explorationHand.addCard(card);
+                await this.explorationHand.addCard(card);
                 let currentPlayer = this.bga.players.getCurrentPlayer();
                 if (currentPlayer) {
                     this._counters[currentPlayer.id]['explo_symbol_tiny_'+card.symbol].incValue(1);
