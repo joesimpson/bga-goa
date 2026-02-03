@@ -99,7 +99,7 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
   public static function resetActionsPhase()
   {
     self::DB()
-      ->update(['nbActions' => 0, 'passed' => 0])
+      ->update(['nbActions' => 0, 'passed' => 0, 'cardsPlayed' => 0])
       ->run();
   }
   /**
@@ -111,6 +111,15 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
         Players::giveExtraActionCards($player,-1);
     }
     $player->incNbActions();
+  }
+  /**
+   * Save the information that the player played one of their card
+   */
+  public static function registerCardPlayed(Player $player, int $card_id)
+  {
+    $cardsPlayed = $player->getCardsPlayed();
+    $cardsPlayed[] = $card_id;
+    $player->setCardsPlayed($cardsPlayed);
   }
 
   /**
@@ -265,23 +274,23 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
   // ----------------------------------------------------------------------------
   // ----------------------------------------------------------------------------
 
-  public static function giveContracts(Player $player, int $nb = 1)
+  public static function giveContracts(Player &$player, int $nb = 1)
   {
     if($nb ==0) return;
     $player->incContracts($nb);
     Notifications::getContracts($player,$nb);
   }
-  public static function giveShips(Player $player, int $nb = 1)
+  public static function giveShips(Player &$player, int $nb = 1)
   {
     $player->incShips($nb);
     Notifications::getShips($player,$nb);
   }
-  public static function giveMoney(Player $player, int $nb = 1)
+  public static function giveMoney(Player &$player, int $nb = 1)
   {
     $player->incMoney($nb);
     Notifications::getMoney($player,$nb);
   }
-  public static function giveExtraActionCards(Player $player, int $nb = 1)
+  public static function giveExtraActionCards(Player &$player, int $nb = 1)
   {
     $player->incCompasses($nb);
     Notifications::getCompass($player,$nb);
@@ -290,7 +299,7 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
   /**
    * @throws PrematureStateChangeException when caller will need to go to another state than default one
    * */
-  public static function directGain(Player $player, int $gainType, int $gainQuantity, Tile $tile)
+  public static function directGain(Player &$player, int $gainType, int $gainQuantity, Tile $tile)
   {
     switch($gainType){
       // gains from tiles with MARKET_TYPE_ACTION_DIRECT

@@ -474,6 +474,31 @@ class PlayerTurn extends GameState
 
         return PlayerTurn::class;
     }
+    
+    /**
+     * Player action : Play some card in hand
+     */
+    #[PossibleAction]
+    public function actPlayCard(int $card_id, int $activePlayerId, array $args)
+    { 
+        $this->game->trace("actPlayCard($card_id,$activePlayerId)");
+        $possibleActions = $args['possibleActions'];
+        if(!in_array('actPlayCard',$possibleActions)){
+            throw new UnexpectedException(110,"Invalid action actPlayCard, see ".json_encode($possibleActions));
+        }
+        $possibleCards = $args['possiblePlayCards'];
+        if(!in_array($card_id,$possibleCards)){
+            throw new UnexpectedException(130,"Invalid card $card_id, see ".json_encode($possibleCards));
+        }
+        Log::addStep();
+        $player = Players::get($activePlayerId);
+
+        Cards::playExploration($player, $card_id, );
+        //keep trace of played card per players
+        Players::registerCardPlayed($player,$card_id);
+
+        return PlayerTurn::class;
+    }
 
     /**
      * Player action : undo ALL

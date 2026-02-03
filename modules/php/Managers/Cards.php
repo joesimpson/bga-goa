@@ -115,7 +115,7 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
   
   public static function getPossibleToPlay(Player $player) : Collection
   {
-    //TODO JSA : filter cards to play
+    //TODO JSA : filter cards to play with type of card + check if already $player->getCardsPlayed()
     $hand = Cards::getExplorationHand($player->getId());
     return $hand;
   }
@@ -186,6 +186,49 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
     return $card;
   }
    
+  public static function playExploration(Player &$player,int $cardId): ExplorationCard
+  { 
+    $card = Cards::get($cardId);
+    
+    self::insertOnTop($cardId,CARD_LOCATION_EXP_DISCARD);
+    $card = Cards::get($cardId);
+    $card->setPId(null);
+
+    //NOTIFY 
+    Notifications::playExploration( $player, $card);
+    
+    //TODO JSA SWITCH CARD TYPE -> play
+    switch($card->getAction()){
+      case CARD_ACTION_PROGRESS_NO_SPICE: 
+        break;
+      case CARD_ACTION_PROGRESS_NO_SHIP:
+        break;
+      case CARD_ACTION_HARVEST_AND_CARDS:
+        break;
+      case CARD_ACTION_OUTPOST_EXTRA_CONTRACTS:
+        break;
+      case CARD_ACTION_RESSOURCES_TO_COINS:
+        break;
+      case CARD_ACTION_2_SPICES:
+        break;
+      case CARD_ACTION_2_CONTRACTS:
+        Players::giveContracts($player, 2);
+        break;
+      case CARD_ACTION_2_SHIPS:
+        Players::giveShips($player, 2);
+        break;
+      case CARD_ACTION_5_COINS:
+        Players::giveMoney($player, 5);
+        break;
+      case CARD_ACTION_PROGRESS_WITH_COINS:
+        break;
+      default:
+        break;
+    }
+    //TODO JSA we could redirect to choice state
+    
+    return $card;
+  }
   ///////////////////////////////////////////////////////////////////////////////////////
    
   /** Creation of the cards

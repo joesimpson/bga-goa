@@ -250,6 +250,18 @@ class Notifications
         'preserve'=>['card'],
     ]);
   }
+  
+  public static function playExploration(Player $player, ExplorationCard $card)
+  {
+    //keep same id as discardExploration to keep same UI behavior for now
+    self::notifyAll("discardExploration", clienttranslate('${player_name} plays ${card_icon} from his hand'), [
+       "player" => $player,
+        "card" => $card->getUiData(),
+        "card_id" => $card->getId(),
+        "card_icon" => '',
+        'preserve'=>['card'],
+    ]);
+  }
   public static function giveExplorationCardsToPlayer(Player $player, Collection $cards)
   {
     $message = clienttranslate('${player_name} draws ${n} exploration cards ${icon_explo}');
