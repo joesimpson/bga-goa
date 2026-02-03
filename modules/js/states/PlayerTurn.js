@@ -95,7 +95,7 @@ export class PlayerTurn {
                             this.selectedBid = args.minBid;
                             this.refreshBidButton();
                         }
-                    ,{ destination:document.getElementById('goa_bid_reset_min'), 'color':'secondary' }
+                    ,{ 'title':_('Set to Minimum bid'),destination:document.getElementById('goa_bid_reset_min'), 'color':'secondary' }
                 );
                 this.bga.statusBar.addActionButton(this.bga.gameui.format_string(  hintLineMax ,{ n:args.minBid, m: (this.currentBid + args.minBid) , icon_money: icon_money}), 
                         () => {
@@ -103,17 +103,17 @@ export class PlayerTurn {
                             this.selectedBid = args.maxBid;
                             this.refreshBidButton();
                         } 
-                    ,{ destination: document.getElementById('goa_bid_reset_max') , 'color':'secondary'}
+                    ,{ 'title':_('Set to Maximum bid'),destination: document.getElementById('goa_bid_reset_max') , 'color':'secondary'}
                 );
 
                 this.bga.statusBar.addActionButton('-1', 
                         () => this.onIncreaseBid(-1, args.minBid, args.maxBid) 
-                    ,{ 'id':'goa_button_bid_dec',destination: document.getElementById('goa_bid_inc'), 'color':'secondary'  }
+                    ,{ 'id':'goa_button_bid_dec','title':_('Decrease bid'),destination: document.getElementById('goa_bid_inc'), 'color':'secondary'  }
                 );
                 
                 this.bga.statusBar.addActionButton('+1', 
                         () => this.onIncreaseBid(1, args.minBid, args.maxBid) 
-                    ,{ 'id':'goa_button_bid_inc', destination: document.getElementById('goa_bid_inc'), 'color':'secondary'  }
+                    ,{ 'id':'goa_button_bid_inc','title':_('Increase bid'),destination: document.getElementById('goa_bid_inc'), 'color':'secondary'  }
                 );
 
             }
@@ -125,18 +125,18 @@ export class PlayerTurn {
                         //description : _("${actplayer} must select a progress track to improve on his board"),
                         args: {'progressTracks': args.progressTracks },
                     });
-                }, { destination: document.getElementById('customPrimary') }); 
+                }, { 'title':_('Action : Progress. Progressing on your Development board has 3 benefits: + At the end of the game, you score points according to the position of your Progress markers, more progress means more points. + Moving your Progress markers down increases the resources you receive or can use with the other actions. + Progressing also allows you to obtain Compasses and Exploration cards'),destination: document.getElementById('customPrimary') }); 
             }
 
             if(possibleActions.includes('actBuildShips')){
-                this.bga.statusBar.addActionButton(_('Build ships'), () => this.bga.actions.performAction("actBuildShips"), { destination: document.getElementById('customPrimary') }); 
+                this.bga.statusBar.addActionButton(_('Build ships'), () => this.bga.actions.performAction("actBuildShips"), { 'title':_('Action : Build ships'),destination: document.getElementById('customPrimary') }); 
                 //+ CLICK ON BOARD section
                 let progressTrack = document.getElementById(`goa_progress_track_${1}_${activePlayer}`);
                 let progressMarker = progressTrack.getElementsByClassName('goa_progress_marker')[0];
                 this.game.onClick(progressMarker.parentNode,() => this.bga.actions.performAction("actBuildShips"));
             }
             if(possibleActions.includes('actTaxes')){
-                this.bga.statusBar.addActionButton(_('Taxes'), () => this.bga.actions.performAction("actTaxes"), { destination: document.getElementById('customPrimary') }); 
+                this.bga.statusBar.addActionButton(_('Taxes'), () => this.bga.actions.performAction("actTaxes"), { 'title':_('Action : Taxes'),destination: document.getElementById('customPrimary') }); 
                 //+ CLICK ON BOARD section
                 let progressTrack = document.getElementById(`goa_progress_track_${3}_${activePlayer}`);
                 let progressMarker = progressTrack.getElementsByClassName('goa_progress_marker')[0];
@@ -152,7 +152,7 @@ export class PlayerTurn {
                     });
                 };
                 this.bga.statusBar.addActionButton(_('Found Outpost'), () => goToNext()
-                    , { destination: document.getElementById('customPrimary') }); 
+                    , { 'title':_('Action : Found Outpost'),destination: document.getElementById('customPrimary') }); 
                 //+ CLICK ON BOARD section
                 let progressTrack = document.getElementById(`goa_progress_track_${5}_${activePlayer}`);
                 let progressMarker = progressTrack.getElementsByClassName('goa_progress_marker')[0];
@@ -164,7 +164,7 @@ export class PlayerTurn {
                     this.bga.gameui.format_string( 
                         _('Explore : +${n} ${icon_explo}'),
                         {'n' : args.nbCardsExploration, 'icon_explo': this.game.formatIcon('exploration_card',_('Exploration card'))},
-                    ), () => this.bga.actions.performAction("actExploration"), { destination: document.getElementById('customPrimary') }); 
+                    ), () => this.bga.actions.performAction("actExploration"), { 'title':_('Action : Exploration'),destination: document.getElementById('customPrimary') }); 
                 //+ CLICK ON BOARD section
                 let progressTrack = document.getElementById(`goa_progress_track_${4}_${activePlayer}`);
                 let progressMarker = progressTrack.getElementsByClassName('goa_progress_marker')[0];
@@ -173,11 +173,11 @@ export class PlayerTurn {
             }
 
             if(possibleActions.includes('actPassBid')){
-                this.bga.statusBar.addActionButton(_('Pass'), () => this.bga.actions.performAction("actPassBid"), { destination: document.getElementById('customSecondary') }); 
+                this.bga.statusBar.addActionButton(_('Pass'), () => this.bga.actions.performAction("actPassBid"), { 'title':_('Pass the bid'),destination: document.getElementById('customSecondary') }); 
             }
             
             if(possibleActions.includes('actPassAction')){
-                this.bga.statusBar.addActionButton(_('Pass'), () => this.bga.actions.performAction("actPassAction"), { destination: document.getElementById('customSecondary') }); 
+                this.bga.statusBar.addActionButton(_('Pass'), () => this.bga.actions.performAction("actPassAction"), { 'title':_('Pass to play no actions until next round'),destination: document.getElementById('customSecondary') }); 
             }
 
         }
@@ -242,7 +242,7 @@ export class PlayerTurn {
         this.bga.statusBar.addActionButton(this.bga.gameui.format_string(  _('Bid ${n} ${icon_money} => ${m} ${icon_money}') ,
                     { 'n': this.selectedBid, m: (this.currentBid + this.selectedBid), icon_money: icon_money}), 
                 () => this.onBid(this.selectedBid) 
-            , {'id':'goa_button_bid', destination: document.getElementById('customPrimary')}
+            , {'id':'goa_button_bid', 'title':_('Confirm the bid'),destination: document.getElementById('customPrimary')}
             );
     }
 }

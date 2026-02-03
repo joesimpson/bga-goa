@@ -47,7 +47,7 @@ export class PlayerChoice {
                             };
                             this.bga.statusBar.addActionButton( tile_icon, () => {
                                 nextState(this.bga);
-                            }, {  destination: document.getElementById('customPrimary') }); 
+                            }, {  destination: document.getElementById('customPrimary'),'title':_('Select this tile'),  }); 
                             if(directState){
                                 //UNIQUE CHOICE => go for it
                                 nextState(this.bga);
@@ -111,7 +111,7 @@ export class ClientSelectTileAction {
                                         'choice': choice,
                                         'choice_index':args.choice_index,
                                     })
-                            }, {destination: document.getElementById('customPrimary') }); 
+                            }, {destination: document.getElementById('customPrimary'),'title':_('Take ships'),  }); 
                             break;
                         case this.game.const.ACTION_CONTRACT:
                             let buttonText1 = this.bga.gameui.format_string(
@@ -124,7 +124,7 @@ export class ClientSelectTileAction {
                                         'choice': choice,
                                         'choice_index':args.choice_index,
                                     })
-                            }, { destination: document.getElementById('customPrimary') }); 
+                            }, { destination: document.getElementById('customPrimary'),'title':_('Take contracts'),  }); 
 
                             break;
                         default: break;
@@ -138,7 +138,7 @@ export class ClientSelectTileAction {
                                 'choice': choice_id,
                                 'choice_index':args.choice_index,
                             })
-                    }, {  destination: document.getElementById('customPrimary') }); 
+                    }, {  destination: document.getElementById('customPrimary'),'title':_('Select this tile'),  }); 
                     break;
                 case this.game.const.CHOICE_PICK_SPICE:
                     let tileToFill = document.getElementById(`goa_tile-${tile_id}`);
@@ -151,7 +151,7 @@ export class ClientSelectTileAction {
                                 'choice': choice,
                                 'choice_index':args.choice_index,
                             })
-                    }, {  destination: document.getElementById('customPrimary') }); 
+                    }, {  destination: document.getElementById('customPrimary'),'title':_('Select this spice'),  }); 
                     break;
                 case this.game.const.CHOICE_REPLACE_TILE:
                     this.bga.statusBar.setTitle(isCurrentPlayerActive ? 
@@ -187,7 +187,7 @@ export class ClientSelectTileAction {
                                     'choice': choice,
                                     'choice_index':args.choice_index,
                                 })
-                        }, {destination: document.getElementById('customPrimary') }); 
+                        }, {destination: document.getElementById('customPrimary'),'title':_('Abandon Outpost'),  }); 
                         break;
                         case this.game.const.ACTION_FOUND_FORWARD: 
                             this.bga.statusBar.addActionButton( _("Found Outpost"), () => {
@@ -196,7 +196,7 @@ export class ClientSelectTileAction {
                                         'choice': choice,
                                         'choice_index':args.choice_index,
                                     })
-                            }, {destination: document.getElementById('customPrimary') }); 
+                            }, {destination: document.getElementById('customPrimary') ,'title':_('Found Outpost'),}); 
                         break;
                     }
                     
@@ -207,7 +207,7 @@ export class ClientSelectTileAction {
         if(args.cancelable){
             this.bga.statusBar.addActionButton( _('Cancel'), () => {
                 this.bga.states.restoreServerGameState();
-            }, { 'color':'secondary',destination: document.getElementById('customSecondary') }); 
+            }, { 'color':'secondary','title':_('Cancel'),destination: document.getElementById('customSecondary') }); 
         }
         if(isCurrentPlayerActive) this.game.confirmTurn.displayUndoButtons(args);
 

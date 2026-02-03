@@ -38,13 +38,13 @@ export class ClientFoundOutpost {
                     () => { 
                         this.bga.actions.performAction('actFoundOutpost', { 'tile_id': outpostId,});
                     }
-                , { id:'goa_button_found',destination: document.getElementById('customPrimary') }); 
+                , { id:'goa_button_found', 'title':_('Action : Found Outpost'), destination: document.getElementById('customPrimary') }); 
             });
         });
     
         this.bga.statusBar.addActionButton( _('Cancel'), () => {
             this.bga.states.restoreServerGameState();
-        }, { 'color':'secondary',destination: document.getElementById('customSecondary') }); 
+        }, { 'color':'secondary','title':_('Cancel'), destination: document.getElementById('customSecondary') }); 
 
     }
 

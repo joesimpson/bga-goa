@@ -479,7 +479,7 @@ export class Game {
         if (selectedElements.length == n) {
             this.bga.statusBar.addActionButton( confirmText, () => {
                 endSelection();
-            }, { id:'btnConfirmChoice'});
+            }, { id:'btnConfirmChoice', 'title':confirmText});
         }
 
         if ($('btnCancelChoice')) $('btnCancelChoice').remove();
@@ -487,7 +487,7 @@ export class Game {
             this.bga.statusBar.addActionButton( _('Clear selection'), () => {
                 selectedElements = [];
                 updateStatus();
-            }, { id:'btnCancelChoice', 'color':'secondary',destination: document.getElementById('customSecondary')},);
+            }, { id:'btnCancelChoice', 'title':_('Clear selection'), 'color':'secondary',destination: document.getElementById('customSecondary')},);
         }
 
         Object.keys(elements).forEach((id) => {
