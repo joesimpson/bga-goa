@@ -212,6 +212,12 @@ const PROGRESS_COST_AS_SPICES = [
    ],
 ];
 
+const PROGRESS_COST_AS_COINS = [
+      2 => 6, 
+      3 => 12, 
+      4 => 18, 
+      5 => 24, 
+];
 /////////////////////////////////////////////////////////
 //          Game options
 /////////////////////////////////////////////////////////  
@@ -345,4 +351,5 @@ CONST ALL_MY_UI_CONSTANTS= [
    'PROGRESS_GAINS_SHIPS' => PROGRESS_GAINS_SHIPS,
    'PROGRESS_GAINS_OUTPOST' => PROGRESS_GAINS_OUTPOST,
    'PROGRESS_GAINS_EXPLO'  => PROGRESS_GAINS_EXPLO,
+   'PROGRESS_COST_AS_COINS' => PROGRESS_COST_AS_COINS,
 ] ;

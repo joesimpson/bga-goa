@@ -115,9 +115,40 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
   
   public static function getPossibleToPlay(Player $player) : Collection
   {
-    //TODO JSA : filter cards to play with type of card + check if already $player->getCardsPlayed()
+    $cardsPlayed = $player->getCardsPlayed();
+    $playerSpices = $player->getSpicesCount();
+
     $hand = Cards::getExplorationHand($player->getId());
-    return $hand;
+    return $hand->filter(function($card) use ($player, $cardsPlayed, $playerSpices){
+      if(isset($cardsPlayed) && count($cardsPlayed) >0) return false;
+
+      //TODO JSA : filter cards to play with type of action
+      switch($card->getAction()){
+        case CARD_ACTION_PROGRESS_NO_SPICE: 
+          return false;
+        case CARD_ACTION_PROGRESS_NO_SHIP:
+          return false;
+        case CARD_ACTION_HARVEST_AND_CARDS:
+          return false;
+        case CARD_ACTION_OUTPOST_EXTRA_CONTRACTS:
+          return false;
+        case CARD_ACTION_RESSOURCES_TO_COINS:
+          foreach($playerSpices as $playerSpiceCount) if($playerSpiceCount>0) return true;
+          return false;
+        case CARD_ACTION_2_SPICES:
+          return Tiles::getPlayerAvailableSpotsForSpices($player)->count()>0;
+        case CARD_ACTION_PROGRESS_WITH_COINS:
+          $playerMarkers = Tokens::getUpgradableProgressMarkersWithCoins($player);
+          if(count($playerMarkers)>0) return true;
+          return false;
+        case CARD_ACTION_2_CONTRACTS:
+        case CARD_ACTION_2_SHIPS:
+        case CARD_ACTION_5_COINS:
+        default:
+          return true;
+      }
+
+    });
   }
   
   public static function getPrivateDatas(int $pId)

@@ -1933,7 +1933,15 @@ export class Game {
                 )
              }
             );
-            case this.const.CARD_ACTION_PROGRESS_WITH_COINS  : return _('Type j: Spend 6/12/18/24 Pardaos to advance a Progress marker of your choice to the 2nd/3rd/4th/5th row.');
+            case this.const.CARD_ACTION_PROGRESS_WITH_COINS  : return this.bga.gameui.format_string(
+                    _('Type j: Spend ${a}/${b}/${c}/${d} Pardaos to advance a Progress marker of your choice to the 2nd/3rd/4th/5th row.')
+                    , { 
+                        a: this.const.PROGRESS_COST_AS_COINS[2],
+                        b: this.const.PROGRESS_COST_AS_COINS[3],
+                        c: this.const.PROGRESS_COST_AS_COINS[4],
+                        d: this.const.PROGRESS_COST_AS_COINS[5],
+                    }
+                );
             
         }
         return '';

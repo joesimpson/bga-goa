@@ -262,6 +262,15 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
       ->get();
   }
   
+  public static function countSpicesOnTile(int $tile_id) : Collection
+  {
+    return self::DB()
+      ->where('subtype', TOKEN_SUBTTYPE_SPICE)
+      ->where( static::$prefix . 'location', TOKEN_LOCATION_TILE.$tile_id)
+      ->get();
+  }
+  
+  
   public static function getProgressMarkerByType(int $progressType, int $playerId) : ProgressMarker
   {
     return self::DB()
@@ -346,6 +355,32 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
               return $map;
             })
           //->map(function ($token) { return $token->getTrackIndex();})
+          ->toArray();
+  }
+
+  public static function getUpgradableProgressMarkersWithCoins( Player $player) : array
+  {
+    $allMarkers = Tokens::getProgressMarkers($player->getId());
+    $playerMoney = $player->getMoney();
+
+    return $allMarkers->map(function ($token) { 
+                $map = [
+                  'track' => $token->getTrackIndex(),
+                  'row' => $token->getRow(),
+                ];
+                $currentRow = $token->getRow();
+                $costs = PROGRESS_COST_AS_COINS;
+                if( array_key_exists($currentRow+1, $costs)){
+                  $map['costMoney'] = $costs[$currentRow+1];
+                }
+                return $map;
+              })
+            ->filter(function ($tokenDatas) use ($playerMoney) {
+                if($playerMoney < $tokenDatas['costMoney']){
+                  return false;
+                }
+                return true;
+            }) 
           ->toArray();
   }
 
