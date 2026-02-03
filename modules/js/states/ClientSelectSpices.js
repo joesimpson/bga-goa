@@ -21,9 +21,10 @@ export class ClientSelectSpices {
             spicesDivs[tId] = $(`goa_token-${tId}`);
         });
 
+        let selectionHint = _('Select this spice token');
         this.game.onSelectN(spicesDivs, nbSpices, (selectedSpices) => {
             this.bga.actions.performAction('actProgress', { 'track': args.track, 't_ids': selectedSpices.join(',')});
-        }, spicesSets, true );
+        }, spicesSets, true, _('Confirm'), selectionHint );
     
         this.bga.statusBar.addActionButton( _('Cancel'), () => {
             this.bga.states.restoreServerGameState();

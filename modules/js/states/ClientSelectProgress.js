@@ -37,6 +37,7 @@ export class ClientSelectProgress {
             });
 
             let progressTrack = document.getElementById(`goa_progress_track_${track}_${activePlayer}`);
+            progressTrack.setAttribute("title",_('Select this progress track'));
             this.game.onClick(progressTrack,() => {
                 //refresh selection
                 [...document.getElementsByClassName('goa_progress_track')].forEach( a => a.classList.remove('selected'));

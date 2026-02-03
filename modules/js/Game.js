@@ -417,23 +417,26 @@ export class Game {
         this._connections = [];
         this._selectableNodes.forEach((node) => {
             if ($(node)){
+                $(node).removeAttribute("title");//title hint depends on current action
                 $(node).classList.remove('selectable');
                 $(node).classList.remove('selected');
             }
         });
         this._selectableNodes = [];
-        [...document.getElementsByClassName('selectable')].forEach((node) => {
+        let gameContainer = document.getElementById('goa_game_container');
+        [...gameContainer.getElementsByClassName('selectable')].forEach((node) => {
             if ($(node)){
-                $(node).classList.remove('selectable')
+                $(node).classList.remove('selectable');
+                $(node).removeAttribute("title");//title hint depends on current action
             }
         });
-        [...document.getElementsByClassName('selected')].forEach((node) => {
+        [...gameContainer.getElementsByClassName('selected')].forEach((node) => {
             if ($(node)){
                 $(node).classList.remove('selected')
             }
         });
         if(withClientState) {
-            [...document.getElementsByClassName('selected_for_client_state')].forEach((node) => {
+            [...gameContainer.getElementsByClassName('selected_for_client_state')].forEach((node) => {
                 if ($(node)){
                     $(node).classList.remove('selected_for_client_state')
                 }
@@ -466,7 +469,7 @@ export class Game {
      * Optional parameter "listPossibleSets" will make selection impossible if not in list of sets/arrays.
      * Optional parameter "autoConfirm" will make selection callback as soon as we have a possible set
     */
-    onSelectN(elements, n, callbackOnSelectionEnd, listPossibleSets =null, autoConfirm = false , confirmText = _('Confirm')) {
+    onSelectN(elements, n, callbackOnSelectionEnd, listPossibleSets =null, autoConfirm = false , confirmText = _('Confirm'), selectionHint = null) {
       let selectedElements = [];
       let endSelection = () => {
         if (callbackOnSelectionEnd(selectedElements)) {
@@ -544,7 +547,7 @@ export class Game {
 
       Object.keys(elements).forEach((id) => {
         let elt = elements[id];
-
+        if(selectionHint) elt.setAttribute("title",selectionHint);
         this.onClick(elt, () => {
           if(!elt.classList.contains("selectable")) return;
 

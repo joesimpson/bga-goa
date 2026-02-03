@@ -160,6 +160,7 @@ export class ClientSelectTileAction {
                     );
                     //click on each selectable tile
                     let tileDiv = document.getElementById(`goa_tile-${choice}`);
+                    tileDiv.setAttribute("title",_('Select this tile'));
                     this.game.onClick(tileDiv,() => {
                             this.bga.actions.performAction("actTileChoice", { 
                                 'tile_id' : tile_id,
@@ -167,6 +168,7 @@ export class ClientSelectTileAction {
                                 'choice_index':args.choice_index,
                             });
                         });
+                        
                     break;
                 case this.game.const.CHOICE_FOUND_TILE:
                     let missingContracts = tile_choice.n;

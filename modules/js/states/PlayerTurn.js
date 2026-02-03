@@ -65,6 +65,7 @@ export class PlayerTurn {
 
                     let marketSpace = $(`goa_market_grid_space-${spot.row}-${spot.col}`);
                     this.game.onClick(marketSpace,() => this.onMarketSpotClick(spot.row,spot.col));
+                    marketSpace.setAttribute("title",_('Select this spot for the auction'));
                 }); 
             }
             
@@ -129,21 +130,29 @@ export class PlayerTurn {
             }
 
             if(possibleActions.includes('actBuildShips')){
-                this.bga.statusBar.addActionButton(_('Build ships'), () => this.bga.actions.performAction("actBuildShips"), { 'title':_('Action : Build ships'),destination: document.getElementById('customPrimary') }); 
+                let actionName = _('Build ships');
+                let actionHint = this.bga.gameui.format_string(_('Action : ${name}'),{'name': actionName});
+                this.bga.statusBar.addActionButton(actionName, () => this.bga.actions.performAction("actBuildShips"), { 'title':actionHint,destination: document.getElementById('customPrimary') }); 
                 //+ CLICK ON BOARD section
                 let progressTrack = document.getElementById(`goa_progress_track_${1}_${activePlayer}`);
                 let progressMarker = progressTrack.getElementsByClassName('goa_progress_marker')[0];
                 this.game.onClick(progressMarker.parentNode,() => this.bga.actions.performAction("actBuildShips"));
+                progressMarker.parentNode.setAttribute("title",actionHint);
             }
             if(possibleActions.includes('actTaxes')){
-                this.bga.statusBar.addActionButton(_('Taxes'), () => this.bga.actions.performAction("actTaxes"), { 'title':_('Action : Taxes'),destination: document.getElementById('customPrimary') }); 
+                let actionName = _('Taxes');
+                let actionHint = this.bga.gameui.format_string(_('Action : ${name}'),{'name': actionName});
+                this.bga.statusBar.addActionButton(actionName, () => this.bga.actions.performAction("actTaxes"), { 'title':actionHint,destination: document.getElementById('customPrimary') }); 
                 //+ CLICK ON BOARD section
                 let progressTrack = document.getElementById(`goa_progress_track_${3}_${activePlayer}`);
                 let progressMarker = progressTrack.getElementsByClassName('goa_progress_marker')[0];
                 this.game.onClick(progressMarker.parentNode,() => this.bga.actions.performAction("actTaxes"));
+                progressMarker.parentNode.setAttribute("title",actionHint);
             }
             
             if(possibleActions.includes('actFoundOutpost') && args.outpostsToFound.length>0){
+                let actionName = _('Found Outpost');
+                let actionHint = this.bga.gameui.format_string(_('Action : ${name}'),{'name': actionName});
                 let baseContractsWithAction = args.playerBaseContracts;
                 let goToNext = () => {
                     this.bga.states.setClientState("ClientFoundOutpost", {
@@ -151,24 +160,28 @@ export class PlayerTurn {
                         args: {'outpostsToFound': args.outpostsToFound },
                     });
                 };
-                this.bga.statusBar.addActionButton(_('Found Outpost'), () => goToNext()
-                    , { 'title':_('Action : Found Outpost'),destination: document.getElementById('customPrimary') }); 
+                this.bga.statusBar.addActionButton(actionName, () => goToNext()
+                    , { 'title':actionHint,destination: document.getElementById('customPrimary') }); 
                 //+ CLICK ON BOARD section
                 let progressTrack = document.getElementById(`goa_progress_track_${5}_${activePlayer}`);
                 let progressMarker = progressTrack.getElementsByClassName('goa_progress_marker')[0];
                 this.game.onClick(progressMarker.parentNode,() => goToNext());
+                progressMarker.parentNode.setAttribute("title",actionHint);
             }
             
             if(possibleActions.includes('actExploration') && args.nbCardsExploration>0){
+                let actionName = _('Exploration');
+                let actionHint = this.bga.gameui.format_string(_('Action : ${name}'),{'name': actionName});
                 this.bga.statusBar.addActionButton(
                     this.bga.gameui.format_string( 
                         _('Explore : +${n} ${icon_explo}'),
                         {'n' : args.nbCardsExploration, 'icon_explo': this.game.formatIcon('exploration_card',_('Exploration card'))},
-                    ), () => this.bga.actions.performAction("actExploration"), { 'title':_('Action : Exploration'),destination: document.getElementById('customPrimary') }); 
+                    ), () => this.bga.actions.performAction("actExploration"), { 'title':actionHint,destination: document.getElementById('customPrimary') }); 
                 //+ CLICK ON BOARD section
                 let progressTrack = document.getElementById(`goa_progress_track_${4}_${activePlayer}`);
                 let progressMarker = progressTrack.getElementsByClassName('goa_progress_marker')[0];
                 this.game.onClick(progressMarker.parentNode,() => this.bga.actions.performAction("actExploration"));
+                progressMarker.parentNode.setAttribute("title",actionHint);
                 //TODO JSA : player should be able to discard cards before this action
             }
 

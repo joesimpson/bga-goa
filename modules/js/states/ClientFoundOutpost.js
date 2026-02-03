@@ -24,6 +24,7 @@ export class ClientFoundOutpost {
             let colonyName = this.game.getColonyName(colony);
             let stock = this.game.outpostsTilesStocks[colony];
 
+            outpostDiv.setAttribute("title",_('Select this tile'));
             this.game.onClick(outpostDiv, () => {
                 //unselect before select
                 this.game.outpostsTilesStocks.forEach((s) => { s.unselectAll();});
