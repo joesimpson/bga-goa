@@ -190,7 +190,7 @@ export class PlayerTurn {
             }
             
             if(possibleActions.includes('actPassAction')){
-                this.bga.statusBar.addActionButton(_('Pass'), () => this.bga.actions.performAction("actPassAction"), { 'title':_('Pass to play no actions until next round'),destination: document.getElementById('customSecondary') }); 
+                this.bga.statusBar.addActionButton(_('Pass'), () => this.bga.actions.performAction("actPassAction"), { 'title':_('Pass to play no actions until next round'),'color':'secondary',destination: document.getElementById('customSecondary') }); 
             }
 
         }

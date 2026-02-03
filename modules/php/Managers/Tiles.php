@@ -347,6 +347,10 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
       ->wherePlayer($player->getId())
       ->get();
   }
+  /**
+   * @param Player $player 
+   * @return Collection list of OutpostTile that can be (tried to be) founded by this player
+   */
   public static function getFoundableOutposts(Player $player): Collection{
     $playerTiles = self::getPlayerOutposts($player);
     $playerColonies = $playerTiles->filter(function($tile) {return ($tile instanceof OutpostTile);})
@@ -358,6 +362,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
       if(in_array($colony, $playerColonies)) continue;
       $newOutposts = $newOutposts->merge(self::getInLocation($location));
     }
+    //Game::get()->trace("getFoundableOutposts(".$player->getId()."), playerColonies = ".json_encode($playerColonies)." : newOutposts => ".json_encode($newOutposts));
     return $newOutposts;
   }
 

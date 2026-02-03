@@ -1007,8 +1007,17 @@ export class Game {
             });
         }
         else {
-            //TODO JSA ANIMATE BACK CARD ?
-            await this.explorationDeck.setCardNumber(this.explorationDeck.getCardNumber() - notif.n );
+            let amount = notif.n;
+            await this.explorationDeck.setCardNumber(this.explorationDeck.getCardNumber() - amount );
+            let fromElement = this.explorationDeck.element;
+            let toElement = document.getElementById(`goa_reserve_${notif.player_id}_exploration_hand_size`);
+            let animations = new Array(amount).fill(0).map(index => (() => {
+                this.animationManager.slideFloatingElement(this.createTempElement(this.formatIcon('exploration_hand_size', _('Exploration card'))), fromElement, toElement, {
+                    duration: 800,
+                    ignoreScale: false,
+                })
+                }));
+            await this.animationManager.playInterval(animations);
         }
         
     }
@@ -1947,9 +1956,11 @@ export class Game {
      * Create a coin div to animate as a temporary piece (for example for scoring animation).
      */
     createCoin() {
+        return this.createTempElement(this.formatIcon('money', _('Coins')));
+    }
+    createTempElement(html) {
         const div = document.createElement('div');
-        div.innerHTML = `<p></p>`;
-        div.classList.add('goa_icon_money');
+        div.innerHTML = html;
         div.style.pointerEvents = 'all';
         return div;
     }
