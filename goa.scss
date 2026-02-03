@@ -24,6 +24,38 @@
 @use "modules/css/ext/bga-help.css";
 @use "modules/css/ext/bga-zoom.css";
 
+#goa_overall_background{
+    background-position: 0%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    z-index: -10;
+}
+
+html {
+    &.goa_background_1{
+        background: none;
+        #goa_overall_background
+        {
+            background-image:url("img/background/background_1.jpg");
+            background-position-y: 15%;
+            opacity: 0.5;
+            filter: grayscale(0.75);
+        }
+    } 
+    &.goa_background_none{
+        #goa_overall_background
+        {
+            visibility: hidden;
+        }
+    }
+}
+
 #goa_game_container{
     display: flex;
     flex-wrap: wrap;
