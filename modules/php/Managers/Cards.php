@@ -106,6 +106,19 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
     $possibleDelta = $nbMaxInHand - $nbCardsInHand;
     return max( 0, min($delta, $possibleDelta));
   }
+
+  public static function getPossibleToDiscard(Player $player) : Collection
+  {
+    //We suppose we always may discard our exploration cards
+    return Cards::getExplorationHand($player->getId());
+  }
+  
+  public static function getPossibleToPlay(Player $player) : Collection
+  {
+    //TODO JSA : filter cards to play
+    $hand = Cards::getExplorationHand($player->getId());
+    return $hand;
+  }
   
   public static function getPrivateDatas(int $pId)
   {

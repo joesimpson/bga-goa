@@ -182,8 +182,36 @@ export class PlayerTurn {
                 let progressMarker = progressTrack.getElementsByClassName('goa_progress_marker')[0];
                 this.game.onClick(progressMarker.parentNode,() => this.bga.actions.performAction("actExploration"));
                 progressMarker.parentNode.setAttribute("title",actionHint);
-                //TODO JSA : player should be able to discard cards before this action
             }
+
+            /*
+            if(possibleActions.includes('actDiscard')){
+                this.bga.statusBar.addActionButton(_('Discard card'), () => this.bga.actions.performAction("actDiscard"), { 'title':_('Discard this card'),destination: document.getElementById('customSecondary') }); 
+            }
+            */
+            
+            //Manage various actions on same cards :
+            let handCards = [...this.game.explorationHand.element.getElementsByClassName("goa_exploration_card")];
+            let possibleDiscards = args.possibleDiscards; 
+            let playableCards = args.possiblePlayCards; 
+            handCards.forEach( (div) => {
+                let card_id = div.dataset.id;
+                let cardDatas = { 'id': parseInt(card_id), 'type': parseInt(div.dataset.type), };
+                let isDiscardableCard = (possibleActions.includes('actDiscard') && Object.values(possibleDiscards).indexOf(card_id)>=0) ? true : false;
+                let isPlayableCard = (possibleActions.includes('actPlayCard') && Object.keys(playableCards).indexOf(card_id)>=0) ? true : false;
+                //If nothing to do with the card, no event to add
+                if(!isDiscardableCard && !isPlayableCard) return;
+
+                let callbackCardSelection = (evt) => {
+                    this.clientState('cardActionSelection',  _('Select an action for this card'), {
+                        'card': cardDatas,
+                        'isPlayableCard': isPlayableCard,
+                        'isDiscardableCard': isDiscardableCard,
+                    });
+                };
+                this.game.onClick(`${div.id}`, callbackCardSelection);
+                div.setAttribute("title",_("Select this card"));
+            });
 
             if(possibleActions.includes('actPassBid')){
                 this.bga.statusBar.addActionButton(_('Pass'), () => this.bga.actions.performAction("actPassBid"), { 'title':_('Pass the bid'),destination: document.getElementById('customSecondary') }); 

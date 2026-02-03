@@ -112,6 +112,16 @@ class PlayerTurn extends GameState
                     $args['outpostsToFound'] = Tiles::getFoundableOutposts($player)->getIds();
                     $args['nbCardsExploration'] = Cards::maxExplorationToDraw($player);
                     $args['possibleActions'][] = 'actExploration';
+                    $discardableCards = Cards::getPossibleToDiscard($player);
+                    $args['possibleDiscards'] = $discardableCards->getIds();
+                    $playableCards = Cards::getPossibleToPlay($player);
+                    $args['possiblePlayCards'] = $playableCards->getIds();
+                    if( $discardableCards->count()>0){
+                        $args['possibleActions'][] = 'actDiscard';
+                    }
+                    if( $playableCards->count()>0){
+                        $args['possibleActions'][] = 'actPlayCard';
+                    }
                 }
                 //if($player->getNbActions() >= $args['minActions'] ) {
                 if($player->getNbActions() >= NB_MIN_ACTIONS_PER_ROUND && $player->getCompasses()<=1){
