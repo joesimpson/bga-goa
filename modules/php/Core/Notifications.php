@@ -242,7 +242,7 @@ class Notifications
 
   public static function discardExploration(Player $player, ExplorationCard $card)
   {
-    self::notifyAll("discardExploration", clienttranslate('${player_name} discard ${card_icon} from his hand'), [
+    self::notifyAll("discardExploration", clienttranslate('${player_name} discards ${card_icon} from his hand'), [
        "player" => $player,
         "card" => $card->getUiData(),
         "card_id" => $card->getId(),

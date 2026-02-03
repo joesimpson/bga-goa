@@ -157,7 +157,6 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
     $nbDeckBefore = Cards::countInExplorationDeck();
 
     $cards = Cards::pickForLocation($nb, CARD_LOCATION_EXP_DECK,CARD_LOCATION_EXP_DISCARD,);
-    //TODO JSA insertOnTop to keep order of discarded cards on pile
 
     if($nbDeckBefore< $nb){
       $nbDeck = Cards::countInExplorationDeck();
@@ -166,7 +165,10 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
       Notifications::reshuffleExplorationDeck($player, $nbDeckRightAfterShuffle );
     }
 
-    foreach($cards as $card){
+    foreach($cards as &$card){
+      //insertOnTop to keep order of discarded cards on pile
+      Cards::insertOnTop($card->getId(),$card->getLocation());
+      $card = Cards::get($card->getId());//refresh object
       Notifications::drawAndDiscardExploration($player->getId(), $card);
     }
     return $cards;

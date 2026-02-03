@@ -1734,6 +1734,7 @@ export class Game {
                 getId: (card) => card.id,
                 setupFrontDiv: (card, div) => {
                     div.dataset.type = card.type; 
+                    div.dataset.state = card.state; 
                     this.bga.gameui.addTooltipHtml(div.id, this.getCardTooltip(card));
                 },
                 cardWidth: 131,
@@ -1748,6 +1749,7 @@ export class Game {
                 counter: {
                     hideWhenEmpty: true,
                 }, 
+                sort: BgaCards.sort('state'),
             });
             
             let currentPlayer = this.bga.players.getCurrentPlayer();
@@ -1814,7 +1816,8 @@ export class Game {
     
     async addCard(card, location = null) {
         console.log('addCard',card,location);
-        if (!$(`goa_card-${card.id}`)){
+        let cardDiv = $(`goa_card-${card.id}`);
+        if (!cardDiv){
             let container = location == null ? this.getCardContainer(card) : location;
             
             if(container == `goa_exploration_discard`){
@@ -1831,7 +1834,11 @@ export class Game {
             else {//manual add
                 document.getElementById(container).insertAdjacentHTML('beforeend', this.tplCard(card));
             }
+            cardDiv = document.getElementById(`goa_card-${card.id}`) ;
 
+        }
+        else {
+            cardDiv.dataset.state = tile.state;//refresh state if already exists
         }
         //TODO JSA CALL when remove card
         this.updateCardsStackCounters();
