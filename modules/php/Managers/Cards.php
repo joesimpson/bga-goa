@@ -157,7 +157,8 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
     $nbDeckBefore = Cards::countInExplorationDeck();
 
     $cards = Cards::pickForLocation($nb, CARD_LOCATION_EXP_DECK,CARD_LOCATION_EXP_DISCARD,);
-    
+    //TODO JSA insertOnTop to keep order of discarded cards on pile
+
     if($nbDeckBefore< $nb){
       $nbDeck = Cards::countInExplorationDeck();
       //notify deck size BEFORE drawing, because we have an animation after
@@ -169,6 +170,18 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
       Notifications::drawAndDiscardExploration($player->getId(), $card);
     }
     return $cards;
+  }
+  
+  public static function discardExploration(Player $player,int $cardId): ExplorationCard
+  {
+    self::insertOnTop($cardId,CARD_LOCATION_EXP_DISCARD);
+    $card = Cards::get($cardId);
+    //$card->setLocation(CARD_LOCATION_EXP_DISCARD);
+    $card->setPId(null);
+
+    Notifications::discardExploration( $player, $card);
+ 
+    return $card;
   }
    
   ///////////////////////////////////////////////////////////////////////////////////////

@@ -1000,8 +1000,24 @@ export class Game {
     }
     async notif_drawAndDiscardExploration(notif) {
         console.log("notif_drawAndDiscardExploration",notif);
-        this.discardExCard(notif.card);
+        await this.discardExCard(notif.card);
     }
+    async notif_discardExploration(notif) {
+        console.log("notif_discardExploration",notif);
+        this._counters[notif.player_id]['exploration_hand_size'].incValue( -1);
+        let currentPlayerId = this.bga.players.getCurrentPlayerId();
+        let addCardSettings = { 
+                fromElement: document.getElementById(`goa_reserve_${notif.player_id}_exploration_hand_size`)
+            };
+        if (currentPlayerId == notif.player_id) {
+            addCardSettings = { 
+                fromStock: this.explorationHand
+            };
+            this._counters[currentPlayerId]['explo_symbol_tiny_'+notif.card.symbol].incValue(-1);
+        }
+        await this.explorationDiscard.addCard(notif.card, addCardSettings);
+    }
+    
     async notif_giveExplorationCardsToPlayer(notif) {
         console.log("notif_giveExplorationCardsToPlayer",notif);
 
@@ -1828,11 +1844,11 @@ export class Game {
         return '';
     }
     // draw + discard from deck
-    discardExCard(card_datas) {
+    async discardExCard(card_datas) {
         let cardNumber = this.explorationDeck.getCardNumber();
 
         if (cardNumber >= 1) {
-            this.explorationDiscard.addCard(card_datas, { fromStock: this.explorationDeck });
+            await this.explorationDiscard.addCard(card_datas, { fromStock: this.explorationDeck });
         }
     }
     getCardTooltip(cardDatas) {

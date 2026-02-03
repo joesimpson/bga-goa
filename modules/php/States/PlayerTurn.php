@@ -451,6 +451,30 @@ class PlayerTurn extends GameState
         return PlayerChoice::class;
     }
     
+    
+    /**
+     * Player action : discard some card in hand
+     */
+    #[PossibleAction]
+    public function actDiscard(int $card_id, int $activePlayerId, array $args)
+    { 
+        $this->game->trace("actDiscard($card_id,$activePlayerId)");
+        $possibleActions = $args['possibleActions'];
+        if(!in_array('actDiscard',$possibleActions)){
+            throw new UnexpectedException(110,"Invalid action actDiscard, see ".json_encode($possibleActions));
+        }
+        $possibleDiscards = $args['possibleDiscards'];
+        if(!in_array($card_id,$possibleDiscards)){
+            throw new UnexpectedException(130,"Invalid card $card_id, see ".json_encode($possibleDiscards));
+        }
+        Log::addStep();
+        $player = Players::get($activePlayerId);
+
+        Cards::discardExploration($player, $card_id, );
+
+        return PlayerTurn::class;
+    }
+
     /**
      * Player action : undo ALL
      *

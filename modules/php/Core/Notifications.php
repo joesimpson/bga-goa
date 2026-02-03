@@ -239,6 +239,17 @@ class Notifications
         'preserve'=>['card'],
     ]);
   }
+
+  public static function discardExploration(Player $player, ExplorationCard $card)
+  {
+    self::notifyAll("discardExploration", clienttranslate('${player_name} discard ${card_icon} from his hand'), [
+       "player" => $player,
+        "card" => $card->getUiData(),
+        "card_id" => $card->getId(),
+        "card_icon" => '',
+        'preserve'=>['card'],
+    ]);
+  }
   public static function giveExplorationCardsToPlayer(Player $player, Collection $cards)
   {
     $message = clienttranslate('${player_name} draws ${n} exploration cards ${icon_explo}');
