@@ -19,7 +19,7 @@
     
     &.selectable{
         cursor: pointer;
-        outline: 5px dashed blue;
+        outline: 5px dashed var(--goa_selectable_color);
     }
 }
 
@@ -52,7 +52,8 @@
     --bga-cards_hand-stock-card-y: 0px !important;
 
     --bga-cards_selectable-card_outline-size: 5px;
-    --bga-cards_selectable-card_outline-color: blue;
+    --bga-cards_selectable-card_outline-color: var(--goa_selectable_color);
+    --bga-cards_selected-card_outline-color: var(--goa_selected_color);
     --bga-cards_card-border-radius: 10px !important;
     border-radius: var(--bga-cards_card-border-radius);
 

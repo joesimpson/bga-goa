@@ -102,9 +102,9 @@
 
     &.selectable{
         cursor: pointer;
-        outline: 5px dashed blue;
+        outline: 5px dashed var(--goa_selectable_color);
     }
     &.selected{
-        outline: 8px solid red;
+        outline: 8px solid var(--goa_selected_color);
     }
 }
