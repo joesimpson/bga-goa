@@ -674,7 +674,7 @@ export class Game {
                 let clientState = this.getCurrentClientStateDatas();
                 //ignore ClientCardAction because it doesnot represent an action state, only card selection with multiple changes
                 if(clientState && clientState.name == 'ClientCardAction') 
-                    return clientState = clientState.args.previousClientState;
+                    clientState = clientState.args.previousClientState;
                 this.bga.states.setClientState("ClientCardAction", {
                     descriptionmyturn: _("Select an action for this card"),
                     args: { 
