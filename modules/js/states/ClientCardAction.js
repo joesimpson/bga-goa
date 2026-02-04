@@ -11,11 +11,15 @@ export class ClientCardAction {
     onEnteringState(args, isCurrentPlayerActive) {
         
         let card_id = args.card.id;
+        let possibleDiscards = args.possibleDiscards; 
+        let possiblePlayCards = args.possiblePlayCards; 
         let div = document.getElementById(`goa_exploration_card-${card_id}`);
         div.classList.add('selected');
         //div.classList.add('bga-cards_selected-card');
         //let selection in case we want to click on another card instead
         this.game.explorationHand.setSelectionMode('single');
+        let selectableCards = this.game.explorationHand.getCards().filter((card, index) => possibleDiscards.includes(card.id) || playableCards.includes(card.id) );
+        this.game.explorationHand.setSelectableCards(selectableCards);
         this.game.explorationHand.setLastPlayedCards([args.card]);
 
         if(args.isPlayableCard){

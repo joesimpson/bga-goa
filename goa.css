@@ -1043,6 +1043,10 @@ Icon extract in sprite with differents layers size (so % is not useful).
   height: 76px;
   border-radius: 5%;
 }
+.goa_exploration_card.selectable {
+  cursor: pointer;
+  outline: 5px dashed blue;
+}
 
 .exploration_hand {
   --bga-cards_hand-stock-height: 210px !important;
@@ -1063,6 +1067,8 @@ Icon extract in sprite with differents layers size (so % is not useful).
 .goa_exploration_card-front, .goa_exploration_card-back {
   --bga-cards_hand-stock-card-a: 0deg !important;
   --bga-cards_hand-stock-card-y: 0px !important;
+  --bga-cards_selectable-card_outline-size: 5px;
+  --bga-cards_selectable-card_outline-color: blue;
   --bga-cards_card-border-radius: 10px !important;
   border-radius: var(--bga-cards_card-border-radius);
   background-size: 700% 500%;

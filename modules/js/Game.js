@@ -1866,7 +1866,7 @@ export class Game {
             let iconsContracts = this.formatIcon('contracts',_('Contracts'));
             for(let k=2;k<=cardDatas.contracts;k++) iconsContracts += this.formatIcon('contracts',_('Contracts'));
             textLine1 = this.bga.gameui.format_string( 
-                _('When revealing and discarding this card to found an oupost, this gives ${n} ${resource_name} : ${icon_resource}'),
+                _('When revealing and discarding this card to found an outpost, this gives ${n} ${resource_name} : ${icon_resource}'),
                 {'n': cardDatas.contracts , resource_name: _('Contracts'), icon_resource: iconsContracts}
             );
             title = _('Exploration card');
