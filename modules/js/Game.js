@@ -622,13 +622,17 @@ export class Game {
     getCurrentClientStateDatas(){
         let isOnClientState = this.bga.states.isOnClientState();
         let currentClientState = isOnClientState ? this.bga.states.getCurrentMainStateClass():null;
-        if(currentClientState) return { 
-            'name' : currentClientState.constructor.name,
-            'args' : currentClientState.args,
+        if(currentClientState){
+            let stateName = currentClientState.constructor.name;
+            return { 
+                'name' : stateName,
+                'args' : currentClientState.args,
+            }
         }
         return null;
     }
     restorePreviousState(args, exceptStateName =null){
+        console.log("restorePreviousState",args, exceptStateName);
         let previousClientState = args.previousClientState;
         if(previousClientState && previousClientState.name && exceptStateName!=previousClientState.name){
             //descriptionmyturn useless if title is set on enteringstate
@@ -667,6 +671,10 @@ export class Game {
             let isDiscardableCard = (possibleActions.includes('actDiscard') && possibleDiscards.includes(card_id)) ? true : false;
             let isPlayableCard = (possibleActions.includes('actPlayCard') && possiblePlayCards.includes(card_id)) ? true : false;
             let callbackCardSelection = (evt) => {
+                let clientState = this.getCurrentClientStateDatas();
+                //ignore ClientCardAction because it doesnot represent an action state, only card selection with multiple changes
+                if(clientState && clientState.name == 'ClientCardAction') 
+                    return clientState = clientState.args.previousClientState;
                 this.bga.states.setClientState("ClientCardAction", {
                     descriptionmyturn: _("Select an action for this card"),
                     args: { 
@@ -678,7 +686,7 @@ export class Game {
                         'possibleDiscards': possibleDiscards,
                         'possiblePlayCards': possiblePlayCards,
                         //keep previous state datas in order to go back when cancel 
-                        'previousClientState' : this.getCurrentClientStateDatas(),
+                        'previousClientState' : clientState,
                     },
                 });
             };
