@@ -16,6 +16,8 @@
 :root {
   --goa_board_display_scale: 0.60;
   --goa_playerboard_display_scale: 0.60;
+  --goa_explo_card_with: 131px;
+  --goa_explo_card_height: 200px;
   --goa_board_height_offset: -230px;
   --goa_selectable_color: blue;
   --goa_selected_color: red;
@@ -1034,8 +1036,8 @@ Icon extract in sprite with differents layers size (so % is not useful).
 
 .goa_exploration_card {
   position: relative;
-  width: 131px;
-  height: 200px;
+  width: var(--goa_explo_card_with);
+  height: var(--goa_explo_card_height);
   --bga-cards_card-border-radius: 5%;
   border-radius: var(--bga-cards_card-border-radius);
   box-shadow: 0px 0px 0px 2px black;
@@ -1051,7 +1053,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
 }
 
 .exploration_hand {
-  --bga-cards_hand-stock-height: 210px !important;
+  --bga-cards_hand-stock-height: calc(1.05 * var(--goa_explo_card_height)) !important;
   height: inherit !important;
 }
 .exploration_hand .goa_exploration_card {
@@ -1063,6 +1065,19 @@ Icon extract in sprite with differents layers size (so % is not useful).
   flex-wrap: wrap;
   flex-direction: row;
   height: inherit !important;
+}
+
+.exploration_hand .hand-stock {
+  --bga-cards_hand-stock-floating-height:calc((var(--goa_board_display_scale) + 0.025) * var(--goa_explo_card_height)) !important;
+}
+.exploration_hand .goa_exploration_card {
+  width: calc(var(--goa_board_display_scale) * var(--goa_explo_card_with));
+  height: calc(var(--goa_board_display_scale) * var(--goa_explo_card_height));
+  transform: scale(var(--goa_board_display_scale));
+  --bga-cards_card-width: calc(var(--goa_board_display_scale) * var(--goa_explo_card_with)) !important;
+  --bga-cards_card-height: calc(var(--goa_board_display_scale) * var(--goa_explo_card_height)) !important;
+  --bga-cards_card-effective-width: calc(var(--goa_board_display_scale) * var(--goa_explo_card_with)) !important;
+  --bga-cards_card-effective-height: calc(var(--goa_board_display_scale) * var(--goa_explo_card_height)) !important;
 }
 
 .goa_exploration_card,
