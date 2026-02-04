@@ -287,7 +287,7 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
       ->wherePlayer($playerId)
       ->get();
   }
-  public static function getUpgradableProgressMarkers( Player $player) : array
+  public static function getUpgradableProgressMarkers( Player $player, bool $withSpices = true, bool $withShips = true) : array
   {
     $allMarkers = Tokens::getProgressMarkers($player->getId());
     $ships = $player->getShips();
@@ -316,36 +316,35 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
                 }
                 return $map;
               })
-            ->filter(function ($tokenDatas) use ($ships) {
+            ->filter(function ($tokenDatas) use ($ships, $withSpices, $withShips) {
                 if(!isset($tokenDatas['costShips'])) return false;
-                if($ships < $tokenDatas['costShips']){
+                if($ships < $tokenDatas['costShips'] && $withShips){
                   return false;
                 }
                 foreach($tokenDatas['costSpices'] as $spice => $costDatas){
                   $spiceCost = $costDatas['n'];
                   $nbPlayerSpices = count($costDatas['from']);
-                  if($nbPlayerSpices < $spiceCost){
+                  if($nbPlayerSpices < $spiceCost && $withSpices){
                     return false;
                   }
                 }
-
-                //TODO JSA FILTER on upgrade cost with exploration cards if 0 used in this turn 
-
                 return true;
             })
-            ->map(function ($map){
+            ->map(function ($map) use ( $withSpices){
 
               $possibleSets = [];
               //Save each possible set of spices to pay this progress
-              foreach($map['costSpices'] as $spice => $datas){
-                $possibleSets[$spice] = [];
-                $perms = Utils::computePermutations(array_values($datas['from']));
-                //take n elements from array of each entry
-                foreach($perms as $p){
-                  $possibleSets[$spice][] = array_values(array_slice($p,0,$datas['n']));
+              if( $withSpices){
+                foreach($map['costSpices'] as $spice => $datas){
+                  $possibleSets[$spice] = [];
+                  $perms = Utils::computePermutations(array_values($datas['from']));
+                  //take n elements from array of each entry
+                  foreach($perms as $p){
+                    $possibleSets[$spice][] = array_values(array_slice($p,0,$datas['n']));
+                  }
+                  $possibleSets[$spice] = Utils::array_of_uniquearrays($possibleSets[$spice]);
+                  
                 }
-                $possibleSets[$spice] = Utils::array_of_uniquearrays($possibleSets[$spice]);
-                
               }
 
               //Game::get()->trace(__FUNCTION__.'() : possibleSets = '.json_encode($possibleSets));

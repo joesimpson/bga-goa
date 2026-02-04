@@ -120,13 +120,17 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
 
     $hand = Cards::getExplorationHand($player->getId());
     return $hand->filter(function($card) use ($player, $cardsPlayed, $playerSpices){
-      if(isset($cardsPlayed) && count($cardsPlayed) >0) return false;
+      if(isset($cardsPlayed) && count($cardsPlayed) >= NB_MAX_CARDS_PER_TURN) return false;
 
       //TODO JSA : filter cards to play with type of action
       switch($card->getAction()){
         case CARD_ACTION_PROGRESS_NO_SPICE: 
+          $playerMarkers = Tokens::getUpgradableProgressMarkers($player, false, true);
+          if(count($playerMarkers)>0) return true;
           return false;
         case CARD_ACTION_PROGRESS_NO_SHIP:
+          $playerMarkers = Tokens::getUpgradableProgressMarkers($player, true, false);
+          if(count($playerMarkers)>0) return true;
           return false;
         case CARD_ACTION_HARVEST_AND_CARDS:
           return false;
