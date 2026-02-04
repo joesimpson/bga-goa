@@ -119,40 +119,66 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
     $playerSpices = $player->getSpicesCount();
 
     $hand = Cards::getExplorationHand($player->getId());
-    return $hand->filter(function($card) use ($player, $cardsPlayed, $playerSpices){
+    return $hand->filter(function($card) use ($cardsPlayed){
       if(isset($cardsPlayed) && count($cardsPlayed) >= NB_MAX_CARDS_PER_TURN) return false;
-
-      //TODO JSA : filter cards to play with type of action
+      return true;
+    })
+    ->map(function($card) use ($player, $playerSpices){
+      $playDatas = [];
+      $possiblePlay = false;
       switch($card->getAction()){
+        //TODO JSA : filter cards to play with type of action
         case CARD_ACTION_PROGRESS_NO_SPICE: 
-          $playerMarkers = Tokens::getUpgradableProgressMarkers($player, false, true);
-          if(count($playerMarkers)>0) return true;
-          return false;
+          $progressTracks = Tokens::getUpgradableProgressMarkers($player, false, true);
+          $possiblePlay = count($progressTracks)>0;
+          //TODO JSA not possible if player already performed an action in this round
+          $playDatas['progressTracks'] = $progressTracks;
+          break;
         case CARD_ACTION_PROGRESS_NO_SHIP:
-          $playerMarkers = Tokens::getUpgradableProgressMarkers($player, true, false);
-          if(count($playerMarkers)>0) return true;
-          return false;
+          $progressTracks = Tokens::getUpgradableProgressMarkers($player, true, false);
+          $possiblePlay = count($progressTracks)>0;
+          //TODO JSA not possible if player already performed an action in this round
+          $playDatas['progressTracks'] = $progressTracks;
+          break;
         case CARD_ACTION_HARVEST_AND_CARDS:
-          return false;
+          //TODO JSA not possible if player already performed an action in this round
+          break;
         case CARD_ACTION_OUTPOST_EXTRA_CONTRACTS:
-          return false;
+          //TODO JSA not possible if player already performed an action in this round
+          break;
         case CARD_ACTION_RESSOURCES_TO_COINS:
-          foreach($playerSpices as $playerSpiceCount) if($playerSpiceCount>0) return true;
-          return false;
+          foreach($playerSpices as $playerSpiceCount){
+            if($playerSpiceCount>0) 
+              $possiblePlay = true;
+          }
+          break;
         case CARD_ACTION_2_SPICES:
-          return Tiles::getPlayerAvailableSpotsForSpices($player)->count()>0;
+          $playDatas = Tiles::getPlayerAvailableSpotsForSpices($player);
+          $possiblePlay = ($playDatas->count()>0);
+          break;
         case CARD_ACTION_PROGRESS_WITH_COINS:
-          $playerMarkers = Tokens::getUpgradableProgressMarkersWithCoins($player);
-          if(count($playerMarkers)>0) return true;
-          return false;
+          $progressTracks = Tokens::getUpgradableProgressMarkersWithCoins($player);
+          $possiblePlay = count($progressTracks)>0;
+          $playDatas['progressTracks'] = $progressTracks;
+          break;
         case CARD_ACTION_2_CONTRACTS:
         case CARD_ACTION_2_SHIPS:
         case CARD_ACTION_5_COINS:
         default:
-          return true;
+          $possiblePlay = true;
+          break;
       }
-
-    });
+      return [
+        'id' => $card->getId(),
+        'action' => $card->getAction(),
+        'play_datas' => $playDatas,
+        'possiblePlay' => $possiblePlay,
+      ];
+    })
+    ->filter(function($map) {
+        return $map['possiblePlay'];
+    })
+    ;
   }
   
   public static function getPrivateDatas(int $pId)
@@ -234,9 +260,9 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
     
     //TODO JSA SWITCH CARD TYPE -> play
     switch($card->getAction()){
-      case CARD_ACTION_PROGRESS_NO_SPICE: 
+      case CARD_ACTION_PROGRESS_NO_SPICE: //done in actProgress
         break;
-      case CARD_ACTION_PROGRESS_NO_SHIP:
+      case CARD_ACTION_PROGRESS_NO_SHIP: //done in actProgress
         break;
       case CARD_ACTION_HARVEST_AND_CARDS:
         break;

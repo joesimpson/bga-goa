@@ -652,7 +652,7 @@ export class Game {
         let possiblePlayCards = args.possiblePlayCards; 
         let possibleActionRightNow = (possibleDiscards || possiblePlayCards);
         let handCards = this.explorationHand.getCards();
-        let selectableCards = handCards.filter((card, index) => possibleDiscards && possibleDiscards.includes(card.id) || possiblePlayCards && possiblePlayCards.includes(card.id) );
+        let selectableCards = handCards.filter((card, index) => possibleDiscards && possibleDiscards.includes(card.id) || possiblePlayCards && Object.keys(possiblePlayCards).includes(""+card.id) );
         if(selectableCards.length>0 || handCards.length==0 && possibleActionRightNow){
             this.explorationHand.setSelectionMode('single');
             this.explorationHand.setSelectableCards(selectableCards);
@@ -669,7 +669,7 @@ export class Game {
             let card_id = card.id;
             let cardDatas = card;
             let isDiscardableCard = (possibleActions.includes('actDiscard') && possibleDiscards.includes(card_id)) ? true : false;
-            let isPlayableCard = (possibleActions.includes('actPlayCard') && possiblePlayCards.includes(card_id)) ? true : false;
+            let isPlayableCard = (possibleActions.includes('actPlayCard') && Object.keys(possiblePlayCards).includes(""+card_id)) ? true : false;
             let callbackCardSelection = (evt) => {
                 let clientState = this.getCurrentClientStateDatas();
                 //ignore ClientCardAction because it doesnot represent an action state, only card selection with multiple changes
@@ -827,6 +827,8 @@ export class Game {
             this.gamedatas[value] = notif.datas[value];
         });
         this.gamedatas._private = notif._private;
+
+        this.clearSelection(true);
 
         let currentPlayer = this.bga.players.getCurrentPlayer();
         Object.values(this.gamedatas.players).forEach((player) => {

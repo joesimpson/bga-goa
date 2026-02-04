@@ -23,6 +23,8 @@ export class ClientSelectProgress {
         Object.values(tracksDatas).forEach( trackData => {
             let track = trackData.track;
             let costShips = trackData.costShips;
+            let withSpices = trackData.withSpices;
+            let withShips = trackData.withShips;
             let costSpices = trackData.costSpices;
             let spicesSets = trackData.spicesSets;// [[1022,1027],[1022,1028],[1023,1027],[1023,1028]];
                 
@@ -43,16 +45,21 @@ export class ClientSelectProgress {
                 //refresh selection
                 [...document.getElementsByClassName('goa_progress_track')].forEach( a => a.classList.remove('selected'));
                 progressTrack.classList.add('selected');
-                progressTrack.classList.add('selected_for_client_state');
-                
-                this.bga.states.setClientState("ClientSelectSpices", {
+                if(withSpices){
+                    progressTrack.classList.add('selected_for_client_state');
+                    this.bga.states.setClientState("ClientSelectSpices", {
                         descriptionmyturn: '',
                         args: {'track':track, 'spices_ids': allSpicesIds, 'nbSpices':costShips, 'spicesSets': spicesSets,
                             'costSpices': costSpices,
+                            'withCard': args.withCard,
                             //keep previous state datas in order to go back when cancel 
                             'previousClientState' : this.game.getCurrentClientStateDatas(),
                          },
                     });
+                }
+                else {
+                    this.bga.actions.performAction('actProgress', { 'track': track, 't_ids': null, 'card_id':args.withCard});
+                }
             });
         });
         

@@ -293,10 +293,12 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
     $ships = $player->getShips();
     $playerSpices = Tokens::getPlayerSpices($player->getId());
 
-    return $allMarkers->map(function ($token) use ($playerSpices){ 
+    return $allMarkers->map(function ($token) use ($playerSpices,$withSpices, $withShips){ 
                 $map = [
                   'track' => $token->getTrackIndex(),
                   'row' => $token->getRow(),
+                  'withSpices' => $withSpices,
+                  'withShips' => $withShips,
                 ];
 
                 $currentRow = $token->getRow();

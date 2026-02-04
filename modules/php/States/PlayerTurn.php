@@ -251,15 +251,23 @@ class PlayerTurn extends GameState
      * Player action : turn ACTION #1 PROGRESS
      */
     #[PossibleAction]
-    public function actProgress(int $track, #[IntArrayParam] array $t_ids,  int $activePlayerId, array $args)
+    public function actProgress(int $track, #[IntArrayParam] array|null $t_ids = null, int|null $card_id = null, int $activePlayerId, array $args)
     { 
-        $this->game->trace("actProgress($track,$activePlayerId)");
+        $this->game->trace("actProgress($track,$card_id,$activePlayerId)");
         $possibleActions = $args['possibleActions'];
         if(!in_array('actProgress',$possibleActions)){
             throw new UnexpectedException(110,"Invalid action actProgress, see ".json_encode($possibleActions));
         }
         $progressTracks = $args['progressTracks'];
         $selectedTrack = null;
+        if(isset($card_id)){
+            $possibleCards = $args['possiblePlayCards'];
+            if(!in_array($card_id,$possibleCards->getIds())){
+                throw new UnexpectedException(111,"Invalid card $card_id to progress on ($track) ");
+            }
+            $playCardDatas = $possibleCards[$card_id]['play_datas'];
+            $progressTracks = $playCardDatas['progressTracks'];
+        }
         foreach($progressTracks as $progressTrack){
             if($progressTrack['track'] == $track){
                 $selectedTrack = $progressTrack;
@@ -271,36 +279,46 @@ class PlayerTurn extends GameState
         $player = Players::get($activePlayerId);
         Log::addStep();
 
+        $withShips = $selectedTrack['withShips'];
+        $withSpices = $selectedTrack['withSpices'];
         $costShips = $selectedTrack['costShips'];
         $costSpices = $selectedTrack['costSpices'];
-        $totalSpicesExpected = 0;
-        foreach($costSpices as $datas){
-            $costSpices = $datas['n'];
-            $totalSpicesExpected+= $costSpices;
+        if(isset($card_id)){
+            Cards::playExploration($player, $card_id, );
+            Players::registerCardPlayed($player,$card_id);
         }
-        if ($totalSpicesExpected != count($t_ids)) {
-            throw new UnexpectedException(120,"You must select $totalSpicesExpected tokens");
-        }
-        $foundMatch = false;
-        $possibleTokensIdsArrays = $selectedTrack['spicesSets'];
-        foreach($possibleTokensIdsArrays as $possibleTokensIdsArray){
-            $diff = array_diff($t_ids, $possibleTokensIdsArray);
-            if (count($diff) == 0){
-                $foundMatch = true;
-                break;
+        if($withSpices){
+            $totalSpicesExpected = 0;
+            foreach($costSpices as $datas){
+                $costSpices = $datas['n'];
+                $totalSpicesExpected+= $costSpices;
             }
-        }
-        if (!$foundMatch) {
-            throw new UnexpectedException(121,("These tokens are not a valid set"));
-        }
+            if (!isset($t_ids) || $totalSpicesExpected != count($t_ids)) {
+                throw new UnexpectedException(120,"You must select $totalSpicesExpected tokens");
+            }
+            $foundMatch = false;
+            $possibleTokensIdsArrays = $selectedTrack['spicesSets'];
+            foreach($possibleTokensIdsArrays as $possibleTokensIdsArray){
+                $diff = array_diff($t_ids, $possibleTokensIdsArray);
+                if (count($diff) == 0){
+                    $foundMatch = true;
+                    break;
+                }
+            }
+            if (!$foundMatch) {
+                throw new UnexpectedException(121,("These tokens are not a valid set"));
+            }
 
-        $playerSpices = Tokens::getPlayerSpices($player->getId());
-        $tokens = $playerSpices->filter(function($t) use ($t_ids){
-            return in_array($t->getId(), $t_ids);
-        });
+            $playerSpices = Tokens::getPlayerSpices($player->getId());
+            $tokens = $playerSpices->filter(function($t) use ($t_ids){
+                return in_array($t->getId(), $t_ids);
+            });
 
-        Tokens::removeSpices($tokens, $player);
-        Players::giveShips($player,-$costShips);
+            Tokens::removeSpices($tokens, $player);
+        }
+        if($withShips){
+            Players::giveShips($player,-$costShips);
+        }
 
         $upgradedToken = Tokens::progressOnTrack($track, $activePlayerId);
         
@@ -489,8 +507,9 @@ class PlayerTurn extends GameState
             throw new UnexpectedException(110,"Invalid action actPlayCard, see ".json_encode($possibleActions));
         }
         $possibleCards = $args['possiblePlayCards'];
-        if(!in_array($card_id,$possibleCards)){
-            throw new UnexpectedException(130,"Invalid card $card_id, see ".json_encode($possibleCards));
+        $possibleCardsIds = $possibleCards->getIds();
+        if(!in_array($card_id,$possibleCardsIds)){
+            throw new UnexpectedException(130,"Invalid card $card_id, see ".json_encode($possibleCardsIds));
         }
         Log::addStep();
         $player = Players::get($activePlayerId);
@@ -554,7 +573,7 @@ class PlayerTurn extends GameState
                 $discardableCards = Cards::getPossibleToDiscard($player);
                 $args['possibleDiscards'] = $discardableCards->getIds();
                 $playableCards = Cards::getPossibleToPlay($player);
-                $args['possiblePlayCards'] = $playableCards->getIds();
+                $args['possiblePlayCards'] = $playableCards;
                 if( $discardableCards->count()>0){
                     $args['possibleActions'][] = 'actDiscard';
                 }
