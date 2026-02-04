@@ -616,6 +616,26 @@ export class Game {
         this._counters[player_id][resourceName] = counter;
     }
 
+    getCurrentClientStateDatas(){
+        let isOnClientState = this.bga.states.isOnClientState();
+        let currentClientState = isOnClientState ? this.bga.states.getCurrentMainStateClass():null;
+        if(currentClientState) return { 
+            'name' : currentClientState.constructor.name,
+            'args' : currentClientState.args,
+        }
+        return null;
+    }
+    restorePreviousState(args, exceptStateName =null){
+        let previousClientState = args.previousClientState;
+        if(previousClientState && previousClientState.name && exceptStateName!=previousClientState.name){
+            //descriptionmyturn useless if title is set on enteringstate
+            this.bga.states.setClientState(previousClientState.name, { 'descriptionmyturn':'', 'args': previousClientState.args});
+        }
+        else{
+            this.bga.states.restoreServerGameState();
+        }
+    }
+
     onToggleExpandable(div){
         let parent = div.parentNode;
         let expandable = parent.querySelector('.goa_expandablecontent');

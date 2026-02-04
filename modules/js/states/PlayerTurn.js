@@ -211,6 +211,8 @@ export class PlayerTurn {
                             //'selectableCards': selectableCards,
                             'possibleDiscards': possibleDiscards,
                             'possiblePlayCards': possiblePlayCards,
+                            //keep previous state datas in order to go back when cancel 
+                            'previousClientState' : this.game.getCurrentClientStateDatas(),
                         },
                     });
                 };
@@ -220,7 +222,13 @@ export class PlayerTurn {
                     }
                 }
                 else {
-                    this.bga.states.restoreServerGameState();
+                    let clientState = this.game.getCurrentClientStateDatas();
+                    if(clientState && clientState.name=='ClientCardAction') {
+                        this.game.clientCardAction.restorePreviousState();
+                    }
+                    else {
+                        this.game.restorePreviousState(args);
+                    }
                 }
             };
 

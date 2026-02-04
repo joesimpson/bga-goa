@@ -208,7 +208,7 @@ export class ClientSelectTileAction {
 
         if(args.cancelable){
             this.bga.statusBar.addActionButton( _('Cancel'), () => {
-                this.bga.states.restoreServerGameState();
+                this.game.restorePreviousState(args);
             }, { 'color':'secondary','title':_('Cancel'),destination: document.getElementById('customSecondary') }); 
         }
         if(isCurrentPlayerActive) this.game.confirmTurn.displayUndoButtons(args);

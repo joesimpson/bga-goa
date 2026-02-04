@@ -14,6 +14,11 @@ export class ClientSelectProgress {
     onEnteringState(args, isCurrentPlayerActive) {
         
         let activePlayer = this.bga.players.getActivePlayerId();
+
+        this.bga.statusBar.setTitle(
+                    _("${you} must select a progress track to improve on your board")
+                );
+
         let tracksDatas = args.progressTracks;
         Object.values(tracksDatas).forEach( trackData => {
             let track = trackData.track;
@@ -21,14 +26,10 @@ export class ClientSelectProgress {
             let costSpices = trackData.costSpices;
             let spicesSets = trackData.spicesSets;// [[1022,1027],[1022,1028],[1023,1027],[1023,1028]];
                 
-            let spicesIcons = '';
             let allSpicesIds = [];
             Object.entries(costSpices).forEach( ([spice, cost]) => {
                 Object.values(cost.from).forEach((tId) => {
                     allSpicesIds.push(tId);
-                });
-                new Array(cost.n).fill(0).forEach( x => { 
-                    spicesIcons += this.game.formatIcon('spices_'+spice,_('Spices'));
                 });
             });
             let spicesDivs = [];
@@ -45,14 +46,18 @@ export class ClientSelectProgress {
                 progressTrack.classList.add('selected_for_client_state');
                 
                 this.bga.states.setClientState("ClientSelectSpices", {
-                        descriptionmyturn: _("${you} must select spices ${icons} to discard and progress on track ${n}").replace('${icons}',spicesIcons).replace('${n}',track),
-                        args: {'track':track, 'spices_ids': allSpicesIds, 'nbSpices':costShips, 'spicesSets': spicesSets },
+                        descriptionmyturn: '',
+                        args: {'track':track, 'spices_ids': allSpicesIds, 'nbSpices':costShips, 'spicesSets': spicesSets,
+                            'costSpices': costSpices,
+                            //keep previous state datas in order to go back when cancel 
+                            'previousClientState' : this.game.getCurrentClientStateDatas(),
+                         },
                     });
             });
         });
         
         this.bga.statusBar.addActionButton( _('Cancel'), () => {
-            this.bga.states.restoreServerGameState();
+            this.game.restorePreviousState(args);
         }, { 'color':'secondary','title':_('Cancel'), destination: document.getElementById('customSecondary') }); 
 
     }

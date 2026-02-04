@@ -32,7 +32,7 @@ export class ClientCardAction {
 
         this.bga.statusBar.addActionButton( _('Cancel'), () => {
             this.game.explorationHand.setSelectionMode('none');
-            this.bga.states.restoreServerGameState();
+            this.game.restorePreviousState(args,'ClientCardAction');
         }, { 'color':'secondary','title':_('Cancel'), destination: document.getElementById('customSecondary') }); 
 
     }
@@ -46,6 +46,10 @@ export class ClientCardAction {
         //this.game.explorationHand.setSelectionMode('none');
         this.game.clearSelection();
         this.game.removeAllActionButtons();
+    }
+
+    restorePreviousState(){
+        this.game.restorePreviousState(this.args,'ClientCardAction');
     }
  
 }
