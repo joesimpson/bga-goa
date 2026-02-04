@@ -184,53 +184,7 @@ export class PlayerTurn {
                 progressMarker.parentNode.setAttribute("title",actionHint);
             }
             
-            //Manage various actions on hand cards with a unique handler
-            let possibleDiscards = args.possibleDiscards; 
-            let possiblePlayCards = args.possiblePlayCards; 
-            this.game.explorationHand.setSelectionMode('single');
-            let selectableCards = this.game.explorationHand.getCards().filter((card, index) => possibleDiscards.includes(card.id) || playableCards.includes(card.id) );
-            this.game.explorationHand.setSelectableCards(selectableCards);
-
-            this.game.explorationHand.onSelectionChange = (x, card) => {
-                console.log("HAND onSelectionChange",card);
-                let isSelected = this.game.explorationHand.isSelected(card);
-                this.game.explorationHand.removeLastPlayedCardsClass();
-                if(!card) return;
-                let card_id = card.id;
-                let cardDatas = card;
-                let isDiscardableCard = (possibleActions.includes('actDiscard') && possibleDiscards.includes(card_id)) ? true : false;
-                let isPlayableCard = (possibleActions.includes('actPlayCard') && possiblePlayCards.includes(card_id)) ? true : false;
-                let callbackCardSelection = (evt) => {
-                    this.bga.states.setClientState("ClientCardAction", {
-                        descriptionmyturn: _("Select an action for this card"),
-                        args: { 
-                            'card': cardDatas,
-                            'isPlayableCard': isPlayableCard,
-                            'isDiscardableCard': isDiscardableCard,
-                            //keep trace of all selectable to change selection at anytime
-                            //'selectableCards': selectableCards,
-                            'possibleDiscards': possibleDiscards,
-                            'possiblePlayCards': possiblePlayCards,
-                            //keep previous state datas in order to go back when cancel 
-                            'previousClientState' : this.game.getCurrentClientStateDatas(),
-                        },
-                    });
-                };
-                if(isSelected){
-                    if(isDiscardableCard || isPlayableCard) {
-                        callbackCardSelection();
-                    }
-                }
-                else {
-                    let clientState = this.game.getCurrentClientStateDatas();
-                    if(clientState && clientState.name=='ClientCardAction') {
-                        this.game.clientCardAction.restorePreviousState();
-                    }
-                    else {
-                        this.game.restorePreviousState(args);
-                    }
-                }
-            };
+            this.game.updateHandSelectable(args);
 
             if(possibleActions.includes('actPassBid')){
                 this.bga.statusBar.addActionButton(_('Pass'), () => this.bga.actions.performAction("actPassBid"), { 'title':_('Pass the bid'),destination: document.getElementById('customSecondary') }); 
@@ -248,6 +202,8 @@ export class PlayerTurn {
      * This method is called each time we are leaving the game state. You can use this method to perform some user interface changes at this moment.
      */
     onLeavingState(args, isCurrentPlayerActive) {
+        //TODO JSA disable selection when PLAYER change
+        //this.game.explorationHand.setSelectionMode('none');
         this.game.clearSelection();
         this.game.removeAllActionButtons();
     }

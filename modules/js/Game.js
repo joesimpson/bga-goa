@@ -27,6 +27,7 @@ import { ClientCardAction } from "./states/ClientCardAction.js";
 import { ClientSelectProgress } from "./states/ClientSelectProgress.js";
 import { ClientSelectSpices } from "./states/ClientSelectSpices.js";
 import { ClientFoundOutpost } from "./states/ClientFoundOutpost.js";
+import { NextPlayer } from "./states/NextPlayer.js";
 import { PlayerChoice, ClientSelectTileAction } from "./states/PlayerChoice.js";
 import { PlayerTurn } from "./states/PlayerTurn.js";
 
@@ -41,6 +42,8 @@ export class Game {
         this.bga.states.register('PlayerTurn', this.playerTurn);
         this.confirmTurn = new ConfirmTurn(this, bga);
         this.bga.states.register('ConfirmTurn', this.confirmTurn);
+        this.nextPlayer = new NextPlayer(this, bga);
+        this.bga.states.register('NextPlayer', this.nextPlayer);
         this.playerChoice = new PlayerChoice(this, bga);
         this.bga.states.register('PlayerChoice', this.playerChoice);
         //CLIENT STATES :
@@ -634,6 +637,65 @@ export class Game {
         else{
             this.bga.states.restoreServerGameState();
         }
+    }
+
+    updateHandSelectable(args){
+        console.log("updateHandSelectable",args);
+        let possibleActions = args.possibleActions;
+        let activePlayer = this.bga.players.getActivePlayerId();
+        //Manage various actions on hand cards with a unique handler
+        let possibleDiscards = args.possibleDiscards; 
+        let possiblePlayCards = args.possiblePlayCards; 
+        let handCards = this.explorationHand.getCards();
+        let selectableCards = handCards.filter((card, index) => possibleDiscards && possibleDiscards.includes(card.id) || possiblePlayCards && possiblePlayCards.includes(card.id) );
+        if(selectableCards.length>0 || handCards.length==0){
+            this.explorationHand.setSelectionMode('single');
+            this.explorationHand.setSelectableCards(selectableCards);
+        } else {
+            //!\\ manage reload page = > cards are added in hand after this
+            this.explorationHand.setSelectionMode('none');
+        }
+
+        this.explorationHand.onSelectionChange = (x, card) => {
+            console.log("HAND onSelectionChange",card, selectableCards);
+            let isSelected = this.explorationHand.isSelected(card);
+            this.explorationHand.removeLastPlayedCardsClass();
+            if(!card) return;
+            let card_id = card.id;
+            let cardDatas = card;
+            let isDiscardableCard = (possibleActions.includes('actDiscard') && possibleDiscards.includes(card_id)) ? true : false;
+            let isPlayableCard = (possibleActions.includes('actPlayCard') && possiblePlayCards.includes(card_id)) ? true : false;
+            let callbackCardSelection = (evt) => {
+                this.bga.states.setClientState("ClientCardAction", {
+                    descriptionmyturn: _("Select an action for this card"),
+                    args: { 
+                        'card': cardDatas,
+                        'isPlayableCard': isPlayableCard,
+                        'isDiscardableCard': isDiscardableCard,
+                        //keep trace of all selectable to change selection at anytime
+                        //'selectableCards': selectableCards,
+                        'possibleDiscards': possibleDiscards,
+                        'possiblePlayCards': possiblePlayCards,
+                        //keep previous state datas in order to go back when cancel 
+                        'previousClientState' : this.getCurrentClientStateDatas(),
+                    },
+                });
+            };
+            if(isSelected){
+                if(isDiscardableCard || isPlayableCard) {
+                    callbackCardSelection();
+                }
+            }
+            else {
+                let clientState = this.getCurrentClientStateDatas();
+                if(clientState && clientState.name=='ClientCardAction') {
+                    this.clientCardAction.restorePreviousState();
+                }
+                else {
+                    this.restorePreviousState(args);
+                }
+            }
+        };  
     }
 
     onToggleExpandable(div){

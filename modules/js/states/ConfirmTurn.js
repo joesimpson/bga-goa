@@ -15,6 +15,8 @@ export class ConfirmTurn {
       
         if(!isCurrentPlayerActive) return;
         
+        this.game.updateHandSelectable(args);
+
         this.bga.statusBar.addActionButton(_('Confirm'), () => this.bga.actions.performAction("actConfirmTurn"), {'title':_('Confirm'),destination: document.getElementById('customPrimary') }); 
         
         this.displayUndoButtons(args);

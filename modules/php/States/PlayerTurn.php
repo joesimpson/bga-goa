@@ -112,16 +112,7 @@ class PlayerTurn extends GameState
                     $args['outpostsToFound'] = Tiles::getFoundableOutposts($player)->getIds();
                     $args['nbCardsExploration'] = Cards::maxExplorationToDraw($player);
                     $args['possibleActions'][] = 'actExploration';
-                    $discardableCards = Cards::getPossibleToDiscard($player);
-                    $args['possibleDiscards'] = $discardableCards->getIds();
-                    $playableCards = Cards::getPossibleToPlay($player);
-                    $args['possiblePlayCards'] = $playableCards->getIds();
-                    if( $discardableCards->count()>0){
-                        $args['possibleActions'][] = 'actDiscard';
-                    }
-                    if( $playableCards->count()>0){
-                        $args['possibleActions'][] = 'actPlayCard';
-                    }
+                    self::addArgsForCardPlay($player,$args);
                 }
                 //if($player->getNbActions() >= $args['minActions'] ) {
                 if($player->getNbActions() >= NB_MIN_ACTIONS_PER_ROUND && $player->getCompasses()<=1){
@@ -458,7 +449,14 @@ class PlayerTurn extends GameState
     #[PossibleAction]
     public function actDiscard(int $card_id, int $activePlayerId, array $args)
     { 
-        $this->game->trace("actDiscard($card_id,$activePlayerId)");
+        PlayerTurn::actDiscard_content($card_id, $activePlayerId, $args);
+        return PlayerTurn::class;
+    }
+
+    /**Reusable action content */
+    static function actDiscard_content(int $card_id, int $activePlayerId, array $args)
+    { 
+        Game::get()->trace("actDiscard_content($card_id,$activePlayerId)");
         $possibleActions = $args['possibleActions'];
         if(!in_array('actDiscard',$possibleActions)){
             throw new UnexpectedException(110,"Invalid action actDiscard, see ".json_encode($possibleActions));
@@ -471,8 +469,6 @@ class PlayerTurn extends GameState
         $player = Players::get($activePlayerId);
 
         Cards::discardExploration($player, $card_id, );
-
-        return PlayerTurn::class;
     }
     
     /**
@@ -481,7 +477,14 @@ class PlayerTurn extends GameState
     #[PossibleAction]
     public function actPlayCard(int $card_id, int $activePlayerId, array $args)
     { 
-        $this->game->trace("actPlayCard($card_id,$activePlayerId)");
+        PlayerTurn::actPlayCard_content($card_id, $activePlayerId, $args);
+        return PlayerTurn::class;
+    }
+    
+    /**Reusable action content */
+    static function actPlayCard_content(int $card_id, int $activePlayerId, array $args)
+    { 
+        Game::get()->trace("actPlayCard_content($card_id,$activePlayerId)");
         $possibleActions = $args['possibleActions'];
         if(!in_array('actPlayCard',$possibleActions)){
             throw new UnexpectedException(110,"Invalid action actPlayCard, see ".json_encode($possibleActions));
@@ -496,8 +499,6 @@ class PlayerTurn extends GameState
         Cards::playExploration($player, $card_id, );
         //keep trace of played card per players
         Players::registerCardPlayed($player,$card_id);
-
-        return PlayerTurn::class;
     }
 
     /**
@@ -542,5 +543,20 @@ class PlayerTurn extends GameState
         $args = $this->getArgs();
         $zombieChoice = $this->getRandomZombieChoice($args['pAuctionableSpots']); // random choice over possible moves
         return $this->actPlaceAuction($zombieChoice['row'],$zombieChoice['col'], $playerId, $args); // this function will return the transition to the next state
+    }
+
+    // -----------------------------
+
+    public static function addArgsForCardPlay($player, array &$args){
+        $discardableCards = Cards::getPossibleToDiscard($player);
+        $args['possibleDiscards'] = $discardableCards->getIds();
+        $playableCards = Cards::getPossibleToPlay($player);
+        $args['possiblePlayCards'] = $playableCards->getIds();
+        if( $discardableCards->count()>0){
+            $args['possibleActions'][] = 'actDiscard';
+        }
+        if( $playableCards->count()>0){
+            $args['possibleActions'][] = 'actPlayCard';
+        }
     }
 }

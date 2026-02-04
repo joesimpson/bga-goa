@@ -31,7 +31,8 @@ export class ClientCardAction {
         }
 
         this.bga.statusBar.addActionButton( _('Cancel'), () => {
-            this.game.explorationHand.setSelectionMode('none');
+            //this.game.explorationHand.setSelectionMode('none');
+            this.game.explorationHand.unselectAll();
             this.game.restorePreviousState(args,'ClientCardAction');
         }, { 'color':'secondary','title':_('Cancel'), destination: document.getElementById('customSecondary') }); 
 
