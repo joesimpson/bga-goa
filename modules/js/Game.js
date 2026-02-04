@@ -646,9 +646,10 @@ export class Game {
         //Manage various actions on hand cards with a unique handler
         let possibleDiscards = args.possibleDiscards; 
         let possiblePlayCards = args.possiblePlayCards; 
+        let possibleActionRightNow = (possibleDiscards || possiblePlayCards);
         let handCards = this.explorationHand.getCards();
         let selectableCards = handCards.filter((card, index) => possibleDiscards && possibleDiscards.includes(card.id) || possiblePlayCards && possiblePlayCards.includes(card.id) );
-        if(selectableCards.length>0 || handCards.length==0){
+        if(selectableCards.length>0 || handCards.length==0 && possibleActionRightNow){
             this.explorationHand.setSelectionMode('single');
             this.explorationHand.setSelectableCards(selectableCards);
         } else {

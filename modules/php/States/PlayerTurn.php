@@ -112,7 +112,6 @@ class PlayerTurn extends GameState
                     $args['outpostsToFound'] = Tiles::getFoundableOutposts($player)->getIds();
                     $args['nbCardsExploration'] = Cards::maxExplorationToDraw($player);
                     $args['possibleActions'][] = 'actExploration';
-                    self::addArgsForCardPlay($player,$args);
                 }
                 //if($player->getNbActions() >= $args['minActions'] ) {
                 if($player->getNbActions() >= NB_MIN_ACTIONS_PER_ROUND && $player->getCompasses()<=1){
@@ -122,7 +121,7 @@ class PlayerTurn extends GameState
                 break;
             default : break;
         }
-
+        self::addArgsForCardPlay($player,$args);
         ConfirmTurn::addArgsForUndo($args);
         return $args;
     }    
@@ -548,15 +547,23 @@ class PlayerTurn extends GameState
     // -----------------------------
 
     public static function addArgsForCardPlay($player, array &$args){
-        $discardableCards = Cards::getPossibleToDiscard($player);
-        $args['possibleDiscards'] = $discardableCards->getIds();
-        $playableCards = Cards::getPossibleToPlay($player);
-        $args['possiblePlayCards'] = $playableCards->getIds();
-        if( $discardableCards->count()>0){
-            $args['possibleActions'][] = 'actDiscard';
+        $roundStep = Globals::getRoundStep();
+        
+        switch($roundStep){
+            case ROUND_STEP_PLAYER_ACTIONS:
+                $discardableCards = Cards::getPossibleToDiscard($player);
+                $args['possibleDiscards'] = $discardableCards->getIds();
+                $playableCards = Cards::getPossibleToPlay($player);
+                $args['possiblePlayCards'] = $playableCards->getIds();
+                if( $discardableCards->count()>0){
+                    $args['possibleActions'][] = 'actDiscard';
+                }
+                if( $playableCards->count()>0){
+                    $args['possibleActions'][] = 'actPlayCard';
+                }
+                break;
+            default: return;
         }
-        if( $playableCards->count()>0){
-            $args['possibleActions'][] = 'actPlayCard';
-        }
+
     }
 }

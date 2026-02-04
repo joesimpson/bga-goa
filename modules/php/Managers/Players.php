@@ -99,7 +99,7 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
   public static function resetActionsPhase()
   {
     self::DB()
-      ->update(['nbActions' => 0, 'passed' => 0, 'cardsPlayed' => 0])
+      ->update(['nbActions' => 0, 'passed' => 0, 'cardsPlayed' =>null])
       ->run();
   }
   /**
