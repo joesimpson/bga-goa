@@ -42,16 +42,26 @@ class PlayerChoice extends GameState
             'tiles_choices' => [],
             'tiles' => [],
         ];
+        $player = Players::getActive();
 
+        //Use a whitelist of possible card actions, because we don't want complex actions to interfere with multiple steps
+        $actionsWhiteList = [];
         $choiceTiles = Globals::getChoiceTiles(); 
         if(isset($choiceTiles)){
             foreach($choiceTiles as $tileId => $tileChoices){
                 $tile = Tiles::get((int)$tileId);
                 $args['tiles'][$tileId] = $tile->getUiData();
+                foreach($tileChoices as $tileChoiceDatas){
+                    if($tileChoiceDatas['selectType'] === CHOICE_FOUND_TILE ){
+                        //IF we are near abandon, let player play a card to receive contracts
+                        $actionsWhiteList[] = CARD_ACTION_2_CONTRACTS;
+                    }
+                }
             }
             $args['tiles_choices'] = $choiceTiles;
             $args['possibleActions'][] = 'actTileChoice';
         }
+        PlayerTurn::addArgsForCardPlay($player,$args, $actionsWhiteList );
 
         ConfirmTurn::addArgsForUndo($args);
         return $args;
@@ -159,6 +169,45 @@ class PlayerChoice extends GameState
         }
         //Else end
         return ConfirmTurn::class;
+    }
+    
+    /**
+     * Player action : discard some card in hand
+     */
+    #[PossibleAction]
+    public function actDiscard(int $card_id, int $activePlayerId, array $args)
+    { 
+        PlayerTurn::actDiscard_content($card_id, $activePlayerId, $args);
+        return self::class;
+    }
+    
+    /**
+     * Player action : Play some card in hand
+     */
+    #[PossibleAction]
+    public function actPlayCard(int $card_id, int $activePlayerId, array $args)
+    { 
+        PlayerTurn::actPlayCard_content($card_id, $activePlayerId, $args);
+        
+        $player = Players::get($activePlayerId);
+        $choiceTiles = $args['tiles_choices'];
+        //REFRESH TILES CHOICES DATAS according to played card
+        foreach($choiceTiles as $tileId => &$tileChoices){
+            foreach($tileChoices as &$tileChoiceDatas){
+                if($tileChoiceDatas['selectType'] === CHOICE_FOUND_TILE 
+                && !in_array(ACTION_FOUND_FORWARD,$tileChoiceDatas['choices']) ){
+                    //
+                    $missingContracts = $tileChoiceDatas['n'];
+                    if($player->getContracts() >= $missingContracts){
+                        $playerChoices[] = ACTION_FOUND_FORWARD;
+                    }
+                    $tileChoiceDatas['choices'][] = ACTION_FOUND_FORWARD;
+                }
+            }
+        }
+        Globals::setChoiceTiles($choiceTiles);
+
+        return self::class;
     }
 
     function zombie(int $playerId) {

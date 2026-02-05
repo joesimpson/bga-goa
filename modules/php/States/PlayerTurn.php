@@ -676,14 +676,15 @@ class PlayerTurn extends GameState
 
     // -----------------------------
 
-    public static function addArgsForCardPlay($player, array &$args){
+    public static function addArgsForCardPlay($player, array &$args, array|null $actionsWhiteList = null){
+        Game::get()->trace("PlayerTurn.addArgsForCardPlay(".json_encode($actionsWhiteList).")");
         $roundStep = Globals::getRoundStep();
         
         switch($roundStep){
             case ROUND_STEP_PLAYER_ACTIONS:
                 $discardableCards = Cards::getPossibleToDiscard($player);
                 $args['possibleDiscards'] = $discardableCards->getIds();
-                $playableCards = Cards::getPossibleToPlay($player, $args);
+                $playableCards = Cards::getPossibleToPlay($player, $args,$actionsWhiteList);
                 $args['possiblePlayCards'] = $playableCards;
                 if( $discardableCards->count()>0){
                     $args['possibleActions'][] = 'actDiscard';

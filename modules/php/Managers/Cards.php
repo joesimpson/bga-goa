@@ -113,21 +113,21 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
     return Cards::getExplorationHand($player->getId());
   }
   
-  public static function getPossibleToPlay(Player $player, array &$args) : Collection
+  public static function getPossibleToPlay(Player $player, array &$args, array|null $actionsWhiteList = null) : Collection
   {
     $cardsPlayed = $player->getCardsPlayed();
     $playerSpices = Tokens::getPlayerSpices($player->getId());
 
     $hand = Cards::getExplorationHand($player->getId());
-    return $hand->filter(function($card) use ($cardsPlayed){
+    return $hand->filter(function($card) use ($cardsPlayed, $actionsWhiteList){
       if(isset($cardsPlayed) && count($cardsPlayed) >= NB_MAX_CARDS_PER_TURN) return false;
+      if(isset($actionsWhiteList) && !in_array($card->getAction(),$actionsWhiteList)) return false;
       return true;
     })
     ->map(function($card) use ($player, $playerSpices, &$args){
       $playDatas = [];
       $possiblePlay = false;
       $actionPlayed = $player->isActionPlayed();
-      $possibleActions = isset($args['possibleActions']) ? $args['possibleActions'] : [];
       switch($card->getAction()){
         //TODO JSA : FILL SWITCH 
         case CARD_ACTION_PROGRESS_NO_SPICE: 
