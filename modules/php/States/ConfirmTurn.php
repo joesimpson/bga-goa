@@ -36,7 +36,7 @@ class ConfirmTurn extends GameState
         $data = [];
         $this->addArgsForUndo($data);
         $player = Players::getActive();
-        PlayerTurn::addArgsForCardPlay($player,$data);
+        //PlayerTurn::addArgsForCardPlay($player,$data);
         return $data;
     }    
     
@@ -98,25 +98,25 @@ class ConfirmTurn extends GameState
         ConfirmTurn::processUndoLastStep();
     }
     
-    /**
-     * Player action : discard some card in hand
-     */
-    #[PossibleAction]
-    public function actDiscard(int $card_id, int $activePlayerId, array $args)
-    { 
-        PlayerTurn::actDiscard_content($card_id, $activePlayerId, $args);
-        return ConfirmTurn::class;
-    }
-    
-    /**
-     * Player action : Play some card in hand
-     */
-    #[PossibleAction]
-    public function actPlayCard(int $card_id, int $activePlayerId, array $args)
-    { 
-        PlayerTurn::actPlayCard_content($card_id, $activePlayerId, $args);
-        return ConfirmTurn::class;
-    }
+    ///**
+    // * Player action : discard some card in hand
+    // */
+    //#[PossibleAction]
+    //public function actDiscard(int $card_id, int $activePlayerId, array $args)
+    //{ 
+    //    PlayerTurn::actDiscard_content($card_id, $activePlayerId, $args);
+    //    return ConfirmTurn::class;
+    //}
+    //
+    ///**
+    // * Player action : Play some card in hand
+    // */
+    //#[PossibleAction]
+    //public function actPlayCard(int $card_id, int $activePlayerId, array $args)
+    //{ 
+    //    PlayerTurn::actPlayCard_content($card_id, $activePlayerId, $args);
+    //    return ConfirmTurn::class;
+    //}
 
     function zombie(int $playerId) {
         //TODO JSA ZOMBIE 

@@ -99,24 +99,29 @@ class PlayerTurn extends GameState
                 }
                 break;
             case ROUND_STEP_PLAYER_ACTIONS:
+                $actionPlayed = $player->isActionPlayed();
+                $args['actionPlayed'] = $actionPlayed;
                 $args['nbActions'] = $player->getNbActions();
                 $args['minActions'] = NB_MIN_ACTIONS_PER_ROUND + max(0,$player->getCompasses()-1);
-                if($player->getNbActions() <NB_MIN_ACTIONS_PER_ROUND || $player->getCompasses()>0){
-                    $args['possibleActions'][] = 'actProgress';
-                    $args['progressTracks'] = Tokens::getUpgradableProgressMarkers($player);
-                    $args['possibleActions'][] = 'actBuildShips';
-                    $args['possibleActions'][] = 'actTaxes';
-                    $args['possibleActions'][] = 'actFoundOutpost';
-                    $outpostMarker = Tokens::getProgressMarkerByType(TOKEN_TYPE_PROGRESS_MARKER_OUTPOST, $player->getId());
-                    $args['playerBaseContracts'] = PROGRESS_GAINS_OUTPOST[$outpostMarker->getRow() - 1];
-                    $args['outpostsToFound'] = Tiles::getFoundableOutposts($player)->getIds();
-                    $args['nbCardsExploration'] = Cards::maxExplorationToDraw($player);
-                    $args['possibleActions'][] = 'actExploration';
-                }
-                //if($player->getNbActions() >= $args['minActions'] ) {
-                if($player->getNbActions() >= NB_MIN_ACTIONS_PER_ROUND && $player->getCompasses()<=1){
-                    //Game rule : player must keep max 1 compass card
-                    $args['possibleActions'][] = 'actPassAction';
+                if(! $actionPlayed) {
+                    if($player->getNbActions() <NB_MIN_ACTIONS_PER_ROUND || $player->getCompasses()>0){
+                        $args['possibleActions'][] = 'actProgress';
+                        $args['progressTracks'] = Tokens::getUpgradableProgressMarkers($player);
+                        $args['possibleActions'][] = 'actBuildShips';
+                        $args['possibleActions'][] = 'actTaxes';
+                        $args['possibleActions'][] = 'actFoundOutpost';
+                        $args['playerBaseContracts'] = Players::getFoundBaseContracts($player);
+                        $args['outpostsToFound'] = Tiles::getFoundableOutposts($player)->getIds();
+                        $args['nbCardsExploration'] = Cards::maxExplorationToDraw($player);
+                        $args['possibleActions'][] = 'actExploration';
+                    }
+                    //if($player->getNbActions() >= $args['minActions'] ) {
+                    if($player->getNbActions() >= NB_MIN_ACTIONS_PER_ROUND && $player->getCompasses()<=1){
+                        //Game rule : player must keep max 1 compass card
+                        $args['possibleActions'][] = 'actPassAction';
+                    }
+                } else {
+                    $args['possibleActions'][] = 'actStopAction';
                 }
                 break;
             default : break;
@@ -127,9 +132,10 @@ class PlayerTurn extends GameState
     }    
     
     public function onEnteringState(int $activePlayerId, array $args) {
-        $this->game->trace("PlayerTurn.onEnteringState()");
+        $this->game->trace("PlayerTurn.onEnteringState($activePlayerId)");
 
         $player = Players::get($activePlayerId);
+        $actionPlayed = $player->isActionPlayed();
         $possibleActions = $args['possibleActions'];
         if($player->isPassed() 
             || 
@@ -137,7 +143,12 @@ class PlayerTurn extends GameState
         ) {
             //AUTO PASS when no more to play
             //return $this->actPassAction($activePlayerId,$args);
-            //COMMENTED because we should not come here
+            //COMMENTED because we should not come here, we only activate players with something to play
+        }
+        if(!$actionPlayed){
+            if(count($possibleActions)==1 && in_array('actStopAction',$possibleActions)){
+                //TODO JSA AUTO STOP if no tile/card action
+            }
         }
     }
 
@@ -226,7 +237,7 @@ class PlayerTurn extends GameState
     }
     
     /**
-     * Player action : pass the bid
+     * Player action : pass the action turn
      */
     #[PossibleAction]
     public function actPassAction(int $activePlayerId, array $args)
@@ -244,6 +255,24 @@ class PlayerTurn extends GameState
         Notifications::passAction($player);
 
         // at the end of the action, move to the next state
+        return ConfirmTurn::class;
+    }
+    
+    /**
+     * Player action : stop the action turn
+     */
+    #[PossibleAction]
+    public function actStopAction(int $activePlayerId, array $args)
+    {
+        $this->game->trace("actStopAction($activePlayerId)");
+        
+        $possibleActions = $args['possibleActions'];
+        if(!in_array('actStopAction',$possibleActions)){
+            throw new UnexpectedException(110,"Invalid action actStopAction, see ".json_encode($possibleActions));
+        }
+
+        Log::addStep();
+
         return ConfirmTurn::class;
     }
 
@@ -326,6 +355,10 @@ class PlayerTurn extends GameState
             Players::giveMoney($player,-$cost);
             $countAsAPlayerAction = false;//linked to player card
         }
+        
+        if($countAsAPlayerAction){
+            Players::registerNewAction($player);
+        }
 
         $upgradedToken = Tokens::progressOnTrack($track, $activePlayerId);
         
@@ -344,13 +377,8 @@ class PlayerTurn extends GameState
             if($nbTokensBelowRow == 1) //consider =1 because the token has already moved down
             {
                 Cards::drawExplorationCardsToPlayer($player,1);
-                Log::addStateCheckpoint(ConfirmTurn::class);
+                Log::addStateCheckpoint(PlayerTurn::class);
             }
-        }
-        
-        if($countAsAPlayerAction){
-            Players::registerNewAction($player);
-            return ConfirmTurn::class;
         }
         return PlayerTurn::class;
 
@@ -375,7 +403,7 @@ class PlayerTurn extends GameState
         
         Players::registerNewAction($player);
 
-        return ConfirmTurn::class;
+        return PlayerTurn::class;
     }
     /**
      * Player action : turn ACTION #4 take taxes
@@ -397,7 +425,7 @@ class PlayerTurn extends GameState
         
         Players::registerNewAction($player);
 
-        return ConfirmTurn::class;
+        return PlayerTurn::class;
     }
     
     /**
@@ -419,8 +447,8 @@ class PlayerTurn extends GameState
         
         Players::registerNewAction($player);
 
-        Log::addStateCheckpoint(ConfirmTurn::class);
-        return ConfirmTurn::class;
+        Log::addStateCheckpoint(PlayerTurn::class);
+        return PlayerTurn::class;
     }
     /**
      * Player action : turn ACTION #6 try to found an outpost

@@ -60,6 +60,7 @@ class NextPlayer extends \Bga\GameFramework\States\GameState
                 }
                 if(isset($nextPlayer)){
                     $nextPlayer->setCardsPlayed([]);
+                    $nextPlayer->setActionPlayed(false);
                 }
                 //$nextPlayer->incNbActions();
                 //TODO JSA INCREASE OnLY when same player act again or remove that global

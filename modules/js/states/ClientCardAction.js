@@ -51,13 +51,14 @@ export class ClientCardAction {
                             },
                         });
                     }
+                    else {
+                        //DIRECT CARD PLAY
+                        this.bga.actions.performAction("actPlayCard", {'card_id':card_id});
+                    }
                 }
                 else {
                     //DIRECT CARD PLAY
-                    this.bga.actions.performAction("actPlayCard", {'card_id':card_id}).then( () =>{
-                        }
-                    );
-                    
+                    this.bga.actions.performAction("actPlayCard", {'card_id':card_id});
                 }
             }, { 'disabled': !args.isPlayableCard,  'title':_('Play this card'),destination: document.getElementById('customPrimary') }); 
         //}

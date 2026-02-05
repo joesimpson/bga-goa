@@ -34,6 +34,7 @@ class Player extends \Bga\Games\Goa\Helpers\DB_Model
     'compasses' => ['compasses', 'int'],
     'nbActions' => ['nbActions', 'int'],
     'passed' => ['passed', 'bool'],
+    'actionPlayed' => ['actionPlayed', 'bool'],
     'cardsPlayed' => ['cardsPlayed', 'obj'],
 
   ];

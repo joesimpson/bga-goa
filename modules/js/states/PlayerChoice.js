@@ -24,6 +24,9 @@ export class PlayerChoice {
             _('${you} must choose a tile action'):
             _('${actplayer} must choose a tile action')
         );
+
+        //We should not select cards to play now in order to not loose our current server choices
+        if(isCurrentPlayerActive) this.game.updateHandSelectable(args);
       
         if (isCurrentPlayerActive || true) { // display buttons choices for other players to let them know
 
@@ -59,6 +62,7 @@ export class PlayerChoice {
             }
 
         }
+        
         if(isCurrentPlayerActive && !directState) this.game.confirmTurn.displayUndoButtons(args);
     }
 
@@ -211,6 +215,7 @@ export class ClientSelectTileAction {
                 this.game.restorePreviousState(args);
             }, { 'color':'secondary','title':_('Cancel'),destination: document.getElementById('customSecondary') }); 
         }
+        
         if(isCurrentPlayerActive) this.game.confirmTurn.displayUndoButtons(args);
 
     }

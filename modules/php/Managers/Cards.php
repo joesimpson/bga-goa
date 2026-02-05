@@ -126,38 +126,39 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
     ->map(function($card) use ($player, $playerSpices, $args){
       $playDatas = [];
       $possiblePlay = false;
+      $actionPlayed = $player->isActionPlayed();
       $possibleActions = isset($args['possibleActions']) ? $args['possibleActions'] : [];
       switch($card->getAction()){
         //TODO JSA : FILL SWITCH 
         case CARD_ACTION_PROGRESS_NO_SPICE: 
-          if(in_array('actProgress',$possibleActions)){
-            //not possible if player already performed an action in this round
             $progressTracks = Tokens::getUpgradableProgressMarkers($player, false, true);
             $possiblePlay = count($progressTracks)>0;
             $playDatas['progressTracks'] = $progressTracks;
-          }
+          //not possible if player already performed an action in this round
+          if($actionPlayed) $possiblePlay = false;
           break;
         case CARD_ACTION_PROGRESS_NO_SHIP:
-          if(in_array('actProgress',$possibleActions)){
-            //possible if player already performed an action in this round
             $progressTracks = Tokens::getUpgradableProgressMarkers($player, true, false);
             $possiblePlay = count($progressTracks)>0;
             $playDatas['progressTracks'] = $progressTracks;
-          }
+          //not possible if player already performed an action in this round
+          if($actionPlayed) $possiblePlay = false;
           break;
         case CARD_ACTION_HARVEST_AND_CARDS:
-          //TODO JSA not possible if player already performed an action in this round
+          //not possible if player already performed an action in this round
+          if($actionPlayed) $possiblePlay = false;
           break;
         case CARD_ACTION_OUTPOST_EXTRA_CONTRACTS:
-          //TODO JSA not possible if player already performed an action in this round 
           // Not possible if the arg outpostsToFound is not set for playerTurn
-          if(isset($args['outpostsToFound'])){
-            $outpostsToFound = $args['outpostsToFound'];
+          $playDatas['outpostsToFound'] = Tiles::getFoundableOutposts($player)->getIds();
+          if(isset($playDatas['outpostsToFound'])){
+            $outpostsToFound = $playDatas['outpostsToFound'];
             $possiblePlay = (count($outpostsToFound)>0);
-            $playDatas['outpostsToFound'] = $outpostsToFound;
-            $playDatas['playerBaseContracts'] = $args['playerBaseContracts'];
+            $playDatas['playerBaseContracts'] = Players::getFoundBaseContracts($player);
             $playDatas['extraDraw'] = 1;
           }
+          //not possible if player already performed an action in this round
+          if($actionPlayed) $possiblePlay = false;
           break;
         case CARD_ACTION_RESSOURCES_TO_COINS:
           foreach($playerSpices as $playerSpiceCount){

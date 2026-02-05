@@ -125,11 +125,15 @@ class PlayerChoice extends GameState
                         case ACTION_FOUND_ABANDON:
                             Notifications::abandonOutpost($player,$tile);
                             Players::giveContracts($player, 1);
+                            //We come from PlayerTurn, stay there
+                            throw new PrematureStateChangeException (10,PlayerTurn::class,$player);
                             break;
                         case ACTION_FOUND_FORWARD:
                             $amount = $foundChoice['n'];
                             Players::giveContracts($player, -$amount);
                             Tiles::giveOutpostToPlayer($player,$tile);
+                            //We come from PlayerTurn, stay there
+                            throw new PrematureStateChangeException (11,PlayerTurn::class,$player);
                             break;
                         default: break;
                     }

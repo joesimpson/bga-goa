@@ -26,7 +26,9 @@ ALTER TABLE `player` ADD `compasses` int(2) NOT NULL DEFAULT 0 COMMENT 'This pla
 
 ALTER TABLE `player` ADD `nbActions` int(2) NOT NULL DEFAULT 0 COMMENT 'Current actions turn in current round/step';
 ALTER TABLE `player` ADD `passed` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Player has passed in current round/step';
+ALTER TABLE `player` ADD `actionPlayed` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Player has played an action in current actions turn';
 ALTER TABLE `player` ADD `cardsPlayed` JSON COMMENT 'Infos about card played during a round/turn';
+
 
 CREATE TABLE IF NOT EXISTS `cards` (
   `card_id` int(2) NOT NULL AUTO_INCREMENT,

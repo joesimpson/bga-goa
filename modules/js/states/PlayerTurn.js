@@ -44,8 +44,13 @@ export class PlayerTurn {
                 break;
             case this.game.const.ROUND_STEP_PLAYER_ACTIONS: 
                 //let titleActive =  _('${you} must select an action (${n} done in this round, min ${x} to pass)').replace('${n}', args.nbActions).replace('${x}', args.minActions);
-                let titleActive =  _('${you} must select an action (${n} done in this round)').replace('${n}', args.nbActions);
-                let titleOthers =  _('${actplayer} must select an action (${n} done in this round)').replace('${n}', args.nbActions);
+                let titleActive =  _('${player} must select an action (${n} done in this round)').replace('${player}','${you}').replace('${n}', args.nbActions);
+                let titleOthers =  _('${player} must select an action (${n} done in this round)').replace('${player}','${actplayer}').replace('${n}', args.nbActions);
+                if(args.actionPlayed){
+                    titleActive =  _('${player} may play a card or tile').replace('${player}','${you}');
+                    titleOthers =  _('${player} may play a card or tile').replace('${player}','${actplayer}');
+                }
+
                 this.bga.statusBar.setTitle(isCurrentPlayerActive ? titleActive : titleOthers);
                 break;
             default: 
@@ -194,6 +199,10 @@ export class PlayerTurn {
             
             if(possibleActions.includes('actPassAction')){
                 this.bga.statusBar.addActionButton(_('Pass'), () => this.bga.actions.performAction("actPassAction"), { 'title':_('Pass to play no actions until next round'),'color':'secondary',destination: document.getElementById('customSecondary') }); 
+            }
+            
+            if(possibleActions.includes('actStopAction')){
+                this.bga.statusBar.addActionButton(_('Stop'), () => this.bga.actions.performAction("actStopAction"), { 'title':_('Stop actions until next turn'),'color':'primary',destination: document.getElementById('customSecondary') }); 
             }
 
         }

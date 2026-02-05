@@ -99,7 +99,7 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
   public static function resetActionsPhase()
   {
     self::DB()
-      ->update(['nbActions' => 0, 'passed' => 0, 'cardsPlayed' =>null])
+      ->update(['nbActions' => 0, 'passed' => 0, 'actionPlayed' => 0, 'cardsPlayed' =>null])
       ->run();
   }
   /**
@@ -111,6 +111,7 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
         Players::giveExtraActionCards($player,-1);
     }
     $player->incNbActions();
+    $player->setActionPlayed(true);
   }
   /**
    * Save the information that the player played one of their card
@@ -193,6 +194,7 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
    */
   public static function getNextPlayerWithActions(int $player_id, array &$tried_pid = []) : Player |null
   {
+    Game::get()->trace("getNextPlayerWithActions($player_id, ".json_encode($tried_pid).")");
     $nextPlayer = Players::getNextPlayer($player_id);
     if(in_array($nextPlayer->getId(), $tried_pid) ) return null;
     if(isset($nextPlayer) 
@@ -274,6 +276,11 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
   // ----------------------------------------------------------------------------
   // ----------------------------------------------------------------------------
 
+  public static function getFoundBaseContracts(Player $player) : int
+  {
+    $outpostMarker = Tokens::getProgressMarkerByType(TOKEN_TYPE_PROGRESS_MARKER_OUTPOST, $player->getId());
+    return PROGRESS_GAINS_OUTPOST[$outpostMarker->getRow() - 1];
+  }
   public static function giveContracts(Player &$player, int $nb = 1)
   {
     if($nb ==0) return;
