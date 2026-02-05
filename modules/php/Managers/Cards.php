@@ -113,7 +113,7 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
     return Cards::getExplorationHand($player->getId());
   }
   
-  public static function getPossibleToPlay(Player $player) : Collection
+  public static function getPossibleToPlay(Player $player, array $args) : Collection
   {
     $cardsPlayed = $player->getCardsPlayed();
     $playerSpices = $player->getSpicesCount();
@@ -123,7 +123,7 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
       if(isset($cardsPlayed) && count($cardsPlayed) >= NB_MAX_CARDS_PER_TURN) return false;
       return true;
     })
-    ->map(function($card) use ($player, $playerSpices){
+    ->map(function($card) use ($player, $playerSpices, $args){
       $playDatas = [];
       $possiblePlay = false;
       switch($card->getAction()){
@@ -145,6 +145,13 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
           break;
         case CARD_ACTION_OUTPOST_EXTRA_CONTRACTS:
           //TODO JSA not possible if player already performed an action in this round
+          if(isset($args['outpostsToFound'])){
+            $outpostsToFound = $args['outpostsToFound'];
+            $possiblePlay = (count($outpostsToFound)>0);
+            $playDatas['outpostsToFound'] = $outpostsToFound;
+            $playDatas['playerBaseContracts'] = $args['playerBaseContracts'];
+            $playDatas['extraDraw'] = 1;
+          }
           break;
         case CARD_ACTION_RESSOURCES_TO_COINS:
           foreach($playerSpices as $playerSpiceCount){
@@ -266,7 +273,7 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
         break;
       case CARD_ACTION_HARVEST_AND_CARDS:
         break;
-      case CARD_ACTION_OUTPOST_EXTRA_CONTRACTS:
+      case CARD_ACTION_OUTPOST_EXTRA_CONTRACTS: //done in actFoundOutpost
         break;
       case CARD_ACTION_RESSOURCES_TO_COINS:
         break;
@@ -281,7 +288,7 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
       case CARD_ACTION_5_COINS:
         Players::giveMoney($player, 5);
         break;
-      case CARD_ACTION_PROGRESS_WITH_COINS:
+      case CARD_ACTION_PROGRESS_WITH_COINS: //done in actProgress
         break;
       default:
         break;

@@ -153,11 +153,13 @@ export class PlayerTurn {
             if(possibleActions.includes('actFoundOutpost') && args.outpostsToFound.length>0){
                 let actionName = _('Found Outpost');
                 let actionHint = this.bga.gameui.format_string(_('Action : ${name}'),{'name': actionName});
-                let baseContractsWithAction = args.playerBaseContracts;
                 let goToNext = () => {
                     this.bga.states.setClientState("ClientFoundOutpost", {
-                        descriptionmyturn: _("${you} must select a new outpost to found with a base of ${n} ${icon_contracts}").replace('${icon_contracts}', this.game.formatIcon('contracts',_('Contracts'))).replace('${n}', baseContractsWithAction),
-                        args: {'outpostsToFound': args.outpostsToFound },
+                        descriptionmyturn: '',
+                        args: {
+                            'outpostsToFound': args.outpostsToFound , 
+                            'playerBaseContracts':args.playerBaseContracts
+                        },
                     });
                 };
                 this.bga.statusBar.addActionButton(actionName, () => goToNext()

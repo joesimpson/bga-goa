@@ -426,24 +426,41 @@ class PlayerTurn extends GameState
      * Player action : turn ACTION #6 try to found an outpost
      */
     #[PossibleAction]
-    public function actFoundOutpost(int $tile_id,int $activePlayerId, array $args)
+    public function actFoundOutpost(int $tile_id, int|null $card_id = null,int $activePlayerId, array $args)
     { 
-        $this->game->trace("actFoundOutpost($activePlayerId)");
+        $this->game->trace("actFoundOutpost($activePlayerId, $tile_id, $card_id)");
         $possibleActions = $args['possibleActions'];
         if(!in_array('actFoundOutpost',$possibleActions)){
             throw new UnexpectedException(110,"Invalid action actFoundOutpost, see ".json_encode($possibleActions));
         }
+        
+        $nbCardsToDraw = 2;
         $outpostsToFound =  $args['outpostsToFound'];
+        if(isset($card_id)){
+            $possibleCards = $args['possiblePlayCards'];
+            if(!in_array($card_id,$possibleCards->getIds())){
+                throw new UnexpectedException(111,"Invalid card $card_id to play now ");
+            }
+            $playCardDatas = $possibleCards[$card_id]['play_datas'];
+            $outpostsToFound = $playCardDatas['outpostsToFound'];
+            $nbCardsToDraw = $nbCardsToDraw + $playCardDatas['extraDraw'];
+        }
         if(!in_array($tile_id,$outpostsToFound)){
             throw new UnexpectedException(111,"Invalid outpost $tile_id, see ".json_encode($outpostsToFound));
         }
         
         Log::addStep();
         $player = Players::get($activePlayerId);
+        
+        if(isset($card_id)){
+            Cards::playExploration($player, $card_id, );
+            Players::registerCardPlayed($player,$card_id);
+        }
+
         $tile = Tiles::get($tile_id);
         $nbNeededContracts = Utils::getNbContractsForColony($tile->getColony());
         Notifications::tryFoundOutpost($player, $tile, $nbNeededContracts);
-        $cards = Cards::drawAndDiscardExploration($player, 2);
+        $cards = Cards::drawAndDiscardExploration($player, $nbCardsToDraw);
         $base = $args['playerBaseContracts'];
         $sum = 0;
         foreach($cards as $card){
@@ -582,7 +599,7 @@ class PlayerTurn extends GameState
             case ROUND_STEP_PLAYER_ACTIONS:
                 $discardableCards = Cards::getPossibleToDiscard($player);
                 $args['possibleDiscards'] = $discardableCards->getIds();
-                $playableCards = Cards::getPossibleToPlay($player);
+                $playableCards = Cards::getPossibleToPlay($player, $args);
                 $args['possiblePlayCards'] = $playableCards;
                 if( $discardableCards->count()>0){
                     $args['possibleActions'][] = 'actDiscard';

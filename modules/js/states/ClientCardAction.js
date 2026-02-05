@@ -30,14 +30,27 @@ export class ClientCardAction {
         //if(args.isPlayableCard){
             this.bga.statusBar.addActionButton(_('Play'), () => {
                 let play_datas = args.possiblePlayCards[card_id].play_datas;
-                if(play_datas && play_datas.progressTracks){
-                    this.bga.states.setClientState("ClientSelectProgress", {
-                        args: {
-                            'progressTracks': play_datas.progressTracks, 
-                            'withCard':card_id,
-                            'previousClientState' : this.game.getCurrentClientStateDatas(),
-                        },
-                    });
+                if(play_datas ) { 
+                    if(play_datas.progressTracks){
+                        this.bga.states.setClientState("ClientSelectProgress", {
+                            args: {
+                                'progressTracks': play_datas.progressTracks, 
+                                'withCard':card_id,
+                                'previousClientState' : this.game.getCurrentClientStateDatas(),
+                            },
+                        });
+                    }
+                    else if(play_datas.outpostsToFound){
+                        this.bga.states.setClientState("ClientFoundOutpost", {
+                            descriptionmyturn: '',
+                            args: {
+                                'outpostsToFound': play_datas.outpostsToFound,
+                                'playerBaseContracts':play_datas.playerBaseContracts,
+                                'withCard':card_id,
+                                'previousClientState' : this.game.getCurrentClientStateDatas(),
+                            },
+                        });
+                    }
                 }
                 else {
                     //DIRECT CARD PLAY

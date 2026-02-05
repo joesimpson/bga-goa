@@ -11,6 +11,11 @@ export class ClientFoundOutpost {
     onEnteringState(args, isCurrentPlayerActive) {
         
         let outpostsIds = args.outpostsToFound; 
+        let baseContractsWithAction = args.playerBaseContracts;
+        
+        this.bga.statusBar.setTitle(
+                   _("${you} must select a new outpost to found with a base of ${n} ${icon_contracts}").replace('${icon_contracts}', this.game.formatIcon('contracts',_('Contracts'))).replace('${n}', baseContractsWithAction)
+                );
     
         this.game.outpostsTilesStocks.forEach((stock) => { 
             stock.setSelectionMode('single');
@@ -37,7 +42,7 @@ export class ClientFoundOutpost {
                         _('Found ${name} : requires ${n} ${icon_contracts}'), 
                         {'name': colonyName, 'n':outpostMinContractsNeeded, 'icon_contracts':this.game.formatIcon('contracts',_('Contracts')), }),
                     () => { 
-                        this.bga.actions.performAction('actFoundOutpost', { 'tile_id': outpostId,});
+                        this.bga.actions.performAction('actFoundOutpost', { 'tile_id': outpostId, 'card_id': args.withCard});
                     }
                 , { id:'goa_button_found', 'title':_('Action : Found Outpost'), destination: document.getElementById('customPrimary') }); 
             });
