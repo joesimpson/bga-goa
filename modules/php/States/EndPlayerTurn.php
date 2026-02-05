@@ -111,10 +111,7 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
             case ROUND_STEP_PLAYER_ACTIONS:
                 $nextPlayer = Players::getNextPlayerWithActions($activePlayerId);
                 $roundEnd = false;
-                if(isset($nextPlayer)){
-                    $nextPlayer->setCardsPlayed([]);
-                }
-                else {
+                if(!isset($nextPlayer)){
                     $roundEnd = true;
                 }
                 break;
