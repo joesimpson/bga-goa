@@ -10,6 +10,10 @@ export class ClientCardAction {
 
     onEnteringState(args, isCurrentPlayerActive) {
         
+        this.bga.statusBar.setTitle(
+                    _("Select an action for this card")
+                );
+
         let card_id = args.card.id;
         let possibleDiscards = args.possibleDiscards; 
         let possiblePlayCards = args.possiblePlayCards; 
@@ -31,6 +35,7 @@ export class ClientCardAction {
                         args: {
                             'progressTracks': play_datas.progressTracks, 
                             'withCard':card_id,
+                            'previousClientState' : this.game.getCurrentClientStateDatas(),
                         },
                     });
                 }

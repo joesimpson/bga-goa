@@ -676,7 +676,7 @@ export class Game {
                 if(clientState && clientState.name == 'ClientCardAction') 
                     clientState = clientState.args.previousClientState;
                 this.bga.states.setClientState("ClientCardAction", {
-                    descriptionmyturn: _("Select an action for this card"),
+                    descriptionmyturn: '',
                     args: { 
                         'card': cardDatas,
                         'isPlayableCard': isPlayableCard,
