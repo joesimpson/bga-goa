@@ -36,7 +36,7 @@ export class ClientSelectProgress {
                 progressTrack.classList.add('selected');
                 if(withSpices){
                     progressTrack.classList.add('selected_for_client_state');
-                    this.bga.states.setClientState("ClientSelectSpices", {
+                    this.bga.states.setClientState("ClientSelectSpicesForProgress", {
                         descriptionmyturn: '',
                         args: {'track':track, 'nbSpices':costShips, 'spicesSets': spicesSets,
                             'costSpices': costSpices,

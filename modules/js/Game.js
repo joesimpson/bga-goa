@@ -25,7 +25,7 @@ const [BgaHelp,BgaZoom] = await globalThis.importDojoLibs([g_gamethemeurl + "mod
 import { ConfirmTurn } from "./states/ConfirmTurn.js";
 import { ClientCardAction } from "./states/ClientCardAction.js";
 import { ClientSelectProgress } from "./states/ClientSelectProgress.js";
-import { ClientSelectSpices } from "./states/ClientSelectSpices.js";
+import { ClientSelectSpicesForProgress } from "./states/ClientSelectSpicesForProgress.js";
 import { ClientFoundOutpost } from "./states/ClientFoundOutpost.js";
 import { NextPlayer } from "./states/NextPlayer.js";
 import { PlayerChoice, ClientSelectTileAction } from "./states/PlayerChoice.js";
@@ -53,8 +53,8 @@ export class Game {
         this.bga.states.register('ClientSelectTileAction', this.clientSelectTileAction);
         this.clientSelectProgress = new ClientSelectProgress(this, bga);
         this.bga.states.register('ClientSelectProgress', this.clientSelectProgress);
-        this.clientSelectSpices = new ClientSelectSpices(this, bga);
-        this.bga.states.register('ClientSelectSpices', this.clientSelectSpices);
+        this.clientSelectSpicesForProgress = new ClientSelectSpicesForProgress(this, bga);
+        this.bga.states.register('ClientSelectSpicesForProgress', this.clientSelectSpicesForProgress);
         this.clientFoundOutpost = new ClientFoundOutpost(this, bga);
         this.bga.states.register('ClientFoundOutpost', this.clientFoundOutpost);
 

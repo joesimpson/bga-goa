@@ -2,7 +2,7 @@
 /**
  * Client STATE
  */
-export class ClientSelectSpices {
+export class ClientSelectSpicesForProgress {
     constructor(game, bga) {
         this.game = game;
         this.bga = bga;
