@@ -299,6 +299,7 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
                   'row' => $token->getRow(),
                   'withSpices' => $withSpices,
                   'withShips' => $withShips,
+                  'withCoins' => false,
                 ];
 
                 $currentRow = $token->getRow();
@@ -368,6 +369,9 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
                 $map = [
                   'track' => $token->getTrackIndex(),
                   'row' => $token->getRow(),
+                  'withSpices' => false,
+                  'withShips' => false,
+                  'withCoins' => true,
                 ];
                 $currentRow = $token->getRow();
                 $costs = PROGRESS_COST_AS_COINS;

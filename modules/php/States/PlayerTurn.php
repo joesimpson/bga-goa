@@ -279,15 +279,16 @@ class PlayerTurn extends GameState
         $player = Players::get($activePlayerId);
         Log::addStep();
 
+        $countAsAPlayerAction = true;
+        $withCoins = $selectedTrack['withCoins'];
         $withShips = $selectedTrack['withShips'];
         $withSpices = $selectedTrack['withSpices'];
-        $costShips = $selectedTrack['costShips'];
-        $costSpices = $selectedTrack['costSpices'];
         if(isset($card_id)){
             Cards::playExploration($player, $card_id, );
             Players::registerCardPlayed($player,$card_id);
         }
         if($withSpices){
+            $costSpices = $selectedTrack['costSpices'];
             $totalSpicesExpected = 0;
             foreach($costSpices as $datas){
                 $costSpices = $datas['n'];
@@ -317,7 +318,13 @@ class PlayerTurn extends GameState
             Tokens::removeSpices($tokens, $player);
         }
         if($withShips){
+            $costShips = $selectedTrack['costShips'];
             Players::giveShips($player,-$costShips);
+        }
+        if($withCoins){
+            $cost = $selectedTrack['costMoney'];
+            Players::giveMoney($player,-$cost);
+            $countAsAPlayerAction = false;//linked to player card
         }
 
         $upgradedToken = Tokens::progressOnTrack($track, $activePlayerId);
@@ -341,9 +348,12 @@ class PlayerTurn extends GameState
             }
         }
         
-        Players::registerNewAction($player);
+        if($countAsAPlayerAction){
+            Players::registerNewAction($player);
+            return ConfirmTurn::class;
+        }
+        return PlayerTurn::class;
 
-        return ConfirmTurn::class;
     }
     /**
      * Player action : turn ACTION #2 take ships

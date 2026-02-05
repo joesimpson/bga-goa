@@ -984,7 +984,18 @@ export class Game {
             ignoreScale: false,
             ignoreRotation: true,
         };
-        let animations = new Array(amount).fill(0).map(index => (() => {
+        let arrayAnim = null;
+        if(amount<0){
+            //Reverse dir (spend money)
+            arrayAnim = new Array(-amount);
+            let toElement2 = fromElement;
+            fromElement = toElement;
+            toElement = toElement2;
+        }
+        else {
+            arrayAnim = new Array(amount);
+        }
+        let animations = arrayAnim.fill(0).map(index => (() => {
             this.animationManager.slideFloatingElement(this.createCoin(), fromElement, toElement, floatingPieceAnimationSettings)
         }));
         await this.animationManager.playInterval(animations);

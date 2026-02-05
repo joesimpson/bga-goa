@@ -27,17 +27,6 @@ export class ClientSelectProgress {
             let withShips = trackData.withShips;
             let costSpices = trackData.costSpices;
             let spicesSets = trackData.spicesSets;// [[1022,1027],[1022,1028],[1023,1027],[1023,1028]];
-                
-            let allSpicesIds = [];
-            Object.entries(costSpices).forEach( ([spice, cost]) => {
-                Object.values(cost.from).forEach((tId) => {
-                    allSpicesIds.push(tId);
-                });
-            });
-            let spicesDivs = [];
-            Object.values(allSpicesIds).forEach((tId) => {
-                spicesDivs[tId] = $(`goa_token-${tId}`);
-            });
 
             let progressTrack = document.getElementById(`goa_progress_track_${track}_${activePlayer}`);
             progressTrack.setAttribute("title",_('Select this progress track'));
@@ -49,7 +38,7 @@ export class ClientSelectProgress {
                     progressTrack.classList.add('selected_for_client_state');
                     this.bga.states.setClientState("ClientSelectSpices", {
                         descriptionmyturn: '',
-                        args: {'track':track, 'spices_ids': allSpicesIds, 'nbSpices':costShips, 'spicesSets': spicesSets,
+                        args: {'track':track, 'nbSpices':costShips, 'spicesSets': spicesSets,
                             'costSpices': costSpices,
                             'withCard': args.withCard,
                             //keep previous state datas in order to go back when cancel 

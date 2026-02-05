@@ -18,9 +18,15 @@ export class ClientSelectSpices {
 
         let spicesSets = args.spicesSets; 
         let nbSpices = args.nbSpices;
-        let allSpicesIds = args.spices_ids; 
+        let allSpicesIds = [];
         let costSpices = args.costSpices;
         let spicesDivs = [];
+    
+        Object.entries(costSpices).forEach( ([spice, cost]) => {
+            Object.values(cost.from).forEach((tId) => {
+                allSpicesIds.push(tId);
+            });
+        });
         Object.values(allSpicesIds).forEach((tId) => {
             spicesDivs[tId] = $(`goa_token-${tId}`);
         });
