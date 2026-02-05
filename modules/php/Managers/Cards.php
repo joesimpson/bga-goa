@@ -126,25 +126,31 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
     ->map(function($card) use ($player, $playerSpices, $args){
       $playDatas = [];
       $possiblePlay = false;
+      $possibleActions = isset($args['possibleActions']) ? $args['possibleActions'] : [];
       switch($card->getAction()){
-        //TODO JSA : filter cards to play with type of action
+        //TODO JSA : FILL SWITCH 
         case CARD_ACTION_PROGRESS_NO_SPICE: 
-          $progressTracks = Tokens::getUpgradableProgressMarkers($player, false, true);
-          $possiblePlay = count($progressTracks)>0;
-          //TODO JSA not possible if player already performed an action in this round
-          $playDatas['progressTracks'] = $progressTracks;
+          if(in_array('actProgress',$possibleActions)){
+            //not possible if player already performed an action in this round
+            $progressTracks = Tokens::getUpgradableProgressMarkers($player, false, true);
+            $possiblePlay = count($progressTracks)>0;
+            $playDatas['progressTracks'] = $progressTracks;
+          }
           break;
         case CARD_ACTION_PROGRESS_NO_SHIP:
-          $progressTracks = Tokens::getUpgradableProgressMarkers($player, true, false);
-          $possiblePlay = count($progressTracks)>0;
-          //TODO JSA not possible if player already performed an action in this round
-          $playDatas['progressTracks'] = $progressTracks;
+          if(in_array('actProgress',$possibleActions)){
+            //possible if player already performed an action in this round
+            $progressTracks = Tokens::getUpgradableProgressMarkers($player, true, false);
+            $possiblePlay = count($progressTracks)>0;
+            $playDatas['progressTracks'] = $progressTracks;
+          }
           break;
         case CARD_ACTION_HARVEST_AND_CARDS:
           //TODO JSA not possible if player already performed an action in this round
           break;
         case CARD_ACTION_OUTPOST_EXTRA_CONTRACTS:
-          //TODO JSA not possible if player already performed an action in this round
+          //TODO JSA not possible if player already performed an action in this round 
+          // Not possible if the arg outpostsToFound is not set for playerTurn
           if(isset($args['outpostsToFound'])){
             $outpostsToFound = $args['outpostsToFound'];
             $possiblePlay = (count($outpostsToFound)>0);
