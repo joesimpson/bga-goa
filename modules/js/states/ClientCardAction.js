@@ -23,9 +23,9 @@ export class ClientCardAction {
 
         this.game.explorationHand.setLastPlayedCards([args.card]);
 
-        if(args.isPlayableCard){
-            let play_datas = args.possiblePlayCards[card_id].play_datas;
+        //if(args.isPlayableCard){
             this.bga.statusBar.addActionButton(_('Play'), () => {
+                let play_datas = args.possiblePlayCards[card_id].play_datas;
                 if(play_datas && play_datas.progressTracks){
                     this.bga.states.setClientState("ClientSelectProgress", {
                         args: {
@@ -41,12 +41,12 @@ export class ClientCardAction {
                     );
                     
                 }
-            }, { 'title':_('Play this card'),destination: document.getElementById('customPrimary') }); 
-        }
+            }, { 'disabled': !args.isPlayableCard,  'title':_('Play this card'),destination: document.getElementById('customPrimary') }); 
+        //}
         
-        if(args.isDiscardableCard){
-            this.bga.statusBar.addActionButton(_('Discard'), () => this.bga.actions.performAction("actDiscard", {'card_id':card_id}), { 'title':_('Discard this card'),destination: document.getElementById('customPrimary') }); 
-        }
+        //if(args.isDiscardableCard){
+            this.bga.statusBar.addActionButton(_('Discard'), () => this.bga.actions.performAction("actDiscard", {'card_id':card_id}), { 'disabled': !args.isDiscardableCard,'title':_('Discard this card'),destination: document.getElementById('customPrimary') }); 
+        //}
 
         this.bga.statusBar.addActionButton( _('Cancel'), () => {
             //this.game.explorationHand.setSelectionMode('none');
