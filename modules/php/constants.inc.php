@@ -92,6 +92,14 @@ const CARD_ACTION_2_SHIPS              = 'h';
 const CARD_ACTION_5_COINS              = 'i';
 const CARD_ACTION_PROGRESS_WITH_COINS  = 'j';
 
+
+const CARD_GAINS_RESSOURCES_TO_COINS = [
+   1 => 3,
+   2 => 6,
+   3 => 9,
+   4 => 12,
+];
+
 /////////////////////////////////////////////////////////
 //          TILES
 /////////////////////////////////////////////////////////

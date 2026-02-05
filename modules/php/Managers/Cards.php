@@ -113,17 +113,17 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
     return Cards::getExplorationHand($player->getId());
   }
   
-  public static function getPossibleToPlay(Player $player, array $args) : Collection
+  public static function getPossibleToPlay(Player $player, array &$args) : Collection
   {
     $cardsPlayed = $player->getCardsPlayed();
-    $playerSpices = $player->getSpicesCount();
+    $playerSpices = Tokens::getPlayerSpices($player->getId());
 
     $hand = Cards::getExplorationHand($player->getId());
     return $hand->filter(function($card) use ($cardsPlayed){
       if(isset($cardsPlayed) && count($cardsPlayed) >= NB_MAX_CARDS_PER_TURN) return false;
       return true;
     })
-    ->map(function($card) use ($player, $playerSpices, $args){
+    ->map(function($card) use ($player, $playerSpices, &$args){
       $playDatas = [];
       $possiblePlay = false;
       $actionPlayed = $player->isActionPlayed();
@@ -161,13 +161,16 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
           if($actionPlayed) $possiblePlay = false;
           break;
         case CARD_ACTION_RESSOURCES_TO_COINS:
-          foreach($playerSpices as $playerSpiceCount){
-            if($playerSpiceCount>0){
-              $possiblePlay = true;
-              break;
-            }
+          if($playerSpices->count()>0){
+            $possiblePlay = true;
+            $playDatas['spendSpices'] = [
+              'min' => 1, 
+              'max' => 4, 
+              'forCoins' => true, 
+              't_ids' => $playerSpices->getIds(),
+            ];
+            $args['possibleActions'][] = 'actSpendSpices';
           }
-          $playDatas['spendSpices'] = ['max' => 4];
           break;
         case CARD_ACTION_2_SPICES:
           $playDatas = Tiles::getPlayerAvailableSpotsForSpices($player);
@@ -272,10 +275,12 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
     $card = Cards::get($cardId);
     $card->setPId(null);
 
+    Players::registerCardPlayed($player,$cardId);
+
     //NOTIFY 
     Notifications::playExploration( $player, $card);
     
-    //TODO JSA SWITCH CARD TYPE -> play
+    //TODO JSA FILL SWITCH CARD TYPE -> play
     switch($card->getAction()){
       case CARD_ACTION_PROGRESS_NO_SPICE: //done in actProgress
         break;
@@ -285,7 +290,7 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
         break;
       case CARD_ACTION_OUTPOST_EXTRA_CONTRACTS: //done in actFoundOutpost
         break;
-      case CARD_ACTION_RESSOURCES_TO_COINS:
+      case CARD_ACTION_RESSOURCES_TO_COINS: //done in actSpendSpices
         break;
       case CARD_ACTION_2_SPICES:
         break;
@@ -303,7 +308,6 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
       default:
         break;
     }
-    //TODO JSA we could redirect to choice state
     
     return $card;
   }

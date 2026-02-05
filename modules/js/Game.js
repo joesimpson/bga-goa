@@ -2021,6 +2021,7 @@ export class Game {
             case this.const.CARD_ACTION_PROGRESS_NO_SHIP:   return _('Type b: When performing the Progress action, you only need to pay the Resources, you can ignore the Ship costs.');
             case this.const.CARD_ACTION_HARVEST_AND_CARDS:  return _('Type c: When performing the Harvest action, you may take any combination of Resources, Ships, and/or Contracts instead of only Resources.');
             case this.const.CARD_ACTION_OUTPOST_EXTRA_CONTRACTS : return _('Type d: When performing the Found Outpost action, you may draw one extra exploration card and add its Contracts to your total.');
+            //TODO JSA const CARD_GAINS_RESSOURCES_TO_COINS
             case this.const.CARD_ACTION_RESSOURCES_TO_COINS  : return _('Type e: You may spend 1/2/3/4 Resources to gain 3/6/9/12 Pardaos.');
             case this.const.CARD_ACTION_2_SPICES             : return this.bga.gameui.format_string(_('Type ${x} : ${gain}') ,
                     { 'x':'f', 'gain': this.formatTileSpicesText({'spice_slots':[this.const.SPICES_ALL,this.const.SPICES_ALL]}) }

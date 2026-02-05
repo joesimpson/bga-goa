@@ -16,7 +16,8 @@ export class ClientSpendSpices {
         let activePlayer = this.bga.players.getActivePlayerId();
 
         let nbSpices = args.spendSpices.max;
-        let minSpices = 1;
+        let minSpices = args.spendSpices.min;
+        //TODO JSA t_ids
         let spicesDivs = [];
         let withCard = args.withCard;
         let withTile = args.withTile;

@@ -314,7 +314,6 @@ class PlayerTurn extends GameState
         $withSpices = $selectedTrack['withSpices'];
         if(isset($card_id)){
             Cards::playExploration($player, $card_id, );
-            Players::registerCardPlayed($player,$card_id);
         }
         if($withSpices){
             $costSpices = $selectedTrack['costSpices'];
@@ -482,7 +481,6 @@ class PlayerTurn extends GameState
         
         if(isset($card_id)){
             Cards::playExploration($player, $card_id, );
-            Players::registerCardPlayed($player,$card_id);
         }
 
         $tile = Tiles::get($tile_id);
@@ -570,8 +568,66 @@ class PlayerTurn extends GameState
         $player = Players::get($activePlayerId);
 
         Cards::playExploration($player, $card_id, );
-        //keep trace of played card per players
-        Players::registerCardPlayed($player,$card_id);
+    }
+    
+    /**
+     * Optional Action with some cards/tiles
+     */
+    #[PossibleAction]
+    public function actSpendSpices(
+        #[IntArrayParam] array $t_ids, 
+        int|null $card_id = null, 
+        int|null $tile_id = null,
+        int $activePlayerId, array $args)
+    { 
+        $this->game->trace("actSpendSpices(".json_encode($t_ids)."$card_id,$tile_id,$activePlayerId)");
+        $possibleActions = $args['possibleActions'];
+        if(!in_array('actSpendSpices',$possibleActions)){
+            throw new UnexpectedException(110,"Invalid action actSpendSpices, see ".json_encode($possibleActions));
+        }
+        $nbMinTokens = 1;
+        $totalSpicesExpected = 1;
+        $selectableTokens = [];
+        $forCoins = false;
+        if(isset($card_id)){
+            $possibleCards = $args['possiblePlayCards'];
+            if(!in_array($card_id,$possibleCards->getIds())){
+                throw new UnexpectedException(111,"Invalid card $card_id to play");
+            }
+            $playCardDatas = $possibleCards[$card_id]['play_datas'];
+            if(!isset($playCardDatas['spendSpices'])){
+                throw new UnexpectedException(112,"Invalid card $card_id to spend spices");
+            }
+            $spendDatas = $playCardDatas['spendSpices'];
+            $totalSpicesExpected = $spendDatas['max'];
+            $nbMinTokens = $spendDatas['min'];
+            $selectableTokens = $spendDatas['t_ids'];
+            $forCoins = $spendDatas['forCoins'];
+        } 
+        if (!isset($t_ids) || $totalSpicesExpected < count($t_ids) || $nbMinTokens > count($t_ids)) {
+            throw new UnexpectedException(120,"You must select $totalSpicesExpected tokens");
+        }
+        $diff = array_diff($t_ids, $selectableTokens); 
+        if (count($diff) !== 0) {
+            throw new UnexpectedException(121,("These tokens are not a valid set"));
+        }
+
+        $player = Players::get($activePlayerId);
+        Log::addStep();
+        if(isset($card_id)){
+            Cards::playExploration($player, $card_id, );
+        }
+        $playerSpices = Tokens::getPlayerSpices($player->getId());
+        $tokens = $playerSpices->filter(function($t) use ($t_ids){
+            return in_array($t->getId(), $t_ids);
+        });
+        Tokens::removeSpices($tokens, $player);
+        if($forCoins){
+            $amount = CARD_GAINS_RESSOURCES_TO_COINS[count($t_ids)];
+            Players::giveMoney($player, $amount);
+        }
+
+        return PlayerTurn::class;
     }
 
     /**
