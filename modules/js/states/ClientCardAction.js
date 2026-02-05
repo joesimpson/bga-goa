@@ -51,6 +51,16 @@ export class ClientCardAction {
                             },
                         });
                     }
+                    else if(play_datas.spendSpices){
+                        this.bga.states.setClientState("ClientSpendSpices", {
+                            descriptionmyturn: '',
+                            args: {
+                                'spendSpices': play_datas.spendSpices,
+                                'withCard':card_id,
+                                'previousClientState' : this.game.getCurrentClientStateDatas(),
+                            },
+                        });
+                    }
                     else {
                         //DIRECT CARD PLAY
                         this.bga.actions.performAction("actPlayCard", {'card_id':card_id});

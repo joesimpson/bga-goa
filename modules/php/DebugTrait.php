@@ -326,6 +326,11 @@ trait DebugTrait
         Tokens::addSpiceOnTile($tile, $player, TOKEN_TYPE_SPICE_GREEN, 2);
 
         //Test plantations :
+        $plantations = Tiles::getPlantations($player);
+        foreach($plantations as $p){
+            Tiles::discardTileFromPlayer($player, $p);
+        }
+
         $tile = Tiles::getByType(20, TILE_SUBTTYPE_MARKET)->first();
         $tile->setLocation(TILE_LOCATION_PLAYER_BOARD);
         $tile->setPId($player_id);
@@ -364,6 +369,7 @@ trait DebugTrait
         Tokens::addSpiceOnTile($tile, $player, TOKEN_TYPE_SPICE_GREEN, 1);
 
         //$this->debug_refreshUI();
+        $this->debug_goToState(ST_PLAYER_TURN);
     }
     
     //TEst different notif at a time

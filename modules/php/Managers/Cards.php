@@ -162,9 +162,12 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
           break;
         case CARD_ACTION_RESSOURCES_TO_COINS:
           foreach($playerSpices as $playerSpiceCount){
-            if($playerSpiceCount>0) 
+            if($playerSpiceCount>0){
               $possiblePlay = true;
+              break;
+            }
           }
+          $playDatas['spendSpices'] = ['max' => 4];
           break;
         case CARD_ACTION_2_SPICES:
           $playDatas = Tiles::getPlayerAvailableSpotsForSpices($player);

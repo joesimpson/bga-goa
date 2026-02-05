@@ -26,6 +26,7 @@ import { ConfirmTurn } from "./states/ConfirmTurn.js";
 import { ClientCardAction } from "./states/ClientCardAction.js";
 import { ClientSelectProgress } from "./states/ClientSelectProgress.js";
 import { ClientSelectSpicesForProgress } from "./states/ClientSelectSpicesForProgress.js";
+import { ClientSpendSpices } from "./states/ClientSpendSpices.js";
 import { ClientFoundOutpost } from "./states/ClientFoundOutpost.js";
 import { NextPlayer } from "./states/NextPlayer.js";
 import { PlayerChoice, ClientSelectTileAction } from "./states/PlayerChoice.js";
@@ -55,6 +56,8 @@ export class Game {
         this.bga.states.register('ClientSelectProgress', this.clientSelectProgress);
         this.clientSelectSpicesForProgress = new ClientSelectSpicesForProgress(this, bga);
         this.bga.states.register('ClientSelectSpicesForProgress', this.clientSelectSpicesForProgress);
+        this.clientSpendSpices = new ClientSpendSpices(this, bga);
+        this.bga.states.register('ClientSpendSpices', this.clientSpendSpices);
         this.clientFoundOutpost = new ClientFoundOutpost(this, bga);
         this.bga.states.register('ClientFoundOutpost', this.clientFoundOutpost);
 
@@ -479,8 +482,10 @@ export class Game {
      * Optional parameter "listPossibleSets" will make selection impossible if not in list of sets/arrays.
      * Optional parameter "autoConfirm" will make selection callback as soon as we have a possible set
     */
-    onSelectN(elements, n, callbackOnSelectionEnd, listPossibleSets =null, autoConfirm = false , confirmText = _('Confirm'), selectionHint = null) {
+    onSelectN(elements, maxElements, callbackOnSelectionEnd, listPossibleSets =null, autoConfirm = false , confirmText = _('Confirm'), selectionHint = null, min = null) {
       let selectedElements = [];
+      let minElements = (min) ? min : maxElements;
+      let n = maxElements;
       let endSelection = () => {
         if (callbackOnSelectionEnd(selectedElements)) {
           selectedElements = [];
@@ -489,7 +494,7 @@ export class Game {
       }
       let updateStatus = () => {
         if ($('btnConfirmChoice')) $('btnConfirmChoice').remove();
-        if (selectedElements.length == n) {
+        if (selectedElements.length == n || selectedElements.length >= minElements && selectedElements.length <=n ) {
             this.bga.statusBar.addActionButton( confirmText, () => {
                 endSelection();
             }, { id:'btnConfirmChoice', 'title':confirmText,destination: document.getElementById('customPrimary')});
@@ -1213,6 +1218,7 @@ export class Game {
                 type: 'goa_outpost',
                 getId: (card) => card.id,
                 setupFrontDiv: (card, div) => {
+                    div.dataset.id = card.id; 
                     div.dataset.type = card.type; 
                     div.dataset.colony = card.colony; 
                     this.bga.gameui.addTooltipHtml(div.id, this.getTileTooltip(card));
@@ -1512,10 +1518,12 @@ export class Game {
     tplTile(tile, prefix ='') {
         if(tile.subtype == this.const.TILE_SUBTTYPE_OUTPOST) 
             return `<div class="goa_tile goa_tile${prefix} goa_outpost" id="goa_tile${prefix}-${tile.id}" data-id="${tile.id}" data-type="${tile.type}"
+                data-id="${tile.id}"
                 data-colony="${tile.colony}" data-spots="${tile.spice_slots ? tile.spice_slots.length : 0}">
             </div>`;
         if(tile.subtype == this.const.TILE_SUBTTYPE_MARKET) 
             return `<div class="goa_tile goa_tile${prefix} goa_market" id="goa_tile${prefix}-${tile.id}" data-id="${tile.id}" data-type="${tile.type}"
+                data-id="${tile.id}"
                 data-play_type="${tile.play_type}" data-state="${tile.state}" data-spots="${tile.spice_slots ? tile.spice_slots.length : 0}"
                 data-end_score="${tile.end_score}" 
                 >
@@ -1693,6 +1701,7 @@ export class Game {
             let container = location == null ? this.getTokenContainer(token) : location;
             document.getElementById(container).insertAdjacentHTML('beforeend', this.tplToken(token));
             tokenDiv = document.getElementById(`goa_token-${token.id}`) ;
+            tokenDiv.dataset.id = token.id;
         }
         else {
             //refresh dataset if already exists
@@ -1704,13 +1713,13 @@ export class Game {
     
     tplToken(token, prefix ='') {
         if(token.subtype == this.const.TOKEN_SUBTTYPE_PROGRESS_MARKER) 
-            return `<div id="goa_token${prefix}-${token.id}" class="goa_token goa_token${prefix} goa_progress_marker" data-track='${token.track}' data-row='${token.row}' data-color='${this.gamedatas.players[token.pId].color}' data-pid='${token.pId}'></div>`;
+            return `<div id="goa_token${prefix}-${token.id}" class="goa_token goa_token${prefix} goa_progress_marker" data-id="${token.id}" data-track='${token.track}' data-row='${token.row}' data-color='${this.gamedatas.players[token.pId].color}' data-pid='${token.pId}'></div>`;
         if(token.subtype == this.const.TOKEN_SUBTTYPE_AUCTION_MARKER) 
-            return `<div id="goa_token${prefix}-${token.id}" class="goa_token goa_token${prefix} goa_auction_marker" data-value='${token.auctionOrder}' data-color='${this.gamedatas.players[token.pId].color}' data-pid='${token.pId}'></div>`;
+            return `<div id="goa_token${prefix}-${token.id}" class="goa_token goa_token${prefix} goa_auction_marker" data-id="${token.id}" data-value='${token.auctionOrder}' data-color='${this.gamedatas.players[token.pId].color}' data-pid='${token.pId}'></div>`;
         if(token.subtype == this.const.TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER) 
-            return `<div id="goa_token${prefix}-${token.id}" class="goa_token goa_token${prefix} goa_first_auction_marker" ></div>`;
+            return `<div id="goa_token${prefix}-${token.id}" class="goa_token goa_token${prefix} goa_first_auction_marker" data-id="${token.id}" ></div>`;
         if(token.subtype == this.const.TOKEN_SUBTTYPE_SPICE) 
-            return `<div id="goa_token${prefix}-${token.id}" class="goa_token goa_token${prefix} goa_spice" data-type="${token.type}" data-pid="${token.pId}" data-state="${token.state}" data-spice="${token.spice}"></div>`;
+            return `<div id="goa_token${prefix}-${token.id}" class="goa_token goa_token${prefix} goa_spice" data-id="${token.id}" data-type="${token.type}" data-pid="${token.pId}" data-state="${token.state}" data-spice="${token.spice}"></div>`;
         return '';
     }
     tplProgressTrack(datas) {
