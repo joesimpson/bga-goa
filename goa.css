@@ -1686,6 +1686,11 @@ Icon extract in sprite with differents layers size (so % is not useful).
   top: 53px;
 }
 
+.goa_player_tiles .goa_tile {
+  width: calc(var(--goa_playerboard_display_scale) * 108px);
+  height: calc(var(--goa_playerboard_display_scale) * 108px);
+}
+
 .goa_tile_tooltip {
   display: flex;
   flex-direction: column;

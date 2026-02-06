@@ -1,11 +1,14 @@
 
 @use "sass:math";
 
+$tile_with: 108px;
+$tile_height: 108px;
+
 .goa_tile{
     position: relative; 
 
-    width: 108px;
-    height: 108px;
+    width: $tile_with;
+    height: $tile_height;
     border-radius: 6px;
     box-shadow: 0px 0px 0px 2px black;
 
@@ -120,6 +123,13 @@
                 top: 53px;
             }
         } 
+    }
+}
+
+.goa_player_tiles{
+    .goa_tile{
+        width: calc(var(--goa_playerboard_display_scale) * $tile_with);
+        height: calc(var(--goa_playerboard_display_scale) * $tile_height);
     }
 }
 
