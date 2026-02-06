@@ -535,6 +535,18 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
     return $tile;
   }
 
+  public static function resetActionsPhase()
+  {
+    //RESET ALL USED actionable TILES 
+    $reusableTiles = Tiles::getTilesTypesByMarketPlayType(MARKET_TYPE_ACTION_REUSEABLE);
+    self::DB()
+      ->whereIn('type', $reusableTiles)
+      ->where('subtype', TILE_SUBTTYPE_MARKET)
+      ->where( static::$prefix . 'location', TILE_LOCATION_PLAYER_BOARD)
+      ->update([static::$prefix .'state' => TILE_STATE_NOTPLAYED])
+      ->run();
+  }
+
   ///////////////////////////////////////////////////////////////////////////////
   
   /** Creation of the Tiles */

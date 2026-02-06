@@ -104,6 +104,7 @@ const CARD_GAINS_RESSOURCES_TO_COINS = [
 /////////////////////////////////////////////////////////
 //          TILES
 /////////////////////////////////////////////////////////
+const TILE_STATE_NOTPLAYED = 0;
 const TILE_STATE_PLAYED = 1;
 
 const TILE_SUBTTYPE_OUTPOST = 1;

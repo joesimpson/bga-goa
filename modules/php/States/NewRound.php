@@ -11,6 +11,7 @@ use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Log;
 use Bga\Games\Goa\Helpers\Utils;
 use Bga\Games\Goa\Managers\Players;
+use Bga\Games\Goa\Managers\Tiles;
 
 class NewRound extends \Bga\GameFramework\States\GameState
 {
@@ -43,6 +44,7 @@ class NewRound extends \Bga\GameFramework\States\GameState
         Globals::setCurrentBid(0);
         Globals::setActionsTurns(0);
         Players::resetActionsPhase();
+        Tiles::resetActionsPhase();
 
         // Go to another gamestate
         Log::addStateCheckpoint(NewTurn::class);
