@@ -47,7 +47,7 @@ export class ClientSelectProgress {
                     });
                 }
                 else {
-                    this.bga.actions.performAction('actProgress', { 'track': track, 't_ids': null, 'card_id':args.withCard});
+                    this.game.customPerformAction('actProgress', { 'track': track, 't_ids': null, 'card_id':args.withCard});
                 }
             });
         });

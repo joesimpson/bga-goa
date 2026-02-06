@@ -61,7 +61,7 @@ class ConfirmTurn extends GameState
         if (Globals::getChoices() == 0 
             || $prefConfirm == PREF_CONFIRM_DISABLED 
         ) {//AUTO CONFIRM
-            return $this->actConfirmTurn(true);
+            return $this->actConfirmTurn(Utils::gameVersion(),true);
         }
     }
 
@@ -70,8 +70,9 @@ class ConfirmTurn extends GameState
      *
      */
     #[PossibleAction]
-    public function actConfirmTurn(bool $auto = false)
+    public function actConfirmTurn( int $v, bool $auto = false)
     {
+        Utils::checkVersion($v);
         $this->game->trace("actConfirmTurn($auto)");
         return EndPlayerTurn::class;
     }
@@ -82,8 +83,9 @@ class ConfirmTurn extends GameState
      * @throws UnexpectedException
      */
     #[PossibleAction]
-    public function actRestart()
+    public function actRestart(int $v, )
     {
+        Utils::checkVersion($v);
         ConfirmTurn::processRestartTurn();
     }
     
@@ -93,8 +95,9 @@ class ConfirmTurn extends GameState
      * @throws UnexpectedException
      */
     #[PossibleAction]
-    public function actUndoLastStep()
+    public function actUndoLastStep(int $v, )
     {
+        Utils::checkVersion($v);
         ConfirmTurn::processUndoLastStep();
     }
     

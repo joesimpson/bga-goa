@@ -42,7 +42,7 @@ export class ClientFoundOutpost {
                         _('Found ${name} : requires ${n} ${icon_contracts}'), 
                         {'name': colonyName, 'n':outpostMinContractsNeeded, 'icon_contracts':this.game.formatIcon('contracts',_('Contracts')), }),
                     () => { 
-                        this.bga.actions.performAction('actFoundOutpost', { 'tile_id': outpostId, 'card_id': args.withCard});
+                        this.game.customPerformAction('actFoundOutpost', { 'tile_id': outpostId, 'card_id': args.withCard});
                     }
                 , { id:'goa_button_found', 'title':_('Action : Found Outpost'), destination: document.getElementById('customPrimary') }); 
             });

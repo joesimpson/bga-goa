@@ -137,21 +137,21 @@ export class PlayerTurn {
             if(possibleActions.includes('actBuildShips')){
                 let actionName = _('Build ships');
                 let actionHint = this.bga.gameui.format_string(_('Action : ${name}'),{'name': actionName});
-                this.bga.statusBar.addActionButton(actionName, () => this.bga.actions.performAction("actBuildShips"), { 'title':actionHint,destination: document.getElementById('customPrimary') }); 
+                this.bga.statusBar.addActionButton(actionName, () => this.game.customPerformAction("actBuildShips"), { 'title':actionHint,destination: document.getElementById('customPrimary') }); 
                 //+ CLICK ON BOARD section
                 let progressTrack = document.getElementById(`goa_progress_track_${1}_${activePlayer}`);
                 let progressMarker = progressTrack.getElementsByClassName('goa_progress_marker')[0];
-                this.game.onClick(progressMarker.parentNode,() => this.bga.actions.performAction("actBuildShips"));
+                this.game.onClick(progressMarker.parentNode,() => this.game.customPerformAction("actBuildShips"));
                 progressMarker.parentNode.setAttribute("title",actionHint);
             }
             if(possibleActions.includes('actTaxes')){
                 let actionName = _('Taxes');
                 let actionHint = this.bga.gameui.format_string(_('Action : ${name}'),{'name': actionName});
-                this.bga.statusBar.addActionButton(actionName, () => this.bga.actions.performAction("actTaxes"), { 'title':actionHint,destination: document.getElementById('customPrimary') }); 
+                this.bga.statusBar.addActionButton(actionName, () => this.game.customPerformAction("actTaxes"), { 'title':actionHint,destination: document.getElementById('customPrimary') }); 
                 //+ CLICK ON BOARD section
                 let progressTrack = document.getElementById(`goa_progress_track_${3}_${activePlayer}`);
                 let progressMarker = progressTrack.getElementsByClassName('goa_progress_marker')[0];
-                this.game.onClick(progressMarker.parentNode,() => this.bga.actions.performAction("actTaxes"));
+                this.game.onClick(progressMarker.parentNode,() => this.game.customPerformAction("actTaxes"));
                 progressMarker.parentNode.setAttribute("title",actionHint);
             }
             
@@ -183,26 +183,26 @@ export class PlayerTurn {
                     this.bga.gameui.format_string( 
                         _('Explore : +${n} ${icon_explo}'),
                         {'n' : args.nbCardsExploration, 'icon_explo': this.game.formatIcon('exploration_card',_('Exploration card'))},
-                    ), () => this.bga.actions.performAction("actExploration"), { 'title':actionHint,destination: document.getElementById('customPrimary') }); 
+                    ), () => this.game.customPerformAction("actExploration"), { 'title':actionHint,destination: document.getElementById('customPrimary') }); 
                 //+ CLICK ON BOARD section
                 let progressTrack = document.getElementById(`goa_progress_track_${4}_${activePlayer}`);
                 let progressMarker = progressTrack.getElementsByClassName('goa_progress_marker')[0];
-                this.game.onClick(progressMarker.parentNode,() => this.bga.actions.performAction("actExploration"));
+                this.game.onClick(progressMarker.parentNode,() => this.game.customPerformAction("actExploration"));
                 progressMarker.parentNode.setAttribute("title",actionHint);
             }
             
             this.game.updateHandSelectable(args);
 
             if(possibleActions.includes('actPassBid')){
-                this.bga.statusBar.addActionButton(_('Pass'), () => this.bga.actions.performAction("actPassBid"), { 'title':_('Pass the bid'),destination: document.getElementById('customSecondary') }); 
+                this.bga.statusBar.addActionButton(_('Pass'), () => this.game.customPerformAction("actPassBid"), { 'title':_('Pass the bid'),destination: document.getElementById('customSecondary') }); 
             }
             
             if(possibleActions.includes('actPassAction')){
-                this.bga.statusBar.addActionButton(_('Pass'), () => this.bga.actions.performAction("actPassAction"), { 'title':_('Pass to play no actions until next round'),'color':'secondary',destination: document.getElementById('customSecondary') }); 
+                this.bga.statusBar.addActionButton(_('Pass'), () => this.game.customPerformAction("actPassAction"), { 'title':_('Pass to play no actions until next round'),'color':'secondary',destination: document.getElementById('customSecondary') }); 
             }
             
             if(possibleActions.includes('actStopAction')){
-                this.bga.statusBar.addActionButton(_('Stop'), () => this.bga.actions.performAction("actStopAction"), { 'title':_('Stop actions until next turn'),'color':'primary',destination: document.getElementById('customSecondary') }); 
+                this.bga.statusBar.addActionButton(_('Stop'), () => this.game.customPerformAction("actStopAction"), { 'title':_('Stop actions until next turn'),'color':'primary',destination: document.getElementById('customSecondary') }); 
             }
 
         }
@@ -231,7 +231,7 @@ export class PlayerTurn {
     onMarketSpotClick(row,col) {
         console.log( 'onMarketSpotClick', row,col );
 
-        this.bga.actions.performAction("actPlaceAuction", { 
+        this.game.customPerformAction("actPlaceAuction", { 
                             'row': row,
                             'col': col,
         }).then(() =>  {               
@@ -241,7 +241,7 @@ export class PlayerTurn {
     onBid(amount) {
         console.log( 'onBid', amount );
 
-        this.bga.actions.performAction("actBid", { 
+        this.game.customPerformAction("actBid", { 
                             'n': amount,
         }).then(() =>  {
         });

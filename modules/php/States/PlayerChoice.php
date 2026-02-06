@@ -72,8 +72,15 @@ class PlayerChoice extends GameState
      * @throws UserException
      */
     #[PossibleAction]
-    public function actTileChoice(int $tile_id, int $choice, int $choice_index, int $activePlayerId, array $args)
+    public function actTileChoice(
+        int $tile_id, 
+        int $choice, 
+        int $choice_index, 
+        int $activePlayerId, array $args,
+        int $v,
+        )
     {
+        Utils::checkVersion($v);
         $this->game->trace("actTileChoice( $tile_id, $choice, $choice_index, $activePlayerId)");
         // check input values
         if ( !in_array('actTileChoice',$args['possibleActions'])) {
@@ -175,8 +182,13 @@ class PlayerChoice extends GameState
      * Player action : discard some card in hand
      */
     #[PossibleAction]
-    public function actDiscard(int $card_id, int $activePlayerId, array $args)
+    public function actDiscard(
+        int $card_id, 
+        int $activePlayerId, array $args,
+        int $v,
+        )
     { 
+        Utils::checkVersion($v);
         PlayerTurn::actDiscard_content($card_id, $activePlayerId, $args);
         return self::class;
     }
@@ -185,8 +197,13 @@ class PlayerChoice extends GameState
      * Player action : Play some card in hand
      */
     #[PossibleAction]
-    public function actPlayCard(int $card_id, int $activePlayerId, array $args)
+    public function actPlayCard(
+        int $card_id, 
+        int $activePlayerId, array $args,
+        int $v,
+        )
     { 
+        Utils::checkVersion($v);
         PlayerTurn::actPlayCard_content($card_id, $activePlayerId, $args);
         
         $player = Players::get($activePlayerId);
@@ -221,8 +238,9 @@ class PlayerChoice extends GameState
      * @throws UnexpectedException
      */
     #[PossibleAction]
-    public function actRestart()
+    public function actRestart(int $v,)
     {
+        Utils::checkVersion($v);
         ConfirmTurn::processRestartTurn();
     }
     
@@ -232,8 +250,9 @@ class PlayerChoice extends GameState
      * @throws UnexpectedException
      */
     #[PossibleAction]
-    public function actUndoLastStep()
+    public function actUndoLastStep(int $v,)
     {
+        Utils::checkVersion($v);
         ConfirmTurn::processUndoLastStep();
     }
     ///------------------------------------------------------------

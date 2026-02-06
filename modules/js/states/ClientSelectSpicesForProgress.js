@@ -47,7 +47,7 @@ export class ClientSelectSpicesForProgress {
 
         let selectionHint = _('Select this spice token');
         this.game.onSelectN(spicesDivs, nbSpices, (selectedSpices) => {
-            this.bga.actions.performAction('actProgress', { 'track': args.track, 't_ids': selectedSpices.join(','), 'card_id': args.withCard});
+            this.game.customPerformAction('actProgress', { 'track': args.track, 't_ids': selectedSpices.join(','), 'card_id': args.withCard});
         }, spicesSets, true, _('Confirm'), selectionHint );
     
         this.bga.statusBar.addActionButton( _('Cancel'), () => {

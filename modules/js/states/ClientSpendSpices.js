@@ -35,7 +35,7 @@ export class ClientSpendSpices {
             
         let selectionHint = _('Select this spice token');
         this.game.onSelectN(spicesDivs, nbSpices, (selectedSpices) => {
-            this.bga.actions.performAction(actionName, { 't_ids': selectedSpices.join(','), 'card_id': withCard, 'tile_id': withTile, });
+            this.game.customPerformAction(actionName, { 't_ids': selectedSpices.join(','), 'card_id': withCard, 'tile_id': withTile, });
         }, null, false, _('Confirm'), selectionHint, minSpices );
     
         this.bga.statusBar.addActionButton( _('Cancel'), () => {

@@ -766,6 +766,26 @@ export class Game {
                 break;
         }
     }
+    
+    customPerformAction(action, args, options) {
+      console.log('customPerformAction()',action, args, options );
+      args = args || {};
+      options = options || {};
+      //options.ignoreDefaultErrorHandler = true;
+      args.v = this.gamedatas.version;
+      return new Promise((resolve, reject) => {
+        let call = this.bga.actions.performAction(action, args, options);
+        if(call) call.then( resolve() )
+            .catch(({message, finalArgs})=>{ 
+                console.error('Error when calling customPerformAction()',action, message, args, options );
+                if (message == "!!!checkVersion") {
+                    this.bga.gameui.infoDialog(  _("A new version of this game is now available"),_("Reload Required"), () => {window.location.reload(true);},true);
+                }
+                else reject(message);
+            });
+        else reject('No server call');
+      });
+    }
 
     ///////////////////////////////////////////////////
     //// Reaction to cometD notifications

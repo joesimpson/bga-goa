@@ -158,8 +158,14 @@ class PlayerTurn extends GameState
      * @throws UserException
      */
     #[PossibleAction]
-    public function actPlaceAuction(int $row, int $col, int $activePlayerId, array $args)
+    public function actPlaceAuction(
+        int $row, 
+        int $col, 
+        int $activePlayerId, array $args,
+        int $v,
+        )
     {
+        Utils::checkVersion($v);
         $this->game->trace("actPlaceAuction($row,$col,$activePlayerId)");
         // check input values
         $pAuctionableSpots = $args['pAuctionableSpots'];
@@ -191,8 +197,13 @@ class PlayerTurn extends GameState
      * @throws UserException
      */
     #[PossibleAction]
-    public function actBid(int $n, int $activePlayerId, array $args)
+    public function actBid(
+        int $n, 
+        int $activePlayerId, array $args,
+        int $v,
+        )
     {
+        Utils::checkVersion($v);
         $this->game->trace("actBid($n,$activePlayerId)");
         // check input values
         $minBid = $args['minBid'];
@@ -224,8 +235,9 @@ class PlayerTurn extends GameState
      * Player action : pass the bid
      */
     #[PossibleAction]
-    public function actPassBid(int $activePlayerId)
+    public function actPassBid(int $v,int $activePlayerId)
     {
+        Utils::checkVersion($v);
         $this->game->trace("actPassBid($activePlayerId)");
         Log::addStep();
         $player = Players::get($activePlayerId);
@@ -240,8 +252,9 @@ class PlayerTurn extends GameState
      * Player action : pass the action turn
      */
     #[PossibleAction]
-    public function actPassAction(int $activePlayerId, array $args)
+    public function actPassAction(int $v,int $activePlayerId, array $args)
     {
+        Utils::checkVersion($v);
         $this->game->trace("actPassAction($activePlayerId)");
         
         $possibleActions = $args['possibleActions'];
@@ -262,8 +275,9 @@ class PlayerTurn extends GameState
      * Player action : stop the action turn
      */
     #[PossibleAction]
-    public function actStopAction(int $activePlayerId, array $args)
+    public function actStopAction(int $v,int $activePlayerId, array $args)
     {
+        Utils::checkVersion($v);
         $this->game->trace("actStopAction($activePlayerId)");
         
         $possibleActions = $args['possibleActions'];
@@ -280,8 +294,15 @@ class PlayerTurn extends GameState
      * Player action : turn ACTION #1 PROGRESS
      */
     #[PossibleAction]
-    public function actProgress(int $track, #[IntArrayParam] array|null $t_ids = null, int|null $card_id = null, int $activePlayerId, array $args)
+    public function actProgress(
+        int $track, 
+        #[IntArrayParam] array|null $t_ids = null, 
+        int|null $card_id = null, 
+        int $activePlayerId, array $args,
+        int $v,
+    )
     { 
+        Utils::checkVersion($v);
         $this->game->trace("actProgress($track,$card_id,$activePlayerId)");
         $possibleActions = $args['possibleActions'];
         if(!in_array('actProgress',$possibleActions)){
@@ -386,8 +407,12 @@ class PlayerTurn extends GameState
      * Player action : turn ACTION #2 take ships
      */
     #[PossibleAction]
-    public function actBuildShips(int $activePlayerId, array $args)
+    public function actBuildShips(
+        int $activePlayerId, array $args,
+        int $v,
+        )
     { 
+        Utils::checkVersion($v);
         $this->game->trace("actBuildShips($activePlayerId)");
         $possibleActions = $args['possibleActions'];
         if(!in_array('actBuildShips',$possibleActions)){
@@ -408,8 +433,9 @@ class PlayerTurn extends GameState
      * Player action : turn ACTION #4 take taxes
      */
     #[PossibleAction]
-    public function actTaxes(int $activePlayerId, array $args)
+    public function actTaxes(int $v,int $activePlayerId, array $args)
     { 
+        Utils::checkVersion($v);
         $this->game->trace("actTaxes($activePlayerId)");
         $possibleActions = $args['possibleActions'];
         if(!in_array('actTaxes',$possibleActions)){
@@ -431,8 +457,9 @@ class PlayerTurn extends GameState
      * Player action : turn ACTION #5 explore : draw some cards
      */
     #[PossibleAction]
-    public function actExploration(int $activePlayerId, array $args)
+    public function actExploration(int $v,int $activePlayerId, array $args)
     { 
+        Utils::checkVersion($v);
         $this->game->trace("actExploration($activePlayerId)");
         $possibleActions = $args['possibleActions'];
         if(!in_array('actExploration',$possibleActions)){
@@ -453,8 +480,14 @@ class PlayerTurn extends GameState
      * Player action : turn ACTION #6 try to found an outpost
      */
     #[PossibleAction]
-    public function actFoundOutpost(int $tile_id, int|null $card_id = null,int $activePlayerId, array $args)
+    public function actFoundOutpost(
+        int $tile_id, 
+        int|null $card_id = null,
+        int $activePlayerId, array $args,
+        int $v,
+        )
     { 
+        Utils::checkVersion($v);
         $this->game->trace("actFoundOutpost($activePlayerId, $tile_id, $card_id)");
         $possibleActions = $args['possibleActions'];
         if(!in_array('actFoundOutpost',$possibleActions)){
@@ -517,8 +550,9 @@ class PlayerTurn extends GameState
      * Player action : discard some card in hand
      */
     #[PossibleAction]
-    public function actDiscard(int $card_id, int $activePlayerId, array $args)
+    public function actDiscard(int $card_id, int $v, int $activePlayerId, array $args)
     { 
+        Utils::checkVersion($v);
         PlayerTurn::actDiscard_content($card_id, $activePlayerId, $args);
         return PlayerTurn::class;
     }
@@ -545,8 +579,9 @@ class PlayerTurn extends GameState
      * Player action : Play some card in hand
      */
     #[PossibleAction]
-    public function actPlayCard(int $card_id, int $activePlayerId, array $args)
+    public function actPlayCard(int $card_id, int $v, int $activePlayerId, array $args)
     { 
+        Utils::checkVersion($v);
         PlayerTurn::actPlayCard_content($card_id, $activePlayerId, $args);
         return PlayerTurn::class;
     }
@@ -578,8 +613,10 @@ class PlayerTurn extends GameState
         #[IntArrayParam] array $t_ids, 
         int|null $card_id = null, 
         int|null $tile_id = null,
-        int $activePlayerId, array $args)
+        int $activePlayerId, array $args,
+        int $v,)
     { 
+        Utils::checkVersion($v);
         $this->game->trace("actSpendSpices(".json_encode($t_ids)."$card_id,$tile_id,$activePlayerId)");
         $possibleActions = $args['possibleActions'];
         if(!in_array('actSpendSpices',$possibleActions)){
@@ -636,8 +673,9 @@ class PlayerTurn extends GameState
      * @throws UnexpectedException
      */
     #[PossibleAction]
-    public function actRestart()
+    public function actRestart(int $v,)
     {
+        Utils::checkVersion($v);
         ConfirmTurn::processRestartTurn();
     }
     
@@ -647,8 +685,9 @@ class PlayerTurn extends GameState
      * @throws UnexpectedException
      */
     #[PossibleAction]
-    public function actUndoLastStep()
+    public function actUndoLastStep(int $v,)
     {
+        Utils::checkVersion($v);
         ConfirmTurn::processUndoLastStep();
     }
 
@@ -666,12 +705,10 @@ class PlayerTurn extends GameState
      * but use the $playerId passed in parameter and $this->game->getPlayerNameById($playerId) instead.
      */
     function zombie(int $playerId) {
-        // Example of zombie level 0: return NextPlayer::class; or $this->actPass($playerId);
-
-        // Example of zombie level 1:
+        $gameVersion = Utils::gameVersion();
         $args = $this->getArgs();
         $zombieChoice = $this->getRandomZombieChoice($args['pAuctionableSpots']); // random choice over possible moves
-        return $this->actPlaceAuction($zombieChoice['row'],$zombieChoice['col'], $playerId, $args); // this function will return the transition to the next state
+        return $this->actPlaceAuction($zombieChoice['row'],$zombieChoice['col'], $playerId, $args, $gameVersion);
     }
 
     // -----------------------------

@@ -1,6 +1,7 @@
 <?php
 namespace Bga\Games\Goa\Helpers;
 
+use Bga\GameFramework\UserException;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\States\ConfirmTurn;
 use Bga\Games\Goa\States\EndPlayerTurn;
@@ -39,6 +40,23 @@ abstract class Utils {
         return null;
     }
 
+    
+    public static function gameVersion() : int
+    {
+        $gameVersion = Game::get()->bga->tableOptions->get(BGA_GAMESTATE_GAMEVERSION);
+        return intval($gameVersion);
+    }
+    /**
+    * Check Server version to compare with client version : throw an error in case it 's not the same
+    * From https://en.doc.boardgamearena.com/BGA_Studio_Cookbook#Force_players_to_refresh_after_new_deploy
+    */
+    public static function checkVersion(int $clientVersion)
+    {
+        $gameVersion = Utils::gameVersion();
+        if ($clientVersion != $gameVersion) {
+            throw new UserException('!!!checkVersion');
+        }
+    }
 
     public static function array_of_uniquearrays(array $array): array {
         return array_intersect_key($array, array_unique(array_map('serialize', $array)));
@@ -98,37 +116,6 @@ abstract class Utils {
      */
     public static function array_cartesian(array $possibleSets) : array {
         $allSets = [];
-
-        /*
-        $multiplyOthers = function($i, $array2) use($possibleSets) {
-            
-            //Game::get()->trace("multiplyOthers() : array BEFORE $i= ".json_encode($array2));
-
-            $array = [];
-            foreach($possibleSets as $j => $sets){
-                if($j == $i) continue;
-                foreach($sets as $set){
-                    $array[] = array_values(array_merge($set,$array2));
-                    //else  $array[] = array_values(array_merge([$set],[$array2]));
-                }
-            }
-            sort($array);
-            //Game::get()->trace("multiplyOthers() : array AFTER $i= ".json_encode($array));
-            return $array;
-        };
-        
-        foreach($possibleSets as $key => $sets){
-            foreach($sets as $set){
-                $allSets[] = $multiplyOthers($key,$set);
-            }
-            
-        }
-        //flatten the array
-        $allSets = array_merge(...$allSets);
-        foreach($allSets as &$set){
-            sort($set);
-        }
-        */
         $allSets = Utils::array_cartesian_productV3($possibleSets);
         foreach($allSets as &$set){
             $set = array_merge(...$set);
@@ -137,33 +124,6 @@ abstract class Utils {
         $allSets = Utils::array_of_uniquearrays($allSets);
         return $allSets;
     }
-
-    /**
-     * @source https://gist.github.com/bdelespierre/0980c0f93cc63b883376a65865f44017
-     */
-    /*
-    static function array_cartesian_product(...$items): array
-    {
-        if (empty($items)) {
-            return [];
-        }
-
-        if (count($items) == 1) {
-            foreach ((array) $items[0] as $value) {
-                $result[] = (array) $value;
-            }
-        } else {
-            foreach ((array) $items[0] as $value) {
-                foreach (self::array_cartesian_product(...array_slice($items, 1)) as $values) {
-                    array_unshift($values, $value);
-                    $result[] = $values;
-                }
-            }
-        }
-
-        return $result ?? [];
-    }
-    */
 
     /**
      * @source https://stackoverflow.com/questions/6311779/finding-cartesian-product-with-php-associative-arrays

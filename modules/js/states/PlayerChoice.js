@@ -110,7 +110,7 @@ export class ClientSelectTileAction {
                                         ,{n:tile_choice.n, 'resource_name': _('Ships'), icon_resource : this.game.formatIcon('ships',_('Ships'))}
                                     );
                             this.bga.statusBar.addActionButton( buttonText, () => {
-                                this.bga.actions.performAction("actTileChoice", { 
+                                this.game.customPerformAction("actTileChoice", { 
                                         'tile_id' : tile_id,
                                         'choice': choice,
                                         'choice_index':args.choice_index,
@@ -123,7 +123,7 @@ export class ClientSelectTileAction {
                                         ,{n:tile_choice.n, 'resource_name': _('Contracts'), icon_resource : this.game.formatIcon('contracts',_('Contracts'))}
                                     );
                             this.bga.statusBar.addActionButton( buttonText1, () => {
-                                this.bga.actions.performAction("actTileChoice", { 
+                                this.game.customPerformAction("actTileChoice", { 
                                         'tile_id' : tile_id,
                                         'choice': choice,
                                         'choice_index':args.choice_index,
@@ -137,7 +137,7 @@ export class ClientSelectTileAction {
                 case this.game.const.CHOICE_PICK_TILE:
                     let tile_icon = this.game.tplTileFromType(choice, '_log');
                     this.bga.statusBar.addActionButton( tile_icon, () => {
-                        this.bga.actions.performAction("actTileChoice", { 
+                        this.game.customPerformAction("actTileChoice", { 
                                 'tile_id' : tile_id,
                                 'choice': choice_id,
                                 'choice_index':args.choice_index,
@@ -150,7 +150,7 @@ export class ClientSelectTileAction {
                     if(tileToFill) tileToFill.classList.add('selected');
                     let spice_icon = this.game.formatIcon('spices_'+choice,_('Spices'));
                     this.bga.statusBar.addActionButton( spice_icon, () => {
-                        this.bga.actions.performAction("actTileChoice", { 
+                        this.game.customPerformAction("actTileChoice", { 
                                 'tile_id' : tile_id,
                                 'choice': choice,
                                 'choice_index':args.choice_index,
@@ -166,7 +166,7 @@ export class ClientSelectTileAction {
                     let tileDiv = document.getElementById(`goa_tile-${choice}`);
                     tileDiv.setAttribute("title",_('Select this tile'));
                     this.game.onClick(tileDiv,() => {
-                            this.bga.actions.performAction("actTileChoice", { 
+                            this.game.customPerformAction("actTileChoice", { 
                                 'tile_id' : tile_id,
                                 'choice': choice,
                                 'choice_index':args.choice_index,
@@ -188,7 +188,7 @@ export class ClientSelectTileAction {
                     switch(choice){
                         case this.game.const.ACTION_FOUND_ABANDON: 
                             this.bga.statusBar.addActionButton( _("Abandon Outpost"), () => {
-                            this.bga.actions.performAction("actTileChoice", { 
+                            this.game.customPerformAction("actTileChoice", { 
                                     'tile_id' : tile_id,
                                     'choice': choice,
                                     'choice_index':args.choice_index,
@@ -197,7 +197,7 @@ export class ClientSelectTileAction {
                         break;
                         case this.game.const.ACTION_FOUND_FORWARD: 
                             this.bga.statusBar.addActionButton( _("Found Outpost"), () => {
-                                this.bga.actions.performAction("actTileChoice", { 
+                                this.game.customPerformAction("actTileChoice", { 
                                         'tile_id' : tile_id,
                                         'choice': choice,
                                         'choice_index':args.choice_index,

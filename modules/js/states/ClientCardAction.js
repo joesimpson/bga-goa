@@ -63,18 +63,18 @@ export class ClientCardAction {
                     }
                     else {
                         //DIRECT CARD PLAY
-                        this.bga.actions.performAction("actPlayCard", {'card_id':card_id});
+                        this.game.customPerformAction("actPlayCard", {'card_id':card_id});
                     }
                 }
                 else {
                     //DIRECT CARD PLAY
-                    this.bga.actions.performAction("actPlayCard", {'card_id':card_id});
+                    this.game.customPerformAction("actPlayCard", {'card_id':card_id});
                 }
             }, { 'disabled': !args.isPlayableCard,  'title':_('Play this card'),destination: document.getElementById('customPrimary') }); 
         //}
         
         //if(args.isDiscardableCard){
-            this.bga.statusBar.addActionButton(_('Discard'), () => this.bga.actions.performAction("actDiscard", {'card_id':card_id}), { 'disabled': !args.isDiscardableCard,'title':_('Discard this card'),destination: document.getElementById('customPrimary') }); 
+            this.bga.statusBar.addActionButton(_('Discard'), () => this.game.customPerformAction("actDiscard", {'card_id':card_id}), { 'disabled': !args.isDiscardableCard,'title':_('Discard this card'),destination: document.getElementById('customPrimary') }); 
         //}
 
         this.bga.statusBar.addActionButton( _('Cancel'), () => {

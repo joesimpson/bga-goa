@@ -22,6 +22,7 @@ require_once 'constants.inc.php';
 
 use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Core\Stats;
+use Bga\Games\Goa\Helpers\Utils;
 use Bga\Games\Goa\Managers\Cards;
 use Bga\Games\Goa\Managers\Players;
 use Bga\Games\Goa\Managers\Tiles;
@@ -154,6 +155,7 @@ class Game extends \Bga\GameFramework\Table
         $result["tokens"] = Tokens::getUiData($current_player_id);
         
         $result["constants"] = ALL_MY_UI_CONSTANTS;
+        $result["version"] = Utils::gameVersion();
 
         return $result;
     }
