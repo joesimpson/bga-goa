@@ -23,5 +23,10 @@ class MarketTile extends Tile
         $data['subtype'] = TILE_SUBTTYPE_MARKET;
         return $data;
     }
+
+    public function alreadyPlayed()
+    {
+        return $this->getState() === TILE_STATE_PLAYED;
+    }
  
 }

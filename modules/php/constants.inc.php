@@ -27,6 +27,7 @@ const ACTION_RESUPPLY            = 10;
 const ACTION_HARVEST             = 11;
 const ACTION_ESPIONAGE           = 12;
 const ACTION_VICEKING            = 13;
+const ACTION_SPEND_SPICES        = 14;
 const ACTION_FOUND_ABANDON       = 30;
 const ACTION_FOUND_FORWARD       = 31;
 
@@ -103,6 +104,7 @@ const CARD_GAINS_RESSOURCES_TO_COINS = [
 /////////////////////////////////////////////////////////
 //          TILES
 /////////////////////////////////////////////////////////
+const TILE_STATE_PLAYED = 1;
 
 const TILE_SUBTTYPE_OUTPOST = 1;
 const TILE_SUBTTYPE_MARKET = 2;

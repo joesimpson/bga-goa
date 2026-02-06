@@ -710,6 +710,23 @@ export class Game {
                 }
             }
         };  
+
+        //--------------------------------------------
+        //--------------------- TILES
+        //--------------------------------------------
+        let possiblePlayTiles = args.possiblePlayTiles; 
+        let playerTilesContainer = document.getElementById(`goa_player_tiles-${activePlayer}`);
+        let playerTiles = playerTilesContainer.querySelectorAll('.goa_tile');
+        playerTiles.forEach((tileDiv) => {
+            let tile_id = tileDiv.dataset.id;
+            let isPlayableCard = (possibleActions.includes('actPlayTile') && Object.keys(possiblePlayTiles).includes(""+tile_id)) ? true : false;
+            if(isPlayableCard){
+                this.onClick(tileDiv, () => {
+                    this.customPerformAction('actPlayTile', { 'tile_id':tile_id });
+                });
+                tileDiv.setAttribute("title",_('Play this tile'));
+            }
+        });
     }
 
     onToggleExpandable(div){

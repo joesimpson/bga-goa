@@ -198,6 +198,16 @@ class Notifications
     ]);
   }
   
+  public static function playTile(Player $player, Tile $tile)
+  {
+    self::notifyAll("playTile", clienttranslate('${player_name} plays the tile ${tile_icon}'), [
+        "player" => $player,
+        "tile" => $tile->getUiData(),
+        "tile_icon" => '',
+        'preserve'=>['tile'],
+    ]);
+  }
+  
   public static function tryFoundOutpost(Player $player, Tile $tile, int $nbContracts)
   {
     $colonyName = Utils::getColonyName($tile->getColony());

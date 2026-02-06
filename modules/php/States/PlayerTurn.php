@@ -127,6 +127,7 @@ class PlayerTurn extends GameState
             default : break;
         }
         self::addArgsForCardPlay($player,$args);
+        self::addArgsForTilePlay($player,$args);
         ConfirmTurn::addArgsForUndo($args);
         return $args;
     }    
@@ -606,6 +607,36 @@ class PlayerTurn extends GameState
     }
     
     /**
+     * Player action : Play some tile in hand
+     */
+    #[PossibleAction]
+    public function actPlayTile(int $tile_id, int $v, int $activePlayerId, array $args)
+    { 
+        Utils::checkVersion($v);
+        PlayerTurn::actPlayTile_content($tile_id, $activePlayerId, $args);
+        return PlayerTurn::class;
+    }
+    
+    /**Reusable action content */
+    static function actPlayTile_content(int $tile_id, int $activePlayerId, array $args)
+    { 
+        Game::get()->trace("actPlayTile_content($tile_id,$activePlayerId)");
+        $possibleActions = $args['possibleActions'];
+        if(!in_array('actPlayTile',$possibleActions)){
+            throw new UnexpectedException(110,"Invalid action actPlayTile, see ".json_encode($possibleActions));
+        }
+        $possibleTiles = $args['possiblePlayTiles'];
+        $possibleTilesIds = $possibleTiles->getIds();
+        if(!in_array($tile_id,$possibleTilesIds)){
+            throw new UnexpectedException(130,"Invalid tile $tile_id, see ".json_encode($possibleTilesIds));
+        }
+        Log::addStep();
+        $player = Players::get($activePlayerId);
+
+        Tiles::playTile($player, $tile_id, );
+    }
+    
+    /**
      * Optional Action with some cards/tiles
      */
     #[PossibleAction]
@@ -728,6 +759,22 @@ class PlayerTurn extends GameState
                 }
                 if( $playableCards->count()>0){
                     $args['possibleActions'][] = 'actPlayCard';
+                }
+                break;
+            default: return;
+        }
+
+    }
+    
+    public static function addArgsForTilePlay($player, array &$args){
+        $roundStep = Globals::getRoundStep();
+        
+        switch($roundStep){
+            case ROUND_STEP_PLAYER_ACTIONS:
+                $playableTiles = Tiles::getPossibleToPlay($player, $args);
+                $args['possiblePlayTiles'] = $playableTiles;
+                if( $playableTiles->count()>0){
+                    $args['possibleActions'][] = 'actPlayTile';
                 }
                 break;
             default: return;

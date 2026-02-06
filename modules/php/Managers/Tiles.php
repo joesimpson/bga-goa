@@ -240,9 +240,26 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
       Notifications::replaceTile($player,$tile);
     }
     else {
+      $tile->setPId(null);
       $tile->setLocation(TILE_LOCATION_DISCARD);
       Notifications::discardTile($player,$tile);
     }
+  }
+
+  /**
+   * @return Collection list of player tiles not used to plant something (no plantation/outpost)
+   */
+  public static function getNotPlantations(Player $player) : Collection
+  {
+    $plantationTypes = Tiles::getTilesTypesByMarketPlayType(MARKET_TYPE_PLANTATION);
+    $tiles = self::DB()
+      ->whereNotIn('type', $plantationTypes)
+      ->where('subtype', TILE_SUBTTYPE_MARKET)
+      ->where( static::$prefix . 'location', TILE_LOCATION_PLAYER_BOARD)
+      ->wherePlayer($player->getId())
+      ->get();
+ 
+    return $tiles;
   }
 
   public static function getPlantations(Player $player) : Collection
@@ -386,6 +403,138 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
     return $allSpots;
   }
 
+  public static function getPossibleToPlay(Player $player, array &$args,) : Collection
+  {
+    $hand = Tiles::getNotPlantations($player);
+    $playTypes = [MARKET_TYPE_ACTION_REUSEABLE, MARKET_TYPE_ACTION_ONCE, MARKET_TYPE_SCORING];
+        
+    return $hand->filter(function($tile) use ($playTypes) {
+      if(!in_array($tile->getPlay_type(),$playTypes)) return false;
+      $actions = $tile->getActions();
+      if(count($actions ) < 1) return false;
+      if(count($actions ) > 1) return false;//we should not manage multiple actions here ...
+      if($tile->alreadyPlayed()) return false;
+      return true;
+    })
+    ->map(function($tile) use ($player, &$args){
+      $playDatas = [];
+      $possiblePlay = false;
+      foreach($tile->getActions() as $action => $nb){
+        switch($action){
+          //TODO JSA : FILL SWITCH  
+          case ACTION_SPICE:
+            break;
+          case ACTION_CONTRACT:
+            $possiblePlay = true;
+            break;
+          case ACTION_SHIP:
+            $possiblePlay = true;
+            break;
+          case ACTION_MONEY:
+            $possiblePlay = true;
+            break;
+          case ACTION_SWAP: 
+            break;
+          case ACTION_RESUPPLY: 
+            break;
+          case ACTION_HARVEST: 
+            break;
+          case ACTION_ESPIONAGE: 
+            break;
+          case ACTION_VICEKING: 
+            break;
+          case ACTION_EXPLORATION:
+            break;
+          case ACTION_SPEND_SPICES:
+            //TODO JSA COUNT nb SPICES
+            $possiblePlay = true;
+            break;
+          default:
+            break;
+        }  
+
+        return [
+          'id' => $tile->getId(),
+          'action' => $action,
+          'play_datas' => $playDatas,
+          'possiblePlay' => $possiblePlay,
+        ];
+      }
+    })
+    ->filter(function($map) {
+        return $map['possiblePlay'];
+    });
+  }
+
+  /**
+   * Action of a tile in player actions turn
+   */
+  public static function playTile(Player &$player,int $tileId): Tile
+  { 
+    $tile = Tiles::get($tileId);
+    $discard = false;
+    
+    switch($tile->getPlay_type()){
+      case MARKET_TYPE_PLANTATION:
+      case MARKET_TYPE_ACTION_DIRECT:
+        //Should not happen (done in giveMarketTileToPlayer)
+        break;
+      case MARKET_TYPE_ACTION_ONCE:
+        $discard = true;
+        break;
+      case MARKET_TYPE_ACTION_REUSEABLE:
+        break;
+      case MARKET_TYPE_SCORING:
+        break;
+      default: break;
+    }
+    if($discard) {
+      Tiles::discardTileFromPlayer($player,$tile);
+    }
+    else //ELSE KEEP CARD
+    {
+      $tile->setState(TILE_STATE_PLAYED);
+    }
+
+    //NOTIFY 
+    Notifications::playTile( $player, $tile);
+    
+    foreach($tile->getActions() as $action => $nb){
+      switch($action){
+        //TODO JSA : FILL SWITCH  
+        case ACTION_SPICE:
+          break;
+        case ACTION_CONTRACT:
+          Players::giveContracts($player, $nb);
+          break;
+        case ACTION_SHIP:
+          Players::giveShips($player, $nb);
+          break;
+        case ACTION_MONEY:
+          Players::giveMoney($player, $nb);
+          break;
+        case ACTION_SWAP: 
+          break;
+        case ACTION_RESUPPLY: 
+          break;
+        case ACTION_HARVEST: 
+          break;
+        case ACTION_ESPIONAGE: 
+          break;
+        case ACTION_VICEKING: 
+          break;
+        case ACTION_EXPLORATION:
+          break;
+        case ACTION_SPEND_SPICES:
+          break;
+        default:
+          break;
+      }  
+    }
+    
+    return $tile;
+  }
+
   ///////////////////////////////////////////////////////////////////////////////
   
   /** Creation of the Tiles */
@@ -527,7 +676,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
       36 => $f([ 0, 1, MARKET_TYPE_ACTION_REUSEABLE, [], [ACTION_EXPLORATION => 1, ], 0, ]),
       
       37 => $f([ 1, 0, MARKET_TYPE_SCORING, [], [], 0, ]),
-      38 => $f([ 1, 1, MARKET_TYPE_SCORING, [], [], 0, ]),
+      38 => $f([ 1, 1, MARKET_TYPE_SCORING, [], [ACTION_SPEND_SPICES => 6], 0, ]),
       39 => $f([ 0, 1, MARKET_TYPE_SCORING, [], [], 2, ]),
       40 => $f([ 0, 1, MARKET_TYPE_SCORING, [], [], 3, ]),
 
