@@ -1090,6 +1090,14 @@ export class Game {
             await this.animationManager.slideOutAndDestroy(tileDiv, voidDiv, {duration: 1000});
         }
     }
+    async notif_playTile(notif) {
+        console.log("notif_playTile",notif);
+        let tile = notif.tile;
+        let tileDiv = document.getElementById(`goa_tile-${tile.id}`);
+        if(tileDiv){
+            tileDiv.dataset.state = tile.state;
+        }
+    }
     
     async notif_newSpiceOnTile(notif) {
         console.log("notif_newSpiceOnTile",notif);

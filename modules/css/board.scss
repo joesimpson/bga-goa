@@ -355,6 +355,12 @@ $playerboard_img_height: calc(1 * 796px);
     flex-direction: row;
     justify-content: center;
     margin-bottom: 5px;
+
+    .goa_tile{
+        &[data-state="1"]{ //TILE_STATE_PLAYED
+            filter: grayscale(1);
+        }
+    }
 }
 .goa_resizable_playerboard {
     width: calc(var(--goa_playerboard_display_scale) * $playerboard_img_width);

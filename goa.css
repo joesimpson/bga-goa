@@ -385,6 +385,9 @@ Icon extract in sprite with differents layers size (so % is not useful).
   justify-content: center;
   margin-bottom: 5px;
 }
+.goa_player_tiles .goa_tile[data-state="1"] {
+  filter: grayscale(1);
+}
 
 .goa_resizable_playerboard {
   width: calc(var(--goa_playerboard_display_scale) * 810px);
@@ -1363,6 +1366,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
   cursor: pointer;
   outline: 5px dashed var(--goa_selectable_color);
   border-radius: 15px;
+  z-index: 1;
 }
 .goa_tile.selected {
   cursor: crosshair;
