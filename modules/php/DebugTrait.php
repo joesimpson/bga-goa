@@ -380,6 +380,14 @@ trait DebugTrait
         Tiles::fillPlayerTileWithSpices($player,$tile);
         $this->debug_goToState(ST_PLAYER_TURN);
     }
+    function debug_removeSpicesOnTile(int $tile_id){
+        $tile = Tiles::get($tile_id);
+        $pid = $tile->getPId();
+        $player = Players::get($pid);
+        Log::addStep();
+        Tokens::removeSpicesOnTile($tile,$player);
+        $this->debug_goToState(ST_PLAYER_TURN);
+    }
     
     //TEst different notif at a time
     function debug_sendNotif(){

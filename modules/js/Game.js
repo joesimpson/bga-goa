@@ -486,6 +486,21 @@ export class Game {
       let selectedElements = [];
       let minElements = (min) ? min : maxElements;
       let n = maxElements;
+      
+        let countElements = 0;
+        let allElementsIds = [];
+        Object.keys(elements).forEach((id) => {
+            countElements++;
+            allElementsIds.push(id);
+        });
+
+        let autoSelectOnOpen = false;
+        if(!listPossibleSets && autoConfirm && (minElements == maxElements) && (countElements == minElements) ) {
+            //AUTO SELECT ALL when all ARE needed
+            autoSelectOnOpen = true;
+            listPossibleSets = [allElementsIds];
+        }
+        
       let endSelection = () => {
         if (callbackOnSelectionEnd(selectedElements)) {
           selectedElements = [];
@@ -563,7 +578,7 @@ export class Game {
       Object.keys(elements).forEach((id) => {
         let elt = elements[id];
         if(selectionHint) elt.setAttribute("title",selectionHint);
-        this.onClick(elt, () => {
+        let clickAction = () => {
           if(!elt.classList.contains("selectable")) return;
 
           let index = selectedElements.findIndex((t) => t == id);
@@ -576,8 +591,11 @@ export class Game {
           }
           updateStatus();
           checkPossibleSets();
-        });
+        };
+        this.onClick(elt, clickAction);
+        if(autoSelectOnOpen) clickAction();
       });
+      
     }
     
     async setupRoundMarker(){
