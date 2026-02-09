@@ -449,6 +449,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
           case ACTION_VICEKING: 
             break;
           case ACTION_EXPLORATION:
+            $possiblePlay = true;
             break;
           case ACTION_SPEND_SPICES:
             if($playerSpices->count() >= $nb){
@@ -539,6 +540,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
         case ACTION_VICEKING: 
           break;
         case ACTION_EXPLORATION:
+          Cards::drawExplorationCardsToPlayer($player, $nb);
           break;
         case ACTION_SPEND_SPICES: //done in actSpendSpices
           break;
