@@ -266,7 +266,8 @@ trait DebugTrait
     function debug_HandExplo(int $size = 1){
         $player = Players::getCurrent();
         Log::addStep();
-        Cards::drawExplorationCardsToPlayer($player, $size);
+        $doCheckpoint = true;
+        Cards::drawExplorationCardsToPlayer($player, $size, $doCheckpoint);
        
     }
     

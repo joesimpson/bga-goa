@@ -110,6 +110,7 @@ class PlayerChoice extends GameState
 
         // game logic  
         $prematureStateChange = null;
+        $doCheckpoint = false;
         try{
             switch($tile_choice['selectType']){
                 //use 2 different switches, because in case of DB elements ids (like tiles ids), we cannot tell in advance if the id is the same as an predefined action id
@@ -117,14 +118,14 @@ class PlayerChoice extends GameState
                     //SELECT A TILE : choice is a tile id
                     $foundChoice = $this->checkChoiceAsKey($tile_choice,$tile_id,$choice);
                     $selectedTile = Tiles::get($choice);
-                    Tiles::giveMarketTileToPlayer($player, $selectedTile);
+                    Tiles::giveMarketTileToPlayer($player, $selectedTile, $doCheckpoint);
                     break;
                 case CHOICE_REPLACE_TILE:
                     //SELECT A TILE : choice is a tile id
                     $foundChoice = $this->checkChoiceAsValue($tile_choice,$tile_id,$choice);
                     $selectedTile = Tiles::get($choice);
                     Tiles::discardTileFromPlayer($player, $selectedTile);
-                    Tiles::giveMarketTileToPlayer($player, $tile);
+                    Tiles::giveMarketTileToPlayer($player, $tile, $doCheckpoint);
                     break;
                 case CHOICE_PICK_SPICE:
                     //SELECT A SPICE : choice is a spice type
@@ -140,7 +141,7 @@ class PlayerChoice extends GameState
                     switch($choice){
                         case ACTION_SHIP:
                         case ACTION_CONTRACT:
-                            Players::directGain($player,$choice, $foundChoice['n'], $tile );
+                            Players::directGain($player,$choice, $foundChoice['n'], $tile, $doCheckpoint );
                             break;
                         case ACTION_FOUND_ABANDON:
                             Notifications::abandonOutpost($player,$tile);
@@ -171,14 +172,18 @@ class PlayerChoice extends GameState
         if(isset($prematureStateChange) ){
             //Players::changeActive($prematureStateChange->changePlayer->getId());
             //Should not be necessary, but we cannot change active player in active state
-            return $prematureStateChange->nextStateClass;
+            $nextStateClass = $prematureStateChange->nextStateClass;
         }
-        if(count($remainingChoices) > 0){
+        else if(count($remainingChoices) > 0){
             //continue to have choices
-            return PlayerChoice::class;
+            $nextStateClass = PlayerChoice::class;
         }
-        //Else end
-        return ConfirmTurn::class;
+        else {
+            //Else end
+            $nextStateClass = ConfirmTurn::class;
+        }
+        if($doCheckpoint) Log::addStateCheckpoint($nextStateClass);
+        return $nextStateClass;
     }
     
     /**
@@ -222,10 +227,13 @@ class PlayerChoice extends GameState
         )
     { 
         Utils::checkVersion($v);
-        PlayerTurn::actPlayTile_content($tile_id, $activePlayerId, $args);
         
-        UTils::refreshFoundTileChoice($activePlayerId);
-
+        $doCheckpoint = false;
+        PlayerTurn::actPlayTile_content($tile_id, $activePlayerId, $args, $doCheckpoint);
+        
+        Utils::refreshFoundTileChoice($activePlayerId);
+        if($doCheckpoint) Log::addStateCheckpoint(self::class);
+        
         return self::class;
     }
 

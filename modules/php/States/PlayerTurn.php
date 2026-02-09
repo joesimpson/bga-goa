@@ -333,6 +333,7 @@ class PlayerTurn extends GameState
         }
         $player = Players::get($activePlayerId);
         Log::addStep();
+        $doCheckpoint = false;
 
         $countAsAPlayerAction = true;
         $withCoins = $selectedTrack['withCoins'];
@@ -401,10 +402,10 @@ class PlayerTurn extends GameState
             $nbTokensBelowRow = Tokens::countProgressMarkersBelowRow($upgradedToken->getRow());
             if($nbTokensBelowRow == 1) //consider =1 because the token has already moved down
             {
-                Cards::drawExplorationCardsToPlayer($player,1);
-                Log::addStateCheckpoint(PlayerTurn::class);
+                Cards::drawExplorationCardsToPlayer($player,1, $doCheckpoint);
             }
         }
+        if($doCheckpoint) Log::addStateCheckpoint(PlayerTurn::class);
         return PlayerTurn::class;
 
     }
@@ -471,10 +472,11 @@ class PlayerTurn extends GameState
             throw new UnexpectedException(110,"Invalid action actExploration, see ".json_encode($possibleActions));
         }
         Log::addStep();
+        $doCheckpoint = false;
         $player = Players::get($activePlayerId);
 
         $amount = $args['nbCardsExploration'];
-        Cards::drawExplorationCardsToPlayer($player,$amount);
+        Cards::drawExplorationCardsToPlayer($player,$amount, $doCheckpoint);
         
         Players::registerNewAction($player);
 
@@ -617,12 +619,14 @@ class PlayerTurn extends GameState
     public function actPlayTile(int $tile_id, int $v, int $activePlayerId, array $args)
     { 
         Utils::checkVersion($v);
-        PlayerTurn::actPlayTile_content($tile_id, $activePlayerId, $args);
+        $doCheckpoint = false;
+        PlayerTurn::actPlayTile_content($tile_id, $activePlayerId, $args, $doCheckpoint);
+        if($doCheckpoint) Log::addStateCheckpoint(PlayerTurn::class);
         return PlayerTurn::class;
     }
     
     /**Reusable action content */
-    static function actPlayTile_content(int $tile_id, int $activePlayerId, array $args)
+    static function actPlayTile_content(int $tile_id, int $activePlayerId, array $args, bool &$doCheckpoint)
     { 
         Game::get()->trace("actPlayTile_content($tile_id,$activePlayerId)");
         $possibleActions = $args['possibleActions'];
@@ -637,7 +641,7 @@ class PlayerTurn extends GameState
         Log::addStep();
         $player = Players::get($activePlayerId);
 
-        Tiles::playTile($player, $tile_id, );
+        Tiles::playTile($player, $tile_id, $doCheckpoint);
     }
     
     /**
@@ -701,11 +705,12 @@ class PlayerTurn extends GameState
 
         $player = Players::get($activePlayerId);
         Log::addStep();
+        $doCheckpoint = false;
         if(isset($card_id)){
             Cards::playExploration($player, $card_id, );
         }
         if(isset($tile_id)){
-            $tile = Tiles::playTile($player, $tile_id, );
+            $tile = Tiles::playTile($player, $tile_id, $doCheckpoint );
         }
         $playerSpices = Tokens::getPlayerSpices($player->getId());
         $tokens = $playerSpices->filter(function($t) use ($t_ids){
@@ -720,6 +725,7 @@ class PlayerTurn extends GameState
             $player->addPointsWithTile($forScore, $tile);
         }
 
+        if($doCheckpoint) Log::addStateCheckpoint(PlayerTurn::class);
         return PlayerTurn::class;
     }
 

@@ -100,7 +100,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
    * then give it to player
    * @throws PrematureStateChangeException when caller will need to go to another state than default one
    * */
-  public static function giveMarketTileToPlayerAt(Player $player, int $row, int $col):void
+  public static function giveMarketTileToPlayerAt(Player $player, int $row, int $col, bool &$doCheckpoint):void
   {
     $tilesOnMarketSpace = self::DB()
       ->where( static::$prefix . 'location', TILE_LOCATION_BOARD_MARKET)
@@ -111,7 +111,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
 
     $tile = $tilesOnMarketSpace->first();
     if(isset($tile)){
-      Tiles::giveMarketTileToPlayer($player, $tile);
+      Tiles::giveMarketTileToPlayer($player, $tile, $doCheckpoint);
     }
   }
   
@@ -120,7 +120,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
    * then give it to player
    * @throws PrematureStateChangeException when caller will need to go to another state than default one
    * */
-  public static function giveMarketTileToPlayer(Player $player, MarketTile &$tile) :void
+  public static function giveMarketTileToPlayer(Player $player, MarketTile &$tile, bool &$doCheckpoint) :void
   {
     $stateExc = null;  
     
@@ -156,7 +156,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
           $gains = $tile->getActions();
           foreach($gains as $type => $quantity){
             try{
-              Players::directGain($player,$type,$quantity, $tile);
+              Players::directGain($player,$type,$quantity, $tile, $doCheckpoint);
             }
             catch(PrematureStateChangeException $exc){
               $stateExc = $exc;
@@ -485,7 +485,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
   /**
    * Action of a tile in player actions turn
    */
-  public static function playTile(Player &$player,int $tileId): Tile
+  public static function playTile(Player &$player,int $tileId, bool &$doCheckpoint): Tile
   { 
     $tile = Tiles::get($tileId);
     $discard = false;
@@ -540,7 +540,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
         case ACTION_VICEKING: 
           break;
         case ACTION_EXPLORATION:
-          Cards::drawExplorationCardsToPlayer($player, $nb);
+          Cards::drawExplorationCardsToPlayer($player, $nb, $doCheckpoint);
           break;
         case ACTION_SPEND_SPICES: //done in actSpendSpices
           break;

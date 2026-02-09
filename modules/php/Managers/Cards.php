@@ -5,6 +5,7 @@ namespace Bga\Games\Goa\Managers;
 use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Collection;
+use Bga\Games\Goa\Helpers\Log;
 use Bga\Games\Goa\Models\ExplorationCard;
 use Bga\Games\Goa\Models\Player;
 use InvalidArgumentException;
@@ -208,7 +209,7 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
     ];
   }
   
-  public static function drawExplorationCardsToPlayer(Player $player,int $nb)
+  public static function drawExplorationCardsToPlayer(Player $player,int $nb, bool &$doCheckpoint)
   {
     Game::get()->trace("drawExplorationCardsToPlayer($nb)");
     //$nbDiscardBefore = Cards::countInLocation(CARD_LOCATION_EXP_DISCARD);
@@ -230,7 +231,9 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
     }
      
     Notifications::giveExplorationCardsToPlayer($player,$cards);
-    //TODO JSA CHECKPOINT !
+    //we don't know here which state to save, and the action may be unfinished here
+    //Log::addStateCheckpoint($nextStateClass);
+    $doCheckpoint = true;
     return $cards;
   }
   public static function drawAndDiscardExploration(Player $player,int $nb): Collection

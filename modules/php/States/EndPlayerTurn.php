@@ -38,6 +38,7 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
 
         $roundEnd = false;
         $prematureStateChange = null;
+        $doCheckpoint = false;
 
         $player = Players::get($activePlayerId);
         $roundStep = Globals::getRoundStep();
@@ -87,7 +88,7 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
                         //ELSE highBidPlayer receives a tile
                         try{
 
-                            Tiles::giveMarketTileToPlayerAt($highBidPlayer, $auctionToken->getRow(), $auctionToken->getCol() );
+                            Tiles::giveMarketTileToPlayerAt($highBidPlayer, $auctionToken->getRow(), $auctionToken->getCol(), $doCheckpoint );
                         }
                         catch(PrematureStateChangeException $exc){
                             $prematureStateChange = $exc;

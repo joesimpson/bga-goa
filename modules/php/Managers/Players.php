@@ -306,7 +306,7 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
   /**
    * @throws PrematureStateChangeException when caller will need to go to another state than default one
    * */
-  public static function directGain(Player &$player, int $gainType, int $gainQuantity, Tile $tile)
+  public static function directGain(Player &$player, int $gainType, int $gainQuantity, Tile $tile, bool &$doCheckpoint)
   {
     switch($gainType){
       // gains from tiles with MARKET_TYPE_ACTION_DIRECT
@@ -320,7 +320,7 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
         Players::giveExtraActionCards($player, $gainQuantity);
         break;
       case ACTION_EXPLORATION:
-        Cards::drawExplorationCardsToPlayer($player, $gainQuantity);
+        Cards::drawExplorationCardsToPlayer($player, $gainQuantity, $doCheckpoint);
         break;
       case ACTION_SHIPS_OR_CONTRACTS: 
         //Save datas for next state
