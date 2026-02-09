@@ -355,6 +355,13 @@ export class Game {
             if('token' in args && 'token_icon' in args) {
                 args.token_icon = this.tplToken(args.token, '_log');
             }
+            if('tokens' in args && 'token_icons' in args){
+                let icons = '';
+                Object.values(args.tokens).forEach((token) => {
+                    icons += this.tplToken(token, '_log');
+                });
+                args.token_icons = icons;
+            }
             if('tile' in args && 'tile_icon' in args) {
                 args.tile_icon = this.tplTile(args.tile, '_log');
             }

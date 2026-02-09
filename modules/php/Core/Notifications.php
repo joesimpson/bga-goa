@@ -363,12 +363,16 @@ class Notifications
   {
     $nTokens = $tokens->count();
     if($nTokens == 0) return;
-    $msg = clienttranslate('${player_name} removes ${n} spices tokens from their tiles');
-    //TODO JSA ICONS
+    $sortedTokens = $tokens->ui();
+    usort($sortedTokens, function ($a,$b)  {
+      return $a["spice"] <=>  $b["spice"];
+    });
+    $msg = clienttranslate('${player_name} removes ${n} spices tokens ${token_icons} from their tiles');
     self::notifyAll('removeSpices', $msg, [
       'player' => $player,
       'n' => $nTokens,
-      'tokens' => $tokens->ui(),
+      'tokens' => $sortedTokens,
+      'token_icons' => '',
       'preserve'=>['tokens',],
     ]);
   }
