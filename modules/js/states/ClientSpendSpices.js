@@ -29,9 +29,18 @@ export class ClientSpendSpices {
         });
      
         this.bga.statusBar.setTitle(
+            minSpices == nbSpices ? 
+                _("${you} must select ${n} spices to discard").replace('${n}',nbSpices)
+                :
                 _("${you} must select ${a} to ${b} spices to discard").replace('${a}',minSpices).replace('${b}',nbSpices)
             );
         let actionName = 'actSpendSpices';
+
+        if(withTile){
+            let tileDiv = document.getElementById(`goa_tile-${withTile}`);
+            tileDiv.classList.add('selected');
+            tileDiv.classList.add('selected_for_client_state');
+        }
             
         let selectionHint = _('Select this spice token');
         this.game.onSelectN(spicesDivs, nbSpices, (selectedSpices) => {

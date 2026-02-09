@@ -657,6 +657,7 @@ class PlayerTurn extends GameState
         $totalSpicesExpected = 1;
         $selectableTokens = [];
         $forCoins = false;
+        $forScore = 0;
         if(isset($card_id)){
             $possibleCards = $args['possiblePlayCards'];
             if(!in_array($card_id,$possibleCards->getIds())){
@@ -671,6 +672,20 @@ class PlayerTurn extends GameState
             $nbMinTokens = $spendDatas['min'];
             $selectableTokens = $spendDatas['t_ids'];
             $forCoins = $spendDatas['forCoins'];
+        } else if(isset($tile_id)){
+            $possibleTiles = $args['possiblePlayTiles'];
+            if(!in_array($tile_id,$possibleTiles->getIds())){
+                throw new UnexpectedException(111,"Invalid tile $tile_id to play");
+            }
+            $playDatas = $possibleTiles[$tile_id]['play_datas'];
+            if(!isset($playDatas['spendSpices'])){
+                throw new UnexpectedException(112,"Invalid tile $tile_id to spend spices");
+            }
+            $spendDatas = $playDatas['spendSpices'];
+            $totalSpicesExpected = $spendDatas['max'];
+            $nbMinTokens = $spendDatas['min'];
+            $selectableTokens = $spendDatas['t_ids'];
+            $forScore = $spendDatas['forScore'];
         } 
         if (!isset($t_ids) || $totalSpicesExpected < count($t_ids) || $nbMinTokens > count($t_ids)) {
             throw new UnexpectedException(120,"You must select $totalSpicesExpected tokens");
@@ -685,6 +700,9 @@ class PlayerTurn extends GameState
         if(isset($card_id)){
             Cards::playExploration($player, $card_id, );
         }
+        if(isset($tile_id)){
+            Tiles::playTile($player, $tile_id, );
+        }
         $playerSpices = Tokens::getPlayerSpices($player->getId());
         $tokens = $playerSpices->filter(function($t) use ($t_ids){
             return in_array($t->getId(), $t_ids);
@@ -693,6 +711,9 @@ class PlayerTurn extends GameState
         if($forCoins){
             $amount = CARD_GAINS_RESSOURCES_TO_COINS[count($t_ids)];
             Players::giveMoney($player, $amount);
+        }
+        if($forScore>0){
+            $player->addPoints($forScore);
         }
 
         return PlayerTurn::class;

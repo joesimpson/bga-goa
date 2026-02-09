@@ -315,8 +315,7 @@ class Notifications
    * @param string $n2 (optional) Second number argument used in $msg
    */
   public static function addPoints(Player $player,int $points, ?string $msg = null, ?int $n2 =null){
-    // Commented because unused in this game, and we don't need to translate that message
-    //if(!isset($msg)) $msg = clienttranslate('${player_name} scores ${n} points');
+    if(!isset($msg)) $msg = clienttranslate('${player_name} scores ${n} points');
     $args = [ 
       'player' => $player,
       'n' => $points,

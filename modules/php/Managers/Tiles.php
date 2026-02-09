@@ -408,6 +408,8 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
     $hand = Tiles::getNotPlantations($player);
     $playTypes = [MARKET_TYPE_ACTION_REUSEABLE, MARKET_TYPE_ACTION_ONCE, MARKET_TYPE_SCORING];
         
+    $playerSpices = Tokens::getPlayerSpices($player->getId());
+
     return $hand->filter(function($tile) use ($playTypes) {
       if(!in_array($tile->getPlay_type(),$playTypes)) return false;
       $actions = $tile->getActions();
@@ -416,7 +418,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
       if($tile->alreadyPlayed()) return false;
       return true;
     })
-    ->map(function($tile) use ($player, &$args){
+    ->map(function($tile) use ($playerSpices, $player, &$args){
       $playDatas = [];
       $possiblePlay = false;
       foreach($tile->getActions() as $action => $nb){
@@ -446,8 +448,16 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
           case ACTION_EXPLORATION:
             break;
           case ACTION_SPEND_SPICES:
-            //TODO JSA COUNT nb SPICES
-            $possiblePlay = true;
+            if($playerSpices->count() >= $nb){
+              $possiblePlay = true;
+              $playDatas['spendSpices'] = [
+                'min' => $nb, 
+                'max' => $nb, 
+                'forScore' => $tile->getEnd_score(), 
+                't_ids' => $playerSpices->getIds(),
+              ];
+              $args['possibleActions'][] = 'actSpendSpices';
+            }
             break;
           default:
             break;
@@ -525,7 +535,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
           break;
         case ACTION_EXPLORATION:
           break;
-        case ACTION_SPEND_SPICES:
+        case ACTION_SPEND_SPICES: //done in actSpendSpices
           break;
         default:
           break;
@@ -688,7 +698,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
       36 => $f([ 0, 1, MARKET_TYPE_ACTION_REUSEABLE, [], [ACTION_EXPLORATION => 1, ], 0, ]),
       
       37 => $f([ 1, 0, MARKET_TYPE_SCORING, [], [], 0, ]),
-      38 => $f([ 1, 1, MARKET_TYPE_SCORING, [], [ACTION_SPEND_SPICES => 6], 0, ]),
+      38 => $f([ 1, 1, MARKET_TYPE_SCORING, [], [ACTION_SPEND_SPICES => 6], 5, ]),
       39 => $f([ 0, 1, MARKET_TYPE_SCORING, [], [], 2, ]),
       40 => $f([ 0, 1, MARKET_TYPE_SCORING, [], [], 3, ]),
 

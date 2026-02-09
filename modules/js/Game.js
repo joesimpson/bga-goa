@@ -719,10 +719,23 @@ export class Game {
         let playerTiles = playerTilesContainer.querySelectorAll('.goa_tile');
         playerTiles.forEach((tileDiv) => {
             let tile_id = tileDiv.dataset.id;
-            let isPlayableCard = (possibleActions.includes('actPlayTile') && Object.keys(possiblePlayTiles).includes(""+tile_id)) ? true : false;
-            if(isPlayableCard){
+            let isPlayableTile = (possibleActions.includes('actPlayTile') && Object.keys(possiblePlayTiles).includes(""+tile_id)) ? true : false;
+            if(isPlayableTile){
+                let play_datas = possiblePlayTiles[tile_id].play_datas;
                 this.onClick(tileDiv, () => {
-                    this.customPerformAction('actPlayTile', { 'tile_id':tile_id });
+                    if(play_datas.spendSpices){
+                        this.bga.states.setClientState("ClientSpendSpices", {
+                            descriptionmyturn: '',
+                            args: {
+                                'spendSpices': play_datas.spendSpices,
+                                'withTile':tile_id,
+                                'previousClientState' : this.getCurrentClientStateDatas(),
+                            },
+                        });
+                    }
+                    else { //DIRECT TILE PLAY
+                        this.customPerformAction('actPlayTile', { 'tile_id':tile_id });
+                    }
                 });
                 tileDiv.setAttribute("title",_('Play this tile'));
             }
@@ -1205,6 +1218,19 @@ export class Game {
         let tokenDiv = this.addToken(token);
         let destinationDiv = document.getElementById(this.getTokenContainer(token));
         await this.animationManager.slideAndAttach(tokenDiv, destinationDiv);
+    }
+
+    
+    async notif_addPoints (notif) {
+        console.log( 'notif_addPoints' , notif);
+        let player_id = notif.player_id;
+        let player_color = this.gamedatas.players[player_id].color;
+        let amount = notif.n;
+        let scoreCounter = this.bga.playerPanels.getScoreCounter(player_id);
+        //animate scoring on panel icons
+        this.bga.gameui.displayScoring(scoreCounter.span, player_color, amount,800);
+        await this.bga.gameui.wait(800); 
+        scoreCounter.incValue(amount);
     }
     
 
