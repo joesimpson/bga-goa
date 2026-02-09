@@ -78,6 +78,12 @@ $board_img_height: calc(1 * calc(1429px + var(--goa_board_height_offset)));
                             //box-shadow: 0px 0px 0px 5px blue;
                             outline: 5px dashed var(--goa_selectable_color);;
                             border-radius: 15px;
+                            &:hover{
+                                transform: scale(1.1);
+                                outline-color: var(--goa_selectable_hover_color);
+                                outline-style: solid;
+                                z-index: 2;
+                            }
                         }
                         &.selected{
                             cursor: crosshair;
@@ -357,6 +363,8 @@ $playerboard_img_height: calc(1 * 796px);
     margin-bottom: 5px;
 
     .goa_tile{
+        margin-left: 5px;
+        margin-right: 5px;
         &[data-state="1"]{ //TILE_STATE_PLAYED
             filter: grayscale(1);
         }
@@ -458,6 +466,10 @@ $playerboard_img_height: calc(1 * 796px);
                         //box-shadow: 0px 0px 0px 5px blue;
                         outline: 10px dashed var(--goa_selectable_color);;
                         border-radius: 5%;
+                        &:hover{
+                            outline-color: var(--goa_selectable_hover_color);
+                            outline-style: solid;
+                        }
                     }
                     &.selected, &.selected_for_client_state{
                         cursor: crosshair;
@@ -510,6 +522,10 @@ $playerboard_img_height: calc(1 * 796px);
                             //box-shadow: 0px 0px 0px 5px blue;
                             outline: 10px dashed var(--goa_selectable_color);;
                             border-radius: 5%;
+                            &:hover{
+                                outline-color: var(--goa_selectable_hover_color);
+                                outline-style: solid;
+                            }
                         }
 
                         .goa_progress_marker{

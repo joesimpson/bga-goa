@@ -20,6 +20,7 @@
   --goa_explo_card_height: 200px;
   --goa_board_height_offset: -230px;
   --goa_selectable_color: blue;
+  --goa_selectable_hover_color: orange;
   --goa_selected_color: red;
 }
 
@@ -99,6 +100,12 @@ Icon extract in sprite with differents layers size (so % is not useful).
   cursor: pointer;
   outline: 5px dashed var(--goa_selectable_color);
   border-radius: 15px;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market .goa_grid_space.selectable:hover {
+  transform: scale(1.1);
+  outline-color: var(--goa_selectable_hover_color);
+  outline-style: solid;
+  z-index: 2;
 }
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market .goa_grid_space.selected {
   cursor: crosshair;
@@ -385,6 +392,10 @@ Icon extract in sprite with differents layers size (so % is not useful).
   justify-content: center;
   margin-bottom: 5px;
 }
+.goa_player_tiles .goa_tile {
+  margin-left: 5px;
+  margin-right: 5px;
+}
 .goa_player_tiles .goa_tile[data-state="1"] {
   filter: grayscale(1);
 }
@@ -475,6 +486,10 @@ Icon extract in sprite with differents layers size (so % is not useful).
   outline: 10px dashed var(--goa_selectable_color);
   border-radius: 5%;
 }
+.goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_progress_tracks .goa_progress_track.selectable:hover {
+  outline-color: var(--goa_selectable_hover_color);
+  outline-style: solid;
+}
 .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_progress_tracks .goa_progress_track.selected, .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_progress_tracks .goa_progress_track.selected_for_client_state {
   cursor: crosshair;
   outline: 10px solid var(--goa_selected_color);
@@ -540,6 +555,10 @@ Icon extract in sprite with differents layers size (so % is not useful).
   cursor: pointer;
   outline: 10px dashed var(--goa_selectable_color);
   border-radius: 5%;
+}
+.goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_progress_tracks .goa_progress_track .goa_progress_track_space.selectable:hover {
+  outline-color: var(--goa_selectable_hover_color);
+  outline-style: solid;
 }
 .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_progress_tracks .goa_progress_track .goa_progress_track_space .goa_progress_marker {
   width: 30px;
@@ -1033,6 +1052,10 @@ Icon extract in sprite with differents layers size (so % is not useful).
   cursor: pointer;
   outline: 5px dashed var(--goa_selectable_color);
 }
+.goa_spice.selectable:hover {
+  outline-color: var(--goa_selectable_hover_color) !important;
+  outline-style: solid !important;
+}
 .goa_spice.selected {
   outline: 8px solid var(--goa_selected_color);
 }
@@ -1096,6 +1119,12 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-image: url("img/exp_cards.jpg");
   background-position-x: 0%;
   background-position-y: 0%;
+}
+.goa_exploration_card.selectable:hover, .goa_exploration_card.bga-cards_selectable-card:hover,
+.goa_exploration_card-front.selectable:hover,
+.goa_exploration_card-front.bga-cards_selectable-card:hover, .goa_exploration_card-back.selectable:hover, .goa_exploration_card-back.bga-cards_selectable-card:hover {
+  outline-color: var(--goa_selectable_hover_color) !important;
+  outline-style: solid !important;
 }
 .goa_exploration_card[data-type="2"],
 .goa_exploration_card-front[data-type="2"], .goa_exploration_card-back[data-type="2"] {
@@ -1357,6 +1386,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
   height: 108px;
   border-radius: 6px;
   box-shadow: 0px 0px 0px 2px black;
+  transition: all 0.4s ease-in-out;
 }
 .goa_tile.goa_tile_log {
   width: 40px;
@@ -1367,6 +1397,12 @@ Icon extract in sprite with differents layers size (so % is not useful).
   outline: 5px dashed var(--goa_selectable_color);
   border-radius: 15px;
   z-index: 1;
+}
+.goa_tile.selectable:hover {
+  transform: scale(1.1);
+  outline-color: var(--goa_selectable_hover_color);
+  outline-style: solid;
+  z-index: 2;
 }
 .goa_tile.selected {
   cursor: crosshair;
@@ -1381,6 +1417,11 @@ Icon extract in sprite with differents layers size (so % is not useful).
   --bga-cards_selected-card_outline-color: var(--goa_selected_color);
   background-size: 500% 400%;
   background-image: url("img/outposts.jpg");
+}
+.goa_tile.goa_outpost.selectable:hover,
+.goa_outpost-front.selectable:hover, .goa_outpost-back.selectable:hover {
+  outline-color: var(--goa_selectable_hover_color) !important;
+  outline-style: solid !important;
 }
 .goa_tile.goa_outpost.bga-cards_last-played-card,
 .goa_outpost-front.bga-cards_last-played-card, .goa_outpost-back.bga-cards_last-played-card {

@@ -103,6 +103,10 @@
     &.selectable{
         cursor: pointer;
         outline: 5px dashed var(--goa_selectable_color);
+        &:hover{
+            outline-color: var(--goa_selectable_hover_color) !important;
+            outline-style: solid !important;
+        }
     }
     &.selected{
         outline: 8px solid var(--goa_selected_color);

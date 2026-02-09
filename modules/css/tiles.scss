@@ -11,6 +11,7 @@ $tile_height: 108px;
     height: $tile_height;
     border-radius: 6px;
     box-shadow: 0px 0px 0px 2px black;
+    transition: all .4s ease-in-out;
 
     &.goa_tile_log{
         //REDUCE SIZE IN LOG
@@ -24,6 +25,12 @@ $tile_height: 108px;
         outline: 5px dashed var(--goa_selectable_color);
         border-radius: 15px;
         z-index: 1;
+        &:hover{
+            transform: scale(1.1);
+            outline-color: var(--goa_selectable_hover_color);
+            outline-style: solid;
+            z-index: 2;
+        }
     }
     &.selected{
         cursor: crosshair;
@@ -44,6 +51,13 @@ $tile_height: 108px;
         background-size: 500% 400%;
         background-image: url("img/outposts.jpg");
         
+        &.selectable{
+            &:hover{
+                outline-color: var(--goa_selectable_hover_color) !important;
+                outline-style: solid !important;
+            }
+        }
+
         &.bga-cards_last-played-card{
             cursor: crosshair;
             outline: 8px solid var(--bga-cards_selected-card_outline-color) !important;
