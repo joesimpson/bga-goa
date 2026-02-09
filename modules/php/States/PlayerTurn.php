@@ -146,9 +146,12 @@ class PlayerTurn extends GameState
             //return $this->actPassAction($activePlayerId,$args);
             //COMMENTED because we should not come here, we only activate players with something to play
         }
-        if(!$actionPlayed){
-            if(count($possibleActions)==1 && in_array('actStopAction',$possibleActions)){
-                //TODO JSA AUTO STOP if no tile/card action
+        if($actionPlayed){
+            if(in_array('actStopAction',$possibleActions)){
+                //AUTO STOP if no tile/card action (absence of actPlayCard/actPlayTile), but we may fin the action actDiscard anyway
+                if(!in_array('actPlayCard',$possibleActions) && !in_array('actPlayTile',$possibleActions) ) {
+                    return $this->actStopAction(Utils::gameVersion(), $activePlayerId, $args, true);
+                }
             }
         }
     }
@@ -276,7 +279,7 @@ class PlayerTurn extends GameState
      * Player action : stop the action turn
      */
     #[PossibleAction]
-    public function actStopAction(int $v,int $activePlayerId, array $args)
+    public function actStopAction(int $v,int $activePlayerId, array $args, bool $auto = false,)
     {
         Utils::checkVersion($v);
         $this->game->trace("actStopAction($activePlayerId)");
@@ -286,7 +289,8 @@ class PlayerTurn extends GameState
             throw new UnexpectedException(110,"Invalid action actStopAction, see ".json_encode($possibleActions));
         }
 
-        Log::addStep();
+        //don't save step if automatic action, else the player won't be able to reverse the 2 steps at a time
+        if(!$auto) Log::addStep();
 
         return ConfirmTurn::class;
     }
