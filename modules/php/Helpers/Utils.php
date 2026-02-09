@@ -2,7 +2,9 @@
 namespace Bga\Games\Goa\Helpers;
 
 use Bga\GameFramework\UserException;
+use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Game;
+use Bga\Games\Goa\Managers\Players;
 use Bga\Games\Goa\States\ConfirmTurn;
 use Bga\Games\Goa\States\EndPlayerTurn;
 use Bga\Games\Goa\States\EndRound;
@@ -204,4 +206,25 @@ abstract class Utils {
             default: return '';
         }
     }
+
+    public static function refreshFoundTileChoice(int $playerId){
+
+        $player = Players::get($playerId);
+        $choiceTiles = Globals::getChoiceTiles(); 
+        //REFRESH TILES CHOICES DATAS according to played card/tile adding contracts
+        foreach($choiceTiles as $tileId => &$tileChoices){
+            foreach($tileChoices as &$tileChoiceDatas){
+                if($tileChoiceDatas['selectType'] === CHOICE_FOUND_TILE 
+                && !in_array(ACTION_FOUND_FORWARD,$tileChoiceDatas['choices']) ){
+                    //
+                    $missingContracts = $tileChoiceDatas['n'];
+                    if($player->getContracts() >= $missingContracts){
+                        $tileChoiceDatas['choices'][] = ACTION_FOUND_FORWARD;
+                    }
+                }
+            }
+        }
+        Globals::setChoiceTiles($choiceTiles);
+    }
+
 }

@@ -787,12 +787,13 @@ class PlayerTurn extends GameState
 
     }
     
-    public static function addArgsForTilePlay($player, array &$args){
+    public static function addArgsForTilePlay($player, array &$args, array|null $actionsWhiteList = null){
+        Game::get()->trace("PlayerTurn.addArgsForTilePlay(".json_encode($actionsWhiteList).")");
         $roundStep = Globals::getRoundStep();
         
         switch($roundStep){
             case ROUND_STEP_PLAYER_ACTIONS:
-                $playableTiles = Tiles::getPossibleToPlay($player, $args);
+                $playableTiles = Tiles::getPossibleToPlay($player, $args, $actionsWhiteList);
                 $args['possiblePlayTiles'] = $playableTiles;
                 if( $playableTiles->count()>0){
                     $args['possibleActions'][] = 'actPlayTile';

@@ -403,22 +403,25 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
     return $allSpots;
   }
 
-  public static function getPossibleToPlay(Player $player, array &$args,) : Collection
+  public static function getPossibleToPlay(Player $player, array &$args, array|null $actionsWhiteList = null,) : Collection
   {
     $hand = Tiles::getNotPlantations($player);
     $playTypes = [MARKET_TYPE_ACTION_REUSEABLE, MARKET_TYPE_ACTION_ONCE, MARKET_TYPE_SCORING];
         
     $playerSpices = Tokens::getPlayerSpices($player->getId());
 
-    return $hand->filter(function($tile) use ($playTypes) {
+    $list = $hand->filter(function($tile) use ($playTypes, $actionsWhiteList) {
       if(!in_array($tile->getPlay_type(),$playTypes)) return false;
       $actions = $tile->getActions();
       if(count($actions ) < 1) return false;
       if(count($actions ) > 1) return false;//we should not manage multiple actions here ...
+      $action = array_key_first($tile->getActions());
+      if(isset($actionsWhiteList) && !in_array($action,$actionsWhiteList)) return false;
       if($tile->alreadyPlayed()) return false;
       return true;
-    })
-    ->map(function($tile) use ($playerSpices, $player, &$args){
+    });
+    //Game::get()->trace(__FUNCTION__." -> filter = ".json_encode($list)."");
+    $list = $list->map(function($tile) use ($playerSpices, $player, &$args){
       $playDatas = [];
       $possiblePlay = false;
       foreach($tile->getActions() as $action => $nb){
@@ -474,6 +477,8 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
     ->filter(function($map) {
         return $map['possiblePlay'];
     });
+    //Game::get()->trace(__FUNCTION__." -> result = ".json_encode($list)."");
+    return $list;
   }
 
   /**

@@ -55,6 +55,8 @@ class PlayerChoice extends GameState
                     if($tileChoiceDatas['selectType'] === CHOICE_FOUND_TILE ){
                         //IF we are near abandon, let player play a card to receive contracts
                         $actionsWhiteList[] = CARD_ACTION_2_CONTRACTS;
+                        //IF we are near abandon, let player play a tile to receive contracts
+                        $actionsWhiteList[] = ACTION_CONTRACT;
                     }
                 }
             }
@@ -62,6 +64,7 @@ class PlayerChoice extends GameState
             $args['possibleActions'][] = 'actTileChoice';
         }
         PlayerTurn::addArgsForCardPlay($player,$args, $actionsWhiteList );
+        PlayerTurn::addArgsForTilePlay($player,$args, $actionsWhiteList);
 
         ConfirmTurn::addArgsForUndo($args);
         return $args;
@@ -206,23 +209,22 @@ class PlayerChoice extends GameState
         Utils::checkVersion($v);
         PlayerTurn::actPlayCard_content($card_id, $activePlayerId, $args);
         
-        $player = Players::get($activePlayerId);
-        $choiceTiles = $args['tiles_choices'];
-        //REFRESH TILES CHOICES DATAS according to played card
-        foreach($choiceTiles as $tileId => &$tileChoices){
-            foreach($tileChoices as &$tileChoiceDatas){
-                if($tileChoiceDatas['selectType'] === CHOICE_FOUND_TILE 
-                && !in_array(ACTION_FOUND_FORWARD,$tileChoiceDatas['choices']) ){
-                    //
-                    $missingContracts = $tileChoiceDatas['n'];
-                    if($player->getContracts() >= $missingContracts){
-                        $playerChoices[] = ACTION_FOUND_FORWARD;
-                    }
-                    $tileChoiceDatas['choices'][] = ACTION_FOUND_FORWARD;
-                }
-            }
-        }
-        Globals::setChoiceTiles($choiceTiles);
+        UTils::refreshFoundTileChoice($activePlayerId);
+
+        return self::class;
+    }
+
+    #[PossibleAction]
+    public function actPlayTile(
+        int $tile_id, 
+        int $activePlayerId, array $args,
+        int $v,
+        )
+    { 
+        Utils::checkVersion($v);
+        PlayerTurn::actPlayTile_content($tile_id, $activePlayerId, $args);
+        
+        UTils::refreshFoundTileChoice($activePlayerId);
 
         return self::class;
     }

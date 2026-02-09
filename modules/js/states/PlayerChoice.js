@@ -45,6 +45,7 @@ export class PlayerChoice {
                                     description : _("${actplayer} must select one of these"),
                                     args: { 'tile_choice':tile_choice, 'tile':tile, 'choice_index': tile_choice_entry_index
                                         , 'cancelable' : !directState, 'undo': args.undo,
+                                        'previousArgs' : args,
                                     },
                                 });
                             };
@@ -98,6 +99,8 @@ export class ClientSelectTileAction {
         let tile_id = args.tile.id;
         let icon_contracts = this.game.formatIcon('contracts',_('Contracts'));
         let isOutpost = args.tile.subtype == this.game.const.TILE_SUBTTYPE_OUTPOST;
+
+        if(isCurrentPlayerActive) this.game.updateTilesHandSelectable(args.previousArgs);
       
         Object.entries(tile_choice.choices).forEach( ([choice_id,choice])  => {
             switch(tile_choice.selectType){

@@ -729,6 +729,16 @@ export class Game {
             }
         };  
 
+        this.updateTilesHandSelectable(args);
+
+    }
+    updateTilesHandSelectable(args){
+        console.log("updateTilesHandSelectable",args);
+
+        if(!args) return;
+
+        let possibleActions = args.possibleActions;
+        let activePlayer = this.bga.players.getActivePlayerId();
         //--------------------------------------------
         //--------------------- TILES
         //--------------------------------------------
@@ -737,7 +747,7 @@ export class Game {
         let playerTiles = playerTilesContainer.querySelectorAll('.goa_tile');
         playerTiles.forEach((tileDiv) => {
             let tile_id = tileDiv.dataset.id;
-            let isPlayableTile = (possibleActions.includes('actPlayTile') && Object.keys(possiblePlayTiles).includes(""+tile_id)) ? true : false;
+            let isPlayableTile = (possibleActions && possibleActions.includes('actPlayTile') && Object.keys(possiblePlayTiles).includes(""+tile_id)) ? true : false;
             if(isPlayableTile){
                 let play_datas = possiblePlayTiles[tile_id].play_datas;
                 this.onClick(tileDiv, () => {
