@@ -1716,12 +1716,13 @@ export class Game {
     }
 
     getNbContractsForColony(colony){
-        //TODO JSA reuse server side as const array
-        switch(parseInt(colony)){
-            case this.const.COLONY_KOLLAM: return 6;
-            case this.const.COLONY_KOCHI:  return 8;
-            case this.const.COLONY_MADRAS: return 10;
-            case this.const.COLONY_KOZHIKODE: return 12;
+        let value = parseInt(colony);
+        switch(value){
+            case this.const.COLONY_KOLLAM: 
+            case this.const.COLONY_KOCHI:  
+            case this.const.COLONY_MADRAS: 
+            case this.const.COLONY_KOZHIKODE: 
+                return this.const.COLONIES_CONTRACTS[value];
             default: return 0;
         }
     }
@@ -2132,8 +2133,13 @@ export class Game {
             case this.const.CARD_ACTION_PROGRESS_NO_SHIP:   return _('Type b: When performing the Progress action, you only need to pay the Resources, you can ignore the Ship costs.');
             case this.const.CARD_ACTION_HARVEST_AND_CARDS:  return _('Type c: When performing the Harvest action, you may take any combination of Resources, Ships, and/or Contracts instead of only Resources.');
             case this.const.CARD_ACTION_OUTPOST_EXTRA_CONTRACTS : return _('Type d: When performing the Found Outpost action, you may draw one extra exploration card and add its Contracts to your total.');
-            //TODO JSA const CARD_GAINS_RESSOURCES_TO_COINS
-            case this.const.CARD_ACTION_RESSOURCES_TO_COINS  : return _('Type e: You may spend 1/2/3/4 Resources to gain 3/6/9/12 Pardaos.');
+            case this.const.CARD_ACTION_RESSOURCES_TO_COINS  : 
+                let gains = this.const.CARD_GAINS_RESSOURCES_TO_COINS;
+                let [a,b,c,d] =  Object.keys(gains);
+                let [w,x,y,z] =  Object.values(gains);
+                return this.bga.gameui.format_string(_('Type e: You may spend ${a}/${b}/${c}/${d} Resources to gain ${w}/${x}/${y}/${z} Pardaos.') ,
+                    { 'a':a,'b':b,'c':c,'d':d,  'w':w,'x':x,'y':y,'z':z, }
+                );
             case this.const.CARD_ACTION_2_SPICES             : return this.bga.gameui.format_string(_('Type ${x} : ${gain}') ,
                     { 'x':'f', 'gain': this.formatTileSpicesText({'spice_slots':[this.const.SPICES_ALL,this.const.SPICES_ALL]}) }
                 );

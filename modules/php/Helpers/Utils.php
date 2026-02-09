@@ -190,10 +190,11 @@ abstract class Utils {
     
     public static function getNbContractsForColony(int $colony){
         switch(($colony)){
-            case COLONY_KOLLAM: return 6;
-            case COLONY_KOCHI:  return 8;
-            case COLONY_MADRAS: return 10;
-            case COLONY_KOZHIKODE: return 12;
+            case COLONY_KOLLAM:
+            case COLONY_KOCHI: 
+            case COLONY_MADRAS:
+            case COLONY_KOZHIKODE: 
+                return COLONIES_CONTRACTS[$colony];
             default: return 0;
         }
     }
