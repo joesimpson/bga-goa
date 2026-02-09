@@ -315,7 +315,8 @@ class Notifications
    * @param string $n2 (optional) Second number argument used in $msg
    */
   public static function addPoints(Player $player,int $points, ?string $msg = null, ?int $n2 =null){
-    if(!isset($msg)) $msg = clienttranslate('${player_name} scores ${n} points');
+    //Keep it commented if not necessary to translate it in this game
+    //if(!isset($msg)) $msg = clienttranslate('${player_name} scores ${n} points');
     $args = [ 
       'player' => $player,
       'n' => $points,
@@ -323,7 +324,18 @@ class Notifications
     if(isset($n2)) $args['n2'] = $n2;
     self::notifyAll('addPoints',$msg, $args, );
   }
-
+  
+  public static function addPointsWithTile(Player $player,int $points, Tile $tile){
+    $msg = clienttranslate('${player_name} scores ${n} points with the tile ${tile_icon}');
+    $args = [ 
+      'player' => $player,
+      'n' => $points,
+      "tile" => $tile->getUiData(),
+      "tile_icon" => '',
+      'preserve'=>['tile'],
+    ];
+    self::notifyAll('addPointsWithTile',$msg, $args, );
+  }
   
     /**
    * @param Player $player

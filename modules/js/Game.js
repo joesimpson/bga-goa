@@ -1251,6 +1251,18 @@ export class Game {
         scoreCounter.incValue(amount);
     }
     
+    async notif_addPointsWithTile (notif) {
+        console.log( 'notif_addPointsWithTile' , notif);
+        let player_id = notif.player_id;
+        let player_color = this.gamedatas.players[player_id].color;
+        let amount = notif.n;
+        let tile = notif.tile;
+        let scoreCounter = this.bga.playerPanels.getScoreCounter(player_id);
+        let tileDiv = document.getElementById(`goa_tile-${tile.id}`);
+        this.bga.gameui.displayScoring(tileDiv, player_color, amount,800);
+        await this.bga.gameui.wait(800); 
+        scoreCounter.incValue(amount);
+    }
 
     ////////////////////////////////////////////////////////
     //  _____ _ _

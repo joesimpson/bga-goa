@@ -73,6 +73,13 @@ class Player extends \Bga\Games\Goa\Helpers\DB_Model
     Stats::inc( "score", $this->getId(), $points );
     if($sendNotif) Notifications::addPoints($this,$points);
   }
+  
+  
+  public function addPointsWithTile(int $points, Tile $tile)
+  {
+    $this->addPoints($points,false);
+    Notifications::addPointsWithTile($this,$points, $tile);
+  }
 
   public function setTieBreakerPoints(int $points)
   {

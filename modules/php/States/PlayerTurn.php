@@ -701,7 +701,7 @@ class PlayerTurn extends GameState
             Cards::playExploration($player, $card_id, );
         }
         if(isset($tile_id)){
-            Tiles::playTile($player, $tile_id, );
+            $tile = Tiles::playTile($player, $tile_id, );
         }
         $playerSpices = Tokens::getPlayerSpices($player->getId());
         $tokens = $playerSpices->filter(function($t) use ($t_ids){
@@ -713,7 +713,7 @@ class PlayerTurn extends GameState
             Players::giveMoney($player, $amount);
         }
         if($forScore>0){
-            $player->addPoints($forScore);
+            $player->addPointsWithTile($forScore, $tile);
         }
 
         return PlayerTurn::class;
