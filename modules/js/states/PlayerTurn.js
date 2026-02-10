@@ -44,11 +44,11 @@ export class PlayerTurn {
                 break;
             case this.game.const.ROUND_STEP_PLAYER_ACTIONS: 
                 //let titleActive =  _('${you} must select an action (${n} done in this round, min ${x} to pass)').replace('${n}', args.nbActions).replace('${x}', args.minActions);
-                let titleActive =  _('${player} must select an action (${n} done in this round)').replace('${player}','${you}').replace('${n}', args.nbActions);
-                let titleOthers =  _('${player} must select an action (${n} done in this round)').replace('${player}','${actplayer}').replace('${n}', args.nbActions);
+                let titleActive =  _('${you} must select an action (${n} done in this round)').replace('${n}', args.nbActions);
+                let titleOthers =  _('${actplayer} must select an action (${n} done in this round)').replace('${n}', args.nbActions);
                 if(args.actionPlayed){
-                    titleActive =  _('${player} may play a card or tile').replace('${player}','${you}');
-                    titleOthers =  _('${player} may play a card or tile').replace('${player}','${actplayer}');
+                    titleActive =  _('${you} may play a card or tile');
+                    titleOthers =  _('${actplayer} may play a card or tile');
                 }
 
                 this.bga.statusBar.setTitle(isCurrentPlayerActive ? titleActive : titleOthers);
