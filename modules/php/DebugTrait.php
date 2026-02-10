@@ -369,6 +369,16 @@ trait DebugTrait
         Notifications::giveTile($player,$tile);
         Tokens::addSpiceOnTile($tile, $player, TOKEN_TYPE_SPICE_GREEN, 1);
 
+        //TEST Tiles we may have in hand : 
+        $useableTypes = Tiles::getTilesTypesByMarketPlayType(MARKET_TYPE_ACTION_ONCE);
+        $useableTypes = array_merge($useableTypes , Tiles::getTilesTypesByMarketPlayType(MARKET_TYPE_ACTION_REUSEABLE));
+        $useableTypes = array_merge($useableTypes , Tiles::getTilesTypesByMarketPlayType(MARKET_TYPE_SCORING));
+        $useableTiles = Tiles::getMarketTilesByTypes($useableTypes);
+        $doCheckpoint = false;
+        foreach($useableTiles as $tile){
+            Tiles::giveMarketTileToPlayer($player, $tile, $doCheckpoint);
+        }
+        
         //$this->debug_refreshUI();
         $this->debug_goToState(ST_PLAYER_TURN);
     }

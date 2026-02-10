@@ -385,6 +385,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
 }
 
 .goa_player_tiles {
+  width: calc(var(--goa_playerboard_display_scale) * 810px);
   align-self: baseline;
   display: flex;
   flex-wrap: wrap;
@@ -393,11 +394,27 @@ Icon extract in sprite with differents layers size (so % is not useful).
   margin-bottom: 5px;
 }
 .goa_player_tiles .goa_tile {
+  order: 0;
   margin-left: 5px;
   margin-right: 5px;
 }
 .goa_player_tiles .goa_tile[data-state="1"] {
   filter: grayscale(1);
+}
+.goa_player_tiles .goa_tile[data-play_type="1"] {
+  order: 1;
+}
+.goa_player_tiles .goa_tile[data-play_type="2"] {
+  order: 2;
+}
+.goa_player_tiles .goa_tile[data-play_type="4"] {
+  order: 4;
+}
+.goa_player_tiles .goa_tile[data-play_type="5"] {
+  order: 5;
+}
+.goa_player_tiles .goa_tile[data-play_type="6"] {
+  order: 6;
 }
 
 .goa_resizable_playerboard {

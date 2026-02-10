@@ -355,6 +355,7 @@ $playerboard_img_height: calc(1 * 796px);
     border-radius: 10px;
 }
 .goa_player_tiles{
+    width: calc(var(--goa_playerboard_display_scale) * $playerboard_img_width);
     align-self: baseline;  
     display: flex;
     flex-wrap: wrap;
@@ -363,10 +364,26 @@ $playerboard_img_height: calc(1 * 796px);
     margin-bottom: 5px;
 
     .goa_tile{
+        order: 0;
         margin-left: 5px;
         margin-right: 5px;
         &[data-state="1"]{ //TILE_STATE_PLAYED
             filter: grayscale(1);
+        }
+        &[data-play_type="1"]{ //MARKET_TYPE_PLANTATION
+            order: 1;
+        }
+        &[data-play_type="2"]{ //MARKET_TYPE_ACTION_REUSEABLE
+            order: 2;
+        }
+        &[data-play_type="4"]{ //MARKET_TYPE_ACTION_DIRECT
+            order: 4;
+        }
+        &[data-play_type="5"]{ //MARKET_TYPE_ACTION_ONCE
+            order: 5;
+        }
+        &[data-play_type="6"]{ //MARKET_TYPE_SCORING
+            order: 6;
         }
     }
 }

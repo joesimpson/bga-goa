@@ -294,6 +294,16 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
     Game::get()->trace("getNextAvailablePlantationSpot(".$player->getId().") : no space because unavailablePositions = ".json_encode($unavailablePositions));
     return null;
   }
+  
+  public static function getMarketTilesByTypes(array $types) : Collection
+  {
+    $tiles = self::DB()
+      ->whereIn('type', $types)
+      ->where('subtype', TILE_SUBTTYPE_MARKET)
+      ->get();
+ 
+    return $tiles;
+  }
 
   /**
    * @param int phase Default is 1 for DAY , 2 for night
