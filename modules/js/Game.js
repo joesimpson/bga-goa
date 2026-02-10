@@ -1668,7 +1668,9 @@ export class Game {
     formatTilesHelp(){
         let list1 = "";
         let j = 0;
-        Object.entries(this.gamedatas.material.tiles[this.const.TILE_SUBTTYPE_MARKET]).forEach(([type,tile_type]) => {
+        Object.entries(this.gamedatas.material.tiles[this.const.TILE_SUBTTYPE_MARKET])
+        .sort(([,a],[,b]) => a.play_type - b.play_type) 
+        .forEach(([type,tile_type]) => {
             let resourceDatas = tile_type;
             resourceDatas.id = 0;
             resourceDatas.state = 0;
@@ -2199,7 +2201,19 @@ export class Game {
     formatCardsHelp(){
         let list1 = "";
         let j = 0;
-        Object.entries(this.gamedatas.material.cards[this.const.CARD_SUBTTYPE_EXPLORATION]).forEach(([type,card_type]) => {
+        Object.entries(this.gamedatas.material.cards[this.const.CARD_SUBTTYPE_EXPLORATION])
+        .sort(([,a],[,b]) => {
+            const nameA = a.action.toUpperCase();
+            const nameB = b.action.toUpperCase(); 
+            if (nameA < nameB) {
+                return -1;
+            }
+            if (nameA > nameB) {
+                return 1;
+            }
+            return 0;
+        }) 
+        .forEach(([type,card_type]) => {
             let resourceDatas = card_type;
             resourceDatas.id = 0;
             resourceDatas.state = 0;
