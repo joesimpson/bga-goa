@@ -1637,19 +1637,36 @@ export class Game {
         return description;
     }
     tplTile(tile, prefix ='') {
-        if(tile.subtype == this.const.TILE_SUBTTYPE_OUTPOST) 
+        let spotsDiv = '';
+        let tileMaterial = this.gamedatas.material.tiles[tile.subtype][tile.type];
+        if(tileMaterial.spice_slots){
+            Object.entries(tileMaterial.spice_slots).forEach(([i,t]) =>{
+                spotsDiv += this.tplTileSpot(tile.id, 1+ parseInt(i), t , prefix);
+            });
+        }
+
+        if(tile.subtype == this.const.TILE_SUBTTYPE_OUTPOST) {
             return `<div class="goa_tile goa_tile${prefix} goa_outpost" id="goa_tile${prefix}-${tile.id}" data-id="${tile.id}" data-type="${tile.type}"
                 data-id="${tile.id}"
                 data-colony="${tile.colony}" data-spots="${tile.spice_slots ? tile.spice_slots.length : 0}">
-            </div>`;
-        if(tile.subtype == this.const.TILE_SUBTTYPE_MARKET) 
+                ${spotsDiv}
+            </div>`;   
+        }
+        if(tile.subtype == this.const.TILE_SUBTTYPE_MARKET) {
             return `<div class="goa_tile goa_tile${prefix} goa_market" id="goa_tile${prefix}-${tile.id}" data-id="${tile.id}" data-type="${tile.type}"
                 data-id="${tile.id}"
                 data-play_type="${tile.play_type}" data-state="${tile.state}" data-spots="${tile.spice_slots ? tile.spice_slots.length : 0}"
                 data-end_score="${tile.end_score}" 
                 >
+                ${spotsDiv}
             </div>`;
+        }
         return '';
+    }
+    
+    tplTileSpot(tile_id, index, spotContent, prefix ='') {
+        return `<div class="goa_tile_spot goa_tile_spot${prefix}" id="goa_tile_spot${prefix}-${tile_id}-${index}" data-type="${spotContent}" data-index="${index}">
+            </div>`; 
     }
     
     tplTileFromType(tileType, prefix ='') {
@@ -1811,6 +1828,9 @@ export class Game {
         } 
         if( token.location.startsWith(this.const.TOKEN_LOCATION_TILE)) {
             let tile_id = token.location.split('-')[1];
+            if(token.subtype == this.const.TOKEN_SUBTTYPE_SPICE){
+                return `goa_tile_spot-${tile_id}-${token.state}`;
+            }
             return `goa_tile-${tile_id}`;
         }
         

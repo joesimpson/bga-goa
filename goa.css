@@ -636,7 +636,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
   opacity: 0.2;
 }
 .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_tile:hover .goa_token:not(.selectable) {
-  margin-top: -25%;
+  margin-top: -85%;
   opacity: 0.7;
 }
 
@@ -1717,29 +1717,42 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-position-y: 100%;
 }
 
-.goa_tile .goa_spice {
+.goa_tile .goa_tile_spot {
   position: absolute;
   left: 35px;
   top: 34px;
+  width: 38px;
+  height: 39px;
 }
-.goa_tile[data-spots="1"][data-end_score="1"] .goa_spice[data-state="1"] {
+.goa_tile .goa_tile_spot.selectable {
+  cursor: pointer;
+  outline: 5px dashed var(--goa_selectable_color);
+}
+.goa_tile .goa_tile_spot.selectable:hover {
+  outline-color: var(--goa_selectable_hover_color) !important;
+  outline-style: solid !important;
+}
+.goa_tile .goa_tile_spot.selected {
+  outline: 8px solid var(--goa_selected_color);
+}
+.goa_tile[data-spots="1"][data-end_score="1"] .goa_tile_spot[data-index="1"] {
   top: 17px;
 }
-.goa_tile[data-spots="2"] .goa_spice[data-state="1"] {
+.goa_tile[data-spots="2"] .goa_tile_spot[data-index="1"] {
   left: 14px;
 }
-.goa_tile[data-spots="2"] .goa_spice[data-state="2"] {
+.goa_tile[data-spots="2"] .goa_tile_spot[data-index="2"] {
   left: 56px;
 }
-.goa_tile[data-spots="3"] .goa_spice[data-state="1"] {
+.goa_tile[data-spots="3"] .goa_tile_spot[data-index="1"] {
   left: 36px;
   top: 13px;
 }
-.goa_tile[data-spots="3"] .goa_spice[data-state="2"] {
+.goa_tile[data-spots="3"] .goa_tile_spot[data-index="2"] {
   left: 13px;
   top: 53px;
 }
-.goa_tile[data-spots="3"] .goa_spice[data-state="3"] {
+.goa_tile[data-spots="3"] .goa_tile_spot[data-index="3"] {
   left: 55px;
   top: 53px;
 }
