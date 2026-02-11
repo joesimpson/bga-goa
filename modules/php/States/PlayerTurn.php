@@ -461,6 +461,13 @@ class PlayerTurn extends GameState
         if(!in_array('actHarvest',$possibleActions)){
             throw new UnexpectedException(110,"Invalid action actHarvest, see ".json_encode($possibleActions));
         }
+        if(count($spots) !== count($resources)){
+            throw new UnexpectedException(110,"Invalid number of resources/spots");
+        }
+        $uniqueSpots = array_unique($spots);
+        if(count($spots) !== count($uniqueSpots)){
+            throw new UnexpectedException(110,"Duplicate spots");
+        }
         $harvestSpots = $args['harvestSpots'];
         if(isset($card_id)){
             $possibleCards = $args['possiblePlayCards'];
@@ -468,9 +475,24 @@ class PlayerTurn extends GameState
                 throw new UnexpectedException(111,"Invalid card $card_id for harvest ");
             }
             $playCardDatas = $possibleCards[$card_id]['play_datas'];
+            //TODO JSA card harvest
         }  
-        //TODO JSA CHECK $harvestSpots
-
+        //TODO JSA tile harvest
+        $possibleSpotIds = [];
+        foreach($harvestSpots as $harvestSpot){
+            foreach($harvestSpot['available'] as $availableDatas){
+                $possibleSpotIds[$availableDatas['id']] = $availableDatas;
+            }
+        }
+        foreach($uniqueSpots as $k => $spotId){
+            if(!in_array($spotId, array_keys($possibleSpotIds) )){
+                throw new UnexpectedException(111,"Invalid spot $spotId for harvest ");
+            }
+            $resource = $resources[$k];
+            if(!in_array($resource, $possibleSpotIds[$spotId]['spices'] )){
+                throw new UnexpectedException(112,"Invalid resource $resource for spot $spotId for harvest ");
+            }
+        }
 
         $player = Players::get($activePlayerId);
         Log::addStep();
@@ -484,10 +506,18 @@ class PlayerTurn extends GameState
             Players::registerNewAction($player);
         }
 
-        //TODO JSA LOOP TO FILL SPOTS with specified resources
+        //LOOP TO FILL SPOTS with specified resources
+        foreach($uniqueSpots as $k => $spotId){
+            $slotPosition = $possibleSpotIds[$spotId]['index'];
+            $tile_id = $possibleSpotIds[$spotId]['tile_id'];
+            $tile = Tiles::get($tile_id);
+            $resource = $resources[$k];
+            $spiceTokenType = Tokens::getTokenSpiceTypeFromSpice($resource);
+            Tokens::addSpiceOnTile($tile, $player, $spiceTokenType, $slotPosition);
+        }
  
-        if($doCheckpoint) Log::addStateCheckpoint(PlayerTurn::class);
-        return PlayerTurn::class;
+        if($doCheckpoint) Log::addStateCheckpoint(self::class);
+        return self::class;
 
     }
     /**

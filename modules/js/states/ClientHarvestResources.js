@@ -24,11 +24,14 @@ export class ClientHarvestResources {
         let withTile = args.withTile;
 
         let tilesSpotsDivs = [];
+        let tilesSpotsSpices = [];
         //LOOP ON tiles spots
         Object.values(harvestSpots).forEach((harvestSpot) => {
             let tileId = harvestSpot.tile_id;
-            Object.values(harvestSpot.available).forEach((index) => {
-                tilesSpotsDivs[tileId * 10 + index] = $(`goa_tile_spot-${tileId}-${index}`);
+            Object.values(harvestSpot.available).forEach((datas) => {
+                let index = datas.index;
+                tilesSpotsDivs[datas.id] = $(`goa_tile_spot-${tileId}-${index}`);
+                tilesSpotsSpices[datas.id] = datas.spices;
             });
         });
      
@@ -51,7 +54,7 @@ export class ClientHarvestResources {
         }, { 'color':'secondary','title':_('Cancel'), destination: document.getElementById('customSecondary') }); 
             
         let selectionHint = _('Select this tile spot to fill');
-        this.onSelectNSpiceSpots(tilesSpotsDivs, minSpices, maxSpices, (selectedElements,selectedResources) => {
+        this.onSelectNSpiceSpots(tilesSpotsDivs, tilesSpotsSpices, minSpices, maxSpices, (selectedElements,selectedResources) => {
             this.game.customPerformAction(actionName, { 'spots': selectedElements.join(','),'res': selectedResources.join(','), 'card_id': withCard, 'tile_id': withTile, });
         }, selectionHint );
     
@@ -68,7 +71,7 @@ export class ClientHarvestResources {
 
     //----------------------------------------
     
-    onSelectNSpiceSpots(elements, minElements, maxElements, callbackOnSelectionEnd, selectionHint = null, confirmText = _('Confirm')) {
+    onSelectNSpiceSpots(elements, tilesSpotsSpices, minElements, maxElements, callbackOnSelectionEnd, selectionHint = null, confirmText = _('Confirm')) {
         
         let activePlayer = this.bga.players.getActivePlayerId();
         let selectedElements = [];
@@ -112,14 +115,18 @@ export class ClientHarvestResources {
             }
 
             Object.keys(elements).forEach((id) => {
-            let elt = elements[id];
-            let selected = selectedElements.includes(parseInt(id));
-            elt.classList.toggle('selected', selected);
-            elt.classList.toggle('selectable', selected || selectedElements.length < n);
+                let elt = elements[id];
+                let selected = selectedElements.includes(parseInt(id));
+                elt.classList.toggle('selected', selected);
+                elt.classList.toggle('selectable', selected || selectedElements.length < n);
             });
 
             let harvestResourcesZone = harvestTopZone.getElementsByClassName('goa_harvest_resources')[0]; 
             if(harvestResourcesZone) this.game.empty(harvestResourcesZone);
+            harvestTopZone.classList.remove('goa_display');
+            [...harvestTopZone.getElementsByClassName('goa_harvest_zone')].forEach((h) => {
+                this.game.empty(h);
+            });
             
         }; 
 
@@ -161,8 +168,10 @@ export class ClientHarvestResources {
                     //id is made as (tileId * 10 + index)
                     let tile_spot = id % 10;
                     let tile_id = (id - tile_spot) / 10;
-                    this.game.const.SPICES_ALL.forEach((spice) => {
-                        //TODO JSA FILTER SPICE FOR SELECTED SPOT
+
+                    let possibleSpices = this.game.const.SPICES_ALL;
+                    if(tilesSpotsSpices[id]) possibleSpices = tilesSpotsSpices[id];
+                    possibleSpices.forEach((spice) => {
                         let spice_icon = this.game.formatIcon('spices_'+spice,_('Spices'));
                         this.bga.statusBar.addActionButton( spice_icon, () => {
                             elt.classList.remove('selected_for_client_state');
