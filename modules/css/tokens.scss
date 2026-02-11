@@ -84,18 +84,23 @@
     //to fit on tile spot
     $spice_width: 38px;
     $spice_height: 39px;
+    &[data-spice="1"],//SPICE_WHITE
     &[data-type="31"]{//TOKEN_TYPE_SPICE_WHITE
         @include goa_icons_sprite(473px,0px, $spice_width,$spice_height,113px,119px);
     }
+    &[data-spice="3"],//SPICE_BLACK
     &[data-type="32"]{//TOKEN_TYPE_SPICE_BLACK
         @include goa_icons_sprite(590px,0px, $spice_width,$spice_height,113px,119px);
     }
+    &[data-spice="2"],//SPICE_YELLOW
     &[data-type="33"]{//TOKEN_TYPE_SPICE_YELLOW
         @include goa_icons_sprite(707px,0px, $spice_width,$spice_height,113px,119px);
     }
+    &[data-spice="4"],//SPICE_PINK
     &[data-type="34"]{//TOKEN_TYPE_SPICE_PINK
         @include goa_icons_sprite(824px,0px, $spice_width,$spice_height,113px,119px);
     }
+    &[data-spice="5"],//SPICE_GREEN
     &[data-type="35"]{//TOKEN_TYPE_SPICE_GREEN
         @include goa_icons_sprite(940px,0px, $spice_width,$spice_height,113px,119px);
     }

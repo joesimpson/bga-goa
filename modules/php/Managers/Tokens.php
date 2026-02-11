@@ -262,12 +262,14 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
       ->get();
   }
   
-  public static function countSpicesOnTile(int $tile_id) : Collection
+  public static function countSpicesOnTile(int $tile_id, int|null $spotIndex = null) : Collection
   {
-    return self::DB()
+
+    $query = self::DB()
       ->where('subtype', TOKEN_SUBTTYPE_SPICE)
-      ->where( static::$prefix . 'location', TOKEN_LOCATION_TILE.$tile_id)
-      ->get();
+      ->where( static::$prefix . 'location', TOKEN_LOCATION_TILE.$tile_id);
+    if($spotIndex) $query = $query->where( static::$prefix . 'state', $spotIndex);
+    return $query->get();
   }
   
   

@@ -399,16 +399,23 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
     $countEmptySpots = $allSpots->map(function($tile) {
       $map = [
         'tile_id' => $tile->getId(),
-        'available' => 0,
+        'available' => [],
       ];
       $slots = $tile->getSpice_slots();
+      /*
       $tokensOnTile = Tokens::countSpicesOnTile($tile->getId());
       if($tokensOnTile->count() < count($slots)){
         $map['available'] = count($slots)- $tokensOnTile->count();
       }
+      */
+      foreach($slots as $index => $slot){
+        //look at spot index (from 1 to N)
+        $tokensOnTileSpot = Tokens::countSpicesOnTile($tile->getId(), 1 + $index);
+        if($tokensOnTileSpot->count() == 0) $map['available'][] = 1 + $index;
+      }
       return $map;
     })->filter(function($map) {
-      return $map['available'] >0;
+      return count($map['available']) >0;
     });
     return $countEmptySpots;
   }

@@ -583,6 +583,39 @@ $playerboard_img_height: calc(1 * 796px);
                 }
             }
 
+            .goa_playerboard_top_zone{
+                position: absolute;
+                left: 150px;
+                top: 10px;
+                background-color: #ffffff7e;
+                border-radius: 15px;
+                //display: flex;
+                justify-content: center;
+                display: grid;
+                grid-template-rows: min-content 0fr;
+                transition: grid-template-rows 500ms;
+                .goa_playerboard_top_zone{
+                    overflow: hidden;
+                }
+                &.goa_display{
+                    width: 520px;
+                    height: 110px;
+                    grid-template-rows: min-content 1fr !important;
+                }
+                span{
+                    align-self: center;
+                    text-align: center;
+                    align-content: center;
+                    padding: 0 5px;
+                }
+                .goa_harvest_zone{
+                    display: flex;
+                    flex-wrap: wrap;
+                    flex-direction: column;
+                    justify-content: center;
+                }
+            }
+
             .goa_player_plantations{
                 position: absolute;
                 left: 174px;

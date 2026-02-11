@@ -251,6 +251,10 @@ export class Game {
                         <div class='goa_playerboard_container'>
                             <div class="goa_playerboard">
                                 <div class="goa_playerboard_background"></div>
+                                <div id="goa_playerboard_top_zone-${player.id}" class="goa_playerboard_top_zone">
+                                    <div></div>
+                                    <div class="goa_harvest_zone"></div>
+                                </div>
                                 <div id="goa_player_plantations-${player.id}" class="goa_player_plantations"></div>
                                 <div id="goa_player_outposts-${player.id}" class="goa_player_outposts"></div>
                                 <div id="goa_player_auction_markers-${player.id}" class="goa_player_auction_markers">
@@ -454,13 +458,13 @@ export class Game {
         });
         [...gameContainer.getElementsByClassName('selected')].forEach((node) => {
             if ($(node)){
-                $(node).classList.remove('selected')
+                $(node).classList.remove('selected');
             }
         });
         if(withClientState) {
             [...gameContainer.getElementsByClassName('selected_for_client_state')].forEach((node) => {
                 if ($(node)){
-                    $(node).classList.remove('selected_for_client_state')
+                    $(node).classList.remove('selected_for_client_state');
                 }
             });
         }
@@ -472,6 +476,18 @@ export class Game {
         document.getElementById('goa_top_zone').classList.remove('goa_display');
         //Empty it only when displayed again in order to have smooth transition
         //this.empty(document.getElementById('goa_top_zone_content'));
+        
+        [...gameContainer.getElementsByClassName('goa_playerboard_top_zone')].forEach((node) => {
+            $(node).classList.remove('goa_display');
+            [...node.getElementsByClassName('goa_harvest_zone')].forEach((h) => {
+                this.empty(h);
+            });
+        });
+
+        [...gameContainer.getElementsByClassName('goa_token_tmp_for_harvest')].forEach((node) => {
+            this.destroy(node);
+        });
+        
     }
 
     onClick(node, callback) {
@@ -589,6 +605,7 @@ export class Game {
         let elt = elements[id];
         if(selectionHint) elt.setAttribute("title",selectionHint);
         let clickAction = () => {
+            console.log("onSelectN...CLICK",id);
           if(!elt.classList.contains("selectable")) return;
 
           let index = selectedElements.findIndex((t) => t == id);
@@ -1838,13 +1855,13 @@ export class Game {
         return 'goa_game_container';
     }
     
-    addToken(token, location = null) { 
+    addToken(token, location = null, prefix ='') { 
         console.log("addToken",token,location); 
-        let tokenDiv = document.getElementById(`goa_token-${token.id}`) ;
+        let tokenDiv = document.getElementById(`goa_token${prefix}-${token.id}`) ;
         if (!tokenDiv){
             let container = location == null ? this.getTokenContainer(token) : location;
-            document.getElementById(container).insertAdjacentHTML('beforeend', this.tplToken(token));
-            tokenDiv = document.getElementById(`goa_token-${token.id}`) ;
+            document.getElementById(container).insertAdjacentHTML('beforeend', this.tplToken(token,prefix));
+            tokenDiv = document.getElementById(`goa_token${prefix}-${token.id}`) ;
             tokenDiv.dataset.id = token.id;
         }
         else {

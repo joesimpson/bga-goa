@@ -606,6 +606,37 @@ Icon extract in sprite with differents layers size (so % is not useful).
 .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_outposts .goa_tile[data-colony="4"] {
   left: 359px;
 }
+.goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_playerboard_top_zone {
+  position: absolute;
+  left: 150px;
+  top: 10px;
+  background-color: rgba(255, 255, 255, 0.4941176471);
+  border-radius: 15px;
+  justify-content: center;
+  display: grid;
+  grid-template-rows: min-content 0fr;
+  transition: grid-template-rows 500ms;
+}
+.goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_playerboard_top_zone .goa_playerboard_top_zone {
+  overflow: hidden;
+}
+.goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_playerboard_top_zone.goa_display {
+  width: 520px;
+  height: 110px;
+  grid-template-rows: min-content 1fr !important;
+}
+.goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_playerboard_top_zone span {
+  align-self: center;
+  text-align: center;
+  align-content: center;
+  padding: 0 5px;
+}
+.goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_playerboard_top_zone .goa_harvest_zone {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: center;
+}
 .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_plantations {
   position: absolute;
   left: 174px;
@@ -1025,7 +1056,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-size: 458.0152671756% 129.4117647059%;
 }
 
-.goa_spice[data-type="31"] {
+.goa_spice[data-spice="1"], .goa_spice[data-type="31"] {
   width: 38px;
   height: 39px;
   background-image: url("img/icons.png");
@@ -1033,7 +1064,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-position-y: 0px;
   background-size: 1061.9469026549% 277.3109243697%;
 }
-.goa_spice[data-type="32"] {
+.goa_spice[data-spice="3"], .goa_spice[data-type="32"] {
   width: 38px;
   height: 39px;
   background-image: url("img/icons.png");
@@ -1041,7 +1072,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-position-y: 0px;
   background-size: 1061.9469026549% 277.3109243697%;
 }
-.goa_spice[data-type="33"] {
+.goa_spice[data-spice="2"], .goa_spice[data-type="33"] {
   width: 38px;
   height: 39px;
   background-image: url("img/icons.png");
@@ -1049,7 +1080,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-position-y: 0px;
   background-size: 1061.9469026549% 277.3109243697%;
 }
-.goa_spice[data-type="34"] {
+.goa_spice[data-spice="4"], .goa_spice[data-type="34"] {
   width: 38px;
   height: 39px;
   background-image: url("img/icons.png");
@@ -1057,7 +1088,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-position-y: 0px;
   background-size: 1061.9469026549% 277.3109243697%;
 }
-.goa_spice[data-type="35"] {
+.goa_spice[data-spice="5"], .goa_spice[data-type="35"] {
   width: 38px;
   height: 39px;
   background-image: url("img/icons.png");
@@ -1734,6 +1765,9 @@ Icon extract in sprite with differents layers size (so % is not useful).
 }
 .goa_tile .goa_tile_spot.selected {
   outline: 8px solid var(--goa_selected_color);
+}
+.goa_tile .goa_tile_spot.selected_for_client_state {
+  outline: 8px solid green;
 }
 .goa_tile[data-spots="1"][data-end_score="1"] .goa_tile_spot[data-index="1"] {
   top: 17px;

@@ -117,6 +117,9 @@ $tile_height: 108px;
         &.selected{
             outline: 8px solid var(--goa_selected_color);
         }
+        &.selected_for_client_state{
+            outline: 8px solid green;
+        }
     }
     &[data-spots="1"][data-end_score="1"]{
         //scoring plantation have 1 spice at a different position

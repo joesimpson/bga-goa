@@ -441,6 +441,55 @@ class PlayerTurn extends GameState
 
         return PlayerTurn::class;
     }
+    
+    /**
+     * Player action : turn ACTION #3 Harvest 
+     */
+    #[PossibleAction]
+    public function actHarvest(
+        #[IntArrayParam] array $spots, 
+        #[IntArrayParam(name:'res')] array $resources, 
+        int|null $card_id = null, 
+        int|null $tile_id = null, 
+        int $activePlayerId, array $args,
+        int $v,
+    )
+    { 
+        Utils::checkVersion($v);
+        $this->game->trace("actHarvest($card_id, $tile_id,$activePlayerId)");
+        $possibleActions = $args['possibleActions'];
+        if(!in_array('actHarvest',$possibleActions)){
+            throw new UnexpectedException(110,"Invalid action actHarvest, see ".json_encode($possibleActions));
+        }
+        $harvestSpots = $args['harvestSpots'];
+        if(isset($card_id)){
+            $possibleCards = $args['possiblePlayCards'];
+            if(!in_array($card_id,$possibleCards->getIds())){
+                throw new UnexpectedException(111,"Invalid card $card_id for harvest ");
+            }
+            $playCardDatas = $possibleCards[$card_id]['play_datas'];
+        }  
+        //TODO JSA CHECK $harvestSpots
+
+
+        $player = Players::get($activePlayerId);
+        Log::addStep();
+        $doCheckpoint = false;
+        $countAsAPlayerAction = true;
+
+        if(isset($card_id)){
+            Cards::playExploration($player, $card_id, );
+        }
+        if($countAsAPlayerAction){
+            Players::registerNewAction($player);
+        }
+
+        //TODO JSA LOOP TO FILL SPOTS with specified resources
+ 
+        if($doCheckpoint) Log::addStateCheckpoint(PlayerTurn::class);
+        return PlayerTurn::class;
+
+    }
     /**
      * Player action : turn ACTION #4 take taxes
      */
