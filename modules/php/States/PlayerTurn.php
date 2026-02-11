@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Bga\Games\Goa\States;
 
 use Bga\GameFramework\Actions\Types\IntArrayParam;
+use Bga\GameFramework\Actions\Types\JsonParam;
 use Bga\GameFramework\StateType;
 use Bga\GameFramework\States\GameState;
 use Bga\GameFramework\States\PossibleAction;
@@ -108,6 +109,11 @@ class PlayerTurn extends GameState
                         $args['possibleActions'][] = 'actProgress';
                         $args['progressTracks'] = Tokens::getUpgradableProgressMarkers($player);
                         $args['possibleActions'][] = 'actBuildShips';
+                        $args['harvestSpots'] = Tiles::getPlayerAvailableSpotsForSpices($player);
+                        if($args['harvestSpots']->count()>0) {
+                            $args['possibleActions'][] = 'actHarvest';
+                            $args['playerBaseHarvest'] = Players::getHarvestBaseGain($player);
+                        }
                         $args['possibleActions'][] = 'actTaxes';
                         $args['possibleActions'][] = 'actFoundOutpost';
                         $args['playerBaseContracts'] = Players::getFoundBaseContracts($player);

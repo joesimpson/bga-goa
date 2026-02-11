@@ -24,6 +24,7 @@ const [BgaHelp,BgaZoom] = await globalThis.importDojoLibs([g_gamethemeurl + "mod
 
 import { ConfirmTurn } from "./states/ConfirmTurn.js";
 import { ClientCardAction } from "./states/ClientCardAction.js";
+import { ClientHarvestResources } from "./states/ClientHarvestResources.js";
 import { ClientSelectProgress } from "./states/ClientSelectProgress.js";
 import { ClientSelectSpicesForProgress } from "./states/ClientSelectSpicesForProgress.js";
 import { ClientSpendSpices } from "./states/ClientSpendSpices.js";
@@ -60,7 +61,9 @@ export class Game {
         this.bga.states.register('ClientSpendSpices', this.clientSpendSpices);
         this.clientFoundOutpost = new ClientFoundOutpost(this, bga);
         this.bga.states.register('ClientFoundOutpost', this.clientFoundOutpost);
-
+        this.clientHarvestResources = new ClientHarvestResources(this, bga);
+        this.bga.states.register('ClientHarvestResources', this.clientHarvestResources);
+        
         // Uncomment the next line to show debug informations about state changes in the console. Remove before going to production!
         this.bga.states.logger = console.log;
 
@@ -1873,7 +1876,7 @@ export class Game {
                 break;
             case 2:  
                 action_label = _('Harvest');
-                action_gains = [1,2,4,6,8];
+                action_gains = this.const.PROGRESS_GAINS_HARVEST;
                 action_desc = this.bga.gameui.format_string(
                             _("Take n ${resource_name} ${icon_resource} where n is indicated on the row of your progress marker on this column.")
                             ,{

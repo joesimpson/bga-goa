@@ -144,6 +144,28 @@ export class PlayerTurn {
                 this.game.onClick(progressMarker.parentNode,() => this.game.customPerformAction("actBuildShips"));
                 progressMarker.parentNode.setAttribute("title",actionHint);
             }
+            
+            if(possibleActions.includes('actHarvest')){
+                let actionName = _('Harvest');
+                let actionHint = this.bga.gameui.format_string(_('Action : ${name}'),{'name': actionName});
+                let goToNext = () => {
+                    this.bga.states.setClientState("ClientHarvestResources", {
+                        descriptionmyturn: '',
+                        args: {
+                            'withAction': true, 
+                            'harvestSpots': args.harvestSpots , 
+                            'min': 1,
+                            'max': args.playerBaseHarvest,
+                        },
+                    });
+                };
+                this.bga.statusBar.addActionButton(actionName, () => goToNext(), { 'title':actionHint,destination: document.getElementById('customPrimary') }); 
+                //+ CLICK ON BOARD section
+                let progressTrack = document.getElementById(`goa_progress_track_${2}_${activePlayer}`);
+                let progressMarker = progressTrack.getElementsByClassName('goa_progress_marker')[0];
+                this.game.onClick(progressMarker.parentNode,() => goToNext());
+                progressMarker.parentNode.setAttribute("title",actionHint);
+            }
             if(possibleActions.includes('actTaxes')){
                 let actionName = _('Taxes');
                 let actionHint = this.bga.gameui.format_string(_('Action : ${name}'),{'name': actionName});
