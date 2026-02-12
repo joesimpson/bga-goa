@@ -451,12 +451,14 @@ class PlayerTurn extends GameState
         #[IntArrayParam(name:'res')] array $resources, 
         int|null $card_id = null, 
         int|null $tile_id = null, 
+        int $ships, 
+        int $contracts, 
         int $activePlayerId, array $args,
         int $v,
     )
     { 
         Utils::checkVersion($v);
-        $this->game->trace("actHarvest($card_id, $tile_id,$activePlayerId)");
+        $this->game->trace("actHarvest($card_id, $tile_id, $ships, $contracts, $activePlayerId)");
         $possibleActions = $args['possibleActions'];
         if(!in_array('actHarvest',$possibleActions)){
             throw new UnexpectedException(110,"Invalid action actHarvest, see ".json_encode($possibleActions));
@@ -468,10 +470,11 @@ class PlayerTurn extends GameState
         if(count($spots) !== count($uniqueSpots)){
             throw new UnexpectedException(110,"Duplicate spots");
         }
+        $selectionSize = count($uniqueSpots);
         $countAsAPlayerAction = true;
         $harvestSpots = [];
         $min  = 1;
-        $max = $min; ;
+        $max = $min;
         $others = [];
         if(isset($args['harvestSpots'])) $harvestSpots = $args['harvestSpots'];
         if(isset($args['playerBaseHarvest'])) $max = $args['playerBaseHarvest'];
@@ -490,9 +493,12 @@ class PlayerTurn extends GameState
             $min = $harvestDatas['min'];
             $max = $harvestDatas['max'];
             if(isset($harvestDatas['others']) ) $others = $harvestDatas['others'] ;
-            //TODO JSA others
+            
         }  
         //TODO JSA tile harvest
+        if(in_array(ACTION_SHIP,$others)) $selectionSize += $ships;
+        if(in_array(ACTION_CONTRACT,$others)) $selectionSize += $contracts;
+
         $possibleSpotIds = [];
         foreach($harvestSpots as $harvestSpot){
             foreach($harvestSpot['available'] as $availableDatas){
@@ -509,10 +515,10 @@ class PlayerTurn extends GameState
             }
         }
         //check min < count($uniqueSpots) < max
-        if(count($uniqueSpots) < $min ){
+        if($selectionSize < $min ){
             throw new UnexpectedException(113,"Minimum is $min resources");
         }
-        if(count($uniqueSpots) > $max ){
+        if($selectionSize > $max ){
             throw new UnexpectedException(113,"Maximum is $max resources");
         }
 
@@ -535,6 +541,12 @@ class PlayerTurn extends GameState
             $resource = $resources[$k];
             $spiceTokenType = Tokens::getTokenSpiceTypeFromSpice($resource);
             Tokens::addSpiceOnTile($tile, $player, $spiceTokenType, $slotPosition);
+        }
+        if(in_array(ACTION_SHIP,$others)){
+            Players::giveShips($player, $ships);
+        }
+        if(in_array(ACTION_CONTRACT,$others)){
+            Players::giveContracts($player, $contracts);
         }
  
         if($doCheckpoint) Log::addStateCheckpoint(self::class);

@@ -2226,6 +2226,10 @@ html.goa_background_none #goa_overall_background {
   align-self: center;
   flex-grow: 0;
 }
+#goa_top_zone #goa_harvest_inc button span {
+  padding: 4px;
+  font-size: 18px;
+}
 
 #goa_main_zone {
   display: flex;

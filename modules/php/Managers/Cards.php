@@ -154,7 +154,8 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
               $playDatas['harvest'] = [
                 'countAction' => true,
                 'spots' => $args['harvestSpots'],
-                'min' => 1,
+                //in order to not let players loose ships/contracts, set min to max
+                'min' => $args['playerBaseHarvest'],
                 'max' => $args['playerBaseHarvest'],
                 'others' => [ACTION_SHIP, ACTION_CONTRACT],
               ];
