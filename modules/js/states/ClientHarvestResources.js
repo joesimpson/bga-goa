@@ -196,6 +196,9 @@ export class ClientHarvestResources {
 
 
                 } else {
+                    let tmpTokenDiv = document.getElementById(`goa_token_tmp_for_harvest-TMP_${id}`)
+                    if(tmpTokenDiv) this.game.destroy(tmpTokenDiv);
+                    this.game.empty(elt);
                     elt.classList.remove('selected_for_client_state');
                     selectedElements.splice(index, 1);
                     selectedResources.splice(index, 1);

@@ -469,6 +469,8 @@ class PlayerTurn extends GameState
             throw new UnexpectedException(110,"Duplicate spots");
         }
         $harvestSpots = $args['harvestSpots'];
+        $min  = 1;
+        $max = $args['playerBaseHarvest'];
         if(isset($card_id)){
             $possibleCards = $args['possiblePlayCards'];
             if(!in_array($card_id,$possibleCards->getIds())){
@@ -492,6 +494,13 @@ class PlayerTurn extends GameState
             if(!in_array($resource, $possibleSpotIds[$spotId]['spices'] )){
                 throw new UnexpectedException(112,"Invalid resource $resource for spot $spotId for harvest ");
             }
+        }
+        //check min < count($uniqueSpots) < max
+        if(count($uniqueSpots) < $min ){
+            throw new UnexpectedException(113,"Minimum is $min resources");
+        }
+        if(count($uniqueSpots) > $max ){
+            throw new UnexpectedException(113,"Maximum is $max resources");
         }
 
         $player = Players::get($activePlayerId);
