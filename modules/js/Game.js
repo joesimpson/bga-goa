@@ -797,6 +797,19 @@ export class Game {
                                 'previousClientState' : this.getCurrentClientStateDatas(),
                             },
                         });
+                    } 
+                    else if(play_datas.harvest){
+                        this.bga.states.setClientState("ClientHarvestResources", {
+                            descriptionmyturn: '',
+                            args: {
+                                'countAction': play_datas.harvest.countAction, 
+                                'harvestSpots': play_datas.harvest.spots , 
+                                'min': play_datas.harvest.min,
+                                'max': play_datas.harvest.max,
+                                'withTile':tile_id,
+                                'previousClientState' : this.getCurrentClientStateDatas(),
+                            },
+                        });
                     }
                     else { //DIRECT TILE PLAY
                         this.customPerformAction('actPlayTile', { 'tile_id':tile_id });

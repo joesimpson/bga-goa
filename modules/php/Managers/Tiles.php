@@ -452,6 +452,22 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
         switch($action){
           //TODO JSA : FILL SWITCH  
           case ACTION_SPICE:
+            if(!isset($args['harvestSpots'])){
+              $harvestSpots = Tiles::getPlayerAvailableSpotsForSpices($player);
+            }
+            else {
+              $harvestSpots = $args['harvestSpots'];
+            }
+            $possiblePlay = count($harvestSpots) > 0;
+            if($possiblePlay){
+              $playDatas['harvest'] = [
+                'countAction' => false,
+                'spots' => $harvestSpots,
+                'min' => 1,
+                'max' => 1,
+              ];
+              $args['possibleActions'][] = 'actHarvest';
+            }
             break;
           case ACTION_CONTRACT:
             $possiblePlay = true;
@@ -542,7 +558,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
     foreach($tile->getActions() as $action => $nb){
       switch($action){
         //TODO JSA : FILL SWITCH  
-        case ACTION_SPICE:
+        case ACTION_SPICE:  //done in actHarvest
           break;
         case ACTION_CONTRACT:
           Players::giveContracts($player, $nb);

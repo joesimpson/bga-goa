@@ -494,8 +494,22 @@ class PlayerTurn extends GameState
             $max = $harvestDatas['max'];
             if(isset($harvestDatas['others']) ) $others = $harvestDatas['others'] ;
             
-        }  
-        //TODO JSA tile harvest
+        } else if(isset($tile_id)){
+            $possibleTiles = $args['possiblePlayTiles'];
+            if(!in_array($tile_id,$possibleTiles->getIds())){
+                throw new UnexpectedException(111,"Invalid tile $tile_id to play");
+            }
+            $playDatas = $possibleTiles[$tile_id]['play_datas'];
+            if(!isset($playDatas['harvest'])){
+                throw new UnexpectedException(112,"Invalid tile $tile_id to harvest");
+            } 
+            $harvestDatas = $playDatas['harvest'];
+            $harvestSpots = $harvestDatas['spots'];
+            $countAsAPlayerAction = $harvestDatas['countAction'];
+            $min = $harvestDatas['min'];
+            $max = $harvestDatas['max'];
+            if(isset($harvestDatas['others']) ) $others = $harvestDatas['others'] ;
+        } 
         if(in_array(ACTION_SHIP,$others)) $selectionSize += $ships;
         if(in_array(ACTION_CONTRACT,$others)) $selectionSize += $contracts;
 
@@ -522,6 +536,8 @@ class PlayerTurn extends GameState
 
         if(isset($card_id)){
             Cards::playExploration($player, $card_id, );
+        } else if(isset($tile_id)){
+            $tile = Tiles::playTile($player, $tile_id, $doCheckpoint );
         }
         if($countAsAPlayerAction){
             Players::registerNewAction($player);
