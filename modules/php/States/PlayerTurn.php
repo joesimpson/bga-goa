@@ -110,7 +110,7 @@ class PlayerTurn extends GameState
                         $args['progressTracks'] = Tokens::getUpgradableProgressMarkers($player);
                         $args['possibleActions'][] = 'actBuildShips';
                         $args['harvestSpots'] = Tiles::getPlayerAvailableSpotsForSpices($player);
-                        if($args['harvestSpots']->count()>0) {
+                        if(count($args['harvestSpots'])>0) {
                             $args['possibleActions'][] = 'actHarvest';
                             $args['playerBaseHarvest'] = Players::getHarvestBaseGain($player);
                         }
@@ -499,18 +499,12 @@ class PlayerTurn extends GameState
         if(in_array(ACTION_SHIP,$others)) $selectionSize += $ships;
         if(in_array(ACTION_CONTRACT,$others)) $selectionSize += $contracts;
 
-        $possibleSpotIds = [];
-        foreach($harvestSpots as $harvestSpot){
-            foreach($harvestSpot['available'] as $availableDatas){
-                $possibleSpotIds[$availableDatas['id']] = $availableDatas;
-            }
-        }
         foreach($uniqueSpots as $k => $spotId){
-            if(!in_array($spotId, array_keys($possibleSpotIds) )){
+            if(!in_array($spotId, array_keys($harvestSpots) )){
                 throw new UnexpectedException(111,"Invalid spot $spotId for harvest ");
             }
             $resource = $resources[$k];
-            if(!in_array($resource, $possibleSpotIds[$spotId]['spices'] )){
+            if(!in_array($resource, $harvestSpots[$spotId]['spices'] )){
                 throw new UnexpectedException(112,"Invalid resource $resource for spot $spotId for harvest ");
             }
         }
@@ -535,8 +529,8 @@ class PlayerTurn extends GameState
 
         //LOOP TO FILL SPOTS with specified resources
         foreach($uniqueSpots as $k => $spotId){
-            $slotPosition = $possibleSpotIds[$spotId]['index'];
-            $tile_id = $possibleSpotIds[$spotId]['tile_id'];
+            $slotPosition = $harvestSpots[$spotId]['index'];
+            $tile_id = $harvestSpots[$spotId]['tile_id'];
             $tile = Tiles::get($tile_id);
             $resource = $resources[$k];
             $spiceTokenType = Tokens::getTokenSpiceTypeFromSpice($resource);

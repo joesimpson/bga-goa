@@ -393,13 +393,11 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
     return $newOutposts;
   }
 
-  public static function getPlayerAvailableSpotsForSpices(Player $player) : Collection {
+  public static function getPlayerAvailableSpotsForSpices(Player $player) : array {
     $allSpots = self::getPlayerOutposts($player);
     $allSpots = $allSpots->merge(self::getPlantations($player));
-    $countEmptySpots = $allSpots->map(function($tile) {
+    $emptySpots = $allSpots->map(function($tile) {
       $map = [
-        'tile_id' => $tile->getId(),
-        'available' => [],
       ];
       $slots = $tile->getSpice_slots();
       foreach($slots as $index => $slot){
@@ -408,7 +406,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
         $tokensOnTileSpot = Tokens::countSpicesOnTile($tile->getId(), $spiceIndex);
         if($tokensOnTileSpot->count() == 0){
           $id = $tile->getId() * 10 + $spiceIndex;
-          $map['available'][$id] = [
+          $map[$id] = [
             'id' => $id, 
             'tile_id' => $tile->getId(), 
             'index' => $spiceIndex, 
@@ -418,9 +416,15 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
       }
       return $map;
     })->filter(function($map) {
-      return count($map['available']) >0;
+      return count($map) >0;
     });
-    return $countEmptySpots;
+    $emptySpots = array_merge_recursive(...$emptySpots);
+    $emptySpotsIds = [];
+    foreach($emptySpots as $s){
+      $emptySpotsIds[] = $s['id'];
+    }
+    $emptySpots = array_combine($emptySpotsIds, $emptySpots);
+    return $emptySpots;
   }
 
   public static function getPossibleToPlay(Player $player, array &$args, array|null $actionsWhiteList = null,) : Collection

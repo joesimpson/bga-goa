@@ -149,7 +149,7 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
           //not possible if player already performed an action in this round
           if($actionPlayed) $possiblePlay = false;
           else if(isset($args['harvestSpots'])){
-            $possiblePlay = $args['harvestSpots']->count()>0;
+            $possiblePlay = (count($args['harvestSpots']) > 0);
             if($possiblePlay){
               $playDatas['harvest'] = [
                 'countAction' => true,
@@ -193,7 +193,7 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
           else {
             $harvestSpots = $args['harvestSpots'];
           }
-          $possiblePlay = $harvestSpots->count()>0;
+          $possiblePlay = count($harvestSpots) > 0;
           if($possiblePlay){
             $playDatas['harvest'] = [
               'countAction' => false,

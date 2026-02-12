@@ -20,18 +20,6 @@ export class ClientHarvestResources {
         let withTile = args.withTile;
         let otherResources = (args.others) ? args.others : [];
 
-        let tilesSpotsDivs = [];
-        let tilesSpotsSpices = [];
-        //LOOP ON tiles spots
-        Object.values(harvestSpots).forEach((harvestSpot) => {
-            Object.values(harvestSpot.available).forEach((datas) => {
-                let tileId = datas.tile_id;
-                let index = datas.index;
-                tilesSpotsDivs[datas.id] = $(`goa_tile_spot-${tileId}-${index}`);
-                tilesSpotsSpices[datas.id] = datas.spices;
-            });
-        });
-     
         this.bga.statusBar.setTitle(
             minSpices == maxSpices ? 
                 _("${you} must select ${n} spices to place on your tiles").replace('${n}',maxSpices)
@@ -61,7 +49,7 @@ export class ClientHarvestResources {
         }, { 'color':'secondary','title':_('Cancel'), destination: document.getElementById('customSecondary') }); 
             
         let selectionHint = _('Select this tile spot to fill');
-        this.onSelectNSpiceSpots(tilesSpotsDivs, tilesSpotsSpices, minSpices, maxSpices, (selectedElements,selectedResources, selectedShips, selectedContracts) => {
+        this.onSelectNSpiceSpots(harvestSpots, minSpices, maxSpices, (selectedElements,selectedResources, selectedShips, selectedContracts) => {
             this.game.customPerformAction(actionName, { 
                 'spots': selectedElements.join(','),
                 'res': selectedResources.join(','), 
@@ -85,7 +73,7 @@ export class ClientHarvestResources {
 
     //----------------------------------------
     
-    onSelectNSpiceSpots(elements, tilesSpotsSpices, minElements, maxElements, callbackOnSelectionEnd, otherResources, displayConfirmAsDisabled = false, selectionHint = null,) {
+    onSelectNSpiceSpots(harvestSpots, minElements, maxElements, callbackOnSelectionEnd, otherResources, displayConfirmAsDisabled = false, selectionHint = null,) {
         
         let activePlayer = this.bga.players.getActivePlayerId();
         let selectedElements = [];
@@ -97,6 +85,15 @@ export class ClientHarvestResources {
         
         let countElements = 0;
         let allElementsIds = [];
+        
+        let elements = [];
+        //LOOP ON tiles spots
+        Object.values(harvestSpots).forEach((datas) => {
+                let tileId = datas.tile_id;
+                let index = datas.index;
+                elements[datas.id] = $(`goa_tile_spot-${tileId}-${index}`);
+        });
+     
         Object.keys(elements).forEach((id) => {
             countElements++;
             allElementsIds.push(id);
@@ -221,10 +218,12 @@ export class ClientHarvestResources {
             }
 
             if ($('btnCancelChoice')) $('btnCancelChoice').remove();
-            if (selectedElements.length  > 0) {
+            if (selectedElements.length  > 0 || selectedShips > 0 || selectedContracts > 0 ) {
                 this.bga.statusBar.addActionButton( _('Clear selection'), () => {
                     selectedElements = [];
                     selectedResources = [];
+                    selectedShips = 0;
+                    selectedContracts = 0;
                     [...document.getElementsByClassName('goa_token_tmp_for_harvest')].forEach((node) => {
                         this.game.destroy(node);
                     });
@@ -284,12 +283,11 @@ export class ClientHarvestResources {
                     }
                     harvestResourcesZone.scrollIntoView({'behavior': 'smooth', 'block':'center'});
 
-                    //id is made as (tileId * 10 + index)
-                    let tile_spot = id % 10;
-                    let tile_id = (id - tile_spot) / 10;
+                    let tile_spot = harvestSpots[id]['index'];
+                    let tile_id = harvestSpots[id]['tile_id'];
 
                     let possibleSpices = this.game.const.SPICES_ALL;
-                    if(tilesSpotsSpices[id]) possibleSpices = tilesSpotsSpices[id];
+                    possibleSpices = harvestSpots[id]['spices'];
                     possibleSpices.forEach((spice) => {
                         let spice_icon = this.game.formatIcon('spices_'+spice,_('Spices'));
                         this.bga.statusBar.addActionButton( spice_icon, () => {
