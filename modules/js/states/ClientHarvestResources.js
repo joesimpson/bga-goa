@@ -15,6 +15,7 @@ export class ClientHarvestResources {
         
         let maxSpices = args.max;
         let minSpices = args.min;
+        let maxTiles = args.maxTiles;
         let harvestSpots = args.harvestSpots;
         let withCard = args.withCard;
         let withTile = args.withTile;
@@ -26,6 +27,11 @@ export class ClientHarvestResources {
                 :
                 _("${you} must select ${a} to ${b} spices to place on your tiles").replace('${a}',minSpices).replace('${b}',maxSpices)
             );
+        if(maxTiles){
+            this.bga.statusBar.setTitle(
+                _("${you} must select spices to place on ${n} tiles").replace('${n}',maxTiles)
+            );
+        }
         let displayConfirmAsDisabled = false;    
         let icon_ships = this.game.formatIcon('ships', _('Ships'));
         let icon_contracts = this.game.formatIcon('contracts', _('Contracts'));
@@ -56,7 +62,7 @@ export class ClientHarvestResources {
                 'ships':selectedShips, 
                 'contracts':selectedContracts
             });
-        }, otherResources, displayConfirmAsDisabled, selectionHint );
+        }, otherResources, displayConfirmAsDisabled, selectionHint, maxTiles );
     
     }
 
@@ -71,14 +77,14 @@ export class ClientHarvestResources {
 
     //----------------------------------------
     
-    onSelectNSpiceSpots(harvestSpots, minElements, maxElements, callbackOnSelectionEnd, otherResources, displayConfirmAsDisabled = false, selectionHint = null,) {
+    onSelectNSpiceSpots(harvestSpots, minElements, maxElements, callbackOnSelectionEnd, otherResources, displayConfirmAsDisabled = false, selectionHint = null, maxTiles = null) {
         
         let activePlayer = this.bga.players.getActivePlayerId();
         let selectedElements = [];
         let selectedResources = [];
+        let selectedTiles = [];
         let selectedShips = 0;
         let selectedContracts = 0;
-        let n = maxElements;
         let confirmText = '';
         
         let countElements = 0;
@@ -90,6 +96,7 @@ export class ClientHarvestResources {
                 let tileId = datas.tile_id;
                 let index = datas.index;
                 elements[datas.id] = $(`goa_tile_spot-${tileId}-${index}`);
+            selectedTiles[tileId] = 0;
         });
      
         Object.keys(elements).forEach((id) => {
@@ -185,12 +192,22 @@ export class ClientHarvestResources {
                 selectedResources = [];
                 selectedShips = 0;
                 selectedContracts = 0;
+                Object.values(selectedTiles).forEach((t) => {t = 0  });
                 updateStatus();
             }
         }
         let updateStatus = () => {
             if ($('btnConfirmChoice')) $('btnConfirmChoice').remove();
-            let selectionGood = selectedElements.length == n || selectedElements.length >= minElements && selectedElements.length <=n;
+            let selectionGood = selectedElements.length == maxElements || selectedElements.length >= minElements && selectedElements.length <=maxElements;
+
+            let nbTiles = 0;
+            Object.values(selectedTiles).forEach((t) => {
+                if(t>0) nbTiles++;
+            });
+            if(maxTiles){
+                selectionGood = (nbTiles <= maxTiles);
+            }
+
             if (selectionGood || displayConfirmAsDisabled) {
                 if(otherResources.includes(this.game.const.ACTION_SHIP)  
                     && otherResources.includes(this.game.const.ACTION_CONTRACT)   
@@ -203,7 +220,7 @@ export class ClientHarvestResources {
                         'icon_ships': icon_ships,
                         'icon_contracts': icon_contracts,
                     });
-                    selectionGood = ((selectedElements.length + selectedShips + selectedContracts) == n);
+                    selectionGood = ((selectedElements.length + selectedShips + selectedContracts) == maxElements);
                 } else {
                     confirmText = this.bga.gameui.format_string(  _('Confirm : ${z} resources') ,
                     { 
@@ -220,6 +237,7 @@ export class ClientHarvestResources {
                 this.bga.statusBar.addActionButton( _('Clear selection'), () => {
                     selectedElements = [];
                     selectedResources = [];
+                    Object.values(selectedTiles).forEach((t) => {t = 0  });
                     selectedShips = 0;
                     selectedContracts = 0;
                     [...document.getElementsByClassName('goa_token_tmp_for_harvest')].forEach((node) => {
@@ -229,11 +247,21 @@ export class ClientHarvestResources {
                 }, { id:'btnCancelChoice', 'title':_('Clear selection'), 'color':'secondary',destination: document.getElementById('customSecondary')},);
             }
 
+            if(maxTiles){
+                let nbTiles = 0;
+                Object.values(selectedTiles).forEach((t) => {
+                    if(t>0) nbTiles++;
+                });
+                selectionGood = (nbTiles <= maxTiles);
+            }
+
             Object.keys(elements).forEach((id) => {
                 let elt = elements[id];
                 let selected = selectedElements.includes(parseInt(id));
+                let tile_id = harvestSpots[id]['tile_id'];
+                let selectedTile = (selectedTiles[tile_id] > 0);
                 elt.classList.toggle('selected', selected);
-                elt.classList.toggle('selectable', selected || selectedElements.length < n);
+                elt.classList.toggle('selectable', selected || selectedElements.length < maxElements  || maxTiles && (nbTiles < maxTiles || selectedTile) );
             });
 
             let harvestResourcesZone = harvestTopZone.getElementsByClassName('goa_harvest_resources')[0]; 
@@ -260,8 +288,11 @@ export class ClientHarvestResources {
                 [...document.querySelectorAll('.goa_tile_spot.selected_for_client_state')].forEach((node) => {
                     $(node).classList.remove('selected_for_client_state');
                 });
+                let tile_spot = harvestSpots[id]['index'];
+                let tile_id = harvestSpots[id]['tile_id'];
+
                 if (index === -1) {
-                    if (selectedElements.length >= n) return;
+                    if (selectedElements.length >= maxElements) return;
 
                     //selectedElements.push(parseInt(id));
 
@@ -280,9 +311,6 @@ export class ClientHarvestResources {
                         harvestResourcesZone = harvestTopZone.getElementsByClassName('goa_harvest_resources')[0]; 
                     }
                     harvestResourcesZone.scrollIntoView({'behavior': 'smooth', 'block':'center'});
-
-                    let tile_spot = harvestSpots[id]['index'];
-                    let tile_id = harvestSpots[id]['tile_id'];
 
                     let possibleSpices = this.game.const.SPICES_ALL;
                     possibleSpices = harvestSpots[id]['spices'];
@@ -305,6 +333,7 @@ export class ClientHarvestResources {
                             );
                             this.game.animationManager.slideIn(tmpTokenDiv, document.getElementById('btnHarvestSelect'+spice), {duration: 800});
                              
+                            selectedTiles[tile_id] ++;
                             updateStatus();
                         }, { 'id': 'btnHarvestSelect'+spice, 'destination': harvestResourcesZone,'title':_('Select this spice'),  }); 
                     });
@@ -317,6 +346,7 @@ export class ClientHarvestResources {
                     elt.classList.remove('selected_for_client_state');
                     selectedElements.splice(index, 1);
                     selectedResources.splice(index, 1);
+                    selectedTiles[tile_id] --;
                     updateStatus();
                 }
             };
@@ -324,34 +354,4 @@ export class ClientHarvestResources {
         });
       
     }
- /*
-    onIncreaseShips(delta,min,max) {
-        console.log( 'onIncreaseShips', delta,this.selectedShips,min,max);
-        let nextValue = this.selectedShips + delta;
-        if ( nextValue < min) {
-            return;
-        }
-        if ( nextValue > max) {
-            return;
-        }
-        this.selectedShips = nextValue;
-        
-        updateStatus();
-
-        //this.refreshHarvestButton();
-    }
-    refreshHarvestButton(){
-        let button = document.getElementById('btnConfirmChoice');
-        if(button) this.game.destroy(button);
-
-        let confirmText = this.bga.gameui.format_string(  _('Confirm : ${x} ${icon_ships} / ${y} ${icon_contracts} / ${z} resources') ,
-                { 
-                    'x': selectedShips, 
-                    'y': selectedContracts,
-                    'z': selectedElements.length,
-                    'icon_ships': icon_ships,
-                    'icon_contracts': icon_contracts,
-                });
-    }
-    */
 }

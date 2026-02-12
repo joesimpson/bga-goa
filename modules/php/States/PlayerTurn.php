@@ -506,13 +506,15 @@ class PlayerTurn extends GameState
             $harvestDatas = $playDatas['harvest'];
             $harvestSpots = $harvestDatas['spots'];
             $countAsAPlayerAction = $harvestDatas['countAction'];
-            $min = $harvestDatas['min'];
-            $max = $harvestDatas['max'];
+            if(isset($harvestDatas['min'])) $max = $harvestDatas['min'];
+            if(isset($harvestDatas['max'])) $max = $harvestDatas['max'];
+            if(isset($harvestDatas['maxTiles'])) $maxTiles = $harvestDatas['maxTiles'];
             if(isset($harvestDatas['others']) ) $others = $harvestDatas['others'] ;
         } 
         if(in_array(ACTION_SHIP,$others)) $selectionSize += $ships;
         if(in_array(ACTION_CONTRACT,$others)) $selectionSize += $contracts;
 
+        $tilesToFill = [];
         foreach($uniqueSpots as $k => $spotId){
             if(!in_array($spotId, array_keys($harvestSpots) )){
                 throw new UnexpectedException(111,"Invalid spot $spotId for harvest ");
@@ -521,13 +523,18 @@ class PlayerTurn extends GameState
             if(!in_array($resource, $harvestSpots[$spotId]['spices'] )){
                 throw new UnexpectedException(112,"Invalid resource $resource for spot $spotId for harvest ");
             }
+            $spot_tile_id = $harvestSpots[$spotId]['tile_id'];
+            if(!in_array($spot_tile_id,$tilesToFill)) $tilesToFill[] = $spot_tile_id;
         }
         //check min < count($uniqueSpots) < max
         if($selectionSize < $min ){
             throw new UnexpectedException(113,"Minimum is $min resources");
         }
-        if($selectionSize > $max ){
+        if($selectionSize > $max && !isset($maxTiles)){
             throw new UnexpectedException(113,"Maximum is $max resources");
+        }
+        if(isset($maxTiles) && (count($tilesToFill) > $maxTiles)) {
+            throw new UnexpectedException(113,"Maximum is $maxTiles tiles to fill");
         }
 
         $player = Players::get($activePlayerId);
@@ -546,8 +553,8 @@ class PlayerTurn extends GameState
         //LOOP TO FILL SPOTS with specified resources
         foreach($uniqueSpots as $k => $spotId){
             $slotPosition = $harvestSpots[$spotId]['index'];
-            $tile_id = $harvestSpots[$spotId]['tile_id'];
-            $tile = Tiles::get($tile_id);
+            $spot_tile_id = $harvestSpots[$spotId]['tile_id'];
+            $tile = Tiles::get($spot_tile_id);
             $resource = $resources[$k];
             $spiceTokenType = Tokens::getTokenSpiceTypeFromSpice($resource);
             Tokens::addSpiceOnTile($tile, $player, $spiceTokenType, $slotPosition);

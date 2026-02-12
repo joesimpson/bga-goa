@@ -9,7 +9,8 @@ class UnexpectedException extends BgaVisibleSystemException
     public function __construct(int $code,string $str)
     {
         parent::__construct($str);
-        $this->code = $code;
+        //Don't override BGA codes, I had problems with 114 for example
+        //$this->code = $code;
     }
 }
 ?>

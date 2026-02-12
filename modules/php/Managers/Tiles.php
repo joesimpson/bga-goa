@@ -483,6 +483,22 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
           case ACTION_RESUPPLY: 
             break;
           case ACTION_HARVEST: 
+            if(!isset($args['harvestSpots'])){
+              $harvestSpots = Tiles::getPlayerAvailableSpotsForSpices($player);
+            }
+            else {
+              $harvestSpots = $args['harvestSpots'];
+            }
+            $possiblePlay = count($harvestSpots) > 0;
+            if($possiblePlay){
+              $playDatas['harvest'] = [
+                'countAction' => false,
+                'spots' => $harvestSpots,
+                'min'=> 1,
+                'maxTiles' => 3,
+              ];
+              $args['possibleActions'][] = 'actHarvest';
+            }
             break;
           case ACTION_ESPIONAGE: 
             break;
@@ -573,7 +589,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
           break;
         case ACTION_RESUPPLY: 
           break;
-        case ACTION_HARVEST: 
+        case ACTION_HARVEST:  //done in actHarvest
           break;
         case ACTION_ESPIONAGE: 
           break;

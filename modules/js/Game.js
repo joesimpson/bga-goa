@@ -806,6 +806,7 @@ export class Game {
                                 'harvestSpots': play_datas.harvest.spots , 
                                 'min': play_datas.harvest.min,
                                 'max': play_datas.harvest.max,
+                                'maxTiles' : play_datas.harvest.maxTiles,
                                 'withTile':tile_id,
                                 'previousClientState' : this.getCurrentClientStateDatas(),
                             },
