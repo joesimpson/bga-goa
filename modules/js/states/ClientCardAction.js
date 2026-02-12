@@ -61,6 +61,20 @@ export class ClientCardAction {
                             },
                         });
                     }
+                    else if(play_datas.harvest){
+                        this.bga.states.setClientState("ClientHarvestResources", {
+                            descriptionmyturn: '',
+                            args: {
+                                'countAction': play_datas.harvest.countAction, 
+                                'harvestSpots': play_datas.harvest.spots , 
+                                'min': play_datas.harvest.min,
+                                'max': play_datas.harvest.max,
+                                'others': play_datas.harvest.others,
+                                'withCard':card_id,
+                                'previousClientState' : this.game.getCurrentClientStateDatas(),
+                            },
+                        });
+                    }
                     else {
                         //DIRECT CARD PLAY
                         this.game.customPerformAction("actPlayCard", {'card_id':card_id});

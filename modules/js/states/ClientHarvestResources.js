@@ -19,7 +19,6 @@ export class ClientHarvestResources {
         let minSpices = args.min;
         let harvestSpots = args.harvestSpots;
         let tiles_ids = Object.keys(harvestSpots);
-        let withAction = args.withAction;
         let withCard = args.withCard;
         let withTile = args.withTile;
 

@@ -468,16 +468,29 @@ class PlayerTurn extends GameState
         if(count($spots) !== count($uniqueSpots)){
             throw new UnexpectedException(110,"Duplicate spots");
         }
-        $harvestSpots = $args['harvestSpots'];
+        $countAsAPlayerAction = true;
+        $harvestSpots = [];
         $min  = 1;
-        $max = $args['playerBaseHarvest'];
+        $max = $min; ;
+        $others = [];
+        if(isset($args['harvestSpots'])) $harvestSpots = $args['harvestSpots'];
+        if(isset($args['playerBaseHarvest'])) $max = $args['playerBaseHarvest'];
         if(isset($card_id)){
             $possibleCards = $args['possiblePlayCards'];
             if(!in_array($card_id,$possibleCards->getIds())){
-                throw new UnexpectedException(111,"Invalid card $card_id for harvest ");
+                throw new UnexpectedException(111,"Invalid card $card_id to play");
             }
             $playCardDatas = $possibleCards[$card_id]['play_datas'];
-            //TODO JSA card harvest
+            if(!isset($playCardDatas['harvest'])){
+                throw new UnexpectedException(111,"Invalid card $card_id for harvest");
+            }
+            $harvestDatas = $playCardDatas['harvest'];
+            $harvestSpots = $harvestDatas['spots'];
+            $countAsAPlayerAction = $harvestDatas['countAction'];
+            $min = $harvestDatas['min'];
+            $max = $harvestDatas['max'];
+            if(isset($harvestDatas['others']) ) $others = $harvestDatas['others'] ;
+            //TODO JSA others
         }  
         //TODO JSA tile harvest
         $possibleSpotIds = [];
@@ -506,7 +519,6 @@ class PlayerTurn extends GameState
         $player = Players::get($activePlayerId);
         Log::addStep();
         $doCheckpoint = false;
-        $countAsAPlayerAction = true;
 
         if(isset($card_id)){
             Cards::playExploration($player, $card_id, );

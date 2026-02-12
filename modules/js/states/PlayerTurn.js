@@ -145,14 +145,14 @@ export class PlayerTurn {
                 progressMarker.parentNode.setAttribute("title",actionHint);
             }
             
-            if(possibleActions.includes('actHarvest')){
+            if(possibleActions.includes('actHarvest') && args.harvestSpots &&  Object.keys(args.harvestSpots).length > 0){
                 let actionName = _('Harvest');
                 let actionHint = this.bga.gameui.format_string(_('Action : ${name}'),{'name': actionName});
                 let goToNext = () => {
                     this.bga.states.setClientState("ClientHarvestResources", {
                         descriptionmyturn: '',
                         args: {
-                            'withAction': true, 
+                            'countAction': true, 
                             'harvestSpots': args.harvestSpots , 
                             'min': 1,
                             'max': args.playerBaseHarvest,

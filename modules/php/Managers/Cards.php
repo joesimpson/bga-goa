@@ -148,6 +148,18 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
         case CARD_ACTION_HARVEST_AND_CARDS:
           //not possible if player already performed an action in this round
           if($actionPlayed) $possiblePlay = false;
+          else if(isset($args['harvestSpots'])){
+            $possiblePlay = $args['harvestSpots']->count()>0;
+            if($possiblePlay){
+              $playDatas['harvest'] = [
+                'countAction' => true,
+                'spots' => $args['harvestSpots'],
+                'min' => 1,
+                'max' => $args['playerBaseHarvest'],
+                'others' => [ACTION_SHIP, ACTION_CONTRACT],
+              ];
+            }
+          } 
           break;
         case CARD_ACTION_OUTPOST_EXTRA_CONTRACTS:
           // Not possible if the arg outpostsToFound is not set for playerTurn
@@ -174,8 +186,22 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
           }
           break;
         case CARD_ACTION_2_SPICES:
-          $playDatas = Tiles::getPlayerAvailableSpotsForSpices($player);
-          $possiblePlay = ($playDatas->count()>0);
+          if(!isset($args['harvestSpots'])){
+            $harvestSpots = Tiles::getPlayerAvailableSpotsForSpices($player);
+          }
+          else {
+            $harvestSpots = $args['harvestSpots'];
+          }
+          $possiblePlay = $harvestSpots->count()>0;
+          if($possiblePlay){
+            $playDatas['harvest'] = [
+              'countAction' => false,
+              'spots' => $harvestSpots,
+              'min' => 1,
+              'max' => 2,
+            ];
+            $args['possibleActions'][] = 'actHarvest';
+          }
           break;
         case CARD_ACTION_PROGRESS_WITH_COINS:
           $progressTracks = Tokens::getUpgradableProgressMarkersWithCoins($player);
@@ -283,19 +309,18 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
     //NOTIFY 
     Notifications::playExploration( $player, $card);
     
-    //TODO JSA FILL SWITCH CARD TYPE -> play
     switch($card->getAction()){
       case CARD_ACTION_PROGRESS_NO_SPICE: //done in actProgress
         break;
       case CARD_ACTION_PROGRESS_NO_SHIP: //done in actProgress
         break;
-      case CARD_ACTION_HARVEST_AND_CARDS:
+      case CARD_ACTION_HARVEST_AND_CARDS: //done in actHarvest
         break;
       case CARD_ACTION_OUTPOST_EXTRA_CONTRACTS: //done in actFoundOutpost
         break;
       case CARD_ACTION_RESSOURCES_TO_COINS: //done in actSpendSpices
         break;
-      case CARD_ACTION_2_SPICES:
+      case CARD_ACTION_2_SPICES: //done in actHarvest
         break;
       case CARD_ACTION_2_CONTRACTS:
         Players::giveContracts($player, 2);
