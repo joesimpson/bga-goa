@@ -35,7 +35,7 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
     $gameInfos = Game::get()->getGameinfos();
     $colors = $gameInfos['player_colors'];
     shuffle($colors);//Shuffle for cases where color matters
-    $query = self::DB()->multipleInsert(['player_id', 'player_color', 'player_canal', 'player_name', 'player_avatar','money']);
+    $query = self::DB()->multipleInsert(['player_id', 'player_color', 'player_name', 'money']);
 
     $query_values = [];
     $initialMoney = 10;
@@ -51,9 +51,7 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
       $query_values[] = [
           $player_id,
           $color,
-          $player["player_canal"],
           addslashes($player["player_name"]),
-          addslashes($player["player_avatar"]),
           $initialMoney,
       ];
     }
