@@ -48,10 +48,7 @@ export class ClientFoundOutpost {
             });
         });
     
-        this.bga.statusBar.addActionButton( _('Cancel'), () => {
-            this.game.restorePreviousState(args);
-        }, { 'color':'secondary','title':_('Cancel'), destination: document.getElementById('customSecondary') }); 
-
+        this.game.addButtonCloseClientState(args);
     }
 
     onLeavingState(args, isCurrentPlayerActive) {

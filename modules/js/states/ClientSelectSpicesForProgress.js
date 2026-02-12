@@ -50,10 +50,7 @@ export class ClientSelectSpicesForProgress {
             this.game.customPerformAction('actProgress', { 'track': args.track, 't_ids': selectedSpices.join(','), 'card_id': args.withCard});
         }, spicesSets, true, _('Confirm'), selectionHint );
     
-        this.bga.statusBar.addActionButton( _('Cancel'), () => {
-            this.game.restorePreviousState(args);
-        }, { 'color':'secondary','title':_('Cancel'), destination: document.getElementById('customSecondary') }); 
-
+        this.game.addButtonCloseClientState(args);
     }
 
     /**

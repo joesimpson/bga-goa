@@ -400,6 +400,16 @@ export class Game {
         this.empty('customSecondary');
         this.empty('restartActions');
     }
+
+    addButtonCloseClientState(args){
+        this.bga.statusBar.addActionButton( _('Return'), () => {
+            this.restorePreviousState(args);
+        }, { 
+            'color':'secondary',
+            'title':_('Return'), 
+            'destination': document.getElementById('customSecondary') 
+        }); 
+    }
     
     destroyTooltip(elem) {
         /*TODO JSA destroyTooltip ?

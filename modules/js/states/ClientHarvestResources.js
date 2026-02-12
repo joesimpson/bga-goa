@@ -44,9 +44,7 @@ export class ClientHarvestResources {
             tileDiv.classList.add('selected_for_client_state');
         }
 
-        this.bga.statusBar.addActionButton( _('Cancel'), () => {
-            this.game.restorePreviousState(args);
-        }, { 'color':'secondary','title':_('Cancel'), destination: document.getElementById('customSecondary') }); 
+        this.game.addButtonCloseClientState(args);
             
         let selectionHint = _('Select this tile spot to fill');
         this.onSelectNSpiceSpots(harvestSpots, minSpices, maxSpices, (selectedElements,selectedResources, selectedShips, selectedContracts) => {

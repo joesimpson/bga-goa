@@ -91,11 +91,11 @@ export class ClientCardAction {
             this.bga.statusBar.addActionButton(_('Discard'), () => this.game.customPerformAction("actDiscard", {'card_id':card_id}), { 'disabled': !args.isDiscardableCard,'title':_('Discard this card'),destination: document.getElementById('customPrimary') }); 
         //}
 
-        this.bga.statusBar.addActionButton( _('Cancel'), () => {
+        this.bga.statusBar.addActionButton( _('Return'), () => {
             //this.game.explorationHand.setSelectionMode('none');
             this.game.explorationHand.unselectAll();
             this.game.restorePreviousState(args,'ClientCardAction');
-        }, { 'color':'secondary','title':_('Cancel'), destination: document.getElementById('customSecondary') }); 
+        }, { 'color':'secondary','title':_('Return'), destination: document.getElementById('customSecondary') }); 
 
     }
 
