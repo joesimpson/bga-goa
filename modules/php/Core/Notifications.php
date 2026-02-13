@@ -223,9 +223,17 @@ class Notifications
     ]);
   }
   
+  public static function resultDrawNCards(Player $player, int $nbContracts)
+  {
+    self::notifyAll("resultDrawNCards", clienttranslate('Cards reveal ${n} ${icon_contracts}'), [
+        "player" => $player,
+        "n" => $nbContracts,
+        "icon_contracts" => clienttranslate('Contracts'),
+    ]);
+  }
   public static function resultFoundOutpost(Player $player, int $nbContracts)
   {
-    self::notifyAll("resultFoundOutpost", clienttranslate('Cards revealed ${n} ${icon_contracts} to found the outpost'), [
+    self::notifyAll("resultFoundOutpost", clienttranslate('Cards reveal ${n} ${icon_contracts} to found the outpost'), [
         "player" => $player,
         "n" => $nbContracts,
         "icon_contracts" => clienttranslate('Contracts'),

@@ -43,11 +43,14 @@ export class ClientHarvestResources {
         }
 
         let actionName = 'actHarvest';
+        if(args.serverAction) actionName = args.serverAction;
 
         if(withTile){
             let tileDiv = document.getElementById(`goa_tile-${withTile}`);
-            tileDiv.classList.add('selected');
-            tileDiv.classList.add('selected_for_client_state');
+            if(tileDiv){
+                tileDiv.classList.add('selected');
+                tileDiv.classList.add('selected_for_client_state');
+            }
         }
 
         this.game.addButtonCloseClientState(args);
@@ -61,14 +64,30 @@ export class ClientHarvestResources {
                 sortedResources.push(selectedResources.get(a));
             });
 
-            this.game.customPerformAction(actionName, { 
-                'spots': sortedIds.join(','),
-                'res': sortedResources.join(','), 
-                'card_id': withCard, 
-                'tile_id': withTile, 
-                'ships':selectedShips, 
-                'contracts':selectedContracts
-            });
+            let actionArgs = {};
+            switch(actionName){
+                case 'actTileChoice' : 
+                    //when we come from ClientSelectTileAction
+                    actionArgs = { 
+                        'tile_id' : withTile,
+                        'choice': this.game.const.ACTION_HARVEST,
+                        'choice_index':args.choice_index,
+                        'arr1': sortedIds.join(','),
+                        'arr2': sortedResources.join(','), 
+                    };
+                    break;
+                default:
+                    actionArgs = { 
+                        'spots': sortedIds.join(','),
+                        'res': sortedResources.join(','), 
+                        'card_id': withCard, 
+                        'tile_id': withTile, 
+                        'ships':selectedShips, 
+                        'contracts':selectedContracts,
+                    };
+                    break;
+            }
+            this.game.customPerformAction(actionName, actionArgs);
         }, otherResources, displayConfirmAsDisabled, selectionHint, maxTiles );
     
     }

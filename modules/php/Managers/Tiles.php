@@ -486,6 +486,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
           case ACTION_SWAP: 
             break;
           case ACTION_RESUPPLY: 
+            $possiblePlay = true;
             break;
           case ACTION_HARVEST: 
             if(!isset($args['harvestSpots'])){
@@ -545,8 +546,15 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
 
   /**
    * Action of a tile in player actions turn
+   * 
+   * @param PrematureStateChangeException &$stateChange : this function modify arg  directly instead of throw in order to go until the return value
    */
-  public static function playTile(Player &$player,int $tileId, bool &$doCheckpoint): Tile
+  public static function playTile(
+    Player &$player,
+    int $tileId, 
+    bool &$doCheckpoint, 
+    PrematureStateChangeException| null &$stateChange = null,
+  ): Tile
   { 
     $tile = Tiles::get($tileId);
     $discard = false;
@@ -566,15 +574,16 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
       default: break;
     }
     if($discard) {
+      //NOTIFY 
+      Notifications::playTile( $player, $tile);
       Tiles::discardTileFromPlayer($player,$tile);
     }
     else //ELSE KEEP CARD
     {
       $tile->setState(TILE_STATE_PLAYED);
+      Notifications::playTile( $player, $tile);
     }
 
-    //NOTIFY 
-    Notifications::playTile( $player, $tile);
     
     foreach($tile->getActions() as $action => $nb){
       switch($action){
@@ -593,6 +602,15 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
         case ACTION_SWAP: 
           break;
         case ACTION_RESUPPLY: 
+          $cards = Cards::drawAndDiscardExploration($player, 2);
+          $doCheckpoint = true;
+          $sum = 0;
+          foreach($cards as $card){
+            $sum += $card->getContracts();
+          }
+          Notifications::resultDrawNCards($player,$sum);
+          Globals::addChoiceTile($tile,CHOICE_HARVEST, $sum, [ACTION_HARVEST, ACTION_CONTRACT, ACTION_SHIP], CHOICE_PICK_ACTION);
+          $stateChange = new PrematureStateChangeException (5,PlayerChoice::class,$player);
           break;
         case ACTION_HARVEST:  //done in actHarvest
           break;

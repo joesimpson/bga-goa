@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Bga\Games\Goa\States;
 
+use Bga\GameFramework\Actions\Types\IntArrayParam;
 use Bga\GameFramework\StateType;
 use Bga\GameFramework\States\GameState;
 use Bga\GameFramework\States\PossibleAction;
@@ -58,6 +59,10 @@ class PlayerChoice extends GameState
                         //IF we are near abandon, let player play a tile to receive contracts
                         $actionsWhiteList[] = ACTION_CONTRACT;
                     }
+                    else if($tileChoiceDatas['type'] === CHOICE_HARVEST ){
+                        $args['harvestSpots'] = Tiles::getPlayerAvailableSpotsForSpices($player);
+                        $args['playerBaseHarvest'] = $tileChoiceDatas['n'];
+                    }
                 }
             }
             $args['tiles_choices'] = $choiceTiles;
@@ -81,6 +86,8 @@ class PlayerChoice extends GameState
         int $choice_index, 
         int $activePlayerId, array $args,
         int $v,
+        #[IntArrayParam(name:'arr1')] array|null $choice_array1, 
+        #[IntArrayParam(name:'arr2')] array|null $choice_array2, 
         )
     {
         Utils::checkVersion($v);
@@ -156,9 +163,25 @@ class PlayerChoice extends GameState
                             //We come from PlayerTurn, stay there
                             throw new PrematureStateChangeException (11,PlayerTurn::class,$player);
                             break;
+                        case ACTION_HARVEST:
+                            PlayerTurn::actHarvest_content(
+                                $choice_array1, 
+                                $choice_array2, 
+                                null , 
+                                null , //don't replay the tile
+                                0, 
+                                0, 
+                                $activePlayerId,   
+                                $args,
+                            );
+                            break;
                         default: break;
                     }
                 break;
+            }
+            if($tile_choice['type'] === CHOICE_HARVEST ){
+                //this choice comes from player turn playTile, lets return to it
+                $prematureStateChange = new PrematureStateChangeException (10,PlayerTurn::class,$player);
             }
         }
         catch(PrematureStateChangeException $exc){
@@ -229,12 +252,16 @@ class PlayerChoice extends GameState
         Utils::checkVersion($v);
         
         $doCheckpoint = false;
-        PlayerTurn::actPlayTile_content($tile_id, $activePlayerId, $args, $doCheckpoint);
+        $nextStateClass = self::class;
+        PlayerTurn::actPlayTile_content($tile_id, $activePlayerId, $args, $doCheckpoint,$prematureStateChange);
+        if(isset($prematureStateChange) ){
+            $nextStateClass = $prematureStateChange->nextStateClass;
+        }
         
         Utils::refreshFoundTileChoice($activePlayerId);
-        if($doCheckpoint) Log::addStateCheckpoint(self::class);
+        if($doCheckpoint) Log::addStateCheckpoint($nextStateClass);
         
-        return self::class;
+        return $nextStateClass;
     }
 
     function zombie(int $playerId) {

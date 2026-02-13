@@ -458,11 +458,52 @@ class PlayerTurn extends GameState
     )
     { 
         Utils::checkVersion($v);
+        Log::addStep();
         $this->game->trace("actHarvest($card_id, $tile_id, $ships, $contracts, $activePlayerId)");
         $possibleActions = $args['possibleActions'];
         if(!in_array('actHarvest',$possibleActions)){
             throw new UnexpectedException(110,"Invalid action actHarvest, see ".json_encode($possibleActions));
         }
+        $player = Players::get($activePlayerId);
+        $doCheckpoint = false;
+        $nextStateClass = self::class;
+
+        if(isset($card_id)){
+            Cards::playExploration($player, $card_id, );
+        } else if(isset($tile_id)){
+            $tile = Tiles::playTile($player, $tile_id, $doCheckpoint, $prematureStateChange );
+        }
+
+        PlayerTurn::actHarvest_content(
+            $spots, 
+            $resources, 
+            $card_id , 
+            $tile_id , 
+            $ships, 
+            $contracts, 
+            $activePlayerId,   
+            $args,
+        );
+ 
+        if(isset($prematureStateChange) ){
+            //SHOULD NOT HAPPEN IN this use case
+            $nextStateClass = $prematureStateChange->nextStateClass;
+        }
+        if($doCheckpoint) Log::addStateCheckpoint($nextStateClass);
+        return $nextStateClass;
+
+    }
+    
+    public static function actHarvest_content(
+        #[IntArrayParam] array $spots, 
+        #[IntArrayParam(name:'res')] array $resources, 
+        int|null $card_id = null, 
+        int|null $tile_id = null, 
+        int $ships, 
+        int $contracts, 
+        int $activePlayerId, array $args,
+    )
+    { 
         if(count($spots) !== count($resources)){
             throw new UnexpectedException(110,"Invalid number of resources/spots");
         }
@@ -538,14 +579,7 @@ class PlayerTurn extends GameState
         }
 
         $player = Players::get($activePlayerId);
-        Log::addStep();
-        $doCheckpoint = false;
 
-        if(isset($card_id)){
-            Cards::playExploration($player, $card_id, );
-        } else if(isset($tile_id)){
-            $tile = Tiles::playTile($player, $tile_id, $doCheckpoint );
-        }
         if($countAsAPlayerAction){
             Players::registerNewAction($player);
         }
@@ -565,10 +599,6 @@ class PlayerTurn extends GameState
         if(in_array(ACTION_CONTRACT,$others)){
             Players::giveContracts($player, $contracts);
         }
- 
-        if($doCheckpoint) Log::addStateCheckpoint(self::class);
-        return self::class;
-
     }
     /**
      * Player action : turn ACTION #4 take taxes
@@ -755,13 +785,23 @@ class PlayerTurn extends GameState
     { 
         Utils::checkVersion($v);
         $doCheckpoint = false;
-        PlayerTurn::actPlayTile_content($tile_id, $activePlayerId, $args, $doCheckpoint);
-        if($doCheckpoint) Log::addStateCheckpoint(PlayerTurn::class);
-        return PlayerTurn::class;
+        $nextStateClass = PlayerTurn::class;
+        PlayerTurn::actPlayTile_content($tile_id, $activePlayerId, $args, $doCheckpoint,$prematureStateChange);
+        if(isset($prematureStateChange) ){
+            $nextStateClass = $prematureStateChange->nextStateClass;
+        }
+        if($doCheckpoint) Log::addStateCheckpoint($nextStateClass);
+        return $nextStateClass;
     }
     
     /**Reusable action content */
-    static function actPlayTile_content(int $tile_id, int $activePlayerId, array $args, bool &$doCheckpoint)
+    static function actPlayTile_content(
+        int $tile_id, 
+        int $activePlayerId, 
+        array $args, 
+        bool &$doCheckpoint,
+        PrematureStateChangeException| null &$stateChange = null, //modify arg  directly instead of throw in order to go until the return value
+    )
     { 
         Game::get()->trace("actPlayTile_content($tile_id,$activePlayerId)");
         $possibleActions = $args['possibleActions'];
@@ -776,7 +816,7 @@ class PlayerTurn extends GameState
         Log::addStep();
         $player = Players::get($activePlayerId);
 
-        Tiles::playTile($player, $tile_id, $doCheckpoint);
+        Tiles::playTile($player, $tile_id, $doCheckpoint, $stateChange);
     }
     
     /**
@@ -841,11 +881,12 @@ class PlayerTurn extends GameState
         $player = Players::get($activePlayerId);
         Log::addStep();
         $doCheckpoint = false;
+        $nextStateClass = self::class;
         if(isset($card_id)){
             Cards::playExploration($player, $card_id, );
         }
         if(isset($tile_id)){
-            $tile = Tiles::playTile($player, $tile_id, $doCheckpoint );
+            $tile = Tiles::playTile($player, $tile_id, $doCheckpoint, $prematureStateChange);
         }
         $playerSpices = Tokens::getPlayerSpices($player->getId());
         $tokens = $playerSpices->filter(function($t) use ($t_ids){
@@ -859,9 +900,12 @@ class PlayerTurn extends GameState
         if($forScore>0){
             $player->addPointsWithTile($forScore, $tile);
         }
-
-        if($doCheckpoint) Log::addStateCheckpoint(PlayerTurn::class);
-        return PlayerTurn::class;
+        
+        if(isset($prematureStateChange) ){//should not happen in this use case
+            $nextStateClass = $prematureStateChange->nextStateClass;
+        }
+        if($doCheckpoint) Log::addStateCheckpoint($nextStateClass);
+        return $nextStateClass;
     }
 
     /**

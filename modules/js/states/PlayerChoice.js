@@ -41,8 +41,7 @@ export class PlayerChoice {
                             let tile_icon = this.game.tplTile(tile, '_log');
                             let nextState = function (bga) {
                                 bga.states.setClientState("ClientSelectTileAction", {
-                                    descriptionmyturn: _("${you} must select one of these"),
-                                    description : _("${actplayer} must select one of these"),
+                                    descriptionmyturn: '',
                                     args: { 'tile_choice':tile_choice, 'tile':tile, 'choice_index': tile_choice_entry_index
                                         , 'cancelable' : !directState, 'undo': args.undo,
                                         'previousArgs' : args,
@@ -100,6 +99,13 @@ export class ClientSelectTileAction {
         let icon_contracts = this.game.formatIcon('contracts',_('Contracts'));
         let isOutpost = args.tile.subtype == this.game.const.TILE_SUBTTYPE_OUTPOST;
 
+        this.bga.statusBar.setTitle(
+                isCurrentPlayerActive ? 
+                _("${you} must select one of these")
+                :
+                _("${actplayer} must select one of these")
+            );
+
         if(isCurrentPlayerActive) this.game.updateTilesHandSelectable(args.previousArgs);
       
         Object.entries(tile_choice.choices).forEach( ([choice_id,choice])  => {
@@ -107,6 +113,26 @@ export class ClientSelectTileAction {
                 case this.game.const.CHOICE_PICK_ACTION:
                 default:
                     switch(choice){
+                        case this.game.const.ACTION_HARVEST:
+                            let buttonText2 = this.bga.gameui.format_string(
+                                        _("Harvest ${n} resources")
+                                        ,{ 'n':tile_choice.n, }
+                                    );
+                            this.bga.statusBar.addActionButton( buttonText2, () => {
+                                this.bga.states.setClientState("ClientHarvestResources", {
+                                    descriptionmyturn: '',
+                                    args: {
+                                        'harvestSpots': args.previousArgs.harvestSpots , 
+                                        'min': 1,
+                                        'max': tile_choice.n,
+                                        'withTile':tile_id,
+                                        'serverAction': 'actTileChoice',
+                                        'choice_index':args.choice_index,
+                                        'previousClientState' : this.game.getCurrentClientStateDatas(),
+                                    },
+                                });
+                            }, {'destination': document.getElementById('customPrimary'),'title':_('Harvest'),  }); 
+                            break;
                         case this.game.const.ACTION_SHIP:
                             let buttonText = this.bga.gameui.format_string(
                                         _("Take ${n} ${resource_name} : ${icon_resource}")

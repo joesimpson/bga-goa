@@ -36,6 +36,7 @@ const CHOICE_PICK_TILE           = 2;
 const CHOICE_PICK_SPICE          = 3;
 const CHOICE_REPLACE_TILE        = 4;
 const CHOICE_FOUND_TILE          = 5;
+const CHOICE_HARVEST             = 6;
 
 const SPICE_WHITE     = 1;
 const SPICE_YELLOW    = 2;
