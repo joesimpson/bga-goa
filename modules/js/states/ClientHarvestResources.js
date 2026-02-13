@@ -53,7 +53,7 @@ export class ClientHarvestResources {
         this.game.addButtonCloseClientState(args);
             
         let selectionHint = _('Select this tile spot to fill');
-        this.onSelectNSpiceSpots(harvestSpots, minSpices, maxSpices, (selectedElements,selectedResources, selectedShips, selectedContracts) => {
+        this.onSelectNSpiceSpots(harvestSpots, minSpices, maxSpices, (selectedResources, selectedShips, selectedContracts) => {
             //SORT server params in order to keep same order in replays/tutorials
             let sortedIds = Array.from(selectedResources.keys()).sort((a,b) =>  a - b );
             let sortedResources = [];
@@ -87,15 +87,11 @@ export class ClientHarvestResources {
     onSelectNSpiceSpots(harvestSpots, minElements, maxElements, callbackOnSelectionEnd, otherResources, displayConfirmAsDisabled = false, selectionHint = null, maxTiles = null) {
         
         let activePlayer = this.bga.players.getActivePlayerId();
-        let selectedElements = [];
         let selectedResources = new Map();
         let selectedTiles = [];
         let selectedShips = 0;
         let selectedContracts = 0;
         let confirmText = '';
-        
-        let countElements = 0;
-        let allElementsIds = [];
         
         let elements = [];
         //LOOP ON tiles spots
@@ -106,11 +102,6 @@ export class ClientHarvestResources {
             selectedTiles[tileId] = 0;
         });
      
-        Object.keys(elements).forEach((id) => {
-            countElements++;
-            allElementsIds.push(id);
-        });
-        
         let harvestTopZone = document.getElementById(`goa_playerboard_top_zone-${activePlayer}`);
 
         let icon_ships = this.game.formatIcon('ships', _('Ships'));
@@ -127,12 +118,11 @@ export class ClientHarvestResources {
                     </div>
                 `);
             let harvestInc = document.getElementById('goa_harvest_inc');
-            //this.refreshHarvestButton();
 
             let onIncreaseShips = (delta,min,max) => {
                 console.log( 'onIncreaseShips', delta,selectedShips,min,max);
                 let nextValue = selectedShips + delta;
-                let nextTotal = nextValue + selectedElements.length + selectedContracts;
+                let nextTotal = nextValue + selectedResources.size + selectedContracts;
                 if ( nextValue < 0) {
                     return;
                 }
@@ -145,7 +135,7 @@ export class ClientHarvestResources {
             let onIncreaseContracts = (delta,min,max) => {
                 console.log( 'onIncreaseContracts', delta,selectedContracts,min,max);
                 let nextValue = selectedContracts + delta;
-                let nextTotal = nextValue + selectedElements.length + selectedShips;
+                let nextTotal = nextValue + selectedResources.size + selectedShips;
                 if ( nextValue < 0) {
                     return;
                 }
@@ -181,7 +171,7 @@ export class ClientHarvestResources {
                 { 
                     'x': selectedShips, 
                     'y': selectedContracts,
-                    'z': selectedElements.length,
+                    'z': selectedResources.size,
                     'icon_ships': icon_ships,
                     'icon_contracts': icon_contracts,
                 });
@@ -194,8 +184,7 @@ export class ClientHarvestResources {
         }
         
         let endSelection = () => {
-            if (callbackOnSelectionEnd(selectedElements,selectedResources, selectedShips, selectedContracts)) {
-                selectedElements = [];
+            if (callbackOnSelectionEnd(selectedResources, selectedShips, selectedContracts)) {
                 selectedResources.clear();
                 selectedShips = 0;
                 selectedContracts = 0;
@@ -205,7 +194,7 @@ export class ClientHarvestResources {
         }
         let updateStatus = () => {
             if ($('btnConfirmChoice')) $('btnConfirmChoice').remove();
-            let selectionGood = selectedElements.length == maxElements || selectedElements.length >= minElements && selectedElements.length <=maxElements;
+            let selectionGood = selectedResources.size == maxElements || selectedResources.size >= minElements && selectedResources.size <=maxElements;
 
             let nbTiles = 0;
             Object.values(selectedTiles).forEach((t) => {
@@ -223,15 +212,15 @@ export class ClientHarvestResources {
                     { 
                         'x': selectedShips, 
                         'y': selectedContracts,
-                        'z': selectedElements.length,
+                        'z': selectedResources.size,
                         'icon_ships': icon_ships,
                         'icon_contracts': icon_contracts,
                     });
-                    selectionGood = ((selectedElements.length + selectedShips + selectedContracts) == maxElements);
+                    selectionGood = ((selectedResources.size + selectedShips + selectedContracts) == maxElements);
                 } else {
                     confirmText = this.bga.gameui.format_string(  _('Confirm : ${z} resources') ,
                     { 
-                        'z': selectedElements.length,
+                        'z': selectedResources.size,
                     });
                 }
                 this.bga.statusBar.addActionButton( confirmText, () => {
@@ -240,9 +229,8 @@ export class ClientHarvestResources {
             }
 
             if ($('btnCancelChoice')) $('btnCancelChoice').remove();
-            if (selectedElements.length  > 0 || selectedShips > 0 || selectedContracts > 0 ) {
+            if (selectedResources.size  > 0 || selectedShips > 0 || selectedContracts > 0 ) {
                 this.bga.statusBar.addActionButton( _('Clear selection'), () => {
-                    selectedElements = [];
                     selectedResources.clear();
                     Object.values(selectedTiles).forEach((t) => {t = 0  });
                     selectedShips = 0;
@@ -264,11 +252,11 @@ export class ClientHarvestResources {
 
             Object.keys(elements).forEach((id) => {
                 let elt = elements[id];
-                let selected = selectedElements.includes(parseInt(id));
+                let selected = selectedResources.has(parseInt(id));
                 let tile_id = harvestSpots[id]['tile_id'];
                 let selectedTile = (selectedTiles[tile_id] > 0);
                 elt.classList.toggle('selected', selected);
-                elt.classList.toggle('selectable', selected || selectedElements.length < maxElements  || maxTiles && (nbTiles < maxTiles || selectedTile) );
+                elt.classList.toggle('selectable', selected || selectedResources.size < maxElements  || maxTiles && (nbTiles < maxTiles || selectedTile) );
             });
 
             let harvestResourcesZone = harvestTopZone.getElementsByClassName('goa_harvest_resources')[0]; 
@@ -290,18 +278,14 @@ export class ClientHarvestResources {
 
                 if(!elt.classList.contains("selectable")) return;
 
-                let index = selectedElements.findIndex((t) => t == id);
-
                 [...document.querySelectorAll('.goa_tile_spot.selected_for_client_state')].forEach((node) => {
                     $(node).classList.remove('selected_for_client_state');
                 });
                 let tile_spot = harvestSpots[id]['index'];
                 let tile_id = harvestSpots[id]['tile_id'];
 
-                if (index === -1) {
-                    if (selectedElements.length >= maxElements) return;
-
-                    //selectedElements.push(parseInt(id));
+                if (!selectedResources.has(parseInt(id))) {
+                    if (selectedResources.size >= maxElements) return;
 
                     elt.classList.add('selected_for_client_state');
                     
@@ -325,7 +309,6 @@ export class ClientHarvestResources {
                         let spice_icon = this.game.formatIcon('spices_'+spice,_('Spices'));
                         this.bga.statusBar.addActionButton( spice_icon, () => {
                             elt.classList.remove('selected_for_client_state');
-                            selectedElements.push(parseInt(id));
                             selectedResources.set(parseInt(id),spice);
                             let tmpTokenDiv = this.game.addToken(
                                 {
@@ -351,7 +334,6 @@ export class ClientHarvestResources {
                     if(tmpTokenDiv) this.game.destroy(tmpTokenDiv);
                     this.game.empty(elt);
                     elt.classList.remove('selected_for_client_state');
-                    selectedElements.splice(index, 1);
                     selectedResources.delete(parseInt(id));
                     selectedTiles[tile_id] --;
                     updateStatus();
