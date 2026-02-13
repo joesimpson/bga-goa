@@ -309,18 +309,20 @@ class PlayerTurn extends GameState
         int $track, 
         #[IntArrayParam] array|null $t_ids = null, 
         int|null $card_id = null, 
+        int|null $tile_id = null, 
         int $activePlayerId, array $args,
         int $v,
     )
     { 
         Utils::checkVersion($v);
-        $this->game->trace("actProgress($track,$card_id,$activePlayerId)");
+        $this->game->trace("actProgress($track,$card_id,$tile_id,$activePlayerId)");
         $possibleActions = $args['possibleActions'];
         if(!in_array('actProgress',$possibleActions)){
             throw new UnexpectedException(110,"Invalid action actProgress, see ".json_encode($possibleActions));
         }
         $progressTracks = $args['progressTracks'];
         $selectedTrack = null;
+        $countAsAPlayerAction = true;
         if(isset($card_id)){
             $possibleCards = $args['possiblePlayCards'];
             if(!in_array($card_id,$possibleCards->getIds())){
@@ -328,6 +330,17 @@ class PlayerTurn extends GameState
             }
             $playCardDatas = $possibleCards[$card_id]['play_datas'];
             $progressTracks = $playCardDatas['progressTracks'];
+        }
+        else if(isset($tile_id)){
+            $possibleTiles = $args['possiblePlayTiles'];
+            if(!in_array($tile_id,$possibleTiles->getIds())){
+                throw new UnexpectedException(111,"Invalid tile $tile_id to play");
+            }
+            $playDatas = $possibleTiles[$tile_id]['play_datas'];
+            if(!isset($playDatas['progressTracks'])){
+                throw new UnexpectedException(112,"Invalid tile $tile_id to progress");
+            } 
+            $progressTracks = $playDatas['progressTracks'];
         }
         foreach($progressTracks as $progressTrack){
             if($progressTrack['track'] == $track){
@@ -341,13 +354,15 @@ class PlayerTurn extends GameState
         Log::addStep();
         $doCheckpoint = false;
 
-        $countAsAPlayerAction = true;
         $withCoins = $selectedTrack['withCoins'];
         $withShips = $selectedTrack['withShips'];
         $withSpices = $selectedTrack['withSpices'];
         if(isset($card_id)){
             Cards::playExploration($player, $card_id, );
+        } else if(isset($tile_id)){
+            Tiles::playTile($player, $tile_id, $doCheckpoint );
         }
+
         if($withSpices){
             $costSpices = $selectedTrack['costSpices'];
             $totalSpicesExpected = 0;
@@ -385,7 +400,7 @@ class PlayerTurn extends GameState
         if($withCoins){
             $cost = $selectedTrack['costMoney'];
             Players::giveMoney($player,-$cost);
-            $countAsAPlayerAction = false;//linked to player card
+            $countAsAPlayerAction = false;//linked to player card/tile
         }
         
         if($countAsAPlayerAction){

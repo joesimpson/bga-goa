@@ -19,6 +19,12 @@ export class ClientSelectProgress {
                     _("${you} must select a progress track to improve on your board")
                 );
 
+        
+        if(args.withTile){
+            let tileSelected = document.getElementById(`goa_tile-${args.withTile}`);
+            if(tileSelected) tileSelected.classList.add('selected');
+        }
+
         let tracksDatas = args.progressTracks;
         Object.values(tracksDatas).forEach( trackData => {
             let track = trackData.track;
@@ -47,7 +53,7 @@ export class ClientSelectProgress {
                     });
                 }
                 else {
-                    this.game.customPerformAction('actProgress', { 'track': track, 't_ids': null, 'card_id':args.withCard});
+                    this.game.customPerformAction('actProgress', { 'track': track, 't_ids': null, 'card_id':args.withCard, 'tile_id':args.withTile});
                 }
             });
         });

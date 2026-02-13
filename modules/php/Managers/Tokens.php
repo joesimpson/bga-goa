@@ -362,12 +362,12 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
           ->toArray();
   }
 
-  public static function getUpgradableProgressMarkersWithCoins( Player $player) : array
+  public static function getUpgradableProgressMarkersWithCoins( Player $player, bool $free = false) : array
   {
     $allMarkers = Tokens::getProgressMarkers($player->getId());
     $playerMoney = $player->getMoney();
 
-    return $allMarkers->map(function ($token) { 
+    return $allMarkers->map(function ($token) use ($free){ 
                 $map = [
                   'track' => $token->getTrackIndex(),
                   'row' => $token->getRow(),
@@ -379,11 +379,12 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
                 $costs = PROGRESS_COST_AS_COINS;
                 if( array_key_exists($currentRow+1, $costs)){
                   $map['costMoney'] = $costs[$currentRow+1];
+                  if($free) $map['costMoney'] = 0;
                 }
                 return $map;
               })
-            ->filter(function ($tokenDatas) use ($playerMoney) {
-                if($playerMoney < $tokenDatas['costMoney']){
+            ->filter(function ($tokenDatas) use ($playerMoney ) {
+                if($playerMoney < $tokenDatas['costMoney'] ){
                   return false;
                 }
                 return true;

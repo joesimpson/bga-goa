@@ -297,6 +297,7 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
   }
   public static function giveMoney(Player &$player, int $nb = 1)
   {
+    if($nb == 0) return;
     $player->incMoney($nb);
     Notifications::getMoney($player,$nb);
   }

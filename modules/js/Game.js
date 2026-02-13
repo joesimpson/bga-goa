@@ -823,6 +823,15 @@ export class Game {
                                 'previousClientState' : this.getCurrentClientStateDatas(),
                             },
                         });
+                    } 
+                    else if(play_datas.progressTracks){
+                        this.bga.states.setClientState("ClientSelectProgress", {
+                            args: {
+                                'progressTracks': play_datas.progressTracks, 
+                                'withTile':tile_id,
+                                'previousClientState' : this.getCurrentClientStateDatas(),
+                            },
+                        });
                     }
                     else { //DIRECT TILE PLAY
                         this.customPerformAction('actPlayTile', { 'tile_id':tile_id });

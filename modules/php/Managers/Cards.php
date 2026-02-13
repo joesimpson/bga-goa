@@ -136,7 +136,6 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
       $possiblePlay = false;
       $actionPlayed = $player->isActionPlayed();
       switch($card->getAction()){
-        //TODO JSA : FILL SWITCH 
         case CARD_ACTION_PROGRESS_NO_SPICE: 
             $progressTracks = Tokens::getUpgradableProgressMarkers($player, false, true);
             $possiblePlay = count($progressTracks)>0;

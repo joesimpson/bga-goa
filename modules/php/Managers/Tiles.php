@@ -509,6 +509,9 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
           case ACTION_ESPIONAGE: 
             break;
           case ACTION_VICEKING: 
+            $progressTracks = Tokens::getUpgradableProgressMarkersWithCoins($player, true);
+            $possiblePlay = count($progressTracks) > 0;
+            if($possiblePlay) $playDatas['progressTracks'] = $progressTracks;
             break;
           case ACTION_EXPLORATION:
             $possiblePlay = true;
@@ -616,7 +619,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
           break;
         case ACTION_ESPIONAGE: 
           break;
-        case ACTION_VICEKING: 
+        case ACTION_VICEKING: //done in actProgress
           break;
         case ACTION_EXPLORATION:
           Cards::drawExplorationCardsToPlayer($player, $nb, $doCheckpoint);
