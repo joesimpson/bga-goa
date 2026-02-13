@@ -51,7 +51,8 @@ export class ClientSpendSpices {
             
         let selectionHint = _('Select this spice token');
         this.game.onSelectN(spicesDivs, nbSpices, (selectedSpices) => {
-            this.game.customPerformAction(actionName, { 't_ids': selectedSpices.join(','), 'card_id': withCard, 'tile_id': withTile, });
+            let sortedTokens = selectedSpices.sort((a,b) =>  a - b );
+            this.game.customPerformAction(actionName, { 't_ids': sortedTokens.join(','), 'card_id': withCard, 'tile_id': withTile, });
         }, null, true, _('Confirm'), selectionHint, minSpices );
     
     }

@@ -47,7 +47,8 @@ export class ClientSelectSpicesForProgress {
 
         let selectionHint = _('Select this spice token');
         this.game.onSelectN(spicesDivs, nbSpices, (selectedSpices) => {
-            this.game.customPerformAction('actProgress', { 'track': args.track, 't_ids': selectedSpices.join(','), 'card_id': args.withCard});
+            let sortedTokens = selectedSpices.sort((a,b) =>  a - b );
+            this.game.customPerformAction('actProgress', { 'track': args.track, 't_ids': sortedTokens.join(','), 'card_id': args.withCard});
         }, spicesSets, true, _('Confirm'), selectionHint );
     
         this.game.addButtonCloseClientState(args);
