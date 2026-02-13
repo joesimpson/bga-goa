@@ -274,6 +274,13 @@ body.lockedInterface{
     display: inline-block;
     vertical-align: middle;
 }
+.goa_round_tooltip,
+.goa_progress_row_tooltip{
+    span{
+        font-weight: bold;
+        text-decoration: underline;
+    }
+}
 
 /* bga-help  -------------------------------------- */
 .bga-help_button{

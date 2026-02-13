@@ -157,6 +157,29 @@ export class Game {
                 </div>
             </div>
         `);
+
+         for(let round=1;round<=this.const.NB_ROUNDS_DAY ;round++){
+            let text = this.bga.gameui.format_string( 
+                _('Place for round marker during round #${n} (${dayOrNight})'),
+                { 'n': '<span>'+round +'</span>', 'dayOrNight': '<span>'+_('Day')+'</span>'}
+            );
+            let tooltip =  `<div class="goa_custom_tooltip goa_round_tooltip">
+                    <div>${text}</div>
+                </div>
+            `;
+            this.bga.gameui.addTooltipHtml(`goa_board_round_cell_${round}`, tooltip);
+        }
+        for(let round=this.const.NB_ROUNDS_DAY + 1;round<=this.const.NB_ROUNDS_DAY +this.const.NB_ROUNDS_NIGHT ;round++){
+            let text = this.bga.gameui.format_string( 
+                _('Place for round marker during round #${n} (${dayOrNight})'),
+                { 'n': '<span>'+round +'</span>', 'dayOrNight': '<span>'+_('Night')+'</span>'}
+            );
+            let tooltip =  `<div class="goa_custom_tooltip goa_round_tooltip">
+                    <div>${text}</div>
+                </div>
+            `;
+            this.bga.gameui.addTooltipHtml(`goa_board_round_cell_${round}`, tooltip);
+        }
         
         let currentPlayerNo = 1;
         let nPlayers = 0;
@@ -260,6 +283,8 @@ export class Game {
                                 <div id="goa_player_auction_markers-${player.id}" class="goa_player_auction_markers">
                                 </div>
                                 <div id="goa_player_progress_headers-${player.id}" class="goa_player_progress_headers"></div>
+                                <div id="goa_player_progress_row_headers-${player.id}" class="goa_player_progress_row_headers"></div>
+                                <div id="goa_player_progress_row_ends-${player.id}" class="goa_player_progress_row_ends"></div>
                                 <div id="goa_player_progress_tracks-${player.id}" class="goa_player_progress_tracks">
                                 </div>
                                 <div class="goa_board_filler">&nbsp;<br/></div>
@@ -652,6 +677,7 @@ export class Game {
         console.log("setupRoundMarker", round);
         if(round>0){
             const meepleDiv = document.getElementById(`goa_board_round_marker`);
+            meepleDiv.setAttribute('title', _('Round marker'));
             const destinationDiv = document.getElementById(`goa_board_round_cell_${round}`);
             await this.animationManager.slideAndAttach(meepleDiv, destinationDiv);
         }
@@ -1843,6 +1869,20 @@ export class Game {
 
         if(init){
             Object.values(this.gamedatas.players).forEach(player => {
+                
+                for(let row=1;row<=5;row++){
+                    if(!$(`goa_progress_row_header_${row}_${player.id}`)){
+                        document.getElementById(`goa_player_progress_row_headers-${player.id}`).insertAdjacentHTML('beforeend', this.tplProgressRowHeader({'row':row, 'pId':player.id}));
+                        this.bga.gameui.addTooltipHtmlToClass(`goa_progress_row_header_${row}`, this.getBoardRowHeaderTooltip(row));
+                    }
+                    if(!$(`goa_progress_row_end_${row}_${player.id}`)){
+                        document.getElementById(`goa_player_progress_row_ends-${player.id}`).insertAdjacentHTML('beforeend', this.tplProgressRowEnd({'row':row, 'pId':player.id}));
+                        let tooltipText = this.getBoardRowEndTooltip(row);
+                        if(tooltipText != '') this.bga.gameui.addTooltipHtmlToClass(`goa_progress_row_end_${row}`, tooltipText );
+                        else $(`goa_progress_row_end_${row}_${player.id}`).classList.add('disabled');
+                    }
+                }
+
                 for(let track=1;track<=5;track++){
                     if(!$(`goa_progress_header_${track}_${player.id}`)) document.getElementById(`goa_player_progress_headers-${player.id}`).insertAdjacentHTML('beforeend', this.tplProgressHeader({'track':track, 'pId':player.id}));
                     this.bga.gameui.addTooltipHtmlToClass(`goa_progress_header_${track}`, this.getActionBoardTooltip(track));
@@ -1939,6 +1979,47 @@ export class Game {
             <div class="goa_progress_header goa_progress_header_${datas.track}" id="goa_progress_header_${datas.track}_${datas.pId}" data-track='${datas.track}'>
             </div>`;
     }
+    tplProgressRowHeader(datas) {
+        return `
+            <div class="goa_progress_row_header goa_progress_row_header_${datas.row}" id="goa_progress_row_header_${datas.row}_${datas.pId}" data-row='${datas.row}'>
+            </div>`;
+    }
+    tplProgressRowEnd(datas) {
+        return `
+            <div class="goa_progress_row_end goa_progress_row_end_${datas.row}" id="goa_progress_row_end_${datas.row}_${datas.pId}" data-row='${datas.row}'>
+            </div>`;
+    }
+    getBoardRowHeaderTooltip(row){
+        let rowScore = 0;
+        switch(row){
+            //TODO JSA Server CONSTANT
+            case 1: 
+                rowScore = 0;
+                break;
+            case 2:  
+                rowScore = 1;
+                break;
+            case 3:  
+                rowScore = 3;
+                break;
+            case 4:  
+                rowScore = 5;
+                break;
+            case 5: 
+                rowScore = 10;
+                break;
+
+        }
+        let text = this.bga.gameui.format_string( 
+            _('Final scoring : ${n} points for each progress marker on this row'),
+            { 'n': '<span>'+rowScore +'</span>'}
+        );
+
+        return `<div class="goa_custom_tooltip">
+            <div class='goa_progress_row_tooltip'>${text}</div>
+            </div>
+        `;
+    }
     getActionBoardTooltip(track){
         let action_label = '';
         let action_desc = '';
@@ -2028,6 +2109,30 @@ export class Game {
         return `<div class="goa_custom_tooltip">
             <div class="goa_action_label">${action_label}</div>
             <div class="goa_action_desc">${action_desc}</div>
+            </div>
+        `;
+    }
+    getBoardRowEndTooltip(row){
+        let line1 = '';
+        let line2 = '';
+        if(row <=1) return '';
+        if(row>1){
+
+            line1 = this.bga.gameui.format_string( 
+                _('When the player has moved all of their markers to this row or above, they take ${n} Compass card.'),
+                { 'n': '<span>'+1 +'</span>'}
+            );
+        }
+        if(row>=4){
+            line2 = this.bga.gameui.format_string( 
+                _('The first player to reach this row before the other players draws ${n} Exploration card.'),
+                { 'n': '<span>'+1 +'</span>'}
+            );
+        }
+
+        return `<div class="goa_custom_tooltip goa_progress_row_tooltip">
+                <div>${line1}</div>
+                <div>${line2}</div>
             </div>
         `;
     }
