@@ -54,9 +54,16 @@ export class ClientHarvestResources {
             
         let selectionHint = _('Select this tile spot to fill');
         this.onSelectNSpiceSpots(harvestSpots, minSpices, maxSpices, (selectedElements,selectedResources, selectedShips, selectedContracts) => {
+            //SORT server params in order to keep same order in replays/tutorials
+            let sortedIds = Array.from(selectedResources.keys()).sort((a,b) =>  a - b );
+            let sortedResources = [];
+            sortedIds.forEach( a => {
+                sortedResources.push(selectedResources.get(a));
+            });
+
             this.game.customPerformAction(actionName, { 
-                'spots': selectedElements.join(','),
-                'res': selectedResources.join(','), 
+                'spots': sortedIds.join(','),
+                'res': sortedResources.join(','), 
                 'card_id': withCard, 
                 'tile_id': withTile, 
                 'ships':selectedShips, 
@@ -81,7 +88,7 @@ export class ClientHarvestResources {
         
         let activePlayer = this.bga.players.getActivePlayerId();
         let selectedElements = [];
-        let selectedResources = [];
+        let selectedResources = new Map();
         let selectedTiles = [];
         let selectedShips = 0;
         let selectedContracts = 0;
@@ -189,7 +196,7 @@ export class ClientHarvestResources {
         let endSelection = () => {
             if (callbackOnSelectionEnd(selectedElements,selectedResources, selectedShips, selectedContracts)) {
                 selectedElements = [];
-                selectedResources = [];
+                selectedResources.clear();
                 selectedShips = 0;
                 selectedContracts = 0;
                 Object.values(selectedTiles).forEach((t) => {t = 0  });
@@ -236,7 +243,7 @@ export class ClientHarvestResources {
             if (selectedElements.length  > 0 || selectedShips > 0 || selectedContracts > 0 ) {
                 this.bga.statusBar.addActionButton( _('Clear selection'), () => {
                     selectedElements = [];
-                    selectedResources = [];
+                    selectedResources.clear();
                     Object.values(selectedTiles).forEach((t) => {t = 0  });
                     selectedShips = 0;
                     selectedContracts = 0;
@@ -319,7 +326,7 @@ export class ClientHarvestResources {
                         this.bga.statusBar.addActionButton( spice_icon, () => {
                             elt.classList.remove('selected_for_client_state');
                             selectedElements.push(parseInt(id));
-                            selectedResources.push(spice);
+                            selectedResources.set(parseInt(id),spice);
                             let tmpTokenDiv = this.game.addToken(
                                 {
                                     'id': 'TMP_'+id, 
@@ -345,7 +352,7 @@ export class ClientHarvestResources {
                     this.game.empty(elt);
                     elt.classList.remove('selected_for_client_state');
                     selectedElements.splice(index, 1);
-                    selectedResources.splice(index, 1);
+                    selectedResources.delete(parseInt(id));
                     selectedTiles[tile_id] --;
                     updateStatus();
                 }

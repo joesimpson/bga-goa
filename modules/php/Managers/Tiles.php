@@ -427,6 +427,11 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
     return $emptySpots;
   }
 
+  /**
+   * @param Player $player
+   * @param array &$args : this function may add some possible actions into it
+   * @param array $actionsWhiteList : optional list of tile actions to keep
+   */
   public static function getPossibleToPlay(Player $player, array &$args, array|null $actionsWhiteList = null,) : Collection
   {
     $hand = Tiles::getNotPlantations($player);

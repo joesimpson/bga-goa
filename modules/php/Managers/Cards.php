@@ -114,6 +114,12 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
     return Cards::getExplorationHand($player->getId());
   }
   
+
+  /**
+   * @param Player $player
+   * @param array &$args : this function may add some possible actions into it
+   * @param array $actionsWhiteList : optional list of card actions to keep
+   */
   public static function getPossibleToPlay(Player $player, array &$args, array|null $actionsWhiteList = null) : Collection
   {
     $cardsPlayed = $player->getCardsPlayed();
