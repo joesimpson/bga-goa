@@ -208,6 +208,22 @@ body.lockedInterface{
     cursor: pointer;
 }
 
+
+#bga-zoom-controls{
+    display: flex;
+    flex-direction: column;
+    #goa_zoom_reset {
+        width: 40px;
+        height: 40px;
+        background: unset;
+        color: black;
+        vertical-align: top;
+        .goa_icon_reset{
+            font-size: 35px;
+        }   
+    }
+}
+
 // ------------------------------------------------------------------------------
 // Override BGA style for log player_name
 .playername_wrapper_84cba2{

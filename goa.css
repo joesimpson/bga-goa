@@ -2301,6 +2301,21 @@ body.lockedInterface #restartActions {
   cursor: pointer;
 }
 
+#bga-zoom-controls {
+  display: flex;
+  flex-direction: column;
+}
+#bga-zoom-controls #goa_zoom_reset {
+  width: 40px;
+  height: 40px;
+  background: unset;
+  color: black;
+  vertical-align: top;
+}
+#bga-zoom-controls #goa_zoom_reset .goa_icon_reset {
+  font-size: 35px;
+}
+
 .playername_wrapper_84cba2 .playername, .playername_wrapper_84cba2.playername {
   text-shadow: 2px 0px 2px white, 0px 2px 2px white, -2px 0px 2px white, 0px -2px 2px white;
 }

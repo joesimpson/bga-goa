@@ -304,10 +304,22 @@ export class Game {
             element: document.getElementById('goa_game_container'),
             localStorageZoomKey: 'goa-zoom',
             zoomControls: {
-                color: 'white',
+                color: 'black',
             },
             zoomLevels :[0.5, 0.625, 0.75, 0.875, 1, 1.25, 1.5],
         });
+        //Add a reset zoom button 
+        this.zoomReset = document.createElement('button');
+        this.zoomReset.id = "goa_zoom_reset";
+        this.zoomReset.type = 'button';
+        var _this = this;
+        this.zoomReset.addEventListener('click', function () { 
+            return _this.zoomManager.setZoom(1); 
+        });
+        this.zoomReset.innerHTML = `<i class="fa6 fa6-undo goa_icon_reset"></i>` ;
+        this.zoomReset.setAttribute('title',_('Reset zoom'));
+        document.getElementById('bga-zoom-controls').appendChild(this.zoomReset);
+
         this.helpManager = new HelpManager(this.gamegui, {
             buttons: [
                 new BgaHelpPopinButton({
