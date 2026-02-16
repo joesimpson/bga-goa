@@ -674,6 +674,14 @@ export class Game {
       });
       
     }
+
+    addClickHandlerOnProgressMarker(track, title, playerId, callBack){
+        console.log("addClickHandlerOnProgressMarker", track, title, playerId);
+        let progressTrack = document.getElementById(`goa_progress_track_${track}_${playerId}`);
+        let progressMarker = progressTrack.getElementsByClassName('goa_progress_marker')[0];
+        this.onClick(progressMarker.parentNode,callBack);
+        progressMarker.parentNode.setAttribute("title",title);
+    }
     
     async setupRoundMarker(){
         let round = this.gamedatas.round;

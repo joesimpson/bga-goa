@@ -316,6 +316,14 @@ class Notifications
     ]);
   }
 
+  public static function espionage(Player $player, Player $opponent, int $track)
+  {
+    self::notifyAll("espionage", clienttranslate('${player_name} spies ${player_name2} board to use track #${n}'), [
+        "player" => $player,
+        "player2" => $opponent,
+        "n" => $track,
+    ]);
+  }
   
   public static function progress(Player $player, ProgressMarker $token)
   {

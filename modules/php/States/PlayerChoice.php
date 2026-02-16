@@ -142,6 +142,27 @@ class PlayerChoice extends GameState
                     $spiceTokenType = Tokens::getTokenSpiceTypeFromSpice($choice);
                     Tokens::addSpiceOnTile($tile, $player, $spiceTokenType, $slotPosition);
                     break;
+                case CHOICE_ESPIONAGE:
+                    $foundChoice = $this->checkChoiceAsValue($tile_choice,$tile_id,$choice);
+                    if(isset($choice_array1) && isset($choice_array1[0])){
+                        $opponentId = $choice_array1[0];
+                        $opponent = Players::get($opponentId);
+                    }
+                    if(!isset($opponent) || $opponentId == $activePlayerId){
+                        throw new UnexpectedException(505,"Wrong opponent choice ");
+                    }
+                    switch($choice){
+                        //TODO JSA 4 actions
+                        case ACTION_SHIP:
+                            Notifications::espionage($player, $opponent, 1);
+                            PlayerTurn::actBuildShips_content($player, $opponentId);
+                            break;
+                        case ACTION_MONEY:
+                            Notifications::espionage($player, $opponent, 2);
+                            PlayerTurn::actTaxes_content($player, $opponentId);
+                            break;
+                    }
+                    break;
                 case CHOICE_PICK_ACTION:
                 default:
                     //SELECT AN ACTION : choice is an action id

@@ -512,6 +512,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
             }
             break;
           case ACTION_ESPIONAGE: 
+            $possiblePlay = true;
             break;
           case ACTION_VICEKING: 
             $progressTracks = Tokens::getUpgradableProgressMarkersWithCoins($player, true);
@@ -650,6 +651,8 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
         case ACTION_HARVEST:  //done in actHarvest
           break;
         case ACTION_ESPIONAGE: 
+          Globals::addChoiceTile($tile,0, 1, [ACTION_SHIP, ACTION_HARVEST, ACTION_MONEY, ACTION_FOUND_ABANDON], CHOICE_ESPIONAGE);
+          $stateChange = new PrematureStateChangeException (5,PlayerChoice::class,$player);
           break;
         case ACTION_VICEKING: //done in actProgress
           break;

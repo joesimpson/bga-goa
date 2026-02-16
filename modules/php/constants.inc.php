@@ -36,6 +36,7 @@ const CHOICE_PICK_TILE           = 2;
 const CHOICE_PICK_SPICE          = 3;
 const CHOICE_REPLACE_TILE        = 4;
 const CHOICE_FOUND_TILE          = 5;
+const CHOICE_ESPIONAGE           = 7;
 
 const SPICE_WHITE     = 1;
 const SPICE_YELLOW    = 2;
@@ -316,6 +317,7 @@ CONST ALL_MY_UI_CONSTANTS= [
    'CHOICE_PICK_SPICE'        => CHOICE_PICK_SPICE           ,  
    'CHOICE_REPLACE_TILE'      => CHOICE_REPLACE_TILE         ,  
    'CHOICE_FOUND_TILE'        => CHOICE_FOUND_TILE         ,  
+   'CHOICE_ESPIONAGE'         => CHOICE_ESPIONAGE            ,
 
    'SPICES_ALL' =>   SPICES_ALL,
 

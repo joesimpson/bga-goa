@@ -98,6 +98,7 @@ export class ClientSelectTileAction {
         let tile_id = args.tile.id;
         let icon_contracts = this.game.formatIcon('contracts',_('Contracts'));
         let isOutpost = args.tile.subtype == this.game.const.TILE_SUBTTYPE_OUTPOST;
+        let activePlayerId = this.bga.players.getActivePlayerId();
 
         this.bga.statusBar.setTitle(
                 isCurrentPlayerActive ? 
@@ -235,6 +236,47 @@ export class ClientSelectTileAction {
                         break;
                     }
                     
+                    break;
+                case this.game.const.CHOICE_ESPIONAGE:
+                    this.bga.statusBar.setTitle(
+                        isCurrentPlayerActive ? 
+                        _('Espionage : ${you} must choose an action from an opponent board') 
+                        : _('Espionage : ${actplayer} must choose an action from an opponent board') 
+                    );
+                    Object.entries(this.game.gamedatas.players).forEach(([pId, player]) => {
+                        if(pId == activePlayerId) return;
+                        let opponentId = pId;
+
+                        switch(choice){
+                            //TODO JSA 4 ACTIONS for each opponent
+                            case this.game.const.ACTION_SHIP: 
+                                this.game.addClickHandlerOnProgressMarker(
+                                    1,
+                                    this.bga.gameui.format_string(_('Action : ${name}'),{'name':  _('Build ships')}),
+                                    opponentId,
+                                    () => this.game.customPerformAction("actTileChoice", { 
+                                                'tile_id' : tile_id,
+                                                'choice': choice,
+                                                'choice_index':args.choice_index,
+                                                'arr1': [opponentId].join(','),
+                                            }),
+                                );
+                                break;
+                            case this.game.const.ACTION_MONEY: 
+                                this.game.addClickHandlerOnProgressMarker(
+                                    3,
+                                    this.bga.gameui.format_string(_('Action : ${name}'),{'name':  _('Taxes')}),
+                                    opponentId,
+                                    () => this.game.customPerformAction("actTileChoice", { 
+                                                'tile_id' : tile_id,
+                                                'choice': choice,
+                                                'choice_index':args.choice_index,
+                                                'arr1': [opponentId].join(','),
+                                            }),
+                                );
+                                break;
+                        }
+                    });
                     break;
             }
         });

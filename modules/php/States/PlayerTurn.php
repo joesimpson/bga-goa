@@ -22,6 +22,7 @@ use Bga\Games\Goa\Managers\Cards;
 use Bga\Games\Goa\Managers\Players;
 use Bga\Games\Goa\Managers\Tiles;
 use Bga\Games\Goa\Managers\Tokens;
+use Bga\Games\Goa\Models\Player;
 
 class PlayerTurn extends GameState
 {
@@ -448,13 +449,17 @@ class PlayerTurn extends GameState
         Log::addStep();
         $player = Players::get($activePlayerId);
 
-        $progressMarker = Tokens::getProgressMarkerByType(TOKEN_TYPE_PROGRESS_MARKER_SHIPS,$activePlayerId);
-        $amount = PROGRESS_GAINS_SHIPS[$progressMarker->getRow() - 1];
-        Players::giveShips($player, $amount);
+        PlayerTurn::actBuildShips_content($player,$activePlayerId);
         
         Players::registerNewAction($player);
 
         return PlayerTurn::class;
+    }
+
+    public static function actBuildShips_content(Player $player, int $progressPlayerId): void{
+        $progressMarker = Tokens::getProgressMarkerByType(TOKEN_TYPE_PROGRESS_MARKER_SHIPS,$progressPlayerId);
+        $amount = PROGRESS_GAINS_SHIPS[$progressMarker->getRow() - 1];
+        Players::giveShips($player, $amount);
     }
     
     /**
@@ -630,15 +635,18 @@ class PlayerTurn extends GameState
         Log::addStep();
         $player = Players::get($activePlayerId);
 
-        $taxesMarker = Tokens::getProgressMarkerByType(TOKEN_TYPE_PROGRESS_MARKER_TAXES,$activePlayerId);
-        $amount = PROGRESS_GAINS_TAXES[$taxesMarker->getRow() - 1];
-        Players::giveMoney($player, $amount);
+        PlayerTurn::actTaxes_content($player,$activePlayerId);
         
         Players::registerNewAction($player);
 
         return PlayerTurn::class;
     }
     
+    public static function actTaxes_content(Player $player, int $progressPlayerId): void{
+        $taxesMarker = Tokens::getProgressMarkerByType(TOKEN_TYPE_PROGRESS_MARKER_TAXES,$progressPlayerId);
+        $amount = PROGRESS_GAINS_TAXES[$taxesMarker->getRow() - 1];
+        Players::giveMoney($player, $amount);
+    }
     /**
      * Player action : turn ACTION #5 explore : draw some cards
      */

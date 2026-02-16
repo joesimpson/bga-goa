@@ -139,10 +139,7 @@ export class PlayerTurn {
                 let actionHint = this.bga.gameui.format_string(_('Action : ${name}'),{'name': actionName});
                 this.bga.statusBar.addActionButton(actionName, () => this.game.customPerformAction("actBuildShips"), { 'title':actionHint,destination: document.getElementById('customPrimary') }); 
                 //+ CLICK ON BOARD section
-                let progressTrack = document.getElementById(`goa_progress_track_${1}_${activePlayer}`);
-                let progressMarker = progressTrack.getElementsByClassName('goa_progress_marker')[0];
-                this.game.onClick(progressMarker.parentNode,() => this.game.customPerformAction("actBuildShips"));
-                progressMarker.parentNode.setAttribute("title",actionHint);
+                this.game.addClickHandlerOnProgressMarker(1,actionHint,activePlayer,() => this.game.customPerformAction("actBuildShips"));
             }
             
             if(possibleActions.includes('actHarvest') && args.harvestSpots &&  Object.keys(args.harvestSpots).length > 0){
@@ -171,10 +168,7 @@ export class PlayerTurn {
                 let actionHint = this.bga.gameui.format_string(_('Action : ${name}'),{'name': actionName});
                 this.bga.statusBar.addActionButton(actionName, () => this.game.customPerformAction("actTaxes"), { 'title':actionHint,destination: document.getElementById('customPrimary') }); 
                 //+ CLICK ON BOARD section
-                let progressTrack = document.getElementById(`goa_progress_track_${3}_${activePlayer}`);
-                let progressMarker = progressTrack.getElementsByClassName('goa_progress_marker')[0];
-                this.game.onClick(progressMarker.parentNode,() => this.game.customPerformAction("actTaxes"));
-                progressMarker.parentNode.setAttribute("title",actionHint);
+                this.game.addClickHandlerOnProgressMarker(3,actionHint,activePlayer,() => this.game.customPerformAction("actTaxes"));
             }
             
             if(possibleActions.includes('actFoundOutpost') && args.outpostsToFound.length>0){
