@@ -644,7 +644,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
             $sum += $card->getContracts();
           }
           Notifications::resultDrawNCards($player,$sum);
-          Globals::addChoiceTile($tile,CHOICE_HARVEST, $sum, [ACTION_HARVEST, ACTION_CONTRACT, ACTION_SHIP], CHOICE_PICK_ACTION);
+          Globals::addChoiceTile($tile,ACTION_HARVEST, $sum, [ACTION_HARVEST, ACTION_CONTRACT, ACTION_SHIP], CHOICE_PICK_ACTION);
           $stateChange = new PrematureStateChangeException (5,PlayerChoice::class,$player);
           break;
         case ACTION_HARVEST:  //done in actHarvest

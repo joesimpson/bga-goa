@@ -59,7 +59,7 @@ class PlayerChoice extends GameState
                         //IF we are near abandon, let player play a tile to receive contracts
                         $actionsWhiteList[] = ACTION_CONTRACT;
                     }
-                    else if($tileChoiceDatas['type'] === CHOICE_HARVEST ){
+                    else if($tileChoiceDatas['type'] === ACTION_HARVEST ){
                         $args['harvestSpots'] = Tiles::getPlayerAvailableSpotsForSpices($player);
                         $args['playerBaseHarvest'] = $tileChoiceDatas['n'];
                     }

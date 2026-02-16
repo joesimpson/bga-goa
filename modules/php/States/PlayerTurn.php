@@ -723,7 +723,7 @@ class PlayerTurn extends GameState
         }
         $playerChoices[] = ACTION_FOUND_ABANDON;//always possible
 
-        Globals::addChoiceTile($tile,CHOICE_FOUND_TILE, $missingContracts, $playerChoices, CHOICE_FOUND_TILE);
+        Globals::addChoiceTile($tile,0, $missingContracts, $playerChoices, CHOICE_FOUND_TILE);
         
         Players::registerNewAction($player);
         
