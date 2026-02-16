@@ -585,10 +585,12 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
     }
 
     if(isset($coords)){
-      //Prepare to move the card
-      $discard = false;
       $row = $coords['row'];
       $col = $coords['col'];
+    }
+    if(isset($row) && isset($col)){
+      //Prepare to move the card
+      $discard = false;
 
       $tile->setPId(null);
       $tile->setState(TILE_STATE_NOTPLAYED);
