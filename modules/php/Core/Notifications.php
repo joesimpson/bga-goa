@@ -207,6 +207,17 @@ class Notifications
         'preserve'=>['tile'],
     ]);
   }
+  public static function placeTile(Player $player, Tile $tile)
+  {
+    self::notifyAll("placeTile", clienttranslate('${player_name} places the tile ${tile_icon} at row ${row}/column ${col}'), [
+        "player" => $player,
+        "tile" => $tile->getUiData(),
+        "tile_icon" => '',
+        "row" => $tile->getRow(),
+        "col" => $tile->getCol(),
+        'preserve'=>['tile'],
+    ]);
+  }
   
   public static function tryFoundOutpost(Player $player, Tile $tile, int $nbContracts)
   {

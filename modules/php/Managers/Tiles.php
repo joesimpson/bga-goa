@@ -5,8 +5,10 @@ namespace Bga\Games\Goa\Managers;
 use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Exceptions\PrematureStateChangeException;
+use Bga\Games\Goa\Exceptions\UnexpectedException;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Collection;
+use Bga\Games\Goa\Helpers\GridUtils;
 use Bga\Games\Goa\Models\MarketTile;
 use Bga\Games\Goa\Models\OutpostTile;
 use Bga\Games\Goa\Models\Player;
@@ -484,6 +486,9 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
             $possiblePlay = true;
             break;
           case ACTION_SWAP: 
+            $spots = GridUtils::listPossibleSpotsForSwap();
+            $possiblePlay = count($spots) > 0;
+            $playDatas['market_spots'] = $spots;
             break;
           case ACTION_RESUPPLY: 
             $possiblePlay = true;
@@ -550,11 +555,13 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
   /**
    * Action of a tile in player actions turn
    * 
+   * @param array|null $coords New coordinates to set on tile
    * @param PrematureStateChangeException &$stateChange : this function modify arg  directly instead of throw in order to go until the return value
    */
   public static function playTile(
     Player &$player,
     int $tileId, 
+    array|null $coords = null, 
     bool &$doCheckpoint, 
     PrematureStateChangeException| null &$stateChange = null,
   ): Tile
@@ -576,7 +583,21 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
         break;
       default: break;
     }
-    if($discard) {
+
+    if(isset($coords)){
+      //Prepare to move the card
+      $discard = false;
+      $row = $coords['row'];
+      $col = $coords['col'];
+
+      $tile->setPId(null);
+      $tile->setState(TILE_STATE_NOTPLAYED);
+      $tile->setLocation(TILE_LOCATION_BOARD_MARKET);
+      $tile->setRow($row);
+      $tile->setCol($col);
+      Notifications::placeTile( $player, $tile);
+    }
+    else if($discard) {
       //NOTIFY 
       Notifications::playTile( $player, $tile);
       Tiles::discardTileFromPlayer($player,$tile);
@@ -603,6 +624,15 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
           Players::giveMoney($player, $nb);
           break;
         case ACTION_SWAP: 
+          try{
+            if(!isset($row) || !isset($col)){
+              throw new UnexpectedException(122,("Missing coordinate to swap"));
+            }
+            Tiles::giveMarketTileToPlayerAt($player, $row, $col, $doCheckpoint );
+          }
+          catch(PrematureStateChangeException $exc){
+            $stateChange = $exc;
+          }
           break;
         case ACTION_RESUPPLY: 
           $cards = Cards::drawAndDiscardExploration($player, 2);

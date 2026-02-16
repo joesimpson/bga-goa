@@ -360,7 +360,7 @@ class PlayerTurn extends GameState
         if(isset($card_id)){
             Cards::playExploration($player, $card_id, );
         } else if(isset($tile_id)){
-            Tiles::playTile($player, $tile_id, $doCheckpoint );
+            Tiles::playTile($player, $tile_id, null, $doCheckpoint );
         }
 
         if($withSpices){
@@ -486,7 +486,7 @@ class PlayerTurn extends GameState
         if(isset($card_id)){
             Cards::playExploration($player, $card_id, );
         } else if(isset($tile_id)){
-            $tile = Tiles::playTile($player, $tile_id, $doCheckpoint, $prematureStateChange );
+            $tile = Tiles::playTile($player, $tile_id, null, $doCheckpoint, $prematureStateChange );
         }
 
         PlayerTurn::actHarvest_content(
@@ -796,12 +796,17 @@ class PlayerTurn extends GameState
      * Player action : Play some tile in hand
      */
     #[PossibleAction]
-    public function actPlayTile(int $tile_id, int $v, int $activePlayerId, array $args)
+    public function actPlayTile(
+        int $tile_id,
+        int|null $row = null,
+        int|null $col = null,
+        int $v, int $activePlayerId, array $args,
+        )
     { 
         Utils::checkVersion($v);
         $doCheckpoint = false;
         $nextStateClass = PlayerTurn::class;
-        PlayerTurn::actPlayTile_content($tile_id, $activePlayerId, $args, $doCheckpoint,$prematureStateChange);
+        PlayerTurn::actPlayTile_content($tile_id, $row, $col, $activePlayerId, $args, $doCheckpoint,$prematureStateChange);
         if(isset($prematureStateChange) ){
             $nextStateClass = $prematureStateChange->nextStateClass;
         }
@@ -812,13 +817,15 @@ class PlayerTurn extends GameState
     /**Reusable action content */
     static function actPlayTile_content(
         int $tile_id, 
+        int|null $row = null, //row to play the tile
+        int|null $col = null, //column to play the tile
         int $activePlayerId, 
         array $args, 
         bool &$doCheckpoint,
         PrematureStateChangeException| null &$stateChange = null, //modify arg  directly instead of throw in order to go until the return value
     )
     { 
-        Game::get()->trace("actPlayTile_content($tile_id,$activePlayerId)");
+        Game::get()->trace("actPlayTile_content($tile_id,$row,$col,$activePlayerId)");
         $possibleActions = $args['possibleActions'];
         if(!in_array('actPlayTile',$possibleActions)){
             throw new UnexpectedException(110,"Invalid action actPlayTile, see ".json_encode($possibleActions));
@@ -828,10 +835,21 @@ class PlayerTurn extends GameState
         if(!in_array($tile_id,$possibleTilesIds)){
             throw new UnexpectedException(130,"Invalid tile $tile_id, see ".json_encode($possibleTilesIds));
         }
+        $playDatas = $possibleTiles[$tile_id]['play_datas'];
+        if(!isset($playDatas['market_spots']) && (isset($row) || isset($col))){
+            throw new UnexpectedException(131,"Tile is not expected to be placed on the market");
+        }
+        if(isset($playDatas['market_spots'])){
+            $possibleSpots = $playDatas['market_spots'];
+            if(!in_array(['row'=>$row,'col'=>$col], $possibleSpots)) {
+                throw new UnexpectedException(132,"Invalid market spot [$row, $col] for tile");
+            }
+        }
+        
         Log::addStep();
         $player = Players::get($activePlayerId);
 
-        Tiles::playTile($player, $tile_id, $doCheckpoint, $stateChange);
+        Tiles::playTile($player, $tile_id, ['row'=>$row, 'col'=>$col], $doCheckpoint, $stateChange, );
     }
     
     /**
@@ -901,7 +919,7 @@ class PlayerTurn extends GameState
             Cards::playExploration($player, $card_id, );
         }
         if(isset($tile_id)){
-            $tile = Tiles::playTile($player, $tile_id, $doCheckpoint, $prematureStateChange);
+            $tile = Tiles::playTile($player, $tile_id, null, $doCheckpoint, $prematureStateChange);
         }
         $playerSpices = Tokens::getPlayerSpices($player->getId());
         $tokens = $playerSpices->filter(function($t) use ($t_ids){

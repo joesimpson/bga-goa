@@ -245,6 +245,8 @@ class PlayerChoice extends GameState
     #[PossibleAction]
     public function actPlayTile(
         int $tile_id, 
+        int|null $row = null,
+        int|null $col = null,
         int $activePlayerId, array $args,
         int $v,
         )
@@ -253,7 +255,7 @@ class PlayerChoice extends GameState
         
         $doCheckpoint = false;
         $nextStateClass = self::class;
-        PlayerTurn::actPlayTile_content($tile_id, $activePlayerId, $args, $doCheckpoint,$prematureStateChange);
+        PlayerTurn::actPlayTile_content($tile_id, $row, $col, $activePlayerId, $args, $doCheckpoint,$prematureStateChange);
         if(isset($prematureStateChange) ){
             $nextStateClass = $prematureStateChange->nextStateClass;
         }

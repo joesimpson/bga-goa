@@ -25,6 +25,7 @@ const [BgaHelp,BgaZoom] = await globalThis.importDojoLibs([g_gamethemeurl + "mod
 import { ConfirmTurn } from "./states/ConfirmTurn.js";
 import { ClientCardAction } from "./states/ClientCardAction.js";
 import { ClientHarvestResources } from "./states/ClientHarvestResources.js";
+import { ClientSelectMarketPlace } from "./states/ClientSelectMarketPlace.js";
 import { ClientSelectProgress } from "./states/ClientSelectProgress.js";
 import { ClientSelectSpicesForProgress } from "./states/ClientSelectSpicesForProgress.js";
 import { ClientSpendSpices } from "./states/ClientSpendSpices.js";
@@ -53,6 +54,8 @@ export class Game {
         this.bga.states.register('ClientCardAction', this.clientCardAction);
         this.clientSelectTileAction = new ClientSelectTileAction(this, bga);
         this.bga.states.register('ClientSelectTileAction', this.clientSelectTileAction);
+        this.clientSelectMarketPlace = new ClientSelectMarketPlace(this, bga);
+        this.bga.states.register('ClientSelectMarketPlace', this.clientSelectMarketPlace);
         this.clientSelectProgress = new ClientSelectProgress(this, bga);
         this.bga.states.register('ClientSelectProgress', this.clientSelectProgress);
         this.clientSelectSpicesForProgress = new ClientSelectSpicesForProgress(this, bga);
@@ -859,6 +862,16 @@ export class Game {
                             },
                         });
                     }
+                    else if(play_datas.market_spots){
+                        this.bga.states.setClientState("ClientSelectMarketPlace", {
+                            descriptionmyturn: '',
+                            args: {
+                                'spots': play_datas.market_spots,
+                                'withTile':tile_id,
+                                'previousClientState' : this.getCurrentClientStateDatas(),
+                            },
+                        });
+                    }
                     else { //DIRECT TILE PLAY
                         this.customPerformAction('actPlayTile', { 'tile_id':tile_id });
                     }
@@ -1236,6 +1249,14 @@ export class Game {
         if(tileDiv){
             tileDiv.dataset.state = tile.state;
         }
+    }
+    async notif_placeTile(notif) {
+        console.log("notif_placeTile",notif);
+        let tile = notif.tile;
+        
+        let tileDiv = this.addTile(tile);//refresh tile dataset
+        let destinationDiv = document.getElementById(this.getTileContainer(tile));
+        await this.animationManager.slideAndAttach(tileDiv, destinationDiv);
     }
     
     async notif_newSpiceOnTile(notif) {

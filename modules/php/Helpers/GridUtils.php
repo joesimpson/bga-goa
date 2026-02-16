@@ -132,4 +132,28 @@ abstract class GridUtils
 
         return $spots;
     }
+
+    
+    /**
+     * @return array the list of spots to take :
+     *    all non empty spots as ['row'=>$row,'col'=>$col]
+     */
+    public static function listPossibleSpotsForSwap(): array
+    {
+        $boardTiles = Tiles::getBoardTiles();
+        $isEmptySpot = function ($row,$col) use ($boardTiles){
+            return $boardTiles->filter(function ($tile) use($row,$col){
+                return $row == $tile->getRow() && $col == $tile->getCol() ;
+            })->count() == 0;
+        };
+        $spots = [];
+
+        for($row=1;$row<=MARKET_GRID_SIZE;$row++){
+            for($col=1;$col<=MARKET_GRID_SIZE;$col++){
+                if(!$isEmptySpot($row,$col)) $spots[] = ['row'=>$row,'col'=>$col];
+            }
+        }
+
+        return $spots;
+    }
 }
