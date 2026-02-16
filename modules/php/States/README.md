@@ -18,14 +18,14 @@ Visual Diagram (hand made), in order to keep a trace of each possible transition
                     |                                 ^      |  |
                     v                                 |      |  |
                playerTurn   -------\                  |      |  |
-              |       |            |                  |      |  |
-              |       v            |                  |      |  |
-              |playerChoice->\     |                  |      |  |
-              |       |      |     |                  |      |  |
-              v       v      |     |                  |      |  |
-              YYYYYYYYY  -->\|     |                  |      |  |
-                            ||     |                  |      |  |
-                            vv     v                  |      |  |
+                      |   <--\     |                  |      |  |
+                      v      |     |                  |      |  |
+               playerChoice->/     |                  |      |  |
+                           ->\     |                  |      |  |
+                             |     |                  |      |  |
+                             |     |                  |      |  |
+                             |     |                  |      |  |
+                             v     v                  |      |  |
                             confirm --> endPlayTurn ->/      |  |
                                            |                 |  |
                                            |                 |  |

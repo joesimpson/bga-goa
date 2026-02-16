@@ -6,6 +6,7 @@ namespace Bga\Games\Goa\States;
 
 use Bga\GameFramework\StateType;
 use Bga\Games\Goa\Core\Globals;
+use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Log;
 use Bga\Games\Goa\Helpers\Utils;
@@ -36,12 +37,21 @@ class NextPlayer extends \Bga\GameFramework\States\GameState
         $roundStep = Globals::getRoundStep();
         switch($roundStep){
             case ROUND_STEP_TILE_AUCTIONS:
+                $nextAuctionTokenToBid = Tokens::getCurrentAuctionToken();
+                if(!isset($nextAuctionTokenToBid)) {
+                    //Time to end this step
+                    $roundStep = ROUND_STEP_PLAYER_ACTIONS;
+                    Globals::setRoundStep($roundStep);
+                    Notifications::newRoundStep($roundStep, clienttranslate('Player Actions'));
+                    //Recall this switch with new step value
+                    return $this->onEnteringState($activePlayerId);
+                }
                 //TODO JSA INCREASE OnLY when same player bid again (when multiple bid turns)
                 Globals::incBidTurns();
                 $bidTurns = Globals::getBidTurns();
                 if($bidTurns == 1){
                     //First turn of bidding on each auction => player after the auctioneer
-                    $auctionToken = Tokens::getCurrentAuctionToken();
+                    $auctionToken = $nextAuctionTokenToBid;
                     $currentAuctioneerId = $auctionToken->getPId();
                     $nextPlayer = Players::getNextPlayer($currentAuctioneerId);
                 }

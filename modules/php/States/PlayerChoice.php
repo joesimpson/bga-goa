@@ -118,6 +118,7 @@ class PlayerChoice extends GameState
         // game logic  
         $prematureStateChange = null;
         $doCheckpoint = false;
+        $roundStep = Globals::getRoundStep();
         try{
             switch($tile_choice['selectType']){
                 //use 2 different switches, because in case of DB elements ids (like tiles ids), we cannot tell in advance if the id is the same as an predefined action id
@@ -153,15 +154,11 @@ class PlayerChoice extends GameState
                         case ACTION_FOUND_ABANDON:
                             Notifications::abandonOutpost($player,$tile);
                             Players::giveContracts($player, 1);
-                            //We come from PlayerTurn, stay there
-                            throw new PrematureStateChangeException (10,PlayerTurn::class,$player);
                             break;
                         case ACTION_FOUND_FORWARD:
                             $amount = $foundChoice['n'];
                             Players::giveContracts($player, -$amount);
                             Tiles::giveOutpostToPlayer($player,$tile);
-                            //We come from PlayerTurn, stay there
-                            throw new PrematureStateChangeException (11,PlayerTurn::class,$player);
                             break;
                         case ACTION_HARVEST:
                             PlayerTurn::actHarvest_content(
@@ -179,10 +176,6 @@ class PlayerChoice extends GameState
                     }
                 break;
             }
-            if($tile_choice['type'] === CHOICE_HARVEST ){
-                //this choice comes from player turn playTile, lets return to it
-                $prematureStateChange = new PrematureStateChangeException (10,PlayerTurn::class,$player);
-            }
         }
         catch(PrematureStateChangeException $exc){
             $prematureStateChange = $exc;
@@ -197,9 +190,13 @@ class PlayerChoice extends GameState
             //Should not be necessary, but we cannot change active player in active state
             $nextStateClass = $prematureStateChange->nextStateClass;
         }
-        else if(count($remainingChoices) > 0){
+        if(count($remainingChoices) > 0){
             //continue to have choices
             $nextStateClass = PlayerChoice::class;
+        }
+        else if(ROUND_STEP_PLAYER_ACTIONS === $roundStep ){
+            //Else return to player turn to see if something else to play
+            $nextStateClass = PlayerTurn::class;
         }
         else {
             //Else end
