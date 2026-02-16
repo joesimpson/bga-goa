@@ -1451,7 +1451,7 @@ export class Game {
                     div.dataset.id = card.id; 
                     div.dataset.type = card.type; 
                     div.dataset.colony = card.colony; 
-                    this.bga.gameui.addTooltipHtml(div.id, this.getTileTooltip(card));
+                    this.bga.gameui.addTooltipHtml(div.id, this.getTileTooltip(card), 0);
                 },
                 cardWidth: 108,
                 cardHeight: 108,
@@ -1529,7 +1529,7 @@ export class Game {
             else {//manual add
                 document.getElementById(container).insertAdjacentHTML('beforeend', this.tplTile(tile));
             }
-            this.bga.gameui.addTooltipHtml(`goa_tile-${tile.id}`, this.getTileTooltip(tile));
+            this.bga.gameui.addTooltipHtml(`goa_tile-${tile.id}`, this.getTileTooltip(tile),0);
 
             tileDiv = document.getElementById(`goa_tile-${tile.id}`) ;
         }
