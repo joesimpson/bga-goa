@@ -283,6 +283,26 @@ trait DebugTrait
         $this->debug_refreshUI();
         $this->debug_goToState(ST_PLAYER_TURN);
     }
+    
+    function debug_changeProgress(int $ships = 1,int $harvest = 2,int $taxes = 4,int $explo = 2,int $found = 1,){
+        $player = Players::getCurrent();
+        $player_id = $player->getId();
+        Log::addStep();
+        
+        $token = Tokens::getProgressMarkerByType(1, $player_id);
+        $token->setRow($ships);
+        $token = Tokens::getProgressMarkerByType(2, $player_id);
+        $token->setRow($harvest);
+        $token = Tokens::getProgressMarkerByType(3, $player_id);
+        $token->setRow($taxes);
+        $token = Tokens::getProgressMarkerByType(4, $player_id);
+        $token->setRow($explo);
+        $token = Tokens::getProgressMarkerByType(5, $player_id);
+        $token->setRow($found);
+
+        $this->debug_refreshUI();
+        $this->debug_goToState(ST_PLAYER_TURN);
+    }
 
     function debug_playerTiles(){
         $player = Players::getCurrent();

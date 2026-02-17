@@ -374,9 +374,11 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
                   'withSpices' => false,
                   'withShips' => false,
                   'withCoins' => true,
+                  'costMoney' => 0,
                 ];
                 $currentRow = $token->getRow();
                 $costs = PROGRESS_COST_AS_COINS;
+                $map['costMoney'] = 0;
                 if( array_key_exists($currentRow+1, $costs)){
                   $map['costMoney'] = $costs[$currentRow+1];
                   if($free) $map['costMoney'] = 0;
