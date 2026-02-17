@@ -10,7 +10,9 @@
     //Publisher agrees to cut the top of board because it is useless for digital adaptation
     --goa_board_height_offset: -230px;
     --goa_selectable_color: blue;
+    --goa_selectable_color_back: rgba(20, 0, 255, 0.2); //same with opacity
     --goa_selectable_hover_color: orange;
+    --goa_selectable_hover_color_back: rgba(255, 165, 0, 0.24); //same with opacity
     --goa_selected_color: red;
 }
  
