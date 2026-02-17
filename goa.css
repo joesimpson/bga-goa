@@ -2246,11 +2246,20 @@ html.goa_background_none #goa_overall_background {
   width: 100%;
   display: flex;
   flex-wrap: wrap;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
+}
+#goa_top_zone #goa_bid_hints .goa_bid_hint_text {
+  font-style: italic;
 }
 #goa_top_zone #goa_bid_hints span {
   align-self: center;
+}
+#goa_top_zone #goa_bid_hints > div {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
 }
 #goa_top_zone #goa_bid_hints .goa_bid {
   align-self: center;

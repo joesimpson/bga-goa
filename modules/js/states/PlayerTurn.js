@@ -38,8 +38,8 @@ export class PlayerTurn {
                 }
                 var token_icon = (auctionToken) ? this.game.tplToken(auctionToken, '_log') : '';
                 this.bga.statusBar.setTitle(isCurrentPlayerActive ? 
-                    _('${you} must pass or raise the current bid of ${bid} ${icon_money} for auction ${token_icon}').replace('${bid}', currentBid).replace('${icon_money}', icon_money).replace('${token_icon}', token_icon) :
-                    _('${actplayer} must pass or raise the current bid of ${bid} ${icon_money} for auction ${token_icon}').replace('${bid}', currentBid).replace('${icon_money}', icon_money).replace('${token_icon}', token_icon)
+                    _('Auction ${token_icon} : ${you} must pass or raise the current bid of ${bid} ${icon_money}').replace('${bid}', currentBid).replace('${icon_money}', icon_money).replace('${token_icon}', token_icon) :
+                    _('Auction ${token_icon} : ${actplayer} must pass or raise the current bid of ${bid} ${icon_money}').replace('${bid}', currentBid).replace('${icon_money}', icon_money).replace('${token_icon}', token_icon)
                 );
                 break;
             case this.game.const.ROUND_STEP_PLAYER_ACTIONS: 
@@ -77,19 +77,30 @@ export class PlayerTurn {
             if(possibleActions.includes('actBid')){
                 this.currentBid = args.bid ; //- args.bidRebate;
                 this.selectedBid = args.minBid; // - args.bidRebate;
+                
+                let auctionToken = args.token;
 
-                let hintLine1 = this.bga.gameui.format_string(  _('My current money : ${n} ${icon_money}') ,{ n:args.currentMoney , icon_money: icon_money});
+                let hintLine1 = '';
+                if(auctionToken.type == this.game.const.TOKEN_TYPE_AUCTION_MARKER_1){
+                    hintLine1 = this.bga.gameui.format_string(  _('Highest bid takes the starting player marker + ${n} ${card_icon}.') ,{'n':1, 'card_icon':this.game.formatIcon('compasses', _('Compass cards')) });
+                }
+                else {
+                    hintLine1 = this.bga.gameui.format_string(  _('Highest bid takes the tile(s) under the auction marker.') ,{});
+                }
                 let hintLineMin = this.bga.gameui.format_string(  _('Minimum bid : ${n} ${icon_money}') ,{ n:args.minBid , icon_money: icon_money});
                 let hintLineMax = this.bga.gameui.format_string(  _('Maximum bid : ${n} ${icon_money}') ,{ n:args.maxBid , icon_money:  icon_money});
-
+                
                 document.getElementById('goa_top_zone').classList.add('goa_display');
                 this.game.empty(document.getElementById('goa_top_zone_content'));
                 document.getElementById('goa_top_zone_content').insertAdjacentHTML('beforeend', `
                         <div id="goa_bid_hints">
-                            <span>${hintLine1 }</span>
-                            <div id='goa_bid_reset_min'></div>
-                            <div id='goa_bid_inc' class='goa_bid'></div>
-                            <div id='goa_bid_reset_max'></div>
+                            <span class="goa_bid_hint_text">${hintLine1 }</span>
+                            <div>
+                                <div id='goa_bid_reset_min'></div>
+                                <div id='goa_bid_inc' class='goa_bid'></div>
+                                <div id='goa_bid_reset_max'></div>
+                            </div>
+                            <span class="goa_bid_hint_text" id="goa_bid_remaining" data-start="${args.currentMoney}"></span>
                         </div>
                     `);
                     
@@ -271,12 +282,18 @@ export class PlayerTurn {
     refreshBidButton(){
         let button = document.getElementById('goa_button_bid');
         if(button) this.game.destroy(button);
-        let icon_money = this.game.formatIcon('money',_('Coins'));
+        let icon_money = this.game.formatIcon('money',null);
+        let icon_arrow = '<i class="fa6 fa6-arrow-right goa_icon_arrow"></i>';
 
-        this.bga.statusBar.addActionButton(this.bga.gameui.format_string(  _('Bid ${n} ${icon_money} => ${m} ${icon_money}') ,
-                    { 'n': this.selectedBid, m: (this.currentBid + this.selectedBid), icon_money: icon_money}), 
+        this.bga.statusBar.addActionButton(this.bga.gameui.format_string(  _('Bid ${n} ${icon_money} ${icon_arrow} ${m} ${icon_money}') ,
+                    { 'n': this.selectedBid, m: (this.currentBid + this.selectedBid), icon_money: icon_money,icon_arrow}), 
                 () => this.onBid(this.selectedBid) 
             , {'id':'goa_button_bid', 'title':_('Confirm the bid'),destination: document.getElementById('customPrimary')}
             );
+            
+        let remainingDiv = document.getElementById('goa_bid_remaining');
+        let startingMoney = remainingDiv.dataset.start;
+        remainingDiv.innerHTML = this.bga.gameui.format_string(  _('Remaining Pardaos if I overbid this amount : ${n} ${icon_money}') ,{ n: Math.min(startingMoney, startingMoney - (this.currentBid + this.selectedBid))  , icon_money:  icon_money});
+
     }
 }
