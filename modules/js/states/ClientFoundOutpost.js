@@ -12,6 +12,19 @@ export class ClientFoundOutpost {
         
         let outpostsIds = args.outpostsToFound; 
         let baseContractsWithAction = args.playerBaseContracts;
+
+        let actionName = 'actFoundOutpost';
+        let actionArgs = {};
+        let fromTileChoice = args.tile_choice;
+        if(fromTileChoice){
+            actionName = 'actTileChoice';
+            actionArgs = { 
+                        'tile_id' : fromTileChoice.tile_id,
+                        'choice': fromTileChoice.choice,
+                        'choice_index':fromTileChoice.choice_index,
+                        'progressRefPlayerId': fromTileChoice.progressRefPlayerId,
+                    };
+        }
         
         this.bga.statusBar.setTitle(
                    _("${you} must select a new outpost to found with a base of ${n} ${icon_contracts}").replace('${icon_contracts}', this.game.formatIcon('contracts',_('Contracts'))).replace('${n}', baseContractsWithAction)
@@ -42,7 +55,14 @@ export class ClientFoundOutpost {
                         _('Found ${name} : requires ${n} ${icon_contracts}'), 
                         {'name': colonyName, 'n':outpostMinContractsNeeded, 'icon_contracts':this.game.formatIcon('contracts',_('Contracts')), }),
                     () => { 
-                        this.game.customPerformAction('actFoundOutpost', { 'tile_id': outpostId, 'card_id': args.withCard});
+                        if(fromTileChoice){
+                            actionArgs.arr1 = outpostId;
+                        }
+                        else {
+                            actionArgs.tile_id = outpostId;
+                            actionArgs.card_id = args.withCard;
+                        }
+                        this.game.customPerformAction(actionName, actionArgs);
                     }
                 , { id:'goa_button_found', 'title':_('Action : Found Outpost'), destination: document.getElementById('customPrimary') }); 
             });

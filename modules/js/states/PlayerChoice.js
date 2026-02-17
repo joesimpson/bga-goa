@@ -248,7 +248,6 @@ export class ClientSelectTileAction {
                         let opponentId = pId;
 
                         switch(choice){
-                            //TODO JSA 4 ACTIONS for each opponent
                             case this.game.const.ACTION_SHIP: 
                                 this.game.addClickHandlerOnProgressMarker(
                                     1,
@@ -294,6 +293,28 @@ export class ClientSelectTileAction {
                                                 'choice_index':args.choice_index,
                                                 'progressRefPlayerId': opponentId,
                                             }),
+                                );
+                                break;
+                            case this.game.const.ACTION_FOUND_ABANDON: 
+                                let playerBaseContracts = args.previousArgs.playersBaseContracts[opponentId];
+                                this.game.addClickHandlerOnProgressMarker(
+                                    5,
+                                    this.bga.gameui.format_string(_('Action : ${name}'),{'name':  _('Found Outpost')}),
+                                    opponentId,
+                                    () => this.bga.states.setClientState("ClientFoundOutpost", {
+                                            descriptionmyturn: '',
+                                            args: {
+                                                'outpostsToFound': args.previousArgs.outpostsToFound,
+                                                'playerBaseContracts':playerBaseContracts,
+                                                'tile_choice': {
+                                                    'tile_id' : tile_id,
+                                                    'choice': choice,
+                                                    'choice_index':args.choice_index,
+                                                    'progressRefPlayerId': opponentId,
+                                                },
+                                                'previousClientState' : this.game.getCurrentClientStateDatas(),
+                                            },
+                                        }),
                                 );
                                 break;
                         }

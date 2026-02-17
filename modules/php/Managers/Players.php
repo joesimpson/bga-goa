@@ -278,6 +278,11 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
     $players = Players::getAll();
     return $players->map(function($p) { return Players::getHarvestBaseGain($p);})->toAssoc();
   }
+  public static function getAllFoundBaseContracts() : array
+  {
+    $players = Players::getAll();
+    return $players->map(function($p) { return Players::getFoundBaseContracts($p);})->toAssoc();
+  }
   public static function getHarvestBaseGain(Player $player) : int
   {
     $outpostMarker = Tokens::getProgressMarkerByType(TOKEN_TYPE_PROGRESS_MARKER_HARVEST, $player->getId());

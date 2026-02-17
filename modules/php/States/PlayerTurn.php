@@ -691,7 +691,26 @@ class PlayerTurn extends GameState
         if(!in_array('actFoundOutpost',$possibleActions)){
             throw new UnexpectedException(110,"Invalid action actFoundOutpost, see ".json_encode($possibleActions));
         }
+        Log::addStep();
+        $player = Players::get($activePlayerId);
+
+        PlayerTurn::actFoundOutpost_content($tile_id,$card_id, $player, $activePlayerId, $args);
+
+        Players::registerNewAction($player);
         
+        //CHECKPOINT because draw cards
+        Log::addStateCheckpoint(PlayerChoice::class);
+        return PlayerChoice::class;
+    }
+    
+    public static function actFoundOutpost_content(
+        int $tile_id, 
+        int|null $card_id = null,
+        Player $player, 
+        int $progressRefPlayerId,
+        array $args,
+        )
+    { 
         $nbCardsToDraw = 2;
         $outpostsToFound =  $args['outpostsToFound'];
         if(isset($card_id)){
@@ -707,9 +726,6 @@ class PlayerTurn extends GameState
             throw new UnexpectedException(111,"Invalid outpost $tile_id, see ".json_encode($outpostsToFound));
         }
         
-        Log::addStep();
-        $player = Players::get($activePlayerId);
-        
         if(isset($card_id)){
             Cards::playExploration($player, $card_id, );
         }
@@ -718,7 +734,8 @@ class PlayerTurn extends GameState
         $nbNeededContracts = Utils::getNbContractsForColony($tile->getColony());
         Notifications::tryFoundOutpost($player, $tile, $nbNeededContracts);
         $cards = Cards::drawAndDiscardExploration($player, $nbCardsToDraw);
-        $base = $args['playerBaseContracts'];
+        if(isset($args['playersBaseContracts'])) $base = $args['playersBaseContracts'][$progressRefPlayerId];
+        else $base = $args['playerBaseContracts'];
         $sum = 0;
         foreach($cards as $card){
             $sum += $card->getContracts();
@@ -736,13 +753,7 @@ class PlayerTurn extends GameState
 
         Globals::addChoiceTile($tile,0, $missingContracts, $playerChoices, CHOICE_FOUND_TILE);
         
-        Players::registerNewAction($player);
-        
-        //CHECKPOINT because draw cards
-        Log::addStateCheckpoint(PlayerChoice::class);
-        return PlayerChoice::class;
     }
-    
     
     /**
      * Player action : discard some card in hand

@@ -423,6 +423,21 @@ trait DebugTrait
         $this->debug_goToState(ST_PLAYER_TURN);
     }
     
+    function debug_discardTile(int $tile_id){
+        $player = Players::getCurrent();
+        $player_id = $player->getId();
+        Log::addStep();
+
+        $tile = Tiles::get($tile_id);
+        //Tiles::discardTileFromPlayer($player, $tile);//Not supposed to be for outposts
+        Tokens::removeSpicesOnTile($tile,$player,);
+        $tile->setPId(null);
+        $tile->setLocation(TILE_LOCATION_DISCARD);
+        Notifications::discardTile($player,$tile);
+
+        $this->debug_refreshUI();
+    }
+    
     //TEst different notif at a time
     function debug_sendNotif(){
         $players = Players::getAll()->toArray();

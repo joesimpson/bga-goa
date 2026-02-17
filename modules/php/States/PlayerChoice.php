@@ -63,9 +63,15 @@ class PlayerChoice extends GameState
                         $args['harvestSpots'] = Tiles::getPlayerAvailableSpotsForSpices($player);
                         $args['playerBaseHarvest'] = $tileChoiceDatas['n'];
                     }
-                    else if($tileChoiceDatas['selectType'] === CHOICE_ESPIONAGE && in_array(ACTION_HARVEST, $tileChoiceDatas['choices'])){
-                        $args['harvestSpots'] = Tiles::getPlayerAvailableSpotsForSpices($player);
-                        $args['playersBaseHarvest'] = Players::getAllHarvestBaseGain();
+                    else if($tileChoiceDatas['selectType'] === CHOICE_ESPIONAGE){
+                        if(in_array(ACTION_HARVEST, $tileChoiceDatas['choices'])){
+                            $args['harvestSpots'] = Tiles::getPlayerAvailableSpotsForSpices($player);
+                            $args['playersBaseHarvest'] = Players::getAllHarvestBaseGain();
+                        }
+                        if(in_array(ACTION_HARVEST, $tileChoiceDatas['choices'])){
+                            $args['outpostsToFound'] = Tiles::getFoundableOutposts($player)->getIds();
+                            $args['playersBaseContracts'] = Players::getAllFoundBaseContracts();
+                        }
                     }
                 }
             }
@@ -90,6 +96,7 @@ class PlayerChoice extends GameState
         int $choice_index, 
         int $activePlayerId, array $args,
         int $v,
+        /** 2 arrays if we need to transfer more datas according to some complex choices */
         #[IntArrayParam(name:'arr1')] array|null $choice_array1, 
         #[IntArrayParam(name:'arr2')] array|null $choice_array2, 
         int|null $progressRefPlayerId,
@@ -157,7 +164,6 @@ class PlayerChoice extends GameState
                         throw new UnexpectedException(505,"Wrong opponent choice ");
                     }
                     switch($choice){
-                        //TODO JSA 4 actions
                         case ACTION_SHIP:
                             Notifications::espionage($player, $opponent, 1);
                             PlayerTurn::actBuildShips_content($player, $progressRefPlayerId);
@@ -181,6 +187,16 @@ class PlayerChoice extends GameState
                             Notifications::espionage($player, $opponent, 3);
                             PlayerTurn::actTaxes_content($player, $progressRefPlayerId);
                             break;
+                        case ACTION_FOUND_ABANDON:
+                            if(isset($choice_array1) && isset($choice_array1[0])){
+                                $selectedTileId = $choice_array1[0];
+                            }
+                            Notifications::espionage($player, $opponent, 5);
+                            PlayerTurn::actFoundOutpost_content($selectedTileId,null, $player, $progressRefPlayerId, $args,);
+                            $doCheckpoint = true;
+                            break;
+                        default:
+                            throw new UnexpectedException(505,"Wrong espionage choice $choice for tile $tile_id");
                     }
                     break;
                 case CHOICE_PICK_ACTION:
@@ -351,7 +367,7 @@ class PlayerChoice extends GameState
             }
         }
         if ( !isset($foundChoice)) {
-            throw new UnexpectedException(504,"Invalid choice $choice for tile $tile_id");
+            throw new UnexpectedException(504,"Invalid key choice $choice for tile $tile_id");
         }    
         return $foundChoice;   
     }

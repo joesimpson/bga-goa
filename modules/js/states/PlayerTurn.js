@@ -183,10 +183,7 @@ export class PlayerTurn {
                 this.bga.statusBar.addActionButton(actionName, () => goToNext()
                     , { 'title':actionHint,destination: document.getElementById('customPrimary') }); 
                 //+ CLICK ON BOARD section
-                let progressTrack = document.getElementById(`goa_progress_track_${5}_${activePlayer}`);
-                let progressMarker = progressTrack.getElementsByClassName('goa_progress_marker')[0];
-                this.game.onClick(progressMarker.parentNode,() => goToNext());
-                progressMarker.parentNode.setAttribute("title",actionHint);
+                this.game.addClickHandlerOnProgressMarker(5,actionHint,activePlayer,() => goToNext());
             }
             
             if(possibleActions.includes('actExploration') && args.nbCardsExploration>0){
@@ -198,10 +195,7 @@ export class PlayerTurn {
                         {'n' : args.nbCardsExploration, 'icon_explo': this.game.formatIcon('exploration_card',_('Exploration card'))},
                     ), () => this.game.customPerformAction("actExploration"), { 'title':actionHint,destination: document.getElementById('customPrimary') }); 
                 //+ CLICK ON BOARD section
-                let progressTrack = document.getElementById(`goa_progress_track_${4}_${activePlayer}`);
-                let progressMarker = progressTrack.getElementsByClassName('goa_progress_marker')[0];
-                this.game.onClick(progressMarker.parentNode,() => this.game.customPerformAction("actExploration"));
-                progressMarker.parentNode.setAttribute("title",actionHint);
+                this.game.addClickHandlerOnProgressMarker(4,actionHint,activePlayer,() => this.game.customPerformAction("actExploration"));
             }
             
             this.game.updateHandSelectable(args);
