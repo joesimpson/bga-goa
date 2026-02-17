@@ -426,6 +426,17 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
     return $token;
   }
 
+  public static function setupSession(int $session)
+  {
+    // replace all progress markers on top
+    self::DB()
+      ->where('subtype', CARD_SUBTTYPE_EXPLORATION)
+      ->update(['row' => 1])
+      ->run();
+
+    //NOTIFY MARKERS ? for now I catch newSession notif
+  }
+
   ///////////////////////////////////////////////////////////////////////////////
   
   /** Creation of the tokens */

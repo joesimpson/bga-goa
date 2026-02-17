@@ -19,7 +19,11 @@ class Notifications
   
   public static function newSession(int $session)
   {
-    $msg = clienttranslate('Session ${n} begins');
+    $msg = '';
+    if($session > 1){
+      //TODO JSA visible message only when game with multiples sessions
+      $msg = clienttranslate('Session ${n} begins');
+    }
 
     self::notifyAll('newSession', $msg, [
       'n' => $session,

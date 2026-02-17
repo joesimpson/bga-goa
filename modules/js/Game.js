@@ -1063,6 +1063,24 @@ export class Game {
         await this.setupTokens(false);
     }
     
+    async notif_newSession(notif) {
+        console.log("notif_newSession",notif);
+        this.gamedatas.session = notif.n;
+     
+        //RESET Players progress :
+        let row = 1;
+        Object.values(this.gamedatas.players).forEach(async (player) => {
+            let pId = player.id;
+            Object.values([1,2,3,4,5]).forEach(async (track) => {
+                let progressTrack = document.getElementById(`goa_progress_track_${track}_${pId}`);
+                let tokenDiv = progressTrack.getElementsByClassName('goa_progress_marker')[0];
+                let destinationDiv = document.getElementById(`goa_progress_track_space_${track}_${row}_${pId}`);
+                await this.animationManager.slideAndAttach(tokenDiv, destinationDiv);
+            });
+        });
+
+    }
+    
     async notif_resetCurrencies(notif) {
         console.log("notif_resetCurrencies",notif);
         let currentPlayerId = this.bga.players.getCurrentPlayerId();

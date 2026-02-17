@@ -13,6 +13,7 @@ use Bga\Games\Goa\Helpers\Utils;
 use Bga\Games\Goa\Managers\Cards;
 use Bga\Games\Goa\Managers\Players;
 use Bga\Games\Goa\Managers\Tiles;
+use Bga\Games\Goa\Managers\Tokens;
 
 class NewSession extends \Bga\GameFramework\States\GameState
 {
@@ -37,14 +38,13 @@ class NewSession extends \Bga\GameFramework\States\GameState
         $session = Globals::getSession();
         $session ++;
         Globals::setSession($session);
-        //TODO JSA notif only when game with multiples sessions
         Notifications::newSession($session);
         
         Globals::setRound(0);
         Cards::setupSession($session);
         Players::setupSession($session);
         Tiles::setupMarket();
-        //nothing special for Tokens
+        Tokens::setupSession($session);
 
         // Go to another gamestate
         Log::addStateCheckpoint(NewRound::class);
