@@ -439,7 +439,12 @@ class Notifications
   }
 
   
-  public static function reshuffleExplorationDeck(Player $player, int $deck_size)
+  public static function discardAllExploration()
+  {
+    self::notifyAll('discardAllExploration', '', [
+    ]);
+  }
+  public static function reshuffleExplorationDeck(Player|null $player, int $deck_size)
   {
     self::notifyAll('reshuffleExplorationDeck', '', [
       'deck_size' => $deck_size,

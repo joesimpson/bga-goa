@@ -368,6 +368,21 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
 
   }
   
+  public static function setupSession(int $session)
+  {
+    
+    // MOVE ALL TO DECK
+    self::DB()
+      ->where('subtype', CARD_SUBTTYPE_EXPLORATION)
+      ->update([static::$prefix .'location' => CARD_LOCATION_EXP_DECK])
+      ->run();
+    Notifications::discardAllExploration();
+
+    self::shuffle(CARD_LOCATION_EXP_DECK);
+    $nbDeck = Cards::countInExplorationDeck();
+    Notifications::reshuffleExplorationDeck(null, $nbDeck );
+  }
+  
   /**
    * @return array of all the different types of Exploration Cards
    */

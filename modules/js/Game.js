@@ -1337,6 +1337,37 @@ export class Game {
         //this.explorationDeck.removeAll();
         await this.explorationDeck.setCardNumber(notif.deck_size);
     }
+    async notif_discardAllExploration(notif) {
+        console.log("notif_discardAllExploration",notif);
+        let currentPlayerId = this.bga.players.getCurrentPlayerId();
+        
+        await Promise.all (
+            Object.values(this.gamedatas.players).map(async (player) => {
+            
+                let addCardSettings = { 
+                    fromElement: document.getElementById(`goa_reserve_${player.id}_exploration_hand_size`)
+                };
+                if (currentPlayerId == player.id) {
+                    addCardSettings = { 
+                        fromStock: this.explorationHand
+                    };
+                    this._counters[currentPlayerId]['exploration_hand_size'].toValue(0);
+
+                    Array.from([1,2,3,4,5,6]).forEach((s) => {
+                        this._counters[currentPlayerId]['explo_symbol_tiny_'+s].toValue(0);
+                    });
+                                
+                    let handCards = this.explorationHand.getCards().forEach(async (c) => {
+                        await this.explorationDiscard.addCard(c, addCardSettings);
+                    });
+                }
+                else {
+                    //We don't have the card data, and maybe don't need it
+                    //await this.explorationDiscard.addCard(card, addCardSettings);
+                }
+            }),
+        );
+    }
     async notif_drawAndDiscardExploration(notif) {
         console.log("notif_drawAndDiscardExploration",notif);
         await this.discardExCard(notif.card);
