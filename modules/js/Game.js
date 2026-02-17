@@ -1063,6 +1063,21 @@ export class Game {
         await this.setupTokens(false);
     }
     
+    async notif_resetCurrencies(notif) {
+        console.log("notif_resetCurrencies",notif);
+        let currentPlayerId = this.bga.players.getCurrentPlayerId();
+        Object.values(this.gamedatas.players).forEach((player) => {
+            let pId = player.id;
+            this._counters[pId]['ships'].toValue(0);
+            this._counters[pId]['contracts'].toValue(0);
+            this._counters[pId]['compasses'].toValue(0);
+
+            if (player.id == currentPlayerId){
+                this._counters[pId].money.toValue(0);
+            }
+        });
+
+    }
     async notif_setupMarket(notif) {
         console.log("notif_setupMarket",notif);
         let tiles = notif.tiles;

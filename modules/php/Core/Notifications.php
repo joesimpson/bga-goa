@@ -25,6 +25,11 @@ class Notifications
       'n' => $session,
     ]);
   }
+  public static function resetCurrencies()
+  {
+    self::notifyAll('resetCurrencies',  '', [
+    ]);
+  }
   public static function setupMarket(int $phase, Collection $tiles)
   {
     self::notifyAll("setupMarket", clienttranslate('The market board is filled with tiles'), [

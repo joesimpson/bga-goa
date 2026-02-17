@@ -10,6 +10,7 @@ use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Log;
 use Bga\Games\Goa\Helpers\Utils;
+use Bga\Games\Goa\Managers\Players;
 use Bga\Games\Goa\Managers\Tiles;
 
 class NewSession extends \Bga\GameFramework\States\GameState
@@ -41,6 +42,7 @@ class NewSession extends \Bga\GameFramework\States\GameState
         //TODO JSA RESETUP Players MONEY etc...
         Globals::setRound(0);
         Tiles::setupMarket();
+        Players::setupSession($session);
 
         // Go to another gamestate
         Log::addStateCheckpoint(NewRound::class);

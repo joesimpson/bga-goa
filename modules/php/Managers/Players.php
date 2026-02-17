@@ -2,6 +2,7 @@
 
 namespace Bga\Games\Goa\Managers;
 
+use Bga\GameFramework\Notify;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Core\Notifications;
@@ -38,14 +39,9 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
     $query = self::DB()->multipleInsert(['player_id', 'player_color', 'player_name', 'money']);
 
     $query_values = [];
-    $initialMoney = 10;
-
-    $firstPlayer = Globals::getFirstPlayer();
+    $initialMoney = 0; // will be set by each session
 
     foreach ($players as $player_id => $player) {
-      if($player_id == $firstPlayer){
-        $initialMoney = 5;
-      }
       // Now you can access both $player_id and $player array
       $color = array_shift($colors);
       $query_values[] = [
@@ -86,6 +82,54 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
   public static function setupNewTurn($player)
   {
     Stats::inc("turns_number_p",$player);
+  }
+  
+  public static function setupSession(int $session)
+  {
+    $firstPlayerId = Globals::getFirstPlayer();
+
+    if($session > 1){
+      //CLEAN PREVIOUS SESSIONS
+      self::DB()
+        ->update(['money' =>0, 'ships' => 0, 'contracts' => 0, 'compasses' => 0])
+        ->run();
+      //NOTIF reset money and currencies
+      Notifications::resetCurrencies();
+    }
+    //refreshed datas
+    $players = Players::getAll();
+
+    /**
+     * Game rule : starting player is determined by randomness of cards : 
+     * 
+     * The first player draws the top Exploration Card. The  other players then do the same in clockwise order until a player reveals a card with the Elephant symbol.
+     */
+    $elephantFound = false;
+    while(!$elephantFound){
+      if(!isset($player)) $player = $players[$firstPlayerId];
+      else $player = Players::getNextPlayer($player->getId());
+      $cards = Cards::drawAndDiscardExploration($player, 1);
+      $card = $cards->first();
+      if(isset($card) && $card->getSymbol() === CARD_SYMBOL_ELEPHANT ){
+        Globals::setFirstPlayer($firstPlayerId);
+        $elephantFound = true;
+        break;
+      }
+    }
+    
+    $firstPlayer = $players[$firstPlayerId];
+    Tokens::giveFirstPlayerToken($firstPlayer);
+
+    foreach($players as $pId => &$player){
+      if($pId == $firstPlayerId){
+        $initialMoney = NB_INITIAL_MONEY_FIRST;
+      } else {
+        $initialMoney = NB_INITIAL_MONEY_OTHERS;
+      }
+      Players::giveMoney($player, $initialMoney);
+      Players::giveShips($player, NB_INITIAL_SHIPS);
+      Players::giveContracts($player, NB_INITIAL_CONTRACTS);
+    }
   }
 
   public static function resetBidPhase()
