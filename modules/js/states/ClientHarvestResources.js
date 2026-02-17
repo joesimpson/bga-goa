@@ -68,12 +68,14 @@ export class ClientHarvestResources {
             switch(actionName){
                 case 'actTileChoice' : 
                     //when we come from ClientSelectTileAction
+                    let progressRefPlayerId = args.progressRefPlayerId;
                     actionArgs = { 
                         'tile_id' : withTile,
                         'choice': this.game.const.ACTION_HARVEST,
                         'choice_index':args.choice_index,
                         'arr1': sortedIds.join(','),
                         'arr2': sortedResources.join(','), 
+                        'progressRefPlayerId': progressRefPlayerId,
                     };
                     break;
                 default:

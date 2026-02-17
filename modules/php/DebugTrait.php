@@ -313,11 +313,14 @@ trait DebugTrait
         $tile->setLocation(TILE_LOCATION_PLAYER_BOARD);
         $tile->setPId($player_id);
         Notifications::giveTile($player,$tile);
+        Tokens::addSpiceOnTile($tile, $player, TOKEN_TYPE_SPICE_GREEN, 1);
         
         $tile = Tiles::getTopOf(TILE_LOCATION_BOARD_OUTPOSTS[COLONY_MADRAS]);
         $tile->setLocation(TILE_LOCATION_PLAYER_BOARD);
         $tile->setPId($player_id);
         Notifications::giveTile($player,$tile);
+        Tokens::addSpiceOnTile($tile, $player, TOKEN_TYPE_SPICE_YELLOW, 1);
+        Tokens::addSpiceOnTile($tile, $player, TOKEN_TYPE_SPICE_WHITE, 2);
         
         $tile = Tiles::getTopOf(TILE_LOCATION_BOARD_OUTPOSTS[COLONY_KOZHIKODE]);
         $tile->setLocation(TILE_LOCATION_PLAYER_BOARD);

@@ -258,8 +258,29 @@ export class ClientSelectTileAction {
                                                 'tile_id' : tile_id,
                                                 'choice': choice,
                                                 'choice_index':args.choice_index,
-                                                'arr1': [opponentId].join(','),
+                                                'progressRefPlayerId': opponentId,
                                             }),
+                                );
+                                break;
+                            case this.game.const.ACTION_HARVEST:
+                                let playersBaseHarvest = args.previousArgs.playersBaseHarvest[opponentId];
+                                this.game.addClickHandlerOnProgressMarker(
+                                    2,
+                                    this.bga.gameui.format_string(_('Action : ${name}'),{'name':  _('Harvest')}),
+                                    opponentId,
+                                    () => this.bga.states.setClientState("ClientHarvestResources", {
+                                        descriptionmyturn: '',
+                                        args: {
+                                            'harvestSpots': args.previousArgs.harvestSpots , 
+                                            'min': 1,
+                                            'max': playersBaseHarvest,
+                                            'withTile':tile_id,
+                                            'serverAction': 'actTileChoice',
+                                            'choice_index':args.choice_index,
+                                            'progressRefPlayerId': opponentId,
+                                            'previousClientState' : this.game.getCurrentClientStateDatas(),
+                                        },
+                                    }),
                                 );
                                 break;
                             case this.game.const.ACTION_MONEY: 
@@ -271,7 +292,7 @@ export class ClientSelectTileAction {
                                                 'tile_id' : tile_id,
                                                 'choice': choice,
                                                 'choice_index':args.choice_index,
-                                                'arr1': [opponentId].join(','),
+                                                'progressRefPlayerId': opponentId,
                                             }),
                                 );
                                 break;

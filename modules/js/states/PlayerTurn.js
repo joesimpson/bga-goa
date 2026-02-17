@@ -158,10 +158,7 @@ export class PlayerTurn {
                 };
                 this.bga.statusBar.addActionButton(actionName, () => goToNext(), { 'title':actionHint,destination: document.getElementById('customPrimary') }); 
                 //+ CLICK ON BOARD section
-                let progressTrack = document.getElementById(`goa_progress_track_${2}_${activePlayer}`);
-                let progressMarker = progressTrack.getElementsByClassName('goa_progress_marker')[0];
-                this.game.onClick(progressMarker.parentNode,() => goToNext());
-                progressMarker.parentNode.setAttribute("title",actionHint);
+                this.game.addClickHandlerOnProgressMarker(2,actionHint,activePlayer,() => goToNext());
             }
             if(possibleActions.includes('actTaxes')){
                 let actionName = _('Taxes');

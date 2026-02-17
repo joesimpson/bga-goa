@@ -63,6 +63,10 @@ class PlayerChoice extends GameState
                         $args['harvestSpots'] = Tiles::getPlayerAvailableSpotsForSpices($player);
                         $args['playerBaseHarvest'] = $tileChoiceDatas['n'];
                     }
+                    else if($tileChoiceDatas['selectType'] === CHOICE_ESPIONAGE && in_array(ACTION_HARVEST, $tileChoiceDatas['choices'])){
+                        $args['harvestSpots'] = Tiles::getPlayerAvailableSpotsForSpices($player);
+                        $args['playersBaseHarvest'] = Players::getAllHarvestBaseGain();
+                    }
                 }
             }
             $args['tiles_choices'] = $choiceTiles;
@@ -88,6 +92,7 @@ class PlayerChoice extends GameState
         int $v,
         #[IntArrayParam(name:'arr1')] array|null $choice_array1, 
         #[IntArrayParam(name:'arr2')] array|null $choice_array2, 
+        int|null $progressRefPlayerId,
         )
     {
         Utils::checkVersion($v);
@@ -144,8 +149,8 @@ class PlayerChoice extends GameState
                     break;
                 case CHOICE_ESPIONAGE:
                     $foundChoice = $this->checkChoiceAsValue($tile_choice,$tile_id,$choice);
-                    if(isset($choice_array1) && isset($choice_array1[0])){
-                        $opponentId = $choice_array1[0];
+                    if(isset($progressRefPlayerId)){
+                        $opponentId = $progressRefPlayerId;
                         $opponent = Players::get($opponentId);
                     }
                     if(!isset($opponent) || $opponentId == $activePlayerId){
@@ -155,11 +160,26 @@ class PlayerChoice extends GameState
                         //TODO JSA 4 actions
                         case ACTION_SHIP:
                             Notifications::espionage($player, $opponent, 1);
-                            PlayerTurn::actBuildShips_content($player, $opponentId);
+                            PlayerTurn::actBuildShips_content($player, $progressRefPlayerId);
+                            break;
+                        case ACTION_HARVEST:
+                            Notifications::espionage($player, $opponent, 2);
+                            PlayerTurn::actHarvest_content(
+                                $choice_array1, 
+                                $choice_array2, 
+                                null , 
+                                null , //don't replay the tile
+                                0, 
+                                0, 
+                                $progressRefPlayerId,
+                                $activePlayerId,   
+                                $args,
+                                false,
+                            );
                             break;
                         case ACTION_MONEY:
-                            Notifications::espionage($player, $opponent, 2);
-                            PlayerTurn::actTaxes_content($player, $opponentId);
+                            Notifications::espionage($player, $opponent, 3);
+                            PlayerTurn::actTaxes_content($player, $progressRefPlayerId);
                             break;
                     }
                     break;
@@ -189,6 +209,7 @@ class PlayerChoice extends GameState
                                 null , //don't replay the tile
                                 0, 
                                 0, 
+                                $activePlayerId,  
                                 $activePlayerId,   
                                 $args,
                             );

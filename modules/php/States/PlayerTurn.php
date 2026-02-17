@@ -502,6 +502,7 @@ class PlayerTurn extends GameState
             $ships, 
             $contracts, 
             $activePlayerId,   
+            $activePlayerId, 
             $args,
         );
  
@@ -521,7 +522,9 @@ class PlayerTurn extends GameState
         int|null $tile_id = null, 
         int $ships, 
         int $contracts, 
+        int $progressRefPlayerId,
         int $activePlayerId, array $args,
+        bool $countAsAPlayerAction = true,
     )
     { 
         if(count($spots) !== count($resources)){
@@ -532,13 +535,13 @@ class PlayerTurn extends GameState
             throw new UnexpectedException(110,"Duplicate spots");
         }
         $selectionSize = count($uniqueSpots);
-        $countAsAPlayerAction = true;
         $harvestSpots = [];
         $min  = 1;
         $max = $min;
         $others = [];
         if(isset($args['harvestSpots'])) $harvestSpots = $args['harvestSpots'];
         if(isset($args['playerBaseHarvest'])) $max = $args['playerBaseHarvest'];
+        if(isset($args['playersBaseHarvest'])) $max = $args['playersBaseHarvest'][$progressRefPlayerId];
         if(isset($card_id)){
             $possibleCards = $args['possiblePlayCards'];
             if(!in_array($card_id,$possibleCards->getIds())){

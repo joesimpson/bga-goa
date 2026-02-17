@@ -1735,7 +1735,7 @@ export class Game {
                                 [this.const.ACTION_RESUPPLY, this.bga.gameui.format_string(_('Reveal ${n} Exploration cards and add the contracts shown on these cards. Then, take this sum in spices, contracts or ships. You choose the resource type after seeing the result. You can only choose one type of resource. Discard the Exploration cards after.'),{n:2})],
                                 [this.const.ACTION_HARVEST, this.bga.gameui.format_string(_('Fill up to ${n} of your plantations and/or outposts with the appropriate spices.'),{n :3})],
                                 [this.const.ACTION_ESPIONAGE, this.bga.gameui.format_string(
-                                    bga_format( _("Choose an opponent and do one of these actions, using the position of this player's Progress marker in the appropriate column: _*Build ships,* *Harvest,* *Taxes,* *Found an outpost*_ "), {
+                                    bga_format( _("Espionage: Choose an opponent and do one of these actions, using the position of this player's Progress marker in the appropriate column: _*Build ships,* *Harvest,* *Taxes,* *Found an outpost*_ "), {
                                         '*': (t) => '<li>' + t + '</li>',
                                         '_': (t) => '<ul>' + t + '</ul>',
                                     })
