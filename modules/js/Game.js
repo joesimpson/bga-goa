@@ -389,9 +389,11 @@ export class Game {
         if (log && args) {
 
             let playernames_keys = Object.keys(args).filter((key) => key.startsWith( 'player_name'));
+            let color_keys = Object.keys(args).filter((key) => key.startsWith('player_color'));
             for(let k=0; k<playernames_keys.length; k++){
                 let key = playernames_keys[k];
-                args[key] = this.coloredPlayerName(args[key]);
+                let colorKey = color_keys[k];
+                args[key] = this.coloredPlayerName(args[key],args[colorKey]);
             }
 
             if('card' in args && 'card_icon' in args) {
