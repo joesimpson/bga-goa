@@ -90,7 +90,16 @@ class Notifications
   
   public static function newBid(Player $player, int $previousBid, int $nextBid,)
   {
-    self::notifyAll("newBid", clienttranslate('${player_name} raises the bid from ${a} ${icon_money} to ${b} ${icon_money}'), [
+    if($nextBid == $previousBid){
+      return;//SILENT
+    }
+    if($nextBid > $previousBid){
+      $msg = clienttranslate('${player_name} raises the bid from ${a} ${icon_money} to ${b} ${icon_money}');
+    }
+    else {
+      $msg = clienttranslate('${player_name} decreases the bid from ${a} ${icon_money} to ${b} ${icon_money}');
+    }
+    self::notifyAll("newBid", $msg, [
         "player" => $player,
         "a" => $previousBid,
         "b" => $nextBid,

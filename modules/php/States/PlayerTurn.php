@@ -68,7 +68,7 @@ class PlayerTurn extends GameState
                 $currentAuctioneer = $auctionToken->getPId();
                 $args['bid'] = $currentBid;
                 $args['currentMoney'] = $player->getMoney();
-                $args['minBid'] = min(1, $args['currentMoney'] - 1);
+                $args['minBid'] = min(1, $args['currentMoney'] - $currentBid);
                 $args['maxBid'] = max(0, $args['currentMoney'] - $currentBid);
                 $args['bidRebate'] = 0;
                 $canPass = true;
@@ -225,6 +225,10 @@ class PlayerTurn extends GameState
         if ( $n > $maxBid) {
             throw new UnexpectedException(102,"Invalid bid $n, max is $maxBid");
         }
+        $possibleActions = $args['possibleActions'];
+        if(!in_array('actBid',$possibleActions)){
+            throw new UnexpectedException(110,"Invalid action actBid");
+        }
         
         Log::addStep();
         $player = Players::get($activePlayerId);
@@ -234,9 +238,7 @@ class PlayerTurn extends GameState
         $nextBid = $currentBid + $n;
         Globals::setCurrentBid($nextBid);
         Globals::setHighBidPlayer($activePlayerId);
-        if($nextBid > $currentBid){
-            Notifications::newBid($player, $currentBid, $nextBid);
-        }
+        Notifications::newBid($player, $currentBid, $nextBid);
 
         // at the end of the action, move to the next state
         return ConfirmTurn::class;
