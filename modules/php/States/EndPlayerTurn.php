@@ -7,6 +7,7 @@ namespace Bga\Games\Goa\States;
 use Bga\GameFramework\StateType;
 use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Core\Notifications;
+use Bga\Games\Goa\Core\Stats;
 use Bga\Games\Goa\Exceptions\PrematureStateChangeException;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Log;
@@ -72,13 +73,15 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
                             $currentAuctioneer->setMoney( $currentAuctioneer->getMoney() - $highBid );
                         }
                         Notifications::winsAuction($currentAuctioneer, $highBid);
+                        Stats::inc( "auctionsWon", $currentAuctioneerId);
                     }
                     else {
                         //auction winner PAYS the auctioneer
                         $highBidPlayer = Players::get($highBidPlayerId);
-                        $highBidPlayer->setMoney( $highBidPlayer->getMoney() - $highBid );
-                        $currentAuctioneer->setMoney( $currentAuctioneer->getMoney() + $highBid );
+                        Players::giveMoney($highBidPlayer, - $highBid , false);
+                        Players::giveMoney($currentAuctioneer, + $highBid , false );
                         Notifications::winsAuction($highBidPlayer, $highBid,$currentAuctioneer);
+                        Stats::inc( "auctionsWon", $highBidPlayerId);
                     }
 
                     if( TOKEN_TYPE_AUCTION_MARKER_1 == $auctionToken->getType()){

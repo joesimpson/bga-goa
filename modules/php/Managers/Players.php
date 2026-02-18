@@ -81,7 +81,7 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
    */
   public static function setupNewTurn($player)
   {
-    Stats::inc("turns_number_p",$player);
+    //Stats::inc("turns_number_p",$player);
   }
   
   public static function setupSession(int $session)
@@ -130,6 +130,13 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
       Players::giveShips($player, NB_INITIAL_SHIPS);
       Players::giveContracts($player, NB_INITIAL_CONTRACTS);
     }
+    
+    $turnOrder = Players::getTurnOrder($firstPlayerId);
+    foreach ($turnOrder as $key => $orderPId) {
+      Stats::set("turnOrder", $orderPId, $key + 1);
+    }
+    //DEBUG 
+    //Notifications::message(json_encode($turnOrder), ['$turnOrder'=> $turnOrder]);
   }
 
   public static function resetBidPhase()
@@ -341,23 +348,28 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
   {
     if($nb ==0) return;
     $player->incContracts($nb);
+    if($nb > 0) Stats::inc( "totalContracts", $player->getId(), $nb);
     Notifications::getContracts($player,$nb);
   }
   public static function giveShips(Player &$player, int $nb = 1)
   {
     if($nb ==0) return;
     $player->incShips($nb);
+    if($nb > 0) Stats::inc( "totalShips", $player->getId(), $nb);
     Notifications::getShips($player,$nb);
   }
-  public static function giveMoney(Player &$player, int $nb = 1)
+  public static function giveMoney(Player &$player, int $nb = 1, bool $sendNotif = true)
   {
     if($nb == 0) return;
     $player->incMoney($nb);
-    Notifications::getMoney($player,$nb);
+    if($nb > 0) Stats::inc( "totalMoney", $player->getId(), $nb);
+    if($sendNotif) Notifications::getMoney($player,$nb);
   }
   public static function giveExtraActionCards(Player &$player, int $nb = 1)
   {
+    if($nb == 0) return;
     $player->incCompasses($nb);
+    if($nb > 0) Stats::inc( "totalCompasses", $player->getId(), $nb);
     Notifications::getCompass($player,$nb);
   }
 

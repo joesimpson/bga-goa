@@ -4,6 +4,7 @@ namespace Bga\Games\Goa\Managers;
 
 use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Core\Notifications;
+use Bga\Games\Goa\Core\Stats;
 use Bga\Games\Goa\Exceptions\UnexpectedException;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Collection;
@@ -123,6 +124,7 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
     ];
     $elt = self::singleCreate($token);
     Notifications::newSpiceOnTile($player,$elt,$tile);
+    Stats::inc("receivedSpices", $player);
     return $elt;
   }
   
@@ -422,6 +424,7 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
     
     $player = Players::get($playerId);
     Notifications::progress($player, $token);
+    Stats::setProgressStat($playerId, $progressType, $token->getRow());
 
     return $token;
   }
@@ -430,9 +433,11 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
   {
     // replace all progress markers on top
     self::DB()
-      ->where('subtype', CARD_SUBTTYPE_EXPLORATION)
+      ->where('subtype', TOKEN_SUBTTYPE_PROGRESS_MARKER)
       ->update(['row' => 1])
       ->run();
+
+    Stats::setAllProgressStat(1);
 
     //NOTIFY MARKERS ? for now I catch newSession notif
   }

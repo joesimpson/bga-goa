@@ -205,4 +205,27 @@ class Stats extends \Bga\Games\Goa\Helpers\DB_Manager
     Stats::checkExistence();
     
   }
+
+  
+  public static function setProgressStat(int $pId, int $progressType, int $value){
+    switch($progressType){
+      case TOKEN_TYPE_PROGRESS_MARKER_SHIPS:      $progressStat = "progressShips"; break;
+      case TOKEN_TYPE_PROGRESS_MARKER_HARVEST:    $progressStat = "progressHarvest"; break;
+      case TOKEN_TYPE_PROGRESS_MARKER_TAXES:      $progressStat = "progressTaxes"; break;
+      case TOKEN_TYPE_PROGRESS_MARKER_EXP:        $progressStat = "progressExploration"; break;
+      case TOKEN_TYPE_PROGRESS_MARKER_OUTPOST:    $progressStat = "progressFound"; break;
+    }
+    if(isset($progressStat)) {
+      Stats::set( $progressStat, $pId, $value);
+    }
+  }
+  public static function setAllProgressStat(int $value){
+
+    $players = Players::getAll();
+    foreach($players as $pId => $player){
+      foreach(TOKEN_TYPE_PROGRESS_MARKERS as $type){
+        Stats::setProgressStat($pId, $type, $value);
+      }
+    }
+  }
 }

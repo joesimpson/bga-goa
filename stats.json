@@ -1,10 +1,6 @@
 {
     "table": {
-        "turns_number": {
-          "id": 10,
-          "name": "Number of turns",
-          "type": "int"
-        }
+
     },
     "player": {
       "score": {
@@ -12,14 +8,91 @@
         "name": "Score",
         "type": "int"
       },
-      "turns_number_p": {
-        "id": 12,
-        "name": "Number of turns",
-        "type": "int"
-      },
       "turnOrder": {
         "id": 13,
         "name": "Turn order",
+        "type": "int"
+      }
+      
+      ,"totalMoney": {
+        "id": 15,
+        "name": "Total Pardaos coins",
+        "type": "int"
+      }
+      ,"totalShips": {
+        "id": 16,
+        "name": "Total Ships",
+        "type": "int"
+      }
+      ,"totalContracts": {
+        "id": 17,
+        "name": "Total Contracts",
+        "type": "int"
+      }
+      ,"totalCompasses": {
+        "id": 18,
+        "name": "Total Compasses",
+        "type": "int"
+      }
+      
+      ,"progressShips": {
+        "id": 21,
+        "name": "Progress row : Build Ships",
+        "type": "int"
+      }
+      ,"progressHarvest": {
+        "id": 22,
+        "name": "Progress row : Harvest",
+        "type": "int"
+      }
+      ,"progressTaxes": {
+        "id": 23,
+        "name": "Progress row : Taxes",
+        "type": "int"
+      }
+      ,"progressExploration": {
+        "id": 24,
+        "name": "Progress row : Exploration",
+        "type": "int"
+      }
+      ,"progressFound": {
+        "id": 25,
+        "name": "Progress row : Found Outpost",
+        "type": "int"
+      }
+      
+      ,"auctionsWon": {
+        "id": 30,
+        "name": "Auctions won",
+        "type": "int"
+      }
+      
+      ,"playedPlantations": {
+        "id": 31,
+        "name": "Played plantations",
+        "type": "int"
+      }
+      ,"playedOutposts": {
+        "id": 32,
+        "name": "Played outposts",
+        "type": "int"
+      }
+      
+      ,"playedTiles": {
+        "id": 33,
+        "name": "Played other tiles",
+        "type": "int"
+      }
+      
+      ,"playedExplorations": {
+        "id": 34,
+        "name": "Played Exploration cards",
+        "type": "int"
+      }
+      
+      ,"receivedSpices": {
+        "id": 40,
+        "name": "Received resources on tiles spots",
         "type": "int"
       }
     },

@@ -4,6 +4,7 @@ namespace Bga\Games\Goa\Managers;
 
 use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Core\Notifications;
+use Bga\Games\Goa\Core\Stats;
 use Bga\Games\Goa\Exceptions\PrematureStateChangeException;
 use Bga\Games\Goa\Exceptions\UnexpectedException;
 use Bga\Games\Goa\Game;
@@ -151,10 +152,12 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
           $tile->setState($nextAvailableSpaceOnPlayerBoard);
           Notifications::giveTile($player,$tile);
           Tiles::fillPlayerTileWithSpices($player,$tile);
+          Stats::inc("playedPlantations", $player->getId());
           break;
         case MARKET_TYPE_ACTION_DIRECT:
           $updateTileDatas($player,$tile);
           Tiles::discardTileFromPlayer($player, $tile);
+          Stats::inc("playedTiles", $player->getId());
           $gains = $tile->getActions();
           foreach($gains as $type => $quantity){
             try{
@@ -185,6 +188,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
    * */
   public static function giveOutpostToPlayer(Player $player, OutpostTile &$tile) :void
   {
+    Game::get()->trace("giveOutpostToPlayer(".$player->getId().") : ".json_encode($tile));
     $updateTileDatas = function ( $player, &$tile,) {
       $tile->setPId($player->getId());
       $tile->setRow(null);
@@ -194,6 +198,8 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
     };
 
     $updateTileDatas($player,$tile);
+
+    Stats::inc("playedOutposts", $player->getId());
 
     Notifications::giveTile($player,$tile);
     Tiles::fillPlayerTileWithSpices($player,$tile);
@@ -610,11 +616,11 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
       $tile->setState(TILE_STATE_PLAYED);
       Notifications::playTile( $player, $tile);
     }
-
+    
+    Stats::inc("playedTiles", $player->getId());
     
     foreach($tile->getActions() as $action => $nb){
       switch($action){
-        //TODO JSA : FILL SWITCH  
         case ACTION_SPICE:  //done in actHarvest
           break;
         case ACTION_CONTRACT:

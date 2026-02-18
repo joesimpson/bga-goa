@@ -3,6 +3,7 @@
 namespace Bga\Games\Goa\Managers;
 
 use Bga\Games\Goa\Core\Notifications;
+use Bga\Games\Goa\Core\Stats;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Collection;
 use Bga\Games\Goa\Helpers\Log;
@@ -311,6 +312,8 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
     $card->setPId(null);
 
     Players::registerCardPlayed($player,$cardId);
+    
+    Stats::inc("playedExplorations", $player->getId());
 
     //NOTIFY 
     Notifications::playExploration( $player, $card);

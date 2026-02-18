@@ -103,7 +103,7 @@ class Globals extends \Bga\Games\Goa\Helpers\DB_Manager
   {
     self::incTurn(1);
     
-    Stats::inc("turns_number");
+    //Stats::inc("turns_number");
   }
 
   public static function addChoiceTile(Tile $tile, int $choiceType, int $choiceQuantity, array $choices, int $selectType = CHOICE_PICK_ACTION) : array
