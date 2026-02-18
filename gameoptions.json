@@ -14,6 +14,12 @@
                 "description": "Variant - Quick Starter : After the initial setup, each player in turn order moves down 2 of their Progress markers into the 2nd row of their Development board OR takes 10 ducats from the bank."
             }
         },
+        "displaycondition": [
+            {
+                "type": "minplayers",
+                "value": 12
+            }
+        ],
         "default": 0
     }
     ,
@@ -32,6 +38,12 @@
                 "description": "Variant - Bonanza : at the beginning of each phase (Day and Night), shuffle the 8 Bonanza tiles and put 1, face down, under each of the 4 tiles located in the corners. When a player buys the tile above, they also immediately receive the bonus of the Bonanza tile."
             }
         },
+        "displaycondition": [
+            {
+                "type": "minplayers",
+                "value": 12
+            }
+        ],
         "default": 0
     }
     ,
@@ -50,6 +62,12 @@
                 "description": "Variant - Stories : The stories introduce new twists to the rules, some beneficial and others challenging. Adapt your strategy to leverage each storyline, turning obstacles into opportunities for greater rewards."
             }
         },
+        "displaycondition": [
+            {
+                "type": "minplayers",
+                "value": 12
+            }
+        ],
         "default": 0
     }
     ,
@@ -68,6 +86,12 @@
                 "description": "Variant - Captains : Setup: give 2 captains to each player to choose 1. Gameplay: some captains give an ability during the game, others a boost in the setup."
             }
         },
+        "displaycondition": [
+            {
+                "type": "minplayers",
+                "value": 12
+            }
+        ],
         "default": 0
     }
 
@@ -87,6 +111,12 @@
                 "description": "Variant - Gambit : Each player receives 8 cards in their colour. After placing the bidding tiles on the board, each player secretly chooses one of their Impact cards and plays it face down. When a player starts their bidding round, they reveal their card. The modified action then applies and is visible to all players."
             }
         },
+        "displaycondition": [
+            {
+                "type": "minplayers",
+                "value": 12
+            }
+        ],
         "default": 0
     }
 
@@ -108,6 +138,10 @@
         },
         "default": 0,
         "displaycondition": [
+            {
+                "type": "minplayers",
+                "value": 12
+            },
             {
                 "type": "maxplayers",
                 "value": 1
