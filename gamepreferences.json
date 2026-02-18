@@ -34,11 +34,27 @@
         "values": {
             "1": {
                 "name": "Enabled",
-                "cssPref": "goa_background_1"
+                "cssPref": "goa_pref_background_1"
             },
             "2": {
                 "name": "Disabled",
-                "cssPref": "goa_background_none"
+                "cssPref": "goa_pref_background_none"
+            }
+        },
+        "default": 1
+    }
+    
+    ,"112": {
+        "name": "Player panel details",
+        "needReload": false,
+        "values": {
+            "1": {
+                "name": "Enabled",
+                "cssPref": "goa_pref_panel_details_on"
+            },
+            "2": {
+                "name": "Disabled",
+                "cssPref": "goa_pref_panel_details_off"
             }
         },
         "default": 1

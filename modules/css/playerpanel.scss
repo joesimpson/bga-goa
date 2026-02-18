@@ -81,3 +81,10 @@
         display: block;
     }
 }
+
+html.goa_pref_panel_details_off{
+    .goa_player_counters_line_symbols,
+    .goa_player_counters_line_spices{
+        display: none !important;
+    }
+}

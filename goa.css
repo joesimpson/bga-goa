@@ -2028,6 +2028,11 @@ button .goa_tile {
   display: block;
 }
 
+html.goa_pref_panel_details_off .goa_player_counters_line_symbols,
+html.goa_pref_panel_details_off .goa_player_counters_line_spices {
+  display: none !important;
+}
+
 /*
 https://github.com/thoun/bga-help/blob/main/bga-help.css
 16 jan 2026
@@ -2204,10 +2209,10 @@ https://github.com/thoun/bga-zoom/blob/main/bga-zoom.css
   z-index: -10;
 }
 
-html.goa_background_1 {
+html.goa_pref_background_1 {
   background: none;
 }
-html.goa_background_1 #goa_overall_background {
+html.goa_pref_background_1 #goa_overall_background {
   /*
   background-image:url("img/background/background_1.jpg");
   background-position-y: 15%;
@@ -2220,7 +2225,7 @@ html.goa_background_1 #goa_overall_background {
   background-position-x: 0%;
   background-position-y: 0%;
 }
-html.goa_background_none #goa_overall_background {
+html.goa_pref_background_none #goa_overall_background {
   visibility: hidden;
 }
 

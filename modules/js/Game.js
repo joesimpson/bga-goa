@@ -191,21 +191,21 @@ export class Game {
         Object.values(gamedatas.players).forEach(player => {
             this.bga.playerPanels.getElement(player.id).insertAdjacentHTML('beforeend', `
                 <div class='goa_panel'>
-                    <div class='goa_player_counters_line'>
+                    <div class='goa_player_counters_line goa_player_counters_line_cards'>
                         ${this.tplResourceCounter(player,'exploration_hand_size',_('Exploration card'))}
                         ${this.tplResourceCounter(player,'money',_('Coins'))}
                         ${this.tplResourceCounter(player,'ships',_('Ships'))}
                         ${this.tplResourceCounter(player,'contracts',_('Contracts'))}
                         ${this.tplResourceCounter(player,'compasses',_('Compasses'))}
                     </div>
-                    <div class='goa_player_counters_line'>
+                    <div class='goa_player_counters_line goa_player_counters_line_spices'>
                         ${this.tplResourceCounter(player,'spices_1',_('Spices'))}
                         ${this.tplResourceCounter(player,'spices_2',_('Spices'))}
                         ${this.tplResourceCounter(player,'spices_3',_('Spices'))}
                         ${this.tplResourceCounter(player,'spices_4',_('Spices'))}
                         ${this.tplResourceCounter(player,'spices_5',_('Spices'))}
                     </div>
-                    <div class='goa_player_counters_line'  ${ (currentPlayer && player.id == currentPlayer.id) ? '': 'style="display:none;"'}>
+                    <div class='goa_player_counters_line goa_player_counters_line_symbols'  ${ (currentPlayer && player.id == currentPlayer.id) ? '': 'style="display:none;"'}>
                         ${this.tplResourceCounter(player,'explo_symbol_tiny_1',this.getCardSymbolName(1))}
                         ${this.tplResourceCounter(player,'explo_symbol_tiny_2',this.getCardSymbolName(2))}
                         ${this.tplResourceCounter(player,'explo_symbol_tiny_3',this.getCardSymbolName(3))}
