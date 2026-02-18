@@ -249,11 +249,28 @@ const PROGRESS_COST_AS_COINS = [
 /////////////////////////////////////////////////////////  
 
 const OPTION_QUICK_STARTER = 101;
+const OPTION_QUICK_STARTER_OFF = 0;
+const OPTION_QUICK_STARTER_ON = 1;
+
 const OPTION_BONANZA       = 102;
+const OPTION_BONANZA_OFF   = 0;
+const OPTION_BONANZA_ON    = 1;
+
 const OPTION_STORIES       = 103;
+const OPTION_STORIES_OFF   = 0;
+const OPTION_STORIES_RANDOM= 1;
+
 const OPTION_CAPTAINS      = 104;
+const OPTION_CAPTAINS_OFF   = 0;
+const OPTION_CAPTAINS_ON    = 1;
+
 const OPTION_GAMBIT        = 105;
+const OPTION_GAMBIT_OFF   = 0;
+const OPTION_GAMBIT_ON    = 1;
+
 const OPTION_CAMPAIGN      = 110;
+const OPTION_CAMPAIGN_OFF   = 0;
+const OPTION_CAMPAIGN_ON    = 1;
 
 
 /////////////////////////////////////////////////////////

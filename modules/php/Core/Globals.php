@@ -3,6 +3,7 @@
 namespace Bga\Games\Goa\Core;
 
 use Bga\GameFramework\SystemException;
+use Bga\Games\Goa\Helpers\Utils;
 use Bga\Games\Goa\Models\Tile;
 
 /** 
@@ -34,6 +35,14 @@ class Globals extends \Bga\Games\Goa\Helpers\DB_Manager
 
     //For Undo log module
     'choices' => 'int',
+
+    //Start OPTIONS
+    'optionQuickStarter' => 'int',
+    'optionBonanza' => 'int',
+    'optionStories' => 'int',
+    'optionCaptains' => 'int',
+    'optionGambit' => 'int',
+    'optionCampaign' => 'int',
   ];
  
   /*
@@ -57,6 +66,33 @@ class Globals extends \Bga\Games\Goa\Helpers\DB_Manager
     //              --------------------------------------------
     //GAME OPTIONS  --------------------------------------------
     //              --------------------------------------------
+    //No specific filter on options, lets retrieve BGA options values :
+    $optionQuickStarter = OPTION_QUICK_STARTER_OFF;
+    Utils::updateDataFromArray($options,OPTION_QUICK_STARTER,$optionQuickStarter);
+    self::setOptionQuickStarter($optionQuickStarter);
+    
+    $optionBonanza = OPTION_BONANZA_OFF;
+    Utils::updateDataFromArray($options,OPTION_BONANZA,$optionBonanza);
+    self::setOptionBonanza($optionBonanza);
+
+    $optionStories = OPTION_STORIES_OFF;
+    Utils::updateDataFromArray($options,OPTION_STORIES,$optionStories);
+    self::setOptionStories($optionStories);
+    
+    $optionValue = OPTION_CAPTAINS_OFF;
+    Utils::updateDataFromArray($options,OPTION_CAPTAINS,$optionValue);
+    self::setOptionCaptains($optionValue);
+    
+    $optionValue = OPTION_GAMBIT_OFF;
+    Utils::updateDataFromArray($options,OPTION_GAMBIT,$optionValue);
+    self::setOptionGambit($optionValue);
+    
+    $optionValue = OPTION_CAMPAIGN_OFF;
+    //displaycondition for solo only :
+    if(count($players) == 1){
+      Utils::updateDataFromArray($options,OPTION_CAMPAIGN,$optionValue);
+    }
+    self::setOptionCampaign($optionValue);
 
   }
    

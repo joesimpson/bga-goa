@@ -22,15 +22,26 @@ trait DebugTrait
     /** 
      * RESET ALL GAME DATAS in order to restart the game without recreating a new table spoiling server space etc...
     */
-    function debug_ReSetup(bool $option1 = true,bool $option2 = true,){
+    function debug_ReSetup(
+        bool $quickStarter = true,
+        bool $bonanza = true,
+        bool $story = true,
+        bool $captains = true,
+        bool $gambit = true,
+        bool $campaign = true,
+    ){
         Game::get()->trace("debug_ReSetup - START ////////////////////////////////////////////////////");
         $players = self::loadPlayersBasicInfos();
         $player = Players::getCurrent();
         
         $options = [
             "DEBUG_SETUP"=> true,
-            //101 => ($option1 ? 2 :1) ,
-            //102 => ($option2 ? 2 :1) ,
+            OPTION_QUICK_STARTER => ($quickStarter ? OPTION_QUICK_STARTER_ON : OPTION_QUICK_STARTER_OFF) ,
+            OPTION_BONANZA => ($bonanza ? OPTION_BONANZA_ON : OPTION_BONANZA_OFF) ,
+            OPTION_STORIES => ($story ? OPTION_STORIES_RANDOM : OPTION_STORIES_OFF) ,
+            OPTION_CAPTAINS => ($captains ? OPTION_CAPTAINS_ON : OPTION_CAPTAINS_OFF) ,
+            OPTION_GAMBIT => ($gambit ? OPTION_GAMBIT_ON : OPTION_GAMBIT_OFF) ,
+            OPTION_CAMPAIGN => ($campaign ? OPTION_CAMPAIGN_ON : OPTION_CAMPAIGN_OFF) ,
         ];
         
         Game::get()->initGameStateLabels([
