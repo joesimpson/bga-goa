@@ -2208,10 +2208,17 @@ html.goa_background_1 {
   background: none;
 }
 html.goa_background_1 #goa_overall_background {
-  background-image: url("img/background/background_1.jpg");
+  /*
+  background-image:url("img/background/background_1.jpg");
   background-position-y: 15%;
   opacity: 0.5;
   filter: grayscale(0.75);
+  */
+  opacity: 0.75;
+  background-image: url("img/exp_cards.jpg");
+  background-size: 700% 500%;
+  background-position-x: 0%;
+  background-position-y: 0%;
 }
 html.goa_background_none #goa_overall_background {
   visibility: hidden;
@@ -2278,7 +2285,7 @@ html.goa_background_none #goa_overall_background {
 
 #goa_main_zone {
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
   flex-wrap: wrap;
   -moz-column-gap: 7px;
