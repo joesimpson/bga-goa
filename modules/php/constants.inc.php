@@ -248,6 +248,12 @@ const PROGRESS_COST_AS_COINS = [
 //          Game options
 /////////////////////////////////////////////////////////  
 
+const OPTION_QUICK_STARTER = 101;
+const OPTION_BONANZA       = 102;
+const OPTION_STORIES       = 103;
+const OPTION_CAPTAINS      = 104;
+const OPTION_GAMBIT        = 105;
+const OPTION_CAMPAIGN      = 110;
 
 
 /////////////////////////////////////////////////////////
