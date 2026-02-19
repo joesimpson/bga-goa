@@ -353,6 +353,11 @@ class Notifications
     ]);
   }
   
+  public static function computeScoring(int $session)
+  {
+    self::notifyAll("computeScoring", clienttranslate('Computing scores...'), [
+    ]);
+  }
   /**
    * @param Player $player
    * @param int $points
@@ -380,6 +385,32 @@ class Notifications
       'preserve'=>['tile'],
     ];
     self::notifyAll('addPointsWithTile',$msg, $args, );
+  }
+  
+  public static function addPointsWithMoney(Player $player,int $points,int $money){
+    $msg = clienttranslate('${player_name} scores ${n} points for having the most Pardaos : ${n2} ${icon_money}');
+    $args = [ 
+      'player' => $player,
+      'n' => $points,
+      'n2' => $money,
+      'icon_money' => clienttranslate('Pardaos'),
+      'i18n' => ['icon_money'],
+    ];
+    self::notifyAll('addPointsWithMoney',$msg, $args, );
+  }
+  
+  public static function addPointsWithSymbols(Player $player,int $points,int $nbSymbols, int $symbolType){
+    $msg = clienttranslate('${player_name} scores ${n} points with ${n2} identical ${icon_symbol} symbols');
+    $args = [ 
+      'player' => $player,
+      'n' => $points,
+      'n2' => $nbSymbols,
+      'symbolType' => $symbolType,
+      'icon_symbol' => CARD_SYMBOLS[$symbolType],
+      'i18n' => ['icon_symbol'],
+      'preserve'=>['symbolType'],
+    ];
+    self::notifyAll('addPointsWithSymbols',$msg, $args, );
   }
   
     /**

@@ -94,6 +94,15 @@ const CARD_SYMBOL_URN = 3;
 const CARD_SYMBOL_PALMTREE = 4;
 const CARD_SYMBOL_SHELL = 5;
 const CARD_SYMBOL_STATUE = 6;
+const CARD_SYMBOLS = [
+   //without clienttranslate, we need a redeclaration on client side
+   CARD_SYMBOL_ELEPHANT =>  ('Elephant') ,
+   CARD_SYMBOL_TIGER    =>  ('Tiger') ,
+   CARD_SYMBOL_URN      =>  ('Urn') ,
+   CARD_SYMBOL_PALMTREE =>  ('Palm tree') ,
+   CARD_SYMBOL_SHELL    =>  ('Shell') ,
+   CARD_SYMBOL_STATUE   =>  ('Statue') ,
+];
 
 const CARD_ACTION_PROGRESS_NO_SPICE    = 'a';
 const CARD_ACTION_PROGRESS_NO_SHIP     = 'b';
@@ -144,6 +153,9 @@ const MARKET_TYPE_ACTION_REUSEABLE  = 2;
 const MARKET_TYPE_ACTION_DIRECT     = 4;
 const MARKET_TYPE_ACTION_ONCE       = 5;
 const MARKET_TYPE_SCORING           = 6;
+
+const MARKET_TYPE_FOREMAN = 37;
+const MARKET_TYPE_DUTY = 38;
 
 /////////////////////////////////////////////////////////
 //          MEEPLES
@@ -244,6 +256,42 @@ const PROGRESS_COST_AS_COINS = [
       4 => 18, 
       5 => 24, 
 ];
+
+/////////////////////////////////////////////////////////
+//          SCORING
+/////////////////////////////////////////////////////////
+/** Score by marker on row */
+const END_SCORE_PROGRESS = [
+   1 => 0,
+   2 => 1, 
+   3 => 3, 
+   4 => 6, 
+   5 => 10, 
+];
+/** Score by number of colonies */
+const END_SCORE_OUTPOSTS = [
+   1 => 1,
+   2 => 3, 
+   3 => 6, 
+   4 => 10, 
+];
+/** Score by group of identical symbols */
+const END_SCORE_EXPLORATION = [
+   1 => 1,
+   2 => 3, 
+   3 => 6, 
+   4 => 10, 
+   5 => 15, 
+];
+const END_SCORE_MOST_COINS = 3;
+const END_SCORE_PLANTATIONS_WITH_FOREMAN = 3;
+
+const SCORING_PROGRESS     = 1;
+const SCORING_OUTPOSTS     = 2;
+const SCORING_EXPLORATION  = 3;
+const SCORING_COINS        = 4;
+const SCORING_TILES        = 5;
+
 /////////////////////////////////////////////////////////
 //          Game options
 /////////////////////////////////////////////////////////  
@@ -367,6 +415,7 @@ CONST ALL_MY_UI_CONSTANTS= [
    'CARD_SYMBOL_PALMTREE' =>  CARD_SYMBOL_PALMTREE,
    'CARD_SYMBOL_SHELL' =>     CARD_SYMBOL_SHELL,
    'CARD_SYMBOL_STATUE' =>    CARD_SYMBOL_STATUE,
+   'CARD_SYMBOLS' =>  CARD_SYMBOLS,
 
    'CARD_ACTION_PROGRESS_NO_SPICE'       => CARD_ACTION_PROGRESS_NO_SPICE       ,
    'CARD_ACTION_PROGRESS_NO_SHIP'        => CARD_ACTION_PROGRESS_NO_SHIP        ,
@@ -409,6 +458,8 @@ CONST ALL_MY_UI_CONSTANTS= [
    'PROGRESS_GAINS_OUTPOST' => PROGRESS_GAINS_OUTPOST,
    'PROGRESS_GAINS_EXPLO'  => PROGRESS_GAINS_EXPLO,
    'PROGRESS_COST_AS_COINS' => PROGRESS_COST_AS_COINS,
+   'END_SCORE_PROGRESS' => END_SCORE_PROGRESS,
+   'END_SCORE_EXPLORATION' => END_SCORE_EXPLORATION,
 
    'CARD_GAINS_RESSOURCES_TO_COINS' => CARD_GAINS_RESSOURCES_TO_COINS,
 ] ;

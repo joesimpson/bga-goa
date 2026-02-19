@@ -5,9 +5,15 @@ declare(strict_types=1);
 namespace Bga\Games\Goa\States;
 
 use Bga\GameFramework\StateType;
+use Bga\Games\Goa\Core\Globals;
+use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Log;
 use Bga\Games\Goa\Helpers\Utils;
+use Bga\Games\Goa\Managers\Cards;
+use Bga\Games\Goa\Managers\Players;
+use Bga\Games\Goa\Managers\Tiles;
+use Bga\Games\Goa\Managers\Tokens;
 
 class EndSession extends \Bga\GameFramework\States\GameState
 {
@@ -28,6 +34,9 @@ class EndSession extends \Bga\GameFramework\States\GameState
     function onEnteringState(int $activePlayerId) {
         $this->game->trace("EndSession.onEnteringState($activePlayerId)");
 
+        $session = Globals::getSession();
+        self::computeScoring($session);
+
         //TODO JSA END session
         $gameEnd = false;
         if ($gameEnd) {
@@ -37,5 +46,140 @@ class EndSession extends \Bga\GameFramework\States\GameState
             Log::addStateCheckpoint(NewSession::class);
             return NewSession::class;
         }
+    }
+
+    // -------------------------------------------------------
+    /**
+     * 
+     * @param int $session
+     * @return void
+     * 
+     *   Victory points (VP) for the position of the Progress markers.
+     * 
+     *   Victory points for the number of colonies founded during the game.
+     *   
+     *   Victory points for Expedition cards.
+     * 
+     *   Victory points for the player with the most ducats.
+     * 
+     *   Victory points for plantations.
+     * 
+     *   Victory points for a Duty tile.
+     * 
+     *   Victory points for a Mission tile.
+     * 
+     */
+    public static function computeScoring(int $session){
+       
+        Notifications::computeScoring($session);
+        $players = Players::getAll();
+
+        //TODO JSA reset score to 0 if score already live counted  ? (duty)
+            
+        //INIT Datas to save
+        $sessionScoringDatas = [];
+        foreach($players as $pid => $player){
+            $sessionScoringDatas[$pid] = [
+                SCORING_PROGRESS     => 0, 
+                SCORING_OUTPOSTS     => 0, 
+                SCORING_EXPLORATION  => [], 
+                SCORING_COINS        => 0, 
+                SCORING_TILES        => 0, 
+            ];
+        }
+
+        //Players LOOP 1 : SCORING_PROGRESS
+        foreach($players as $pId => &$player){
+            $points = 0;
+            $markers = Tokens::getProgressMarkers($pId);
+            foreach($markers as $marker){
+                if(!array_key_exists($marker->getRow(),END_SCORE_PROGRESS)) continue;
+                $points += END_SCORE_PROGRESS[$marker->getRow()];
+            }
+            $sessionScoringDatas[$pId][SCORING_PROGRESS] = $points;
+            $player->addPoints($points, false);
+            Notifications::addPoints($player,$points, clienttranslate('${player_name} scores ${n} points with progress markers'));
+        }
+
+        //Players LOOP 2 : SCORING_OUTPOSTS
+        foreach($players as $pId => &$player){
+            $nbTiles = Tiles::getPlayerOutposts($player)->count();
+            if(!array_key_exists($nbTiles,END_SCORE_OUTPOSTS)) continue;
+            $points = END_SCORE_OUTPOSTS[$nbTiles];
+            $sessionScoringDatas[$pId][SCORING_OUTPOSTS] = $points;
+            $player->addPoints($points, false);
+            Notifications::addPoints($player,$points, clienttranslate('${player_name} scores ${n} points with ${n2} outposts'), $nbTiles);
+        }
+        
+        //Players LOOP 3 : SCORING_EXPLORATION
+        foreach($players as $pId => &$player){
+            $cards = Cards::getExplorationHand($pId);
+            $sessionScoringDatas[$pId][SCORING_EXPLORATION] = [];
+            foreach(CARD_SYMBOLS as $symbol => $name){
+                $nbCards = $cards->filter(function($card) use ($symbol) {return $card->getSymbol() === $symbol; })->count();
+                if(!array_key_exists($nbCards,END_SCORE_EXPLORATION)) continue;
+                $points = END_SCORE_EXPLORATION[$nbCards];
+                $sessionScoringDatas[$pId][SCORING_EXPLORATION][$symbol] = $points;
+                $player->addPoints($points, false);
+                Notifications::addPointsWithSymbols($player,$points, $nbCards, $symbol); 
+            }
+        }
+        
+        //Players LOOP 4 : SCORING_COINS
+        $mostCoins = 0;
+        $mostCoinsPlayers = [];//may be tied
+        foreach($players as $pId => &$player){
+            $coins = $player->getMoney();
+            if($coins > $mostCoins){
+                $mostCoins = $coins;
+                $mostCoinsPlayers = [$pId];//reset
+            }
+            else if($coins === $mostCoins) {
+                $mostCoinsPlayers[] = $pId;//add
+            }
+        }
+        foreach($players as $pId => &$player){
+            if(!in_array($pId, $mostCoinsPlayers)) continue;
+            $points = END_SCORE_MOST_COINS;
+            $sessionScoringDatas[$pId][SCORING_COINS] = $points;
+            $player->addPoints($points, false);
+            Notifications::addPointsWithMoney($player,$points, $mostCoins); 
+        }
+        
+        //Players LOOP 5 : SCORING_TILES
+        foreach($players as $pId => &$player){
+            $tiles = Tiles::getPlayerMarketTiles($player);
+            $hasForeman = ($tiles->filter(function($tile) {return $tile->getType() === MARKET_TYPE_FOREMAN; })->count() > 0);
+
+            $pointsWithTiles = 0;
+            foreach($tiles as $tile){
+                $points = 0;
+                switch($tile->getPlay_type()){
+                    case MARKET_TYPE_PLANTATION: 
+                        $points = $tile->getEnd_score();
+                        if($hasForeman && $points === 1) $points = END_SCORE_PLANTATIONS_WITH_FOREMAN;
+                        break;
+                    case MARKET_TYPE_SCORING: 
+                        $points = $tile->getEnd_score();
+                        if($tile->getType() === MARKET_TYPE_DUTY && !$tile->alreadyPlayed()){
+                            $points = 0;
+                        }
+                        break;
+                    default: 
+                        $points = $tile->getEnd_score();
+                        break;
+                }
+                if($points > 0){
+                    $player->addPointsWithTile($points, $tile);
+                }
+                $pointsWithTiles += $points;
+            }
+            $sessionScoringDatas[$pId][SCORING_TILES] = $pointsWithTiles;
+        }
+        
+        
+        $endScoringDatas = Globals::getEndScoring();
+        $endScoringDatas[$session] = $sessionScoringDatas;
+        Globals::setEndScoring($endScoringDatas);
     }
 }

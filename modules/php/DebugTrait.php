@@ -11,6 +11,7 @@ use Bga\Games\Goa\Managers\Cards;
 use Bga\Games\Goa\Managers\Players;
 use Bga\Games\Goa\Managers\Tiles;
 use Bga\Games\Goa\Managers\Tokens;
+use Bga\Games\Goa\States\EndSession;
 
 /**
  * Debugging functions to be called in BGA Studio game window
@@ -447,6 +448,13 @@ trait DebugTrait
         Notifications::discardTile($player,$tile);
 
         $this->debug_refreshUI();
+    }
+    function debug_scoring(){
+        Log::addStep();
+        $session = Globals::getSession();
+        EndSession::computeScoring($session);
+        
+        $this->debug_goToState(ST_PLAYER_TURN);
     }
     
     //TEst different notif at a time

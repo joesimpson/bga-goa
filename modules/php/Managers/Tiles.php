@@ -255,6 +255,19 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
   }
 
   /**
+   * @return Collection list of player market tiles 
+   */
+  public static function getPlayerMarketTiles(Player $player) : Collection
+  {
+    $tiles = self::DB()
+      ->where('subtype', TILE_SUBTTYPE_MARKET)
+      ->where( static::$prefix . 'location', TILE_LOCATION_PLAYER_BOARD)
+      ->wherePlayer($player->getId())
+      ->get();
+ 
+    return $tiles;
+  }
+  /**
    * @return Collection list of player tiles not used to plant something (no plantation/outpost)
    */
   public static function getNotPlantations(Player $player) : Collection
@@ -827,8 +840,8 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
       
       36 => $f([ 0, 1, MARKET_TYPE_ACTION_REUSEABLE, [], [ACTION_EXPLORATION => 1, ], 0, ]),
       
-      37 => $f([ 1, 0, MARKET_TYPE_SCORING, [], [], 0, ]),
-      38 => $f([ 1, 1, MARKET_TYPE_SCORING, [], [ACTION_SPEND_SPICES => 6], 5, ]),
+      MARKET_TYPE_FOREMAN => $f([ 1, 0, MARKET_TYPE_SCORING, [], [], 0, ]),
+      MARKET_TYPE_DUTY    => $f([ 1, 1, MARKET_TYPE_SCORING, [], [ACTION_SPEND_SPICES => 6], 5, ]),
       39 => $f([ 0, 1, MARKET_TYPE_SCORING, [], [], 2, ]),
       40 => $f([ 0, 1, MARKET_TYPE_SCORING, [], [], 3, ]),
 

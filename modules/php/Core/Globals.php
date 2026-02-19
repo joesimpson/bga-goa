@@ -29,6 +29,8 @@ class Globals extends \Bga\Games\Goa\Helpers\DB_Manager
     'bidTurns' => 'int',
     'actionsTurns' => 'int',
     'highBidPlayer' => 'int',
+    
+    'endScoring' => 'obj',
 
     //save infos about tiles between states
     'choiceTiles' => 'obj',
@@ -58,6 +60,7 @@ class Globals extends \Bga\Games\Goa\Helpers\DB_Manager
     self::setActionsTurns(0);
     self::setHighBidPlayer(null);
     self::setChoiceTiles([]);
+    self::setEndScoring([]);
 
     //Randomize first player selection
     $randomPId = array_rand($players);

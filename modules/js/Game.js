@@ -429,6 +429,10 @@ export class Game {
             if('icon_explo' in args) {
                 args.icon_explo = this.formatIcon('exploration_hand_size', _('Exploration card'));
             }
+            if('icon_symbol' in args && 'symbolType' in args) {
+                args.icon_symbol = this.formatSymbolIcon(args.symbolType, true);
+            }
+            
         }
       } catch (e) {
         console.error(log, args, 'Exception thrown', e.stack);
@@ -706,6 +710,12 @@ export class Game {
         return `<div class="goa_icon_container goa_icon_container_${type}">
             <div class="goa_icon goa_icon_${type}" ${altText}>${text}</div>
             </div>`;
+    }
+
+    formatSymbolIcon(symbolType, tiny = false){
+        let suffix = '';
+        if(tiny) suffix = 'tiny_';
+        return this.formatIcon( 'explo_symbol_'+suffix+symbolType, this.getCardSymbolName( symbolType ));
     }
     /**
      * Use this tpl for any counters that represent qty of tokens
@@ -1466,6 +1476,15 @@ export class Game {
         await this.bga.gameui.wait(800); 
         scoreCounter.incValue(amount);
     }
+    
+    async notif_addPointsWithSymbols (notif) {
+        console.log( 'notif_addPointsWithSymbols' , notif);
+        await this.notif_addPoints(notif);
+    }
+    async notif_addPointsWithMoney (notif) {
+        console.log( 'notif_addPointsWithMoney' , notif);
+        await this.notif_addPoints(notif);
+    }
 
     ////////////////////////////////////////////////////////
     //  _____ _ _
@@ -2085,26 +2104,7 @@ export class Game {
             </div>`;
     }
     getBoardRowHeaderTooltip(row){
-        let rowScore = 0;
-        switch(row){
-            //TODO JSA Server CONSTANT
-            case 1: 
-                rowScore = 0;
-                break;
-            case 2:  
-                rowScore = 1;
-                break;
-            case 3:  
-                rowScore = 3;
-                break;
-            case 4:  
-                rowScore = 5;
-                break;
-            case 5: 
-                rowScore = 10;
-                break;
-
-        }
+        let rowScore = this.const.END_SCORE_PROGRESS[row];
         let text = this.bga.gameui.format_string( 
             _('Final scoring : ${n} points for each progress marker on this row'),
             { 'n': '<span>'+rowScore +'</span>'}
@@ -2391,15 +2391,13 @@ export class Game {
             title = _('Exploration card');
             textSymbols = this.bga.gameui.format_string( 
                 _('Gives the symbol ${s_icon} (${s_name})'),
-                { s_name: this.getCardSymbolName( cardDatas.symbol ), s_icon: this.formatIcon('explo_symbol_'+cardDatas.symbol,this.getCardSymbolName( cardDatas.symbol ))}
+                { s_name: this.getCardSymbolName( cardDatas.symbol ), s_icon: this.formatSymbolIcon(cardDatas.symbol)}
             );
             textSymbols += '<br>'+_('Victory points at the end of the game (if not played) : ');
             textSymbols += '<ul>';
-            textSymbols += '<li>'+this.bga.gameui.format_string( _(' ${n} identical symbols => ${x} points '), {n:1,x:1} ) +  '</li>'; 
-            textSymbols += '<li>'+this.bga.gameui.format_string( _(' ${n} identical symbols => ${x} points '), {n:2,x:3} ) +  '</li>'; 
-            textSymbols += '<li>'+this.bga.gameui.format_string( _(' ${n} identical symbols => ${x} points '), {n:3,x:6} ) +  '</li>'; 
-            textSymbols += '<li>'+this.bga.gameui.format_string( _(' ${n} identical symbols => ${x} points '), {n:4,x:10} ) + '</li>'; 
-            textSymbols += '<li>'+this.bga.gameui.format_string( _(' ${n} identical symbols => ${x} points '), {n:5,x:15} ) + '</li>'; 
+            Object.entries(this.const.END_SCORE_EXPLORATION).forEach(([nbCards,score]) => {
+                textSymbols += '<li>'+this.bga.gameui.format_string( _(' ${n} identical symbols => ${x} points '), {'n':nbCards, 'x': score} ) +  '</li>'; 
+            });
             textSymbols += '</ul>'
         }
         let textAction = this.formatCardActionText( cardDatas );
@@ -2472,6 +2470,9 @@ export class Game {
         return '';
     }
     getCardSymbolName(card_symbol){
+        //let symbols = this.const.CARD_SYMBOLS;
+        //if(symbols[card_symbol]) return _(symbols[card_symbol]);
+        //Client side def in order to use clienttranslate on server side
         switch(card_symbol){
             case this.const.CARD_SYMBOL_ELEPHANT: return _('Elephant');
             case this.const.CARD_SYMBOL_TIGER: return _('Tiger');
