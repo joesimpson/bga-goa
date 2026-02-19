@@ -25,7 +25,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
   protected static $prefix = 'tile_';
   protected static $autoIncrement = true;
   protected static $autoremovePrefix = false;
-  protected static $customFields = ['player_id', 'type', 'subtype', 'row', 'col'];
+  protected static $customFields = ['player_id', 'type', 'subtype', 'tile_row', 'tile_col'];
   protected static $autoreshuffle = false;
 
   protected static function cast($row)
@@ -107,8 +107,8 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
   {
     $tilesOnMarketSpace = self::DB()
       ->where( static::$prefix . 'location', TILE_LOCATION_BOARD_MARKET)
-      ->where('row', $row)
-      ->where('col', $col)
+      ->where('tile_row', $row)
+      ->where('tile_col', $col)
       ->get();
       //TODO JSA multiples if BONANZA + warning if Tile WILD spice, it adds another choice 
 

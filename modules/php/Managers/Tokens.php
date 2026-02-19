@@ -25,7 +25,7 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
   protected static $prefix = 'token_';
   protected static $autoIncrement = true;
   protected static $autoremovePrefix = false;
-  protected static $customFields = ['player_id', 'type', 'subtype', 'row', 'col'];
+  protected static $customFields = ['player_id', 'type', 'subtype',  'token_row', 'token_col'];
   protected static $autoreshuffle = false;
 
   protected static function cast($row)
@@ -120,7 +120,7 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
       'location' => TOKEN_LOCATION_TILE.$tile->getId(),
       'player_id' => $player->getId(),
       'state' => $position,
-      'row' => $position,
+      'token_row' => $position,
     ];
     $elt = self::singleCreate($token);
     Notifications::newSpiceOnTile($player,$elt,$tile);
@@ -405,7 +405,7 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
     }
     return self::DB()
       ->where('subtype', TOKEN_SUBTTYPE_PROGRESS_MARKER)
-      ->whereIn('row', $rowsBelow)
+      ->whereIn('token_row', $rowsBelow)
       ->count();
   }
   
@@ -434,7 +434,7 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
     // replace all progress markers on top
     self::DB()
       ->where('subtype', TOKEN_SUBTTYPE_PROGRESS_MARKER)
-      ->update(['row' => 1])
+      ->update(['token_row' => 1])
       ->run();
 
     Stats::setAllProgressStat(1);
@@ -476,8 +476,8 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
           'subtype' => TOKEN_SUBTTYPE_PROGRESS_MARKER,
           'player_id' => $pId,
           'nbr' => 1,
-          'row' => 1,
-          'col' => $k+1,
+          'token_row' => 1,
+          'token_col' => $k+1,
         ];
       }
     }

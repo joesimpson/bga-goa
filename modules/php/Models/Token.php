@@ -18,8 +18,8 @@ class Token extends \Bga\Games\Goa\Helpers\DB_Model
     'pId' => ['player_id', 'int'],
     'type' => ['type', 'int'],
     
-    'row' => ['row', 'int'],
-    'col' => ['col', 'int'],
+    'row' => ['token_row', 'int'],
+    'col' => ['token_col', 'int'],
   ];
    
   public function __construct($row, $datas)
