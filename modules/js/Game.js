@@ -158,6 +158,12 @@ export class Game {
                         </div>
                     </div>
                 </div>
+                <div id="goa_box_tiles_container" class="whiteblock">
+                    <span>${ _("Tiles in the game box for the Favor tile action")}
+                    </span>
+                    <div id="goa_box_tiles">
+                    </div>
+                </div>
             </div>
         `);
 
@@ -1109,6 +1115,7 @@ export class Game {
     async notif_setupMarket(notif) {
         console.log("notif_setupMarket",notif);
         let tiles = notif.tiles;
+        let boxTiles = notif.boxTiles;
         let voidDiv = document.getElementById('goa_top_zone');
         
         let marketDiv = document.getElementById('goa_board_market_grid');
@@ -1117,11 +1124,29 @@ export class Game {
             this.animationManager.slideOutAndDestroy(tileDiv, voidDiv, {duration: 1000});
         }));
         await this.animationManager.playInterval(animationsCleanMarket);
+        //-----------------------
+        let boxTilesContainer = document.getElementById('goa_box_tiles_container');
+        let boxTilesDivs = [...boxTilesContainer.querySelectorAll('.goa_tile')];
+        let boxTilesDivsIds = boxTilesDivs.map(tileDiv => (() => {
+            return tileDiv.dataset.id;
+        }));
+        let animationsCleanBox = boxTilesDivs.map(tileDiv => (() => {
+            if(Object.keys(boxTiles).includes(tileDiv.dataset.id)) return;//keep tile
+            this.animationManager.slideOutAndDestroy(tileDiv, voidDiv, {duration: 800});
+        }));
+        await this.animationManager.playInterval(animationsCleanBox);
+        //-----------------------
 
         let animationsRefill = Object.values(tiles).map(tile => (() => {
             this.animationManager.slideIn(this.addTile(tile), voidDiv, {duration: 1000});
         }));
         await this.animationManager.playInterval(animationsRefill);
+        //-----------------------
+        let animationsBox = Object.values(boxTiles).map(tile => (() => {
+            if(boxTilesDivsIds.includes(tile.id)) return;//keep tile
+            this.animationManager.slideIn(this.addTile(tile), voidDiv, {duration: 800});
+        }));
+        await this.animationManager.playInterval(animationsBox);
     }
 
     async notif_newRound(notif) {
@@ -1603,6 +1628,9 @@ export class Game {
                     return `goa_player_plantations-${tile.pId}`;
                 }
                 return `goa_player_tiles-${tile.pId}`;
+            }
+            if (tile.location == (this.const.TILE_LOCATION_BOX) ) {
+                return `goa_box_tiles`;
             }
         }
         console.error('Trying to get container of a tile', tile);

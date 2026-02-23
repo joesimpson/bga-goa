@@ -34,12 +34,13 @@ class Notifications
     self::notifyAll('resetCurrencies',  '', [
     ]);
   }
-  public static function setupMarket(int $phase, Collection $tiles)
+  public static function setupMarket(int $phase, Collection $tiles, Collection $boxTiles)
   {
     self::notifyAll("setupMarket", clienttranslate('The market board is filled with tiles'), [
         "phase" => $phase,
-        "tiles" => $tiles->ui(),
-        "preserve" => ['tiles'],
+        "tiles" => $tiles->uiAssoc(),
+        "boxTiles" => $boxTiles->uiAssoc(),
+        "preserve" => ['tiles', 'boxTiles'],
     ]);
   }
 

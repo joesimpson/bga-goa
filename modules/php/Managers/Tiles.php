@@ -58,6 +58,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
       ->merge(self::getInLocation(TILE_LOCATION_BOARD_OUTPOSTS[COLONY_KOCHI     ]))
       ->merge(self::getInLocation(TILE_LOCATION_BOARD_OUTPOSTS[COLONY_MADRAS    ]))
       ->merge(self::getInLocation(TILE_LOCATION_BOARD_OUTPOSTS[COLONY_KOZHIKODE ]))
+      ->merge(Tiles::getTilesForFavor())
       
       //for debug :
       //->merge(self::getInLocation(TILE_LOCATION_DECK_A))
@@ -349,7 +350,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
 
     //SHUFFLE deck of current phase
     Tiles::shuffle($deck);
-    $tiles = Tiles::pickForLocation(4,$deck,TILE_LOCATION_BOX);
+    $boxTiles = Tiles::pickForLocation(4,$deck,TILE_LOCATION_BOX);
     //TODO JSA if more than 2 plantations, pick and replace ...
     
     //DRAW TILES
@@ -363,7 +364,8 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
     }
 
     //NOTIFY
-    Notifications::setupMarket($phase,$deckPhase);
+    $allBoxTiles = Tiles::getInLocationOrdered(TILE_LOCATION_BOX);
+    Notifications::setupMarket($phase,$deckPhase, $allBoxTiles);
   }
   
   /**
