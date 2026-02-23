@@ -125,6 +125,7 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
     $elt = self::singleCreate($token);
     Notifications::newSpiceOnTile($player,$elt,$tile);
     Stats::inc("receivedSpices", $player);
+    Game::get()->trace("addSpiceOnTile($tokenType,$position) result = ".json_encode($elt));
     return $elt;
   }
   
