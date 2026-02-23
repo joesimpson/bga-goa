@@ -1127,9 +1127,9 @@ export class Game {
         //-----------------------
         let boxTilesContainer = document.getElementById('goa_box_tiles_container');
         let boxTilesDivs = [...boxTilesContainer.querySelectorAll('.goa_tile')];
-        let boxTilesDivsIds = boxTilesDivs.map(tileDiv => (() => {
-            return tileDiv.dataset.id;
-        }));
+        let boxTilesDivsIds = boxTilesDivs.map(tileDiv => {
+            return parseInt( tileDiv.dataset.id);
+        });
         let animationsCleanBox = boxTilesDivs.map(tileDiv => (() => {
             if(Object.keys(boxTiles).includes(tileDiv.dataset.id)) return;//keep tile
             this.animationManager.slideOutAndDestroy(tileDiv, voidDiv, {duration: 800});
@@ -1143,7 +1143,7 @@ export class Game {
         await this.animationManager.playInterval(animationsRefill);
         //-----------------------
         let animationsBox = Object.values(boxTiles).map(tile => (() => {
-            if(boxTilesDivsIds.includes(tile.id)) return;//keep tile
+            if(boxTilesDivsIds.includes(parseInt(tile.id))) return;//keep tile
             this.animationManager.slideIn(this.addTile(tile), voidDiv, {duration: 800});
         }));
         await this.animationManager.playInterval(animationsBox);

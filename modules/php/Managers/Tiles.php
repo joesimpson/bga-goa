@@ -348,10 +348,22 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
       $deck = TILE_LOCATION_DECK_B;
     }
 
-    //SHUFFLE deck of current phase
-    Tiles::shuffle($deck);
-    $boxTiles = Tiles::pickForLocation(4,$deck,TILE_LOCATION_BOX);
-    //TODO JSA if more than 2 plantations, pick and replace ...
+    $nbRemovedPlantations = 0;
+    $boxTiles = null;
+    while($nbRemovedPlantations == 0 || $nbRemovedPlantations > 2){
+      if(isset($boxTiles)){
+        // if more than 2 plantations, pick and replace ...
+        foreach($boxTiles as $tile_id => &$tile){
+          $tile->setLocation($deck);
+        }
+      }
+      //SHUFFLE deck of current phase
+      Tiles::shuffle($deck);
+      $boxTiles = Tiles::pickForLocation(4,$deck,TILE_LOCATION_BOX);
+      $nbRemovedPlantations = $boxTiles->filter((function ($tile){ return MARKET_TYPE_PLANTATION == $tile->getPlay_type();}))->count();
+
+      //Game::get()->trace("setupMarket($phase), nbRemovedPlantations = $nbRemovedPlantations ...");
+    }
     
     //DRAW TILES
     $deckPhase = self::getInLocationOrdered($deck);
