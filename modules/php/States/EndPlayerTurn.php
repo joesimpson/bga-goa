@@ -60,12 +60,13 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
                 $highBid = Globals::getCurrentBid();
                 $highBidPlayerId = Globals::getHighBidPlayer();
                 $auctionToken = Tokens::getCurrentAuctionToken();
+                $bidTurns = Globals::getBidTurns();
                 if(isset($auctionToken)){
                     $currentAuctioneerId = $auctionToken->getPId();
                     $currentAuctioneer = Players::get($currentAuctioneerId);
                 }
                 
-                if(isset($currentAuctioneerId) && $activePlayerId == $currentAuctioneerId) { // END the auction when auctioneer played
+                if($bidTurns > 0 && isset($highBidPlayerId) && isset($currentAuctioneerId) && $activePlayerId == $currentAuctioneerId) { // END the auction when auctioneer played
                     if($highBidPlayerId == $currentAuctioneerId) {
                         $highBidPlayer = $currentAuctioneer;
                         //AUCTIONEER PAYS THE BANK
@@ -103,6 +104,7 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
                     Tokens::returnAuctionMarkerToPlayer($currentAuctioneer,$auctionToken);
                     Globals::setBidTurns(0);
                     Globals::setCurrentBid(0);
+                    Globals::setHighBidPlayer(null);
                     Players::resetBidPhase();
                 }
                 break;
