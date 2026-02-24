@@ -3,6 +3,7 @@
 namespace Bga\Games\Goa\Core;
 
 use Bga\GameFramework\SystemException;
+use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Utils;
 use Bga\Games\Goa\Models\Tile;
 
@@ -136,6 +137,11 @@ class Globals extends \Bga\Games\Goa\Helpers\DB_Manager
   protected static function cast($row)
   {
     $val = json_decode(\stripslashes($row['value']), true);
+    if(!isset(self::$variables[$row['name']])){
+      //ERROR  Uncaught ErrorException: Undefined array key "_BGA_INITIAL_STATE_ID" 
+      Game::get()->error(__FUNCTION__."() no defined global variable ".json_encode($row['name']));
+      return null;
+    }
     return self::$variables[$row['name']] == 'int' ? ((int) $val) : $val;
   }
 
