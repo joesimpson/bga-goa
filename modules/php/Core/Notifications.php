@@ -425,7 +425,7 @@ class Notifications
   }
   
   public static function addPointsWithSymbols(Player $player,int $points,int $nbSymbols, int $symbolType){
-    $msg = clienttranslate('${player_name} scores ${n} points with ${n2} identical ${icon_symbol} symbols');
+    $msg = clienttranslate('${player_name} scores ${n} points with ${n2} ${icon_symbol} symbols');
     $args = [ 
       'player' => $player,
       'n' => $points,
