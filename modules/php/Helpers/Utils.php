@@ -10,7 +10,6 @@ use Bga\Games\Goa\States\EndPlayerTurn;
 use Bga\Games\Goa\States\EndRound;
 use Bga\Games\Goa\States\EndScore;
 use Bga\Games\Goa\States\EndSession;
-use Bga\Games\Goa\States\EndTurn;
 use Bga\Games\Goa\States\NewRound;
 use Bga\Games\Goa\States\NewSession;
 use Bga\Games\Goa\States\NewTurn;
@@ -31,7 +30,7 @@ abstract class Utils {
             case NextPlayer::class: return ST_NEXT_PLAYER;
             case PlayerTurn::class: return ST_PLAYER_TURN;
             case PlayerChoice::class: return ST_PLAYER_CHOICE;
-            case EndTurn::class:    return ST_END_TURN;
+            //case EndTurn::class:    return ST_END_TURN;
             case EndRound::class:   return ST_END_ROUND;
             case EndSession::class: return ST_END_SESSION;
             case EndScore::class:   return ST_END_SCORING;

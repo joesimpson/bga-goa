@@ -21,7 +21,7 @@ class Notifications
   {
     $msg = '';
     if($session > 1){
-      //TODO JSA visible message only when game with multiples sessions
+      //visible message only when game with multiples sessions
       $msg = clienttranslate('Session ${n} begins');
     }
 
