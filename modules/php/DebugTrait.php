@@ -104,8 +104,8 @@ trait DebugTrait
     /**
      * Another example of debug function, to easily test the zombie code.
      */
-    public function debug_playOneMove() {
-        $this->debug->playUntil(fn(int $count) => $count == 1);
+    public function debug_playOneMove(int $nbMoves = 1) {
+        $this->debug->playUntil(fn(int $count) => $count == $nbMoves);
     }
     
     ////////////////////////////////////////////////////

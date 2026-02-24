@@ -481,7 +481,7 @@ class PlayerTurn extends GameState
     { 
         Utils::checkVersion($v);
         Log::addStep();
-        $this->game->trace("actHarvest($card_id, $tile_id, $ships, $contracts, $activePlayerId)");
+        $this->game->trace("actHarvest(".json_encode($spots).",".json_encode($resources).",$card_id, $tile_id, $ships, $contracts, $activePlayerId)");
         $possibleActions = $args['possibleActions'];
         if(!in_array('actHarvest',$possibleActions)){
             throw new UnexpectedException(110,"Invalid action actHarvest, see ".json_encode($possibleActions));
@@ -1002,11 +1002,93 @@ class PlayerTurn extends GameState
      * you must _never_ use `getCurrentPlayerId()` or `getCurrentPlayerName()`, 
      * but use the $playerId passed in parameter and $this->game->getPlayerNameById($playerId) instead.
      */
-    function zombie(int $playerId) {
+    function zombie(int $playerId, array $args) {
         $gameVersion = Utils::gameVersion();
-        $args = $this->getArgs();
-        $zombieChoice = $this->getRandomZombieChoice($args['pAuctionableSpots']); // random choice over possible moves
-        return $this->actPlaceAuction($zombieChoice['row'],$zombieChoice['col'], $playerId, $args, $gameVersion);
+        $roundStep = Globals::getRoundStep();
+        $actions = $args['possibleActions'];
+        
+        //ZOMBIE LEVEL 1
+        switch($roundStep){
+            case ROUND_STEP_PLACE_AUCTIONS:
+                if(in_array('actPlaceAuction',$actions)){
+                    // random choice over possible moves
+                    $zombieChoice = $args['pAuctionableSpots'][array_rand($args['pAuctionableSpots'])];
+                    return $this->actPlaceAuction($zombieChoice['row'],$zombieChoice['col'], $playerId, $args, $gameVersion);
+                }
+                break;
+            case ROUND_STEP_TILE_AUCTIONS:
+                if(in_array('actBid',$actions)){
+                    $possibleBids = range($args['minBid'],$args['maxBid']);
+                    $zombieChoice = $possibleBids[array_rand($possibleBids)];
+                    return $this->actBid($zombieChoice, $playerId, $args, $gameVersion);
+                }
+                else {
+                    return $this->actPassBid($gameVersion, $playerId);
+                }
+            case ROUND_STEP_PLAYER_ACTIONS:
+                if(in_array('actStopAction',$actions)){
+                    return $this->actStopAction($gameVersion, $playerId, $args, true);
+                }
+                $badChoice = true;
+                $security = 0;
+                while($badChoice && $security < 10){
+                    $security++;
+                    $zombieChoice = $actions[array_rand($actions)];
+                    //we could improve zombie with card/tile choices
+                    try{
+                            
+                        switch($zombieChoice){
+                            case 'actProgress': 
+                                $progressTracks = $args['progressTracks'];
+                                if(count($progressTracks) > 0){
+                                    //$trackData = $progressTracks [$this->getRandomZombieChoice(array_keys($progressTracks))];
+                                    $trackData = $progressTracks[array_rand($progressTracks)];
+                                    $track = $trackData['track'];
+                                    //$spicesSets = $trackData['spicesSets'] [ $this->getRandomZombieChoice($trackData['spicesSets']) ];
+                                    $spicesSets = $trackData['spicesSets'][array_rand($trackData['spicesSets'])];
+                                    return $this->actProgress($track,$spicesSets,null,null, $playerId, $args,$gameVersion, );
+                                }
+                                $badChoice = true;
+                                break;
+                            case 'actBuildShips': 
+                                return $this->actBuildShips( $playerId, $args, $gameVersion,);
+                            case 'actHarvest': 
+                                $spots = $args['harvestSpots'];
+                                if(count($spots) > 0 ){
+                                    //Harvest 1 spot
+                                    $spot = $spots[array_rand($spots)];
+                                    $spots_ids = [$spot['id']];
+                                    $spots_resources = [$spot['spices'][0]];
+                                    return $this->actHarvest($spots_ids,$spots_resources,null,null, 0,0,$playerId, $args,$gameVersion, );
+                                }
+                                $badChoice = true;
+                                break;
+                            case 'actTaxes': 
+                                return $this->actTaxes( $gameVersion, $playerId, $args,);
+                            case 'actExploration': 
+                                return $this->actExploration( $gameVersion, $playerId, $args,);
+                            case 'actFoundOutpost': 
+                                $outpostsToFound = $args['outpostsToFound'];
+                                if(count($outpostsToFound) > 0 ){
+                                    $outpostId = $outpostsToFound[array_rand($outpostsToFound)];
+                                    return $this->actFoundOutpost($outpostId,null,  $playerId, $args, $gameVersion,);
+                                }
+                                $badChoice = true;
+                                break;
+                            default: 
+                                $badChoice = true;
+                                break;
+                        }
+                    } catch(UnexpectedException $exc){
+                        //If we fall in an edge case where that random choice is not really possible
+                        $badChoice = true;
+                        Game::get()->trace(__FUNCTION__."($playerId) : UnexpectedException, continue zombie choices. ", json_encode($exc));
+                    }
+                }
+                break;
+            default: break;
+        }
+
     }
 
     // -----------------------------

@@ -321,8 +321,23 @@ class PlayerChoice extends GameState
         return $nextStateClass;
     }
 
-    function zombie(int $playerId) {
-        //TODO JSA Zombie
+    function zombie(int $playerId, array $args) {
+        $actions = $args['possibleActions'];
+        $gameVersion = Utils::gameVersion();
+
+        $tile_choices = $args['tiles_choices'];
+        if(count($tile_choices) > 0){
+            //We must treat all choices one by one
+            $tile_choice_entry = $tile_choices[array_keys($tile_choices)[0] ];
+            $choice_index = array_keys($tile_choice_entry)[0];
+            $tile_choice = $tile_choice_entry[$choice_index];
+            $tile_id = $tile_choice['tile_id'];
+            $choices = $tile_choice['choices'];
+            $choice = $choices[array_rand($choices)];
+            $choice_array1 = null;
+            $choice_array2 = null;
+            return $this->actTileChoice($tile_id, $choice, $choice_index, $playerId, $args, $gameVersion, $choice_array1, $choice_array2, $playerId );
+        }
     }
 
     

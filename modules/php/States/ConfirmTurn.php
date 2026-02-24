@@ -122,7 +122,8 @@ class ConfirmTurn extends GameState
     //}
 
     function zombie(int $playerId) {
-        //TODO JSA ZOMBIE 
+        $gameVersion = Utils::gameVersion();
+        return $this->actConfirmTurn($gameVersion,true);
     }
     
     ///------------------------------------------------------------
