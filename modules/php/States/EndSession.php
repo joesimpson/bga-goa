@@ -36,9 +36,17 @@ class EndSession extends \Bga\GameFramework\States\GameState
 
         $session = Globals::getSession();
         self::computeScoring($session);
+        
+        $maxSessions = 1;
+        if(Globals::getOptionCampaign() == OPTION_CAMPAIGN_ON){
+            $maxSessions = NB_SESSIONS_CAMPAIGN;
+        }
 
-        //TODO JSA END session
         $gameEnd = false;
+        if($session >= $maxSessions){
+            $gameEnd = true;
+        }
+
         if ($gameEnd) {
             Log::addStateCheckpoint(EndScore::class);
             return EndScore::class;
