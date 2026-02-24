@@ -439,6 +439,10 @@ export class Game {
                 args.icon_symbol = this.formatSymbolIcon(args.symbolType, true);
             }
             
+            if('action_name' in args) {
+                args.action_name = `<span class='goa_log_action_name' data-type='${args.action_type}'>${_(args.action_name)}</span>`;
+            }
+            
         }
       } catch (e) {
         console.error(log, args, 'Exception thrown', e.stack);

@@ -354,6 +354,30 @@ class Notifications
     ]);
   }
   
+  public static function playAction(Player $player, string $serverAction)
+  {
+
+    $action_name = '';
+    switch($serverAction){
+      case 'actProgress':     $action_type = 0; $action_name = clienttranslate("Progress"); break;
+      case 'actBuildShips':   $action_type = 1; $action_name = clienttranslate("Build Ships"); break;
+      case 'actHarvest':      $action_type = 2; $action_name = clienttranslate("Produce"); break;
+      case 'actTaxes':        $action_type = 3; $action_name = clienttranslate("Collect Taxes"); break;
+      case 'actExploration':  $action_type = 4; $action_name = clienttranslate("Explore"); break;
+      case 'actFoundOutpost': $action_type = 5; $action_name = clienttranslate("Establish an Outpost"); break;
+    }
+
+    if($action_name == '') return;
+
+    self::notifyAll("playAction", clienttranslate('${player_name} plays the action ${action_name}'), [
+        "player" => $player,
+        "action_name" => $action_name,
+        "action_type" => $action_type,
+        'i18n'=>['action_name'],
+        'preserve'=>['action_type'],
+    ]);
+  }
+  
   public static function computeScoring(int $session)
   {
     self::notifyAll("computeScoring", clienttranslate('Computing scores...'), [

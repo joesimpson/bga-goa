@@ -154,13 +154,14 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
   /**
    * Save the information that the player played one of their authorized actions
    */
-  public static function registerNewAction(Player $player)
+  public static function registerNewAction(Player $player, string $serverAction)
   {
     if($player->getNbActions() >= NB_MIN_ACTIONS_PER_ROUND){
         Players::giveExtraActionCards($player,-1);
     }
     $player->incNbActions();
     $player->setActionPlayed(true);
+    Notifications::playAction($player, $serverAction);
   }
   /**
    * Save the information that the player played one of their card

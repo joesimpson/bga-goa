@@ -365,6 +365,13 @@ class PlayerTurn extends GameState
         } else if(isset($tile_id)){
             Tiles::playTile($player, $tile_id, null, $doCheckpoint );
         }
+        
+        if($withCoins){
+            $countAsAPlayerAction = false;//linked to player card/tile
+        }
+        if($countAsAPlayerAction){
+            Players::registerNewAction($player, 'actProgress');
+        }
 
         if($withSpices){
             $costSpices = $selectedTrack['costSpices'];
@@ -403,13 +410,8 @@ class PlayerTurn extends GameState
         if($withCoins){
             $cost = $selectedTrack['costMoney'];
             Players::giveMoney($player,-$cost);
-            $countAsAPlayerAction = false;//linked to player card/tile
         }
         
-        if($countAsAPlayerAction){
-            Players::registerNewAction($player);
-        }
-
         $upgradedToken = Tokens::progressOnTrack($track, $activePlayerId);
         
         $allMarkers = Tokens::getProgressMarkers($activePlayerId);
@@ -451,9 +453,9 @@ class PlayerTurn extends GameState
         Log::addStep();
         $player = Players::get($activePlayerId);
 
+        Players::registerNewAction($player,'actBuildShips');
+
         PlayerTurn::actBuildShips_content($player,$activePlayerId);
-        
-        Players::registerNewAction($player);
 
         return PlayerTurn::class;
     }
@@ -606,7 +608,7 @@ class PlayerTurn extends GameState
         $player = Players::get($activePlayerId);
 
         if($countAsAPlayerAction){
-            Players::registerNewAction($player);
+            Players::registerNewAction($player,'actHarvest');
         }
 
         //LOOP TO FILL SPOTS with specified resources
@@ -640,9 +642,9 @@ class PlayerTurn extends GameState
         Log::addStep();
         $player = Players::get($activePlayerId);
 
+        Players::registerNewAction($player,'actTaxes');
+
         PlayerTurn::actTaxes_content($player,$activePlayerId);
-        
-        Players::registerNewAction($player);
 
         return PlayerTurn::class;
     }
@@ -668,10 +670,10 @@ class PlayerTurn extends GameState
         $doCheckpoint = false;
         $player = Players::get($activePlayerId);
 
+        Players::registerNewAction($player,'actExploration');
+
         $amount = $args['nbCardsExploration'];
         Cards::drawExplorationCardsToPlayer($player,$amount, $doCheckpoint);
-        
-        Players::registerNewAction($player);
 
         Log::addStateCheckpoint(PlayerTurn::class);
         return PlayerTurn::class;
@@ -696,10 +698,10 @@ class PlayerTurn extends GameState
         Log::addStep();
         $player = Players::get($activePlayerId);
 
+        Players::registerNewAction($player,'actFoundOutpost');
+        
         PlayerTurn::actFoundOutpost_content($tile_id,$card_id, $player, $activePlayerId, $args);
 
-        Players::registerNewAction($player);
-        
         //CHECKPOINT because draw cards
         Log::addStateCheckpoint(PlayerChoice::class);
         return PlayerChoice::class;
