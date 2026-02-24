@@ -2561,6 +2561,10 @@ export class Game {
 
     updateCardsStackCounters() { 
         console.log("updateCardsStackCounters");
+        let currentPlayer = this.bga.players.getCurrentPlayer();
+        if (! currentPlayer) {
+            return;
+        }
         let nbCards = this.explorationHand.getCardCount();
         this.explorationHand.element.parentNode.style.setProperty('--goa_stock_count', nbCards);
     }
