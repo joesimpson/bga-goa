@@ -83,9 +83,35 @@ class Game extends \Bga\GameFramework\Table
      */
     public function getGameProgression()
     {
-        // TODO: compute and return the game progression
+        $maxSessions = 1;
+        if(Globals::getOptionCampaign() == OPTION_CAMPAIGN_ON){
+            $maxSessions = NB_SESSIONS_CAMPAIGN;
+        }
+        $maxRounds = NB_ROUNDS_DAY + NB_ROUNDS_NIGHT;
+        $maxRoundSteps = count(ALL_ROUND_STEPS);
+            
+        $session = Globals::getSession();//From 1 to $maxSessions
+        $round = Globals::getRound();//From 1 to $maxRounds
+        $roundStep = Globals::getRoundStep();//From 1 to $maxRoundSteps
 
-        return 0;
+        //Compute mathematical progress between 0 and 1
+        $currentStepProgression = 1;
+        if($roundStep === ROUND_STEP_PLAYER_ACTIONS){
+            //count actions done :
+            $players = Players::getAll();
+            $nbActionsInReserve = 0;
+            $nbActionsTOTAL = count($players) * NB_MIN_ACTIONS_PER_ROUND;
+            foreach($players as $player){
+                //don't consider compass for simplicity
+                $nbActionsInReserve += NB_MIN_ACTIONS_PER_ROUND - $player->getNbActions();
+            }
+            $currentStepProgression = ($nbActionsTOTAL - $nbActionsInReserve) / $nbActionsTOTAL;
+        }
+        $currentRoundProgression = ($roundStep - 1) / $maxRoundSteps + 1 / $maxRoundSteps * $currentStepProgression;
+        $currentSessionProgression = ($round - 1) / $maxRounds + 1 / $maxRounds * $currentRoundProgression;
+        $progress = ($session - 1) / $maxSessions + 1 / $maxSessions * $currentSessionProgression;
+
+        return $progress * 100;
     }
 
     /**
