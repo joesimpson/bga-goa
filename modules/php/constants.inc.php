@@ -304,19 +304,28 @@ const OPTION_BONANZA       = 102;
 const OPTION_BONANZA_OFF   = 0;
 const OPTION_BONANZA_ON    = 1;
 
-const OPTION_STORIES       = 103;
+const OPTION_PLANNED       = 103;
+const OPTION_PLANNED_OFF   = 0;
+const OPTION_PLANNED_ON    = 1;
+
+const OPTION_STORIES       = 104;
 const OPTION_STORIES_OFF   = 0;
 const OPTION_STORIES_RANDOM= 1;
 
-const OPTION_CAPTAINS      = 104;
+const OPTION_CAPTAINS      = 105;
 const OPTION_CAPTAINS_OFF   = 0;
 const OPTION_CAPTAINS_ON    = 1;
 
-const OPTION_GAMBIT        = 105;
+const OPTION_GAMBIT        = 106;
 const OPTION_GAMBIT_OFF   = 0;
 const OPTION_GAMBIT_ON    = 1;
 
-const OPTION_CAMPAIGN      = 110;
+const OPTION_AUTOMA_DIFFICULTY = 110;
+const OPTION_AUTOMA_DIFFICULTY_1    = 1;
+const OPTION_AUTOMA_DIFFICULTY_2    = 2;
+const OPTION_AUTOMA_DIFFICULTY_3    = 3;
+
+const OPTION_CAMPAIGN      = 111;
 const OPTION_CAMPAIGN_OFF   = 0;
 const OPTION_CAMPAIGN_ON    = 1;
 

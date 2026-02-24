@@ -37,12 +37,12 @@ trait DebugTrait
         
         $options = [
             "DEBUG_SETUP"=> true,
-            OPTION_QUICK_STARTER => ($quickStarter ? OPTION_QUICK_STARTER_ON : OPTION_QUICK_STARTER_OFF) ,
-            OPTION_BONANZA => ($bonanza ? OPTION_BONANZA_ON : OPTION_BONANZA_OFF) ,
-            OPTION_STORIES => ($story ? OPTION_STORIES_RANDOM : OPTION_STORIES_OFF) ,
-            OPTION_CAPTAINS => ($captains ? OPTION_CAPTAINS_ON : OPTION_CAPTAINS_OFF) ,
-            OPTION_GAMBIT => ($gambit ? OPTION_GAMBIT_ON : OPTION_GAMBIT_OFF) ,
-            OPTION_CAMPAIGN => ($campaign ? OPTION_CAMPAIGN_ON : OPTION_CAMPAIGN_OFF) ,
+            //OPTION_QUICK_STARTER => ($quickStarter ? OPTION_QUICK_STARTER_ON : OPTION_QUICK_STARTER_OFF) ,
+            //OPTION_BONANZA => ($bonanza ? OPTION_BONANZA_ON : OPTION_BONANZA_OFF) ,
+            //OPTION_STORIES => ($story ? OPTION_STORIES_RANDOM : OPTION_STORIES_OFF) ,
+            //OPTION_CAPTAINS => ($captains ? OPTION_CAPTAINS_ON : OPTION_CAPTAINS_OFF) ,
+            //OPTION_GAMBIT => ($gambit ? OPTION_GAMBIT_ON : OPTION_GAMBIT_OFF) ,
+            //OPTION_CAMPAIGN => ($campaign ? OPTION_CAMPAIGN_ON : OPTION_CAMPAIGN_OFF) ,
         ];
         
         Game::get()->initGameStateLabels([
