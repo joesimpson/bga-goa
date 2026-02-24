@@ -137,6 +137,7 @@ class EndSession extends \Bga\GameFramework\States\GameState
             else if($coins === $mostCoins) {
                 $mostCoinsPlayers[] = $pId;//add
             }
+            $player->setTieBreakerPoints($coins);
         }
         foreach($players as $pId => &$player){
             if(!in_array($pId, $mostCoinsPlayers)) continue;
