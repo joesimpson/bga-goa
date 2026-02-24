@@ -6,6 +6,7 @@ namespace Bga\Games\Goa\States;
 
 use Bga\GameFramework\StateType;
 use Bga\Games\Goa\Core\Globals;
+use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Log;
 use Bga\Games\Goa\Helpers\Utils;
@@ -32,6 +33,7 @@ class EndRound extends \Bga\GameFramework\States\GameState
 
         $sessionEnd = false;
         $round = Globals::getRound();
+        Notifications::endRound($round);
         if($round >= (NB_ROUNDS_DAY + NB_ROUNDS_NIGHT) ){
             $sessionEnd = true;
         }

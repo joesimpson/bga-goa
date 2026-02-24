@@ -52,6 +52,15 @@ class Notifications
       'n' => $round,
     ]);
   }
+
+  public static function endRound(int $round)
+  {
+    $msg = clienttranslate('Round ${n} ends');
+
+    self::notifyAll('endRound', $msg, [
+      'n' => $round,
+    ]);
+  }
   
   public static function newRoundStep(int $roundStep, string $stepMessage)
   {
