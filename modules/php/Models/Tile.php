@@ -16,6 +16,8 @@ class Tile extends DB_Model
     'id' => ['tile_id', 'int'],
     'state' => ['tile_state', 'int'],
     'location' => 'tile_location',
+    //startLocation may be used to reset all tiles when new session starts
+    'startLocation' => 'tile_start_location',
     'pId' => ['player_id', 'int'],
     'type' => ['type', 'int'],
 
@@ -34,6 +36,8 @@ class Tile extends DB_Model
   public function getUiData()
   {
     $data = parent::getUiData();
+    //Remove unused datas on client side :
+    unset($data['startLocation']);
     return $data;
   }
 

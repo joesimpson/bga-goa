@@ -1147,6 +1147,8 @@ export class Game {
             this.animationManager.slideIn(this.addTile(tile), voidDiv, {duration: 800});
         }));
         await this.animationManager.playInterval(animationsBox);
+
+        //TODO JSA clean player tiles
     }
 
     async notif_newRound(notif) {

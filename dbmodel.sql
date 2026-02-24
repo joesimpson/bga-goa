@@ -33,7 +33,7 @@ ALTER TABLE `player` ADD `cardsPlayed` JSON COMMENT 'Infos about card played dur
 CREATE TABLE IF NOT EXISTS `cards` (
   `card_id` int(2) NOT NULL AUTO_INCREMENT,
   `card_state` int(10) DEFAULT 0,
-  `card_location` varchar(32) NOT NULL,
+  `card_location` varchar(32) NOT NULL COMMENT 'Current location of card',
   `type` int(10) NOT NULL,
   `subtype` int(10) NOT NULL,
   `player_id` int(10) NULL,
@@ -41,21 +41,22 @@ CREATE TABLE IF NOT EXISTS `cards` (
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
 CREATE TABLE IF NOT EXISTS `tiles` (
-  `tile_id` int(10) NOT NULL AUTO_INCREMENT,
-  `tile_state` int(10) DEFAULT 0,
-  `tile_location` varchar(32) NOT NULL,
-  `type` int(10) NOT NULL,
-  `subtype` int(10) NOT NULL,
-  `tile_row` int(10) NULL,
-  `tile_col` int(10) NULL,
-  `player_id` int(10) NULL,
+  `tile_id` int NOT NULL AUTO_INCREMENT,
+  `tile_state` int DEFAULT 0,
+  `tile_location` varchar(32) NOT NULL COMMENT 'Current location of tile',
+  `tile_start_location` varchar(32) NOT NULL COMMENT 'Starting location of tile',
+  `type` int NOT NULL,
+  `subtype` int NOT NULL,
+  `tile_row` int NULL,
+  `tile_col` int NULL,
+  `player_id` int NULL,
   PRIMARY KEY (`tile_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
 CREATE TABLE IF NOT EXISTS `tokens` (
   `token_id` int(2) NOT NULL AUTO_INCREMENT,
   `token_state` int(10) DEFAULT 0,
-  `token_location` varchar(32) NOT NULL,
+  `token_location` varchar(32) NOT NULL COMMENT 'Current location of token',
   `type` int(10) NOT NULL,
   `subtype` int(10) NOT NULL,
   `token_row` int(10) NULL,

@@ -25,7 +25,14 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
   protected static $prefix = 'tile_';
   protected static $autoIncrement = true;
   protected static $autoremovePrefix = false;
-  protected static $customFields = ['player_id', 'type', 'subtype', 'tile_row', 'tile_col'];
+  protected static $customFields = [
+    'player_id', 
+    'type', 
+    'subtype', 
+    'tile_start_location', 
+    'tile_row', 
+    'tile_col'
+  ];
   protected static $autoreshuffle = false;
 
   protected static function cast($row)
@@ -334,12 +341,8 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
     $deck = TILE_LOCATION_DECK_A;
     if($phase == 1){
       //RESET FROM THE BEGINNING 
-      //TODO JSA We need a tile attribute 'deck' A/B in order to replace it in A or B for next session
-      //Tiles::moveAllTo(TILE_LOCATION_DECK_A);
       Tokens::removeSpicesOnAllTiles();
-          //DEBUG  waiting solution...
-          Tiles::DB()->delete()->run();
-          Tiles::setupNewGame(null,null);
+      Tiles::resetMarketTilesDeck();
     }
     else if($phase == 2){
       //EMPTY BOARD
@@ -490,7 +493,6 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
       $possiblePlay = false;
       foreach($tile->getActions() as $action => $nb){
         switch($action){
-          //TODO JSA : FILL SWITCH  
           case ACTION_SPICE:
             if(!isset($args['harvestSpots'])){
               $harvestSpots = Tiles::getPlayerAvailableSpotsForSpices($player);
@@ -713,6 +715,35 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
       ->update([static::$prefix .'state' => TILE_STATE_NOTPLAYED])
       ->run();
   }
+  
+  public static function resetMarketTilesDeck()
+  {
+    self::DB()
+      ->where('subtype', TILE_SUBTTYPE_MARKET)
+      ->where( 'tile_start_location', TILE_LOCATION_DECK_A)
+      ->update([
+        static::$prefix .'location' => TILE_LOCATION_DECK_A, 
+        'player_id'=> null,
+        'tile_row'=> null,
+        'tile_col'=> null,
+        'tile_state' => 0,
+        ])
+      ->run();
+    self::shuffle(TILE_LOCATION_DECK_A);
+
+    self::DB()
+      ->where('subtype', TILE_SUBTTYPE_MARKET)
+      ->where( 'tile_start_location', TILE_LOCATION_DECK_B)
+      ->update([
+        static::$prefix .'location' => TILE_LOCATION_DECK_B, 
+        'player_id'=> null,
+        'tile_row'=> null,
+        'tile_col'=> null,
+        'tile_state' => 0,
+        ])
+      ->run();
+    self::shuffle(TILE_LOCATION_DECK_B);
+  }
 
   ///////////////////////////////////////////////////////////////////////////////
   
@@ -724,8 +755,10 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
     $outposts = self::getOutpostTilesTypes();
     
     foreach ($outposts as $type => $outpost) {
+        $location = TILE_LOCATION_BOARD_OUTPOSTS[$outpost['colony']];
         $tiles[] = [
-          'location' => TILE_LOCATION_BOARD_OUTPOSTS[$outpost['colony']],
+          'location' => $location,
+          'tile_start_location' => $location,
           'type' => $type,
           'subtype' => TILE_SUBTTYPE_OUTPOST,
           'nbr' => $outpost['nbr'],
@@ -735,16 +768,20 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
     $markets = self::getMarketTilesTypes();
     foreach ($markets as $type => $market) {
         if($market['nbr_A']>0){
+          $location = TILE_LOCATION_DECK_A;
           $tiles[] = [
-            'location' => TILE_LOCATION_DECK_A,
+            'location' => $location,
+            'tile_start_location' => $location,
             'type' => $type,
             'subtype' => TILE_SUBTTYPE_MARKET,
             'nbr' => $market['nbr_A'],
           ];
         }
         if($market['nbr_B']>0){
+          $location = TILE_LOCATION_DECK_B;
           $tiles[] = [
-            'location' => TILE_LOCATION_DECK_B,
+            'location' => $location,
+            'tile_start_location' => $location,
             'type' => $type,
             'subtype' => TILE_SUBTTYPE_MARKET,
             'nbr' => $market['nbr_B'],
