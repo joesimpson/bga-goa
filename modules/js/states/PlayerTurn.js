@@ -135,7 +135,7 @@ export class PlayerTurn {
 
             }
             
-            if(possibleActions.includes('actProgress') && args.progressTracks.length>0){
+            if(possibleActions.includes('actProgress') && args.progressTracks && args.progressTracks.length>0){
                 this.bga.statusBar.addActionButton(_('Progress'), () => {
                     this.bga.states.setClientState("ClientSelectProgress", {
                         descriptionmyturn: _("${you} must select a progress track to improve on your board"),

@@ -214,6 +214,7 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
           $progressTracks = Tokens::getUpgradableProgressMarkersWithCoins($player);
           $possiblePlay = count($progressTracks)>0;
           $playDatas['progressTracks'] = $progressTracks;
+          if($possiblePlay) $args['possibleActions'][] = 'actProgress';
           break;
         case CARD_ACTION_2_CONTRACTS:
         case CARD_ACTION_2_SHIPS:

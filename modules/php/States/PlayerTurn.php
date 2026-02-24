@@ -323,7 +323,7 @@ class PlayerTurn extends GameState
         if(!in_array('actProgress',$possibleActions)){
             throw new UnexpectedException(110,"Invalid action actProgress, see ".json_encode($possibleActions));
         }
-        $progressTracks = $args['progressTracks'];
+        if(isset($args['progressTracks'])) $progressTracks = $args['progressTracks'];
         $selectedTrack = null;
         $countAsAPlayerAction = true;
         if(isset($card_id)){
