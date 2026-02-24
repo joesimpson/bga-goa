@@ -666,6 +666,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
             if(!isset($row) || !isset($col)){
               throw new UnexpectedException(122,("Missing coordinate to swap"));
             }
+            //TODO JSA NOT THE SWAP TILE itself !
             Tiles::giveMarketTileToPlayerAt($player, $row, $col, $doCheckpoint );
           }
           catch(PrematureStateChangeException $exc){

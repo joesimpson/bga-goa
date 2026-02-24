@@ -247,7 +247,7 @@ export class PlayerTurn {
 
     
     onMarketSpotClick(row,col) {
-        console.log( 'onMarketSpotClick', row,col );
+        this.game.customDebug( 'onMarketSpotClick', row,col );
 
         this.game.customPerformAction("actPlaceAuction", { 
                             'row': row,
@@ -257,7 +257,7 @@ export class PlayerTurn {
     }
     
     onBid(amount) {
-        console.log( 'onBid', amount );
+        this.game.customDebug( 'onBid', amount );
 
         this.game.customPerformAction("actBid", { 
                             'n': amount,
@@ -266,7 +266,7 @@ export class PlayerTurn {
     }
     
     onIncreaseBid(delta,minBid,maxBid) {
-        console.log( 'onIncreaseBid', delta,this.currentBid,this.selectedBid,minBid,maxBid );
+        this.game.customDebug( 'onIncreaseBid', delta,this.currentBid,this.selectedBid,minBid,maxBid );
         let nextBid = this.selectedBid + delta;
         if ( nextBid < minBid) {
             return;

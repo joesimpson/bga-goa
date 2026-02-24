@@ -34,12 +34,16 @@ import { NextPlayer } from "./states/NextPlayer.js";
 import { PlayerChoice, ClientSelectTileAction } from "./states/PlayerChoice.js";
 import { PlayerTurn } from "./states/PlayerTurn.js";
 
+var isDebug = window.location.host == 'studio.boardgamearena.com' || window.location.hash.indexOf('debug') > -1;
+    
 export class Game {
     
-    constructor(bga) {
-        console.log('goa constructor');
-        this.bga = bga;
+    customDebug = isDebug ? console.log.bind(window.console) : function () {};
 
+    constructor(bga) {
+        this.customDebug('goa constructor');
+        this.bga = bga;
+        
         // Declare the State classes
         this.playerTurn = new PlayerTurn(this, bga);
         this.bga.states.register('PlayerTurn', this.playerTurn);
@@ -68,7 +72,7 @@ export class Game {
         this.bga.states.register('ClientHarvestResources', this.clientHarvestResources);
         
         // Uncomment the next line to show debug informations about state changes in the console. Remove before going to production!
-        this.bga.states.logger = console.log;
+        this.bga.states.logger = this.customDebug;
 
         // Here, you can init the global variables of your user interface
         // Example:
@@ -95,7 +99,7 @@ export class Game {
     */
     
     setup( gamedatas ) {
-        console.log( "Starting game setup" , gamedatas);
+        this.customDebug( "Starting game setup" , gamedatas);
         this.gamedatas = gamedatas;
 
         this.animationManager = new BgaAnimations.Manager({
@@ -325,7 +329,7 @@ export class Game {
                 this.setupCards(),
             ]      
         ).then( 
-            console.log("SETUP phases")
+            this.customDebug("SETUP phases")
         );
 
         this.setupRoundMarker();
@@ -371,7 +375,7 @@ export class Game {
         // Setup game notifications to handle (see "setupNotifications" method below)
         this.setupNotifications();
 
-        console.log( "Ending game setup" );
+        this.customDebug( "Ending game setup" );
     }
     
 
@@ -499,11 +503,11 @@ export class Game {
     }
     
     clearSelection(withClientState = false) {
-        console.log('clearSelection()' , withClientState);
+        this.customDebug('clearSelection()' , withClientState);
         this._connections.forEach((i) => {
             let node = i[0];
             let action = i[1];
-            console.log('clearSelection()... disconnect ' ,node, action,);
+            this.customDebug('clearSelection()... disconnect ' ,node, action,);
             this.bga.gameui.disconnect(node,action);
         });
         this._connections = [];
@@ -652,7 +656,7 @@ export class Game {
           });
           if(nbSelectables == n){
             //If only 1 match in fixed possible sets, let's auto select it
-            console.log("onSelectN... auto select ",nbSelectables);
+            this.customDebug("onSelectN... auto select ",nbSelectables);
             Object.keys(elements).forEach((id) => {
               let elt = elements[id];
               if(elt.classList.contains("selectable")){
@@ -671,7 +675,7 @@ export class Game {
         let elt = elements[id];
         if(selectionHint) elt.setAttribute("title",selectionHint);
         let clickAction = () => {
-            console.log("onSelectN...CLICK",id);
+            this.customDebug("onSelectN...CLICK",id);
           if(!elt.classList.contains("selectable")) return;
 
           let index = selectedElements.findIndex((t) => t == id);
@@ -692,7 +696,7 @@ export class Game {
     }
 
     addClickHandlerOnProgressMarker(track, title, playerId, callBack){
-        console.log("addClickHandlerOnProgressMarker", track, title, playerId);
+        this.customDebug("addClickHandlerOnProgressMarker", track, title, playerId);
         let progressTrack = document.getElementById(`goa_progress_track_${track}_${playerId}`);
         let progressMarker = progressTrack.getElementsByClassName('goa_progress_marker')[0];
         this.onClick(progressMarker.parentNode,callBack);
@@ -701,7 +705,7 @@ export class Game {
     
     async setupRoundMarker(){
         let round = this.gamedatas.round;
-        console.log("setupRoundMarker", round);
+        this.customDebug("setupRoundMarker", round);
         if(round>0){
             const meepleDiv = document.getElementById(`goa_board_round_marker`);
             meepleDiv.setAttribute('title', _('Round marker'));
@@ -763,7 +767,7 @@ export class Game {
         return null;
     }
     restorePreviousState(args, exceptStateName =null){
-        console.log("restorePreviousState",args, exceptStateName);
+        this.customDebug("restorePreviousState",args, exceptStateName);
         let previousClientState = args.previousClientState;
         if(previousClientState && previousClientState.name && exceptStateName!=previousClientState.name){
             //descriptionmyturn useless if title is set on enteringstate
@@ -775,7 +779,7 @@ export class Game {
     }
 
     updateHandSelectable(args){
-        console.log("updateHandSelectable",args);
+        this.customDebug("updateHandSelectable",args);
         let possibleActions = args.possibleActions;
         let activePlayer = this.bga.players.getActivePlayerId();
         //Manage various actions on hand cards with a unique handler
@@ -793,7 +797,7 @@ export class Game {
         }
 
         this.explorationHand.onSelectionChange = (x, card) => {
-            console.log("HAND onSelectionChange",card, selectableCards);
+            this.customDebug("HAND onSelectionChange",card, selectableCards);
             let isSelected = this.explorationHand.isSelected(card);
             this.explorationHand.removeLastPlayedCardsClass();
             if(!card) return;
@@ -841,7 +845,7 @@ export class Game {
 
     }
     updateTilesHandSelectable(args){
-        console.log("updateTilesHandSelectable",args);
+        this.customDebug("updateTilesHandSelectable",args);
 
         if(!args) return;
 
@@ -931,7 +935,7 @@ export class Game {
     }
     
     refreshPlayersDatas(players){
-        console.log("refreshPlayersDatas()",players);
+        this.customDebug("refreshPlayersDatas()",players);
         //Erasing this array would erase some BGA datas (ex color_back)-> we should erase only datas in parameter array
         //this.gamedatas.players = players;
         Object.values(players).forEach((player) => {
@@ -967,7 +971,7 @@ export class Game {
     }
     
     customPerformAction(action, args, options) {
-      console.log('customPerformAction()',action, args, options );
+      this.customDebug('customPerformAction()',action, args, options );
       args = args || {};
       options = options || {};
       //options.ignoreDefaultErrorHandler = true;
@@ -999,7 +1003,7 @@ export class Game {
     
     */
     setupNotifications() {
-        console.log( 'notifications subscriptions setup' );
+        this.customDebug( 'notifications subscriptions setup' );
         
         
         const originalOnPlaceLogOnChannel = this.bga.gameui.onPlaceLogOnChannel.bind(this.bga.gameui);
@@ -1016,7 +1020,7 @@ export class Game {
         // automatically listen to the notifications, based on the `notif_xxx` function on this class. 
         // Uncomment the logger param to see debug information in the console about notifications.
         this.bga.notifications.setupPromiseNotifications({
-            logger: console.log,
+            logger: this.customDebug,
             onStart: (notifName, msg, args) => {
                 this.clearSelection();
             }, 
@@ -1040,12 +1044,12 @@ export class Game {
     }
     
     notif_clearTurn(n) {
-        console.log('notif_clearTurn: restarting turn/step', n);
+        this.customDebug('notif_clearTurn: restarting turn/step', n);
         this.cancelLogs(n.notifIds);
     }
 
     async notif_refreshUI(notif){
-        console.log("notif_refreshUI",notif);
+        this.customDebug("notif_refreshUI",notif);
         this.refreshPlayersDatas(notif.datas['players']);
         ['cards', 'tiles', 'tokens'].forEach((value) => {
             this.gamedatas[value] = notif.datas[value];
@@ -1084,7 +1088,7 @@ export class Game {
     }
     
     async notif_newSession(notif) {
-        console.log("notif_newSession",notif);
+        this.customDebug("notif_newSession",notif);
         this.gamedatas.session = notif.n;
      
         //RESET Players progress :
@@ -1102,7 +1106,7 @@ export class Game {
     }
     
     async notif_resetCurrencies(notif) {
-        console.log("notif_resetCurrencies",notif);
+        this.customDebug("notif_resetCurrencies",notif);
         let currentPlayerId = this.bga.players.getCurrentPlayerId();
         Object.values(this.gamedatas.players).forEach((player) => {
             let pId = player.id;
@@ -1117,7 +1121,7 @@ export class Game {
 
     }
     async notif_setupMarket(notif) {
-        console.log("notif_setupMarket",notif);
+        this.customDebug("notif_setupMarket",notif);
         let tiles = notif.tiles;
         let boxTiles = notif.boxTiles;
         let voidDiv = document.getElementById('goa_top_zone');
@@ -1156,13 +1160,13 @@ export class Game {
     }
 
     async notif_newRound(notif) {
-        console.log("notif_newRound",notif);
+        this.customDebug("notif_newRound",notif);
         this.gamedatas.round = notif.n;
         this.setupRoundMarker();
     }
     
     async notif_auctionPlaced(notif) {
-        console.log("notif_auctionPlaced",notif);
+        this.customDebug("notif_auctionPlaced",notif);
         let token = notif.token;
         //let tokenDiv = document.getElementById(`goa_token-${token.id}`);
         let tokenDiv = this.addToken(token);
@@ -1171,7 +1175,7 @@ export class Game {
     }
     
     async notif_auctionMarkerBack(notif) {
-        console.log("notif_auctionMarkerBack",notif);
+        this.customDebug("notif_auctionMarkerBack",notif);
         let token = notif.token;
         let tokenDiv = this.addToken(token);
         let destinationDiv = document.getElementById(this.getTokenContainer(token));
@@ -1179,7 +1183,7 @@ export class Game {
     }
     
     async notif_giveFirstPlayerToken(notif) {
-        console.log("notif_giveFirstPlayerToken",notif);
+        this.customDebug("notif_giveFirstPlayerToken",notif);
         let token = notif.token;
         let tokenDiv = this.addToken(token);
         let destinationDiv = document.getElementById(this.getTokenContainer(token));
@@ -1187,7 +1191,7 @@ export class Game {
     }
     
     async notif_winsAuction(notif) {
-        console.log("notif_winsAuction",notif);
+        this.customDebug("notif_winsAuction",notif);
         let amount = notif.n;
         let fromPlayer = notif.player_id;
         let fromElement = document.getElementById(`goa_reserve_${fromPlayer}_money`);
@@ -1214,7 +1218,7 @@ export class Game {
         }  
     }
     async notif_winsAuctionBank(notif) {
-        console.log("notif_winsAuctionBank",notif);
+        this.customDebug("notif_winsAuctionBank",notif);
         let amount = notif.n;
         let fromPlayer = notif.player_id;
         let fromElement = document.getElementById(`goa_reserve_${fromPlayer}_money`);
@@ -1239,19 +1243,19 @@ export class Game {
     }
     
     async notif_getContracts(notif) {
-        console.log('notif_getContracts', notif);
+        this.customDebug('notif_getContracts', notif);
         this._counters[notif.player_id]['contracts'].incValue(notif.n);
     }
     async notif_getShips(notif) {
-        console.log('notif_getShips', notif);
+        this.customDebug('notif_getShips', notif);
         this._counters[notif.player_id]['ships'].incValue(notif.n);
     }
     async notif_getCompass(notif) {
-        console.log('notif_getCompass', notif);
+        this.customDebug('notif_getCompass', notif);
         this._counters[notif.player_id]['compasses'].incValue(notif.n);
     }
     async notif_getMoney(notif) {
-        console.log('notif_getMoney', notif);
+        this.customDebug('notif_getMoney', notif);
         let amount = notif.n;
         let toPlayer = notif.player_id;
         let toElement = document.getElementById(`goa_reserve_${toPlayer}_money`);
@@ -1285,7 +1289,7 @@ export class Game {
     }
     
     async notif_giveTile(notif) {
-        console.log("notif_giveTile",notif);
+        this.customDebug("notif_giveTile",notif);
         let tile = notif.tile;
         
         let tileDiv = document.getElementById(`goa_tile-${tile.id}`);
@@ -1309,7 +1313,7 @@ export class Game {
     }
     
     async notif_replaceTile(notif) {
-        console.log("notif_replaceTile",notif);
+        this.customDebug("notif_replaceTile",notif);
         let tile = notif.tile;
         
         let tileDiv = this.addTile(tile);//refresh tile dataset
@@ -1318,7 +1322,7 @@ export class Game {
     }
     
     async notif_discardTile(notif) {
-        console.log("notif_discardTile",notif);
+        this.customDebug("notif_discardTile",notif);
         let tile = notif.tile;
         let tileDiv = document.getElementById(`goa_tile-${tile.id}`);
         if(tileDiv){
@@ -1327,7 +1331,7 @@ export class Game {
         }
     }
     async notif_playTile(notif) {
-        console.log("notif_playTile",notif);
+        this.customDebug("notif_playTile",notif);
         let tile = notif.tile;
         let tileDiv = document.getElementById(`goa_tile-${tile.id}`);
         if(tileDiv){
@@ -1335,7 +1339,7 @@ export class Game {
         }
     }
     async notif_placeTile(notif) {
-        console.log("notif_placeTile",notif);
+        this.customDebug("notif_placeTile",notif);
         let tile = notif.tile;
         
         let tileDiv = this.addTile(tile);//refresh tile dataset
@@ -1344,7 +1348,7 @@ export class Game {
     }
     
     async notif_newSpiceOnTile(notif) {
-        console.log("notif_newSpiceOnTile",notif);
+        this.customDebug("notif_newSpiceOnTile",notif);
         let token = notif.token;
         let tokenDiv = this.addToken(token);
         //let destinationDiv = document.getElementById(this.getTokenContainer(token));
@@ -1357,7 +1361,7 @@ export class Game {
         
     }
     async notif_removeTileSpices(notif) {
-        console.log("notif_removeTileSpices",notif);
+        this.customDebug("notif_removeTileSpices",notif);
         let tile_id = notif.tile_id;
         let tileDiv = document.getElementById(`goa_tile-${tile_id}`);
         if(tileDiv){
@@ -1372,7 +1376,7 @@ export class Game {
         }
     }
     async notif_removeSpices(notif) {
-        console.log("notif_removeSpices",notif);
+        this.customDebug("notif_removeSpices",notif);
         let tokens = notif.tokens;
         let tokenDivs = [];
         Object.values(tokens).forEach((token) => {
@@ -1389,15 +1393,15 @@ export class Game {
     }
 
     async notif_reshuffleExplorationDeck(notif) {
-        console.log("notif_reshuffleExplorationDeck",notif);
+        this.customDebug("notif_reshuffleExplorationDeck",notif);
         //this.explorationDeck.addCards(this.explorationDiscard.getCards());
         await this.explorationDeck.addCards(this.explorationDiscard.getCards().map(card => ({ id: card.id, })) );
-        await this.explorationDeck.shuffle().then(() => console.log('shuffle ended'));
+        await this.explorationDeck.shuffle().then(() => this.customDebug('shuffle ended'));
         //this.explorationDeck.removeAll();
         await this.explorationDeck.setCardNumber(notif.deck_size);
     }
     async notif_discardAllExploration(notif) {
-        console.log("notif_discardAllExploration",notif);
+        this.customDebug("notif_discardAllExploration",notif);
         let currentPlayerId = this.bga.players.getCurrentPlayerId();
         
         await Promise.all (
@@ -1428,11 +1432,11 @@ export class Game {
         );
     }
     async notif_drawAndDiscardExploration(notif) {
-        console.log("notif_drawAndDiscardExploration",notif);
+        this.customDebug("notif_drawAndDiscardExploration",notif);
         await this.discardExCard(notif.card);
     }
     async notif_discardExploration(notif) {
-        console.log("notif_discardExploration",notif);
+        this.customDebug("notif_discardExploration",notif);
         this._counters[notif.player_id]['exploration_hand_size'].incValue( -1);
         let currentPlayerId = this.bga.players.getCurrentPlayerId();
         let addCardSettings = { 
@@ -1448,7 +1452,7 @@ export class Game {
     }
     
     async notif_giveExplorationCardsToPlayer(notif) {
-        console.log("notif_giveExplorationCardsToPlayer",notif);
+        this.customDebug("notif_giveExplorationCardsToPlayer",notif);
 
         this._counters[notif.player_id]['exploration_hand_size'].incValue( notif.n);
         let currentPlayer = this.bga.players.getCurrentPlayer();
@@ -1475,7 +1479,7 @@ export class Game {
     }
     
     async notif_progress(notif) {
-        console.log("notif_progress : move token 1 space down",notif);
+        this.customDebug("notif_progress : move token 1 space down",notif);
         let token = notif.token;
         let tokenDiv = this.addToken(token);
         let destinationDiv = document.getElementById(this.getTokenContainer(token));
@@ -1484,7 +1488,7 @@ export class Game {
 
     
     async notif_addPoints (notif) {
-        console.log( 'notif_addPoints' , notif);
+        this.customDebug( 'notif_addPoints' , notif);
         let player_id = notif.player_id;
         let player_color = this.gamedatas.players[player_id].color;
         let amount = notif.n;
@@ -1496,7 +1500,7 @@ export class Game {
     }
     
     async notif_addPointsWithTile (notif) {
-        console.log( 'notif_addPointsWithTile' , notif);
+        this.customDebug( 'notif_addPointsWithTile' , notif);
         let player_id = notif.player_id;
         let player_color = this.gamedatas.players[player_id].color;
         let amount = notif.n;
@@ -1509,11 +1513,11 @@ export class Game {
     }
     
     async notif_addPointsWithSymbols (notif) {
-        console.log( 'notif_addPointsWithSymbols' , notif);
+        this.customDebug( 'notif_addPointsWithSymbols' , notif);
         await this.notif_addPoints(notif);
     }
     async notif_addPointsWithMoney (notif) {
-        console.log( 'notif_addPointsWithMoney' , notif);
+        this.customDebug( 'notif_addPointsWithMoney' , notif);
         await this.notif_addPoints(notif);
     }
 
@@ -1526,7 +1530,7 @@ export class Game {
     //////////////////////////////////////////////////////////
  
     async setupTiles(init = true) {
-        console.log("setupTiles"); 
+        this.customDebug("setupTiles"); 
         
         if(!init){
             //Manual remove all stocks in order to be able to remove all tiles
@@ -1644,7 +1648,7 @@ export class Game {
     }
     
     addTile(tile, location = null) {
-        console.log('addTile',tile,location);
+        this.customDebug('addTile',tile,location);
         let tileDiv = document.getElementById(`goa_tile-${tile.id}`) ;
         if (!tileDiv){
             let container = location == null ? this.getTileContainer(tile) : location;
@@ -1786,7 +1790,7 @@ export class Game {
         return text;
     }
     formatTileActionText (tile) {
-        console.log("formatTileActionText",tile);
+        this.customDebug("formatTileActionText",tile);
         let description = '';
         switch (tile.subtype )
         {
@@ -2010,7 +2014,7 @@ export class Game {
     //                                
     ////////////////////////////////////////
     setupTokens(init = true){
-        console.log('setupTokens');
+        this.customDebug('setupTokens');
         document.querySelectorAll('.goa_token[id^="goa_token-"]').forEach((oToken) => {
             this.destroy(oToken);
         });
@@ -2089,7 +2093,7 @@ export class Game {
     }
     
     addToken(token, location = null, prefix ='') { 
-        console.log("addToken",token,location); 
+        this.customDebug("addToken",token,location); 
         let tokenDiv = document.getElementById(`goa_token${prefix}-${token.id}`) ;
         if (!tokenDiv){
             let container = location == null ? this.getTokenContainer(token) : location;
@@ -2278,7 +2282,7 @@ export class Game {
      * @param {*} init 
      */
     async setupCards(init = true) {
-        console.log("setupCards");
+        this.customDebug("setupCards");
         
         if(init){
             this.explorationCardsManager = new BgaCards.Manager({
@@ -2368,7 +2372,7 @@ export class Game {
     
     
     async addCard(card, location = null) {
-        console.log('addCard',card,location);
+        this.customDebug('addCard',card,location);
         let cardDiv = $(`goa_card-${card.id}`);
         if (!cardDiv){
             let container = location == null ? this.getCardContainer(card) : location;
@@ -2560,7 +2564,7 @@ export class Game {
     }
 
     updateCardsStackCounters() { 
-        console.log("updateCardsStackCounters");
+        this.customDebug("updateCardsStackCounters");
         let currentPlayer = this.bga.players.getCurrentPlayer();
         if (! currentPlayer) {
             return;

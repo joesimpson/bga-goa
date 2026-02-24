@@ -141,7 +141,7 @@ export class ClientHarvestResources {
             let harvestInc = document.getElementById('goa_harvest_inc');
 
             let onIncreaseShips = (delta,min,max) => {
-                console.log( 'onIncreaseShips', delta,selectedShips,min,max);
+                this.game.customDebug( 'onIncreaseShips', delta,selectedShips,min,max);
                 let nextValue = selectedShips + delta;
                 let nextTotal = nextValue + selectedResources.size + selectedContracts;
                 if ( nextValue < 0) {
@@ -154,7 +154,7 @@ export class ClientHarvestResources {
                 updateStatus();
             }
             let onIncreaseContracts = (delta,min,max) => {
-                console.log( 'onIncreaseContracts', delta,selectedContracts,min,max);
+                this.game.customDebug( 'onIncreaseContracts', delta,selectedContracts,min,max);
                 let nextValue = selectedContracts + delta;
                 let nextTotal = nextValue + selectedResources.size + selectedShips;
                 if ( nextValue < 0) {
@@ -293,7 +293,7 @@ export class ClientHarvestResources {
             let elt = elements[id];
             if(selectionHint) elt.setAttribute("title",selectionHint);
             let clickAction = () => {
-                console.log("onSelectNSpiceSpots...CLICK",id);
+                this.game.customDebug("onSelectNSpiceSpots...CLICK",id);
                 let harvestResourcesZone = harvestTopZone.getElementsByClassName('goa_harvest_resources')[0]; 
                 if(harvestResourcesZone) this.game.empty(harvestResourcesZone);
 
