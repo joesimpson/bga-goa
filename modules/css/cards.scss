@@ -200,4 +200,8 @@ $card_height: var(--goa_explo_card_height);
         width: 348px;
         order: 2;
     }
+    .goa_card_symbols{
+        //no need to display 30 times
+        display: none;
+    }
 }

@@ -1472,6 +1472,9 @@ Icon extract in sprite with differents layers size (so % is not useful).
   width: 348px;
   order: 2;
 }
+.goa_ExplorationCardsHelp .goa_card_symbols {
+  display: none;
+}
 
 .goa_tile {
   position: relative;

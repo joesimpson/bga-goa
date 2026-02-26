@@ -2437,6 +2437,18 @@ export class Game {
             await this.explorationDiscard.addCard(card_datas, { fromStock: this.explorationDeck });
         }
     }
+    getCardTooltipSymbolsInfos(cardDatas) {
+        let textSymbols = '';
+        if(cardDatas.subtype == this.const.CARD_SUBTTYPE_EXPLORATION){
+            textSymbols += '<br>'+_('Victory points at the end of the game (if not played) : ');
+            textSymbols += '<ul>';
+            Object.entries(this.const.END_SCORE_EXPLORATION).forEach(([nbCards,score]) => {
+                textSymbols += '<li>'+this.bga.gameui.format_string( _(' ${n} identical symbols => ${x} points '), {'n':nbCards, 'x': score} ) +  '</li>'; 
+            });
+            textSymbols += '</ul>'
+        }
+        return textSymbols;
+    }
     getCardTooltip(cardDatas) {
         let textLine1 = ''
         let title = '';
@@ -2453,12 +2465,7 @@ export class Game {
                 _('Gives the symbol ${s_icon} (${s_name})'),
                 { s_name: this.getCardSymbolName( cardDatas.symbol ), s_icon: this.formatSymbolIcon(cardDatas.symbol)}
             );
-            textSymbols += '<br>'+_('Victory points at the end of the game (if not played) : ');
-            textSymbols += '<ul>';
-            Object.entries(this.const.END_SCORE_EXPLORATION).forEach(([nbCards,score]) => {
-                textSymbols += '<li>'+this.bga.gameui.format_string( _(' ${n} identical symbols => ${x} points '), {'n':nbCards, 'x': score} ) +  '</li>'; 
-            });
-            textSymbols += '</ul>'
+            textSymbols += this.getCardTooltipSymbolsInfos(cardDatas);
         }
         let textAction = this.formatCardActionText( cardDatas );
         let div = this.tplCard(cardDatas,'_tmp'); 
@@ -2471,7 +2478,7 @@ export class Game {
                     <div class="goa_card_text">
                         ${textAction == '' ? '' : '<hr><span class="goa_card_text_action">'+textAction+'</span>'}
                         ${textLine1 == '' ? '' : '<hr><span class="goa_card_text_line1">'+textLine1+'</span>'}
-                        ${textSymbols == '' ? '' : '<hr><span class="goa_card_symbols">'+textSymbols+'</span>'}
+                        ${textSymbols == '' ? '' : '<span class="goa_card_symbols"><hr>'+textSymbols+'</span>'}
                         
                     </div>
                 </div>
@@ -2547,6 +2554,7 @@ export class Game {
     formatCardsHelp(){
         let list1 = "";
         let j = 0;
+        let textSymbols = '';
         Object.entries(this.gamedatas.material.cards[this.const.CARD_SUBTTYPE_EXPLORATION])
         .sort(([,a],[,b]) => {
             const nameA = a.action.toUpperCase();
@@ -2570,6 +2578,7 @@ export class Game {
             }
             list1 = list1.concat( this.getCardTooltip(resourceDatas));
             j++; 
+            textSymbols = this.getCardTooltipSymbolsInfos(resourceDatas);
         });
         return `
         <div class="expandable">
@@ -2579,6 +2588,8 @@ export class Game {
                 <div class="goa_expand_ellipsis">...</div>
             </div>
             <div class='goa_ExplorationCardsHelp goa_expandablecontent goa_expand_on'>
+                ${textSymbols}
+                <hr>
                 ${list1}
             </div>
         </div>
