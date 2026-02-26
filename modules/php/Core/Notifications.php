@@ -73,6 +73,15 @@ class Notifications
     ]);
   }
 
+  public static function resetActionsPhase($reusableTilesIds, int $newState)
+  {
+    $msg = '';
+    self::notifyAll('resetActionsPhase', $msg, [
+      'newState' => $newState,
+      'tiles_ids' => $reusableTilesIds,
+    ]);
+  }
+
   public static function newTurn(int $turn)
   {
     //$msg = clienttranslate('Actions turn ${n} begins');

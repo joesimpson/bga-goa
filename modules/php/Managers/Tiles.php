@@ -709,12 +709,21 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
   {
     //RESET ALL USED actionable TILES 
     $reusableTiles = Tiles::getTilesTypesByMarketPlayType(MARKET_TYPE_ACTION_REUSEABLE);
+    $newState = TILE_STATE_NOTPLAYED;
     self::DB()
       ->whereIn('type', $reusableTiles)
       ->where('subtype', TILE_SUBTTYPE_MARKET)
       ->where( static::$prefix . 'location', TILE_LOCATION_PLAYER_BOARD)
-      ->update([static::$prefix .'state' => TILE_STATE_NOTPLAYED])
+      ->update([static::$prefix .'state' => $newState])
       ->run();
+
+    $reusableTilesIds = self::DB()
+      ->whereIn('type', $reusableTiles)
+      ->where('subtype', TILE_SUBTTYPE_MARKET)
+      ->where( static::$prefix . 'location', TILE_LOCATION_PLAYER_BOARD)
+      ->get()
+      ->getIds();
+    Notifications::resetActionsPhase($reusableTilesIds, $newState );
   }
   
   public static function resetMarketTilesDeck()

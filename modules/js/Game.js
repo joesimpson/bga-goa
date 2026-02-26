@@ -850,8 +850,13 @@ export class Game {
                 if(isDiscardableCard || isPlayableCard) {
                     callbackCardSelection();
                 }
+                /*else {
+                    this.updateHandSelectableList(args);
+                }
+                */
             }
             else {
+                //this.updateHandSelectableList(args);
                 let clientState = this.getCurrentClientStateDatas();
                 if(clientState && clientState.name=='ClientCardAction') {
                     this.clientCardAction.restorePreviousState();
@@ -1184,6 +1189,17 @@ export class Game {
         this.customDebug("notif_newRound",notif);
         this.gamedatas.round = notif.n;
         this.setupRoundMarker();
+    }
+    async notif_resetActionsPhase(notif) {
+        this.customDebug("notif_resetActionsPhase",notif);
+        let newState = notif.newState;
+        let tiles_ids = notif.tiles_ids;
+        Object.values(tiles_ids).forEach( (tile_id) => {
+            let tileDiv = document.getElementById(`goa_tile-${tile_id}`);
+            if(tileDiv){
+                tileDiv.dataset.state = newState;
+            }
+        });
     }
     
     async notif_auctionPlaced(notif) {
