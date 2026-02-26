@@ -188,9 +188,10 @@ export class ClientSelectTileAction {
                     }, {  destination: document.getElementById('customPrimary'),'title':_('Select this spice'),  }); 
                     break;
                 case this.game.const.CHOICE_REPLACE_TILE:
+                    let newtile_icon = this.game.tplTileFromType(args.tile.type, '_log');
                     this.bga.statusBar.setTitle(isCurrentPlayerActive ? 
-                        _('${you} must choose a plantation to replace on your board'): 
-                        _('${actplayer} must choose a plantation to replace on his board')
+                        _('${you} must choose a plantation to replace on your board by ${tile_icon}').replace('${tile_icon}',newtile_icon) : 
+                        _('${actplayer} must choose a plantation to replace on his board by ${tile_icon}').replace('${tile_icon}',newtile_icon) 
                     );
                     //click on each selectable tile
                     let tileDiv = document.getElementById(`goa_tile-${choice}`);

@@ -272,6 +272,12 @@ Icon extract in sprite with differents layers size (so % is not useful).
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_grid .goa_grid_space .goa_token {
   position: absolute;
 }
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_grid .goa_grid_space .goa_tile {
+  position: relative;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_grid .goa_grid_space .goa_tile:nth-child(2) {
+  top: -60%;
+}
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_grid .goa_tile {
   left: 8px;
   top: 8px;

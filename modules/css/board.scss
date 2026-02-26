@@ -214,6 +214,14 @@ $board_img_height: calc(1 * calc(1429px + var(--goa_board_height_offset)));
                             {
                                 position: absolute;
                             }
+                            .goa_tile{
+                                position: relative;
+                                &:nth-child(1) {
+                                }
+                                &:nth-child(2) {
+                                    top: -60%;
+                                }
+                            }
  
                         }
 
