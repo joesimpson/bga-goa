@@ -38,7 +38,7 @@ class NewRound extends \Bga\GameFramework\States\GameState
         Globals::setRound($round);
         Globals::setRoundStep(ROUND_STEP_PLACE_AUCTIONS);
         Notifications::newRound($round);
-        Notifications::newRoundStep(ROUND_STEP_PLACE_AUCTIONS, clienttranslate('Place Auction tokens'));
+        Notifications::newRoundStep(ROUND_STEP_PLACE_AUCTIONS, clienttranslate('Place Auction Markers'));
 
         Globals::setBidTurns(0);
         Globals::setCurrentBid(0);

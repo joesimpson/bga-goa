@@ -144,7 +144,7 @@ Many options could be added in the future :
                 "tmdisplay": "Gambit",
                 "nobeginner": true,
                 "alpha": true,
-                "description": "Variant - Gambit : Each player receives 8 cards in their colour. After placing the bidding tiles on the board, each player secretly chooses one of their Impact cards and plays it face down. When a player starts their bidding round, they reveal their card. The modified action then applies and is visible to all players."
+                "description": "Variant - Gambit : Each player receives 8 cards in their colour. After all Auction Markers have been placed on the Market Grid, each player secretly selects one of their Gambit Cards. When a player becomes the auctioneer, they reveal their chosen Gambit Card. Its effect applies for that auction and remains visible to all players."
             }
         },
         "default": 0
@@ -163,7 +163,7 @@ Many options could be added in the future :
                 "tmdisplay": "Campaign",
                 "nobeginner": true,
                 "alpha": true,
-                "description": "Campaign module : Play 3 successive sessions and try to become the richest merchant."
+                "description": "Campaign module : Campaign Mode challenges you to complete 3 consecutive sessions, tracking your progress across games as you strive to carry your Goods from Goa to Lisbon. Your overall success is measured by how much Cargo you accumulate and how many Campaign Goals you achieve."
             }
         },
         "default": 0,

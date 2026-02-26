@@ -16,7 +16,7 @@ export class ClientSelectProgress {
         let activePlayer = this.bga.players.getActivePlayerId();
 
         this.bga.statusBar.setTitle(
-                    _("${you} must select a progress track to improve on your board")
+                    _("${you} must select an action track to improve on your board")
                 );
 
         
@@ -35,7 +35,7 @@ export class ClientSelectProgress {
             let spicesSets = trackData.spicesSets;// [[1022,1027],[1022,1028],[1023,1027],[1023,1028]];
 
             let progressTrack = document.getElementById(`goa_progress_track_${track}_${activePlayer}`);
-            progressTrack.setAttribute("title",_('Select this progress track'));
+            progressTrack.setAttribute("title",_('Select this action track'));
             this.game.onClick(progressTrack,() => {
                 //refresh selection
                 [...document.getElementsByClassName('goa_progress_track')].forEach( a => a.classList.remove('selected'));

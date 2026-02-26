@@ -27,7 +27,7 @@ export class ClientFoundOutpost {
         }
         
         this.bga.statusBar.setTitle(
-                   _("${you} must select a new outpost to found with a base of ${n} ${icon_contracts}").replace('${icon_contracts}', this.game.formatIcon('contracts',_('Contracts'))).replace('${n}', baseContractsWithAction)
+                   _("${you} must select a new outpost to establish with a base of ${n} ${icon_contracts}").replace('${icon_contracts}', this.game.formatIcon('contracts',_('Contracts'))).replace('${n}', baseContractsWithAction)
                 );
     
         this.game.outpostsTilesStocks.forEach((stock) => { 
@@ -52,7 +52,7 @@ export class ClientFoundOutpost {
                 if(button) this.game.destroy(button);
                 this.bga.statusBar.addActionButton( 
                     this.bga.gameui.format_string( 
-                        _('Found ${name} : requires ${n} ${icon_contracts}'), 
+                        _('Establish ${name} : requires ${n} ${icon_contracts}'), 
                         {'name': colonyName, 'n':outpostMinContractsNeeded, 'icon_contracts':this.game.formatIcon('contracts',_('Contracts')), }),
                     () => { 
                         if(fromTileChoice){
@@ -64,7 +64,7 @@ export class ClientFoundOutpost {
                         }
                         this.game.customPerformAction(actionName, actionArgs);
                     }
-                , { id:'goa_button_found', 'title':_('Action : Found Outpost'), destination: document.getElementById('customPrimary') }); 
+                , { id:'goa_button_found', 'title':this.bga.gameui.format_string(_('Action : ${name}'),{'name':  _('Establish Outpost')}), destination: document.getElementById('customPrimary') }); 
             });
         });
     

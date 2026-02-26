@@ -82,7 +82,7 @@ export class PlayerTurn {
 
                 let hintLine1 = '';
                 if(auctionToken.type == this.game.const.TOKEN_TYPE_AUCTION_MARKER_1){
-                    hintLine1 = this.bga.gameui.format_string(  _('Highest bid takes the starting player marker + ${n} ${card_icon}.') ,{'n':1, 'card_icon':this.game.formatIcon('compasses', _('Compass cards')) });
+                    hintLine1 = this.bga.gameui.format_string(  _('Highest bid takes the Nazar Stone ${token_icon} + ${n} ${card_icon}.') ,{'n':1, 'card_icon':this.game.formatIcon('compasses', _('Compass cards')), 'token_icon': this.game.formatIcon('nazar_stone', _('Nazar Stone (Starting player)')) });
                 }
                 else {
                     hintLine1 = this.bga.gameui.format_string(  _('Highest bid takes the tile(s) under the auction marker.') ,{});
@@ -138,7 +138,7 @@ export class PlayerTurn {
             if(possibleActions.includes('actProgress') && args.progressTracks && args.progressTracks.length>0){
                 this.bga.statusBar.addActionButton(_('Progress'), () => {
                     this.bga.states.setClientState("ClientSelectProgress", {
-                        descriptionmyturn: _("${you} must select a progress track to improve on your board"),
+                        descriptionmyturn: '',
                         //description : _("${actplayer} must select a progress track to improve on his board"),
                         args: {'progressTracks': args.progressTracks },
                     });
@@ -154,7 +154,7 @@ export class PlayerTurn {
             }
             
             if(possibleActions.includes('actHarvest') && args.harvestSpots &&  Object.keys(args.harvestSpots).length > 0){
-                let actionName = _('Harvest');
+                let actionName = _('Produce');
                 let actionHint = this.bga.gameui.format_string(_('Action : ${name}'),{'name': actionName});
                 let goToNext = () => {
                     this.bga.states.setClientState("ClientHarvestResources", {
@@ -172,7 +172,7 @@ export class PlayerTurn {
                 this.game.addClickHandlerOnProgressMarker(2,actionHint,activePlayer,() => goToNext());
             }
             if(possibleActions.includes('actTaxes')){
-                let actionName = _('Taxes');
+                let actionName = _('Collect Taxes');
                 let actionHint = this.bga.gameui.format_string(_('Action : ${name}'),{'name': actionName});
                 this.bga.statusBar.addActionButton(actionName, () => this.game.customPerformAction("actTaxes"), { 'title':actionHint,destination: document.getElementById('customPrimary') }); 
                 //+ CLICK ON BOARD section
@@ -192,7 +192,7 @@ export class PlayerTurn {
             }
             
             if(possibleActions.includes('actFoundOutpost') && args.outpostsToFound.length>0){
-                let actionName = _('Found Outpost');
+                let actionName = _('Establish Outpost');
                 let actionHint = this.bga.gameui.format_string(_('Action : ${name}'),{'name': actionName});
                 let goToNext = () => {
                     this.bga.states.setClientState("ClientFoundOutpost", {

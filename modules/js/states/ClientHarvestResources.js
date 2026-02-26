@@ -38,7 +38,7 @@ export class ClientHarvestResources {
         if(otherResources.includes(this.game.const.ACTION_SHIP)  
             && otherResources.includes(this.game.const.ACTION_CONTRACT)   
         ){
-            this.bga.statusBar.setTitle( _("${you} must select a combination of ${n} ${icon_ships}, ${icon_contracts} and resources to place on your tiles").replace('${n}',maxSpices) .replace('${icon_ships}',icon_ships).replace('${icon_contracts}',icon_contracts ) ) ;
+            this.bga.statusBar.setTitle( _("${you} must select a combination of ${n} ${icon_ships}, ${icon_contracts} and Goods to place on your tiles").replace('${n}',maxSpices) .replace('${icon_ships}',icon_ships).replace('${icon_contracts}',icon_contracts ) ) ;
             displayConfirmAsDisabled = true;
         }
 
@@ -188,7 +188,7 @@ export class ClientHarvestResources {
             );
 
             displayConfirmAsDisabled = true;
-            confirmText = this.bga.gameui.format_string(  _('Confirm : ${x} ${icon_ships} / ${y} ${icon_contracts} / ${z} resources') ,
+            confirmText = this.bga.gameui.format_string(  _('Confirm : ${x} ${icon_ships} / ${y} ${icon_contracts} / ${z} Goods') ,
                 { 
                     'x': selectedShips, 
                     'y': selectedContracts,
@@ -229,7 +229,7 @@ export class ClientHarvestResources {
                 if(otherResources.includes(this.game.const.ACTION_SHIP)  
                     && otherResources.includes(this.game.const.ACTION_CONTRACT)   
                 ){
-                    confirmText = this.bga.gameui.format_string(  _('Confirm : ${x} ${icon_ships} / ${y} ${icon_contracts} / ${z} resources') ,
+                    confirmText = this.bga.gameui.format_string(  _('Confirm : ${x} ${icon_ships} / ${y} ${icon_contracts} / ${z} Goods') ,
                     { 
                         'x': selectedShips, 
                         'y': selectedContracts,
@@ -239,7 +239,7 @@ export class ClientHarvestResources {
                     });
                     selectionGood = ((selectedResources.size + selectedShips + selectedContracts) == maxElements);
                 } else {
-                    confirmText = this.bga.gameui.format_string(  _('Confirm : ${z} resources') ,
+                    confirmText = this.bga.gameui.format_string(  _('Confirm : ${z} Goods') ,
                     { 
                         'z': selectedResources.size,
                     });
@@ -315,7 +315,7 @@ export class ClientHarvestResources {
                     if(!harvestResourcesZone){
                         let harvestZone = harvestTopZone.getElementsByClassName('goa_harvest_zone')[0]; 
                         harvestZone.insertAdjacentHTML('beforeend', `
-                            <span id='goa_harvest_label' class="goa_harvest_label">${_("Select a resource to harvest for that spot") }</span>
+                            <span id='goa_harvest_label' class="goa_harvest_label">${_("Select a good to produce for that spot") }</span>
                             `);
                         harvestZone.insertAdjacentHTML('beforeend', `
                             <div class="goa_harvest_resources" id="goa_harvest_resources-${activePlayer}"></div>

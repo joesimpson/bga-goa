@@ -116,7 +116,7 @@ export class ClientSelectTileAction {
                     switch(choice){
                         case this.game.const.ACTION_HARVEST:
                             let buttonText2 = this.bga.gameui.format_string(
-                                        _("Harvest ${n} resources")
+                                        _("Produce ${n} goods")
                                         ,{ 'n':tile_choice.n, }
                                     );
                             this.bga.statusBar.addActionButton( buttonText2, () => {
@@ -132,7 +132,7 @@ export class ClientSelectTileAction {
                                         'previousClientState' : this.game.getCurrentClientStateDatas(),
                                     },
                                 });
-                            }, {'destination': document.getElementById('customPrimary'),'title':_('Harvest'),  }); 
+                            }, {'destination': document.getElementById('customPrimary'),'title':_('Produce'),  }); 
                             break;
                         case this.game.const.ACTION_SHIP:
                             let buttonText = this.bga.gameui.format_string(
@@ -216,8 +216,8 @@ export class ClientSelectTileAction {
                 case this.game.const.CHOICE_FOUND_TILE:
                     let missingContracts = tile_choice.n;
                     this.bga.statusBar.setTitle(isCurrentPlayerActive ? 
-                        _('${you} must found the outpost by spending ${n} ${icon_contracts} or abandon and receive ${x} ${icon_contracts}').replaceAll('${icon_contracts}', icon_contracts).replace('${n}', missingContracts).replace('${x}', 1): 
-                        _('${actplayer} must found the outpost by spending ${n} ${icon_contracts} or abandon and receive ${x} ${icon_contracts}').replaceAll('${icon_contracts}', icon_contracts).replace('${n}', missingContracts).replace('${x}', 1)
+                        _('${you} must establish the outpost by spending ${n} ${icon_contracts} or abandon and receive ${x} ${icon_contracts}').replaceAll('${icon_contracts}', icon_contracts).replace('${n}', missingContracts).replace('${x}', 1): 
+                        _('${actplayer} must establish the outpost by spending ${n} ${icon_contracts} or abandon and receive ${x} ${icon_contracts}').replaceAll('${icon_contracts}', icon_contracts).replace('${n}', missingContracts).replace('${x}', 1)
                     );
                     let tileToFound= document.getElementById(`goa_outpost-${tile_id}-front`);
                     let colony = tileToFound.dataset.colony;
@@ -235,13 +235,13 @@ export class ClientSelectTileAction {
                         }, {destination: document.getElementById('customPrimary'),'title':_('Abandon Outpost'),  }); 
                         break;
                         case this.game.const.ACTION_FOUND_FORWARD: 
-                            this.bga.statusBar.addActionButton( _("Found Outpost"), () => {
+                            this.bga.statusBar.addActionButton( _("Establish Outpost"), () => {
                                 this.game.customPerformAction("actTileChoice", { 
                                         'tile_id' : tile_id,
                                         'choice': choice,
                                         'choice_index':args.choice_index,
                                     })
-                            }, {destination: document.getElementById('customPrimary') ,'title':_('Found Outpost'),}); 
+                            }, {destination: document.getElementById('customPrimary') ,'title':_('Establish Outpost'),}); 
                         break;
                     }
                     
@@ -274,7 +274,7 @@ export class ClientSelectTileAction {
                                 let playersBaseHarvest = args.previousArgs.playersBaseHarvest[opponentId];
                                 this.game.addClickHandlerOnProgressMarker(
                                     2,
-                                    this.bga.gameui.format_string(_('Action : ${name}'),{'name':  _('Harvest')}),
+                                    this.bga.gameui.format_string(_('Action : ${name}'),{'name':  _('Produce')}),
                                     opponentId,
                                     () => this.bga.states.setClientState("ClientHarvestResources", {
                                         descriptionmyturn: '',
@@ -294,7 +294,7 @@ export class ClientSelectTileAction {
                             case this.game.const.ACTION_MONEY: 
                                 this.game.addClickHandlerOnProgressMarker(
                                     3,
-                                    this.bga.gameui.format_string(_('Action : ${name}'),{'name':  _('Taxes')}),
+                                    this.bga.gameui.format_string(_('Action : ${name}'),{'name':  _('Collect Taxes')}),
                                     opponentId,
                                     () => this.game.customPerformAction("actTileChoice", { 
                                                 'tile_id' : tile_id,
@@ -308,7 +308,7 @@ export class ClientSelectTileAction {
                                 let playerBaseContracts = args.previousArgs.playersBaseContracts[opponentId];
                                 this.game.addClickHandlerOnProgressMarker(
                                     5,
-                                    this.bga.gameui.format_string(_('Action : ${name}'),{'name':  _('Found Outpost')}),
+                                    this.bga.gameui.format_string(_('Action : ${name}'),{'name':  _('Establish Outpost')}),
                                     opponentId,
                                     () => this.bga.states.setClientState("ClientFoundOutpost", {
                                             descriptionmyturn: '',

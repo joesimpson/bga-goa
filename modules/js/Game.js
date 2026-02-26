@@ -227,11 +227,11 @@ export class Game {
                         ${this.tplResourceCounter(player,'explo_symbol_tiny_6',this.getCardSymbolName(6))}
                     </div>
                     <div class='goa_player_counters_line goa_player_counters_lastline'>
-                        <div id="goa_first_player_container_${player.id}" class="goa_first_player_container" alt="${_('Starting player')}" title="${_('Starting player')}"></div>
+                        <div id="goa_first_player_container_${player.id}" class="goa_first_player_container" alt="${_('Nazar Stone (Starting player)')}" title="${_('Nazar Stone (Starting player)')}"></div>
                     </div>
                 </div>
             `);
-            this.bga.gameui.addTooltipHtmlToClass(`goa_first_player_container`, _('Starting player'));
+            this.bga.gameui.addTooltipHtmlToClass(`goa_first_player_container`, _('Nazar Stone (Starting player)'));
 
             this._counters[player.id] = {};
             this.createCounter(player.id,'exploration_hand_size',player.exploration_hand_size);
@@ -1751,7 +1751,7 @@ export class Game {
         let descriptionMap = new Map([
             [this.const.MARKET_TYPE_PLANTATION, this.bga.gameui.format_string(_("Plantation"),{ })] ,
             [this.const.MARKET_TYPE_ACTION_REUSEABLE, this.bga.gameui.format_string( _('Multi-use action'),{ } )],
-            [this.const.MARKET_TYPE_ACTION_DIRECT, this.bga.gameui.format_string(_("Immediate gain"),{ })] ,
+            [this.const.MARKET_TYPE_ACTION_DIRECT, this.bga.gameui.format_string(_("Immediate bonuses"),{ })] ,
             [this.const.MARKET_TYPE_ACTION_ONCE, this.bga.gameui.format_string(_("Single use Action"),{ })] ,
             [this.const.MARKET_TYPE_SCORING, this.bga.gameui.format_string(_("Scoring"),{ })] ,
             
@@ -1769,13 +1769,13 @@ export class Game {
         switch (tile.subtype )
         {
             case this.const.TILE_SUBTTYPE_OUTPOST:
-                return this.bga.gameui.format_string(_("When you found an outpost, place the outpost tile on the matching space of your personal board. After founding an outpost, fill it with the appropriate spices from the supply. To found an outpost with the appropriate action, a player needs to recruit a minimum number of contracts: ${n} contracts for this one."),{ n : this.getNbContractsForColony(tile.colony) });
+                return this.bga.gameui.format_string(_("When you establish an outpost, place the outpost tile on the matching space of your personal board. After establishing an outpost, fill it with the appropriate goods from the supply. To establish an outpost with the appropriate action, a player needs to recruit a minimum number of contracts: ${n} contracts for this one."),{ n : this.getNbContractsForColony(tile.colony) });
             case this.const.TILE_SUBTTYPE_MARKET: 
                 descriptionMap = new Map([
                     [this.const.MARKET_TYPE_PLANTATION, this.bga.gameui.format_string(_("When you build a plantation, put it face up in one of the upper spaces of your personal board. Plantations have 1 to 3 spice fields; this one have ${x}. After building a plantation, fill the field(s) with the appropriate spice token(s). If you already own 4 plantations on your personal board, you must first discard 1 plantation, and any spice tokens still on it, before placing the 5th one. If the discarded plantation has a scoring symbol on it, keep the plantation face down in your play area. This plantation is worth ${n} points at the end of the game, whether it is face up on your personal board or face down in your play area."),{ x: tile.spice_slots.length , n : tile.end_score })] ,
-                    [this.const.MARKET_TYPE_ACTION_REUSEABLE, this.bga.gameui.format_string( _(' For this tile, players must put it face up in their play area. They can use it before, during or after their action. This tile can be played during a future action, but only once per round. After using it, the player must flip it and may no longer use it for the rest of the round. At the beginning of the following round, players flip the tile face up and can use it again.'),{ } )],
-                    [this.const.MARKET_TYPE_ACTION_DIRECT, this.bga.gameui.format_string(_("When a player acquires this tile, they immediately take the appropriate resources. After being used, the tile is discarded."),{ })] ,
-                    [this.const.MARKET_TYPE_ACTION_ONCE, this.bga.gameui.format_string(_("This tile may only be used once during the game. Once used, the tile is discarded."),{ })] ,
+                    [this.const.MARKET_TYPE_ACTION_REUSEABLE, this.bga.gameui.format_string( _('Blue Tile : players must put it face up in their play area. They can use it before, during or after their action. This tile can be played during a future action, but only once per round. After using it, the player must flip it and may no longer use it for the rest of the round. At the beginning of the following round, players flip the tile face up and can use it again.'),{ } )],
+                    [this.const.MARKET_TYPE_ACTION_DIRECT, this.bga.gameui.format_string(_("Teal Tile : When a player acquires this tile, they immediately take the appropriate resources. After being used, the tile is discarded."),{ })] ,
+                    [this.const.MARKET_TYPE_ACTION_ONCE, this.bga.gameui.format_string(_("Yellow Tile : This tile may only be used once during the game. Once used, the tile is discarded."),{ })] ,
                     [this.const.MARKET_TYPE_SCORING, this.formatScoringTileText(tile)] ,
                 ]);
                 break;
@@ -1891,16 +1891,22 @@ export class Game {
                         break;
                     case this.const.MARKET_TYPE_ACTION_ONCE: 
                         let actionDescriptionMap = new Map([
-                                [this.const.ACTION_SWAP, this.bga.gameui.format_string(_('When you buy the Swap tile, place it face up in your play area. During one of your later action turns, you may take 1 tile of your choice from the board and put it face up in your play area. Put the Swap tile, face up, in the space previously occupied by the tile you just took. You may use the tile that you obtained with the Swap tile as soon as you acquire it or later in the game. The Swap tile can be auctioned again, as per the normal rules. '),{}) + '<br/>' + _('Bonanza variant: If the Swap tile is used in one of the corners, you also take the Bonanza tile.') ],
-                                [this.const.ACTION_RESUPPLY, this.bga.gameui.format_string(_('Reveal ${n} Exploration cards and add the contracts shown on these cards. Then, take this sum in spices, contracts or ships. You choose the resource type after seeing the result. You can only choose one type of resource. Discard the Exploration cards after.'),{n:2})],
-                                [this.const.ACTION_HARVEST, this.bga.gameui.format_string(_('Fill up to ${n} of your plantations and/or outposts with the appropriate spices.'),{n :3})],
+                                [this.const.ACTION_SWAP, this.bga.gameui.format_string(_('Exchange : When you buy the Exchange tile, place it face up in your play area. During one of your later action turns, you may take 1 tile of your choice from the market and put it face up in your play area. Put the Exchange tile, face up, in the space previously occupied by the tile you just took. You may use the tile that you obtained with the Exchange tile as soon as you acquire it or later in the game. The Exchange tile can be auctioned again, as per the normal rules. '),{}) + '<br/>' + _('Bonanza variant: If the Exchange tile is used in one of the corners, you also take the Bonanza tile.') ],
+                                [this.const.ACTION_RESUPPLY, this.bga.gameui.format_string(_('Resupply: Reveal ${n} Exploration cards. Add together their Contract values, then gain that many Goods, Contracts, or Ships (your choice). Discard the Exploration Cards afterward.'),{n:2})],
+                                [this.const.ACTION_HARVEST, this.bga.gameui.format_string(_('Great Harvest: Fill up to ${n} of your Depots and/or Outposts with the appropriate Goods from the supply.'),{n :3})],
                                 [this.const.ACTION_ESPIONAGE, this.bga.gameui.format_string(
-                                    bga_format( _("Espionage: Choose an opponent and do one of these actions, using the position of this player's Progress marker in the appropriate column: _*Build ships,* *Harvest,* *Taxes,* *Found an outpost*_ "), {
-                                        '*': (t) => '<li>' + t + '</li>',
-                                        '_': (t) => '<ul>' + t + '</ul>',
-                                    })
-                                    ,{ }) + '<br/>' + _('That tile cannot be used to obtain Exploration cards.')],
-                                [this.const.ACTION_VICEKING, this.bga.gameui.format_string(_('Without paying any resources, move your least advanced Progress marker (the one closest to the top) down on your Development board. If you have more than one marker in this row, move one of these markers, your choice.'),{})],
+                                     _("Espionage: Choose an opponent and do one of these actions, using the position of this player's Progress marker in the appropriate column: ${actions} "), 
+                                    { 
+                                        'actions': '<ul>' 
+                                            +  '<li>' + _('Build Ships') + '</li>'
+                                            +  '<li>' + _('Produce') + '</li>'
+                                            +  '<li>' + _('Collect Taxes') + '</li>'
+                                            +  '<li>' + _('Establish an Outpost') + '</li>'
+                                            + '</ul>', 
+                                    }) 
+                                    + '<br/>' 
+                                    + _('That tile cannot be used to obtain Exploration cards.')],
+                                [this.const.ACTION_VICEKING, this.bga.gameui.format_string(_('Viceroy: Move your highest Progress Marker down one row for free. If several markers are tied for highest, choose one.'),{})],
                             ]);
                         Object.entries( this.gamedatas.material.tiles[tile.subtype][tile.type].actions ).forEach(([action_type,number]) => {
                             description += actionDescriptionMap.get(parseInt(action_type));
@@ -2208,7 +2214,7 @@ export class Game {
                 action_gains = this.const.PROGRESS_GAINS_SHIPS;
                 break;
             case 2:  
-                action_label = _('Harvest');
+                action_label = _('Produce');
                 action_gains = this.const.PROGRESS_GAINS_HARVEST;
                 action_desc = this.bga.gameui.format_string(
                             _("Take n ${resource_name} ${icon_resource} where n is indicated on the row of your progress marker on this column.")
@@ -2219,7 +2225,7 @@ export class Game {
                         );
                 break;
             case 3:  
-                action_label = _('Taxes');
+                action_label = _('Collect Taxes');
                 action_gains = this.const.PROGRESS_GAINS_TAXES;
                 action_desc = this.bga.gameui.format_string(
                             _("Take n ${resource_name} ${icon_resource} where n is indicated on the row of your progress marker on this column.")
@@ -2243,7 +2249,7 @@ export class Game {
                 });
                 break;
             case 5: 
-                action_label = _('Found Outpost');
+                action_label = _('Establish Outpost');
                 action_gains = this.const.PROGRESS_GAINS_OUTPOST;
 
                 let action_gains_desc = '<ul>';
@@ -2253,12 +2259,12 @@ export class Game {
                 action_gains_desc += '</ul>';
                 
                 action_desc = '<ul>'
-                            + '<li>' + this.bga.gameui.format_string( _("Choose an unfounded outpost."),{  } ) + '</li>'
+                            + '<li>' + this.bga.gameui.format_string( _("Choose an unestablished outpost."),{  } ) + '</li>'
                             + '<li>' + this.bga.gameui.format_string( _("The row of your progress marker will give a base number of contracts."),{  } ) + '</li>'
                             + '<li>' + action_gains_desc + '</li>' 
                             + '<li>' + this.bga.gameui.format_string( _("Flip ${n} exploration cards and add their contracts to those on your player board."),{ n: 2 } ) + '</li>'
                             + '<li>' + this.bga.gameui.format_string( _("You may add any number of contracts from your hand."),{  } ) + '</li>'
-                            + '<li>' + this.bga.gameui.format_string( _("If you successfully meet the requirement of the chosen outpost, take it and place it on your board, filling the resources spots on it; if not you draw ${n} ${icon_card}"),{ n:1, icon_card: this.formatIcon('contracts',_('Contracts')) } ) + '</li>'
+                            + '<li>' + this.bga.gameui.format_string( _("If you successfully meet the requirement of the chosen outpost, take it and place it on your board, filling the Goods spots on it; if not you draw ${n} ${icon_card}"),{ n:1, icon_card: this.formatIcon('contracts',_('Contracts')) } ) + '</li>'
                         + '</ul>'
                         ;
 
@@ -2459,7 +2465,7 @@ export class Game {
             textSymbols += '<br>'+_('Victory points at the end of the game (if not played) : ');
             textSymbols += '<ul>';
             Object.entries(this.const.END_SCORE_EXPLORATION).forEach(([nbCards,score]) => {
-                textSymbols += '<li>'+this.bga.gameui.format_string( _(' ${n} identical symbols => ${x} points '), {'n':nbCards, 'x': score} ) +  '</li>'; 
+                textSymbols += '<li>'+this.bga.gameui.format_string( _(' ${n} identical Island Symbol => ${x} points '), {'n':nbCards, 'x': score} ) +  '</li>'; 
             });
             textSymbols += '</ul>'
         }
@@ -2473,12 +2479,12 @@ export class Game {
             let iconsContracts = this.formatIcon('contracts',_('Contracts'));
             for(let k=2;k<=cardDatas.contracts;k++) iconsContracts += this.formatIcon('contracts',_('Contracts'));
             textLine1 = this.bga.gameui.format_string( 
-                _('When revealing and discarding this card to found an outpost, this gives ${n} ${resource_name} : ${icon_resource}'),
+                _('When revealing and discarding this card to establish an outpost, this gives ${n} ${resource_name} : ${icon_resource}'),
                 {'n': cardDatas.contracts , resource_name: _('Contracts'), icon_resource: iconsContracts}
             );
             title = _('Exploration card');
             textSymbols = this.bga.gameui.format_string( 
-                _('Gives the symbol ${s_icon} (${s_name})'),
+                _('Gives the Island Symbol ${s_icon} (${s_name})'),
                 { s_name: this.getCardSymbolName( cardDatas.symbol ), s_icon: this.formatSymbolIcon(cardDatas.symbol)}
             );
             textSymbols += this.getCardTooltipSymbolsInfos(cardDatas);
@@ -2504,35 +2510,35 @@ export class Game {
 
     formatCardActionText(card){
         switch(card.action){
-            case this.const.CARD_ACTION_PROGRESS_NO_SPICE:  return _('Type a: When performing the Progress action, you only need to pay the Ships, you can ignore the Resource costs.');
-            case this.const.CARD_ACTION_PROGRESS_NO_SHIP:   return _('Type b: When performing the Progress action, you only need to pay the Resources, you can ignore the Ship costs.');
-            case this.const.CARD_ACTION_HARVEST_AND_CARDS:  return _('Type c: When performing the Harvest action, you may take any combination of Resources, Ships, and/or Contracts instead of only Resources.');
-            case this.const.CARD_ACTION_OUTPOST_EXTRA_CONTRACTS : return _('Type d: When performing the Found Outpost action, you may draw one extra exploration card and add its Contracts to your total.');
+            case this.const.CARD_ACTION_PROGRESS_NO_SPICE:  return _('Ability a: When performing the Progress action, you only need to pay the Ships, you can ignore the Goods costs');
+            case this.const.CARD_ACTION_PROGRESS_NO_SHIP:   return _('Ability b: When performing the Progress action, you only need to pay the Goods, you can ignore the Ship costs');
+            case this.const.CARD_ACTION_HARVEST_AND_CARDS:  return _('Ability c: When performing the Produce action, you may take any combination of Goods, Ships, and/or Contracts instead of only Goods.');
+            case this.const.CARD_ACTION_OUTPOST_EXTRA_CONTRACTS : return _('Ability d: When performing the Establish an Outpost action, you may draw one extra Exploration Card and add its Contracts to your total. You may play this card after revealing the first 2 cards.');
             case this.const.CARD_ACTION_RESSOURCES_TO_COINS  : 
                 let gains = this.const.CARD_GAINS_RESSOURCES_TO_COINS;
                 let [a,b,c,d] =  Object.keys(gains);
                 let [w,x,y,z] =  Object.values(gains);
-                return this.bga.gameui.format_string(_('Type e: You may spend ${a}/${b}/${c}/${d} Resources to gain ${w}/${x}/${y}/${z} Pardaos.') ,
+                return this.bga.gameui.format_string(_('Ability e: You may spend ${a}/${b}/${c}/${d} Goods to gain ${w}/${x}/${y}/${z} Pardaos.') ,
                     { 'a':a,'b':b,'c':c,'d':d,  'w':w,'x':x,'y':y,'z':z, }
                 );
-            case this.const.CARD_ACTION_2_SPICES             : return this.bga.gameui.format_string(_('Type ${x} : ${gain}') ,
+            case this.const.CARD_ACTION_2_SPICES             : return this.bga.gameui.format_string(_('Ability ${x} : ${gain}') ,
                     { 'x':'f', 'gain': this.formatTileSpicesText({'spice_slots':[this.const.SPICES_ALL,this.const.SPICES_ALL]}) }
                 );
-            case this.const.CARD_ACTION_2_CONTRACTS          : return this.bga.gameui.format_string(_('Type ${x} : ${gain}') ,
+            case this.const.CARD_ACTION_2_CONTRACTS          : return this.bga.gameui.format_string(_('Ability ${x} : ${gain}') ,
                     { 'x':'g', 'gain': this.bga.gameui.format_string(
                             _("Take ${n} ${resource_name} : ${icon_resource}.")
                             ,{n:2, 'resource_name': _('Contracts'), icon_resource : this.formatIcon('contracts',_('Contracts'))}
                         )
                     }
                 );
-            case this.const.CARD_ACTION_2_SHIPS              : return this.bga.gameui.format_string(_('Type ${x} : ${gain}') ,
+            case this.const.CARD_ACTION_2_SHIPS              : return this.bga.gameui.format_string(_('Ability ${x} : ${gain}') ,
                     { 'x':'h', 'gain': this.bga.gameui.format_string(
                             _("Take ${n} ${resource_name} : ${icon_resource}.")
                             ,{n:2, 'resource_name': _('Ships'), icon_resource : this.formatIcon('ships',_('Ships'))}
                         )
                     }
                 );
-            case this.const.CARD_ACTION_5_COINS              : return this.bga.gameui.format_string(_('Type ${x} : ${gain}') ,
+            case this.const.CARD_ACTION_5_COINS              : return this.bga.gameui.format_string(_('Ability ${x} : ${gain}') ,
              { 'x':'i', 'gain': this.bga.gameui.format_string(
                     _("Take ${n} ${resource_name} : ${icon_resource}.")
                     ,{n:5, 'resource_name': _('Coins'), icon_resource : this.formatIcon('money',_('Coins'))}
@@ -2540,7 +2546,7 @@ export class Game {
              }
             );
             case this.const.CARD_ACTION_PROGRESS_WITH_COINS  : return this.bga.gameui.format_string(
-                    _('Type j: Spend ${a}/${b}/${c}/${d} Pardaos to advance a Progress marker of your choice to the 2nd/3rd/4th/5th row.')
+                    _('Ability j: Spend ${a}/${b}/${c}/${d} Pardaos to advance a Progress marker of your choice to the 2nd/3rd/4th/5th row.')
                     , { 
                         a: this.const.PROGRESS_COST_AS_COINS[2],
                         b: this.const.PROGRESS_COST_AS_COINS[3],

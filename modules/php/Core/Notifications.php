@@ -259,7 +259,7 @@ class Notifications
   public static function tryFoundOutpost(Player $player, Tile $tile, int $nbContracts)
   {
     $colonyName = Utils::getColonyName($tile->getColony());
-    self::notifyAll("tryFoundOutpost", clienttranslate('${player_name} tries to found the ${name} outpost ${tile_icon} which requires ${n} ${icon_contracts}'), [
+    self::notifyAll("tryFoundOutpost", clienttranslate('${player_name} tries to establish the ${name} outpost ${tile_icon} which requires ${n} ${icon_contracts}'), [
         "player" => $player,
         "tile" => $tile->getUiData(),
         "tile_icon" => '',
@@ -281,7 +281,7 @@ class Notifications
   }
   public static function resultFoundOutpost(Player $player, int $nbContracts)
   {
-    self::notifyAll("resultFoundOutpost", clienttranslate('Cards reveal ${n} ${icon_contracts} to found the outpost'), [
+    self::notifyAll("resultFoundOutpost", clienttranslate('Cards reveal ${n} ${icon_contracts} to establish the outpost'), [
         "player" => $player,
         "n" => $nbContracts,
         "icon_contracts" => clienttranslate('Contracts'),
@@ -289,7 +289,7 @@ class Notifications
   }
   public static function abandonOutpost(Player $player, Tile $tile)
   {
-    self::notifyAll("abandonOutpost", clienttranslate('${player_name} chooses not to found the outpost'), [
+    self::notifyAll("abandonOutpost", clienttranslate('${player_name} chooses not to establish the outpost'), [
         "player" => $player,
     ]);
   }

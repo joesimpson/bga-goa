@@ -42,12 +42,12 @@
       }
       ,"progressHarvest": {
         "id": 22,
-        "name": "Progress row : Harvest",
+        "name": "Progress row : Produce",
         "type": "int"
       }
       ,"progressTaxes": {
         "id": 23,
-        "name": "Progress row : Taxes",
+        "name": "Progress row : Collect Taxes",
         "type": "int"
       }
       ,"progressExploration": {
@@ -57,7 +57,7 @@
       }
       ,"progressFound": {
         "id": 25,
-        "name": "Progress row : Found Outpost",
+        "name": "Progress row : Establish an Outpost",
         "type": "int"
       }
       
@@ -69,7 +69,7 @@
       
       ,"playedPlantations": {
         "id": 31,
-        "name": "Played plantations",
+        "name": "Played depots",
         "type": "int"
       }
       ,"playedOutposts": {
@@ -92,7 +92,7 @@
       
       ,"receivedSpices": {
         "id": 40,
-        "name": "Received resources on tiles spots",
+        "name": "Received goods on depots/outposts spots",
         "type": "int"
       }
     },
