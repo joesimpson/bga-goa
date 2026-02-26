@@ -808,8 +808,8 @@ export class Game {
 
     }
 
-    updateHandSelectable(args){
-        this.customDebug("updateHandSelectable",args);
+    updateHandSelectable(args, updateTiles = true){
+        this.customDebug("updateHandSelectable",args, updateTiles);
         let possibleActions = args.possibleActions;
         if(!possibleActions) possibleActions = [];
         //Manage various actions on hand cards with a unique handler
@@ -867,7 +867,7 @@ export class Game {
             }
         };  
 
-        this.updateTilesHandSelectable(args);
+        if(updateTiles) this.updateTilesHandSelectable(args);
 
     }
     updateTilesHandSelectable(args){
@@ -2426,7 +2426,7 @@ export class Game {
             } else if(container.startsWith(`goa_exploration_hand`)){
                 //use bga-cards stock
                 await this.explorationHand.addCard(card);
-                this.updateHandSelectable(this.gamedatas.gamestate.args);
+                this.updateHandSelectable(this.gamedatas.gamestate.args, false);
                 let currentPlayer = this.bga.players.getCurrentPlayer();
                 if (currentPlayer) {
                     this._counters[currentPlayer.id]['explo_symbol_tiny_'+card.symbol].incValue(1);
