@@ -179,6 +179,18 @@ export class PlayerTurn {
                 this.game.addClickHandlerOnProgressMarker(3,actionHint,activePlayer,() => this.game.customPerformAction("actTaxes"));
             }
             
+            if(possibleActions.includes('actExploration') && args.nbCardsExploration>0){
+                let actionName = _('Exploration');
+                let actionHint = this.bga.gameui.format_string(_('Action : ${name}'),{'name': actionName});
+                this.bga.statusBar.addActionButton(
+                    this.bga.gameui.format_string( 
+                        _('Explore : +${n} ${icon_explo}'),
+                        {'n' : args.nbCardsExploration, 'icon_explo': this.game.formatIcon('exploration_card',_('Exploration card'))},
+                    ), () => this.game.customPerformAction("actExploration"), { 'title':actionHint,destination: document.getElementById('customPrimary') }); 
+                //+ CLICK ON BOARD section
+                this.game.addClickHandlerOnProgressMarker(4,actionHint,activePlayer,() => this.game.customPerformAction("actExploration"));
+            }
+            
             if(possibleActions.includes('actFoundOutpost') && args.outpostsToFound.length>0){
                 let actionName = _('Found Outpost');
                 let actionHint = this.bga.gameui.format_string(_('Action : ${name}'),{'name': actionName});
@@ -195,18 +207,6 @@ export class PlayerTurn {
                     , { 'title':actionHint,destination: document.getElementById('customPrimary') }); 
                 //+ CLICK ON BOARD section
                 this.game.addClickHandlerOnProgressMarker(5,actionHint,activePlayer,() => goToNext());
-            }
-            
-            if(possibleActions.includes('actExploration') && args.nbCardsExploration>0){
-                let actionName = _('Exploration');
-                let actionHint = this.bga.gameui.format_string(_('Action : ${name}'),{'name': actionName});
-                this.bga.statusBar.addActionButton(
-                    this.bga.gameui.format_string( 
-                        _('Explore : +${n} ${icon_explo}'),
-                        {'n' : args.nbCardsExploration, 'icon_explo': this.game.formatIcon('exploration_card',_('Exploration card'))},
-                    ), () => this.game.customPerformAction("actExploration"), { 'title':actionHint,destination: document.getElementById('customPrimary') }); 
-                //+ CLICK ON BOARD section
-                this.game.addClickHandlerOnProgressMarker(4,actionHint,activePlayer,() => this.game.customPerformAction("actExploration"));
             }
             
             this.game.updateHandSelectable(args);
