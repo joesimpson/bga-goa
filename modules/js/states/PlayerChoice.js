@@ -175,9 +175,17 @@ export class ClientSelectTileAction {
                     }, {  destination: document.getElementById('customPrimary'),'title':_('Select this tile'),  }); 
                     break;
                 case this.game.const.CHOICE_PICK_SPICE:
+                    this.bga.statusBar.setTitle(
+                            isCurrentPlayerActive ? 
+                            _("${you} must select the next good to fill that depot/outpost") :
+                            _("${actplayer} must select the next good to fill the depot/outpost")
+                        );
                     let tileToFill = document.getElementById(`goa_tile-${tile_id}`);
                     //if(!tileToFill && isOutpost) tileToFill = document.getElementById(`goa_outpost-${tile_id}`);
-                    if(tileToFill) tileToFill.classList.add('selected');
+                    if(tileToFill){
+                        tileToFill.classList.add('selected');
+                        tileToFill.scrollIntoView({'behavior': 'smooth', 'block':'center'});
+                    }
                     let spice_icon = this.game.formatIcon('spices_'+choice,_('Spices'));
                     this.bga.statusBar.addActionButton( spice_icon, () => {
                         this.game.customPerformAction("actTileChoice", { 
