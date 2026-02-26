@@ -2460,15 +2460,16 @@ export class Game {
         }
     }
     getCardTooltipSymbolsInfos(cardDatas) {
-        let textSymbols = '';
+        let textSymbols = '<div class="goa_card_symbols_score">';
         if(cardDatas.subtype == this.const.CARD_SUBTTYPE_EXPLORATION){
             textSymbols += '<br>'+_('Victory points at the end of the game (if not played) : ');
             textSymbols += '<ul>';
             Object.entries(this.const.END_SCORE_EXPLORATION).forEach(([nbCards,score]) => {
                 textSymbols += '<li>'+this.bga.gameui.format_string( _(' ${n} identical Island Symbol => ${x} points '), {'n':nbCards, 'x': score} ) +  '</li>'; 
             });
-            textSymbols += '</ul>'
+            textSymbols += '</ul>';
         }
+        textSymbols += '</div>';
         return textSymbols;
     }
     getCardTooltip(cardDatas) {
