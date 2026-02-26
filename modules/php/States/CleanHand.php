@@ -53,7 +53,7 @@ class CleanHand extends GameState
             ],
         ];
 
-        PlayerTurn::addArgsForCardPlay($player,$args, );
+        PlayerTurn::addArgsForCardPlay($player,$args, null, true );
 
         ConfirmTurn::addArgsForUndo($args);
         return $args;

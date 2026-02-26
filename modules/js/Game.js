@@ -781,16 +781,23 @@ export class Game {
         }
     }
 
-    updateHandSelectable(args){
-        this.customDebug("updateHandSelectable",args);
+    updateHandSelectableList(args){
+        this.customDebug("updateHandSelectableList",args);
         let possibleActions = args.possibleActions;
-        let activePlayer = this.bga.players.getActivePlayerId();
         //Manage various actions on hand cards with a unique handler
         let possibleDiscards = args.possibleDiscards; 
         let possiblePlayCards = args.possiblePlayCards; 
-        let possibleActionRightNow = (possibleDiscards || possiblePlayCards);
+        let possibleActionDiscard = possibleActions && possibleActions.includes('actDiscard');
+        let possibleActionPlay = possibleActions && possibleActions.includes('actPlayCard');
+        let possibleActionRightNow = (
+                possibleActionDiscard && possibleDiscards 
+            || possibleActionPlay && possiblePlayCards
+        );
         let handCards = this.explorationHand.getCards();
-        let selectableCards = handCards.filter((card, index) => possibleDiscards && possibleDiscards.includes(card.id) || possiblePlayCards && Object.keys(possiblePlayCards).includes(""+card.id) );
+        let selectableCards = handCards.filter((card, index) => 
+            possibleDiscards && possibleDiscards.includes(card.id) && possibleActionDiscard
+         || possiblePlayCards && Object.keys(possiblePlayCards).includes(""+card.id) && possibleActionPlay
+        );
         if(selectableCards.length>0 || handCards.length==0 && possibleActionRightNow){
             this.explorationHand.setSelectionMode('single');
             this.explorationHand.setSelectableCards(selectableCards);
@@ -799,8 +806,20 @@ export class Game {
             this.explorationHand.setSelectionMode('none');
         }
 
+    }
+
+    updateHandSelectable(args){
+        this.customDebug("updateHandSelectable",args);
+        let possibleActions = args.possibleActions;
+        if(!possibleActions) possibleActions = [];
+        //Manage various actions on hand cards with a unique handler
+        let possibleDiscards = args.possibleDiscards; 
+        let possiblePlayCards = args.possiblePlayCards; 
+
+        this.updateHandSelectableList(args);
+
         this.explorationHand.onSelectionChange = (x, card) => {
-            this.customDebug("HAND onSelectionChange",card, selectableCards);
+            this.customDebug("HAND onSelectionChange",card,);
             let isSelected = this.explorationHand.isSelected(card);
             this.explorationHand.removeLastPlayedCardsClass();
             if(!card) return;
@@ -819,10 +838,9 @@ export class Game {
                         'card': cardDatas,
                         'isPlayableCard': isPlayableCard,
                         'isDiscardableCard': isDiscardableCard,
-                        //keep trace of all selectable to change selection at anytime
-                        //'selectableCards': selectableCards,
                         'possibleDiscards': possibleDiscards,
                         'possiblePlayCards': possiblePlayCards,
+                        'possibleActions': possibleActions,
                         //keep previous state datas in order to go back when cancel 
                         'previousClientState' : clientState,
                     },
@@ -2386,6 +2404,7 @@ export class Game {
             } else if(container.startsWith(`goa_exploration_hand`)){
                 //use bga-cards stock
                 await this.explorationHand.addCard(card);
+                this.updateHandSelectable(this.gamedatas.gamestate.args);
                 let currentPlayer = this.bga.players.getCurrentPlayer();
                 if (currentPlayer) {
                     this._counters[currentPlayer.id]['explo_symbol_tiny_'+card.symbol].incValue(1);

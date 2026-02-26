@@ -24,6 +24,7 @@ export class ClientCardAction {
         this.game.explorationHand.setSelectionMode('single');
         let selectableCards = this.game.explorationHand.getCards().filter((card, index) => possibleDiscards.includes(card.id) || Object.keys(possiblePlayCards).includes(""+card.id) );
         //this.game.explorationHand.setSelectableCards(selectableCards);
+        this.game.updateHandSelectableList(args);
 
         this.game.explorationHand.setLastPlayedCards([args.card]);
 

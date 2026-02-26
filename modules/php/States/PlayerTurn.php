@@ -1154,7 +1154,12 @@ class PlayerTurn extends GameState
 
     // -----------------------------
 
-    public static function addArgsForCardPlay($player, array &$args, array|null $actionsWhiteList = null){
+    public static function addArgsForCardPlay(
+        Player $player, 
+        array &$args, 
+        array|null $actionsWhiteList = null, 
+        bool $withDiscard = false,
+    ){
         Game::get()->trace("PlayerTurn.addArgsForCardPlay(".json_encode($actionsWhiteList).")");
         $roundStep = Globals::getRoundStep();
         
@@ -1164,7 +1169,7 @@ class PlayerTurn extends GameState
                 $args['possibleDiscards'] = $discardableCards->getIds();
                 $playableCards = Cards::getPossibleToPlay($player, $args,$actionsWhiteList);
                 $args['possiblePlayCards'] = $playableCards;
-                if( $discardableCards->count()>0){
+                if( $discardableCards->count()>0 && $withDiscard){
                     $args['possibleActions'][] = 'actDiscard';
                 }
                 if( $playableCards->count()>0){
@@ -1176,7 +1181,11 @@ class PlayerTurn extends GameState
 
     }
     
-    public static function addArgsForTilePlay($player, array &$args, array|null $actionsWhiteList = null){
+    public static function addArgsForTilePlay(
+        Player $player, 
+        array &$args, 
+        array|null $actionsWhiteList = null
+    ){
         Game::get()->trace("PlayerTurn.addArgsForTilePlay(".json_encode($actionsWhiteList).")");
         $roundStep = Globals::getRoundStep();
         
