@@ -333,6 +333,22 @@ class Notifications
         '_private' => $privateDatas,
     ]);
   }
+
+  public static function cleanHandStart(Player $player, int $limit)
+  {
+    self::notifyAll("cleanHandStart", clienttranslate('${player_name} exceeds his hand limit (${n}) and must play and/or discard Exploration cards'), [
+        "player" => $player,
+        "n" => $limit,
+    ]);
+  }
+  
+  public static function cleanHandEnd(Player $player, int $handSize)
+  {
+    self::notifyAll("cleanHandEnd", clienttranslate('${player_name} now reaches his hand limit (${n})'), [
+        "player" => $player,
+        "n" => $handSize,
+    ]);
+  }
   
   public static function getMoney(Player $player, int $amount, )
   {

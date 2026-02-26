@@ -100,13 +100,29 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
   public static function maxExplorationToDraw(Player $player) :int
   {
     $playerId = $player->getId();
-    $nbCardsInHand = Cards::countInExplorationHand($playerId);
     $progressMarker = Tokens::getProgressMarkerByType(TOKEN_TYPE_PROGRESS_MARKER_EXP,$playerId);
     $gains = PROGRESS_GAINS_EXPLO[$progressMarker->getRow() - 1];
     $nbMaxInHand = $gains['max'];
     $delta = $gains['plus'];
-    $possibleDelta = $nbMaxInHand - $nbCardsInHand;
-    return max( 0, min($delta, $possibleDelta));
+    
+    {
+      //If we want to forbid drawing cards when already at max 
+      //$nbCardsInHand = Cards::countInExplorationHand($playerId);
+      //$possibleDelta = $nbMaxInHand - $nbCardsInHand;
+      //return max( 0, min($delta, $possibleDelta));
+    }
+    {
+      //If we allow to draw cards BEFORE discarding to reach max limit
+      return $delta;
+    }
+  }
+  
+  public static function maxExplorationToKeep(Player $player) :int
+  {
+    $playerId = $player->getId();
+    $progressMarker = Tokens::getProgressMarkerByType(TOKEN_TYPE_PROGRESS_MARKER_EXP,$playerId);
+    $gains = PROGRESS_GAINS_EXPLO[$progressMarker->getRow() - 1];
+    return $gains['max'];
   }
 
   public static function getPossibleToDiscard(Player $player) : Collection

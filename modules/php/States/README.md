@@ -17,12 +17,12 @@ Visual Diagram (hand made), in order to keep a trace of each possible transition
                     nextPlayer  <---------------------\      |  |
                     |                                 ^      |  |
                     v                                 |      |  |
-               playerTurn   -------\                  |      |  |
-                      |   <--\     |                  |      |  |
-                      v      |     |                  |      |  |
-               playerChoice->/     |                  |      |  |
-                           ->\     |                  |      |  |
-                             |     |                  |      |  |
+          /---> playerTurn   ------\                  |      |  |
+          |     |        |   <--\  |                  |      |  |
+          |     |        v      |  |                  |      |  |
+          |     | playerChoice->/  |                  |      |  |
+          |     v           ->\    |                  |      |  |
+          \<--- cleanHand    |     |                  |      |  |
                              |     |                  |      |  |
                              |     |                  |      |  |
                              v     v                  |      |  |

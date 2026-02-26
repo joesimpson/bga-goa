@@ -22,6 +22,7 @@ const [BgaHelp,BgaZoom] = await globalThis.importDojoLibs([g_gamethemeurl + "mod
 //import * as bgz from "./ext/bga-zoom.js";
 //import * as bgh from "./ext/bga-help.js";
 
+import { CleanHand } from "./states/CleanHand.js";
 import { ConfirmTurn } from "./states/ConfirmTurn.js";
 import { ClientCardAction } from "./states/ClientCardAction.js";
 import { ClientHarvestResources } from "./states/ClientHarvestResources.js";
@@ -70,7 +71,9 @@ export class Game {
         this.bga.states.register('ClientFoundOutpost', this.clientFoundOutpost);
         this.clientHarvestResources = new ClientHarvestResources(this, bga);
         this.bga.states.register('ClientHarvestResources', this.clientHarvestResources);
-        
+        this.cleanHand = new CleanHand(this, bga);
+        this.bga.states.register('CleanHand', this.cleanHand);
+
         // Uncomment the next line to show debug informations about state changes in the console. Remove before going to production!
         this.bga.states.logger = this.customDebug;
 

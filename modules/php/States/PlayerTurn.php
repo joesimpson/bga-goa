@@ -318,11 +318,37 @@ class PlayerTurn extends GameState
     )
     { 
         Utils::checkVersion($v);
-        $this->game->trace("actProgress($track,$card_id,$tile_id,$activePlayerId)");
+        $this->game->trace("PlayerTurn.actProgress($track,$card_id,$tile_id,$activePlayerId)");
         $possibleActions = $args['possibleActions'];
         if(!in_array('actProgress',$possibleActions)){
             throw new UnexpectedException(110,"Invalid action actProgress, see ".json_encode($possibleActions));
         }
+
+        Log::addStep();
+        $doCheckpoint = false;
+        PlayerTurn::actProgress_Content(
+            $track, 
+            $t_ids, 
+            $card_id, 
+            $tile_id, 
+            $activePlayerId, 
+            $args,
+            $doCheckpoint,
+        );
+
+        if($doCheckpoint) Log::addStateCheckpoint(self::class);
+        return self::class;
+    }
+    
+    public static function actProgress_Content(
+        int $track, 
+        array|null $t_ids = null, 
+        int|null $card_id = null, 
+        int|null $tile_id = null, 
+        int $activePlayerId, array $args,
+        bool &$doCheckpoint, 
+    )
+    { 
         if(isset($args['progressTracks'])) $progressTracks = $args['progressTracks'];
         $selectedTrack = null;
         $countAsAPlayerAction = true;
@@ -354,8 +380,6 @@ class PlayerTurn extends GameState
             throw new UnexpectedException(111,"Invalid track to progress on ($track), see ".json_encode($progressTracks));
         }
         $player = Players::get($activePlayerId);
-        Log::addStep();
-        $doCheckpoint = false;
 
         $withCoins = $selectedTrack['withCoins'];
         $withShips = $selectedTrack['withShips'];
@@ -431,8 +455,6 @@ class PlayerTurn extends GameState
                 Cards::drawExplorationCardsToPlayer($player,1, $doCheckpoint);
             }
         }
-        if($doCheckpoint) Log::addStateCheckpoint(PlayerTurn::class);
-        return PlayerTurn::class;
 
     }
     /**
@@ -675,6 +697,20 @@ class PlayerTurn extends GameState
         $amount = $args['nbCardsExploration'];
         Cards::drawExplorationCardsToPlayer($player,$amount, $doCheckpoint);
 
+        //if more cards than max, let's force player to discard or play cards
+        $nbMaxToKeep = Cards::maxExplorationToKeep($player);
+        $nbCardsInHand = Cards::countInExplorationHand($activePlayerId);
+        if($nbCardsInHand > $nbMaxToKeep){
+            /*
+            Globals::addActionChoice($activePlayerId,ACTION_CLEAN_HAND, [ACTION_PLAY_CARD, ACTION_DISCARD_CARD], );
+            Log::addStateCheckpoint(PlayerChoice::class);
+            return PlayerChoice::class;
+            */
+            Notifications::cleanHandStart($player, $nbMaxToKeep);
+            Log::addStateCheckpoint(CleanHand::class);
+            return CleanHand::class;
+        }
+
         Log::addStateCheckpoint(PlayerTurn::class);
         return PlayerTurn::class;
     }
@@ -890,7 +926,36 @@ class PlayerTurn extends GameState
         int $v,)
     { 
         Utils::checkVersion($v);
-        $this->game->trace("actSpendSpices(".json_encode($t_ids)."$card_id,$tile_id,$activePlayerId)");
+
+        $doCheckpoint = false;
+        $nextStateClass = self::class;
+        PlayerTurn::actSpendSpices_content(
+            $t_ids, 
+            $card_id,
+            $tile_id,
+            $activePlayerId,
+            $args,
+            $doCheckpoint,
+            $prematureStateChange,
+        );
+        
+        if(isset($prematureStateChange) ){//should not happen in this use case
+            $nextStateClass = $prematureStateChange->nextStateClass;
+        }
+        if($doCheckpoint) Log::addStateCheckpoint($nextStateClass);
+        return $nextStateClass;
+    }
+    
+    public static function actSpendSpices_content(
+        array $t_ids, 
+        int|null $card_id = null, 
+        int|null $tile_id = null,
+        int $activePlayerId, array $args,
+        bool &$doCheckpoint, 
+        PrematureStateChangeException| null &$stateChange = null,
+    )
+    { 
+        Game::get()->trace("actSpendSpices(".json_encode($t_ids)."$card_id,$tile_id,$activePlayerId)");
         $possibleActions = $args['possibleActions'];
         if(!in_array('actSpendSpices',$possibleActions)){
             throw new UnexpectedException(110,"Invalid action actSpendSpices, see ".json_encode($possibleActions));
@@ -940,7 +1005,6 @@ class PlayerTurn extends GameState
         $player = Players::get($activePlayerId);
         Log::addStep();
         $doCheckpoint = false;
-        $nextStateClass = self::class;
         if(isset($card_id)){
             Cards::playExploration($player, $card_id, );
         }
@@ -960,11 +1024,6 @@ class PlayerTurn extends GameState
             $player->addPointsWithTile($forScore, $tile);
         }
         
-        if(isset($prematureStateChange) ){//should not happen in this use case
-            $nextStateClass = $prematureStateChange->nextStateClass;
-        }
-        if($doCheckpoint) Log::addStateCheckpoint($nextStateClass);
-        return $nextStateClass;
     }
 
     /**

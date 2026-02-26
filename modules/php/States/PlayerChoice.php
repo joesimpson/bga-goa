@@ -292,7 +292,7 @@ class PlayerChoice extends GameState
         Utils::checkVersion($v);
         PlayerTurn::actPlayCard_content($card_id, $activePlayerId, $args);
         
-        UTils::refreshFoundTileChoice($activePlayerId);
+        Utils::refreshFoundTileChoice($activePlayerId);
 
         return self::class;
     }

@@ -5,6 +5,7 @@ use Bga\GameFramework\UserException;
 use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Managers\Players;
+use Bga\Games\Goa\States\CleanHand;
 use Bga\Games\Goa\States\ConfirmTurn;
 use Bga\Games\Goa\States\EndPlayerTurn;
 use Bga\Games\Goa\States\EndRound;
@@ -30,6 +31,7 @@ abstract class Utils {
             case NextPlayer::class: return ST_NEXT_PLAYER;
             case PlayerTurn::class: return ST_PLAYER_TURN;
             case PlayerChoice::class: return ST_PLAYER_CHOICE;
+            case CleanHand::class: return ST_PLAYER_CLEAN_HAND;
             //case EndTurn::class:    return ST_END_TURN;
             case EndRound::class:   return ST_END_ROUND;
             case EndSession::class: return ST_END_SESSION;

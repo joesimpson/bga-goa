@@ -358,6 +358,7 @@ const ST_NEW_TURN = 6;
 const ST_NEXT_PLAYER = 9;
 const ST_PLAYER_TURN = 10;
 const ST_PLAYER_CHOICE = 11;
+const ST_PLAYER_CLEAN_HAND = 12;
 
 
 const ST_CONFIRM_TURN = 70;

@@ -415,7 +415,7 @@ trait DebugTrait
         }
         
         //$this->debug_refreshUI();
-        $this->debug_goToState(ST_PLAYER_TURN);
+        $this->debug_goToState(Game::get()->gamestate->getCurrentMainStateId());
     }
     
     function debug_fillTileWithSpices(int $tile_id){
