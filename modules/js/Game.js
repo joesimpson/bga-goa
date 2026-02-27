@@ -1686,6 +1686,7 @@ export class Game {
     
     addTile(tile, location = null) {
         this.customDebug('addTile',tile,location);
+        let tileMaterial = this.gamedatas.material.tiles[tile.subtype][tile.type];
         let tileDiv = document.getElementById(`goa_tile-${tile.id}`) ;
         if (!tileDiv){
             let container = location == null ? this.getTileContainer(tile) : location;
@@ -1700,6 +1701,10 @@ export class Game {
             this.bga.gameui.addTooltipHtml(`goa_tile-${tile.id}`, this.getTileTooltip(tile),0);
 
             tileDiv = document.getElementById(`goa_tile-${tile.id}`) ;
+                
+            if(tile.subtype == this.const.TILE_SUBTTYPE_MARKET){
+                tileDiv.dataset.name = _(tileMaterial.name);
+            }
         }
         else {
             tileDiv.dataset.state = tile.state;//refresh state if already exists
@@ -1708,10 +1713,11 @@ export class Game {
         return tileDiv;
     }
     getTileTooltip(tile) {
+        let tileMaterial = this.gamedatas.material.tiles[tile.subtype][tile.type];
         let cardDatas = tile;
         let phaseA = false, phaseB = false;
-        if(this.gamedatas.material.tiles[tile.subtype][tile.type].nbr_A > 0) phaseA = true;
-        if(this.gamedatas.material.tiles[tile.subtype][tile.type].nbr_B > 0) phaseB = true;
+        if(tileMaterial.nbr_A > 0) phaseA = true;
+        if(tileMaterial.nbr_B > 0) phaseB = true;
         let phaseLabel ='';
         if(phaseA && phaseB) phaseLabel = _('Day') + ' / '+ _('Night');
         else if(phaseA) phaseLabel = _('Day');
@@ -1786,10 +1792,10 @@ export class Game {
     }
     formatScoringTileText (tile) {
         let descriptionMap = new Map([
-            [37, this.bga.gameui.format_string(_('${tile_name} : At the end of the game, each of your single-field Depots is worth ${n} points instead of ${x} points.'),{'tile_name':_('Foreman'), 'n':3, 'x':1 })] ,
-            [38, this.bga.gameui.format_string(_('${tile_name} : Remove any ${x} Goods from your Outposts and/or Depots and return them to the supply. Then place the Duty tile face down in front of you. At the end of the game, each completed Duty tile is worth ${n} VP.'),{ 'tile_name':_('Duty'), 'n':5, 'x':6 } )],
-            [39, this.bga.gameui.format_string(_('${tile_name} : At the end of the game, this tile is worth ${n} victory points.'),{ 'tile_name':_('Small Mission'), 'n':tile.end_score })] ,
-            [40, this.bga.gameui.format_string(_('${tile_name} : At the end of the game, this tile is worth ${n} victory points.'),{ 'tile_name':_('Large Mission'), 'n':tile.end_score})] ,
+            [37, this.bga.gameui.format_string(_('At the end of the game, each of your single-field Depots is worth ${n} points instead of ${x} points.'),{'tile_name':_('Foreman'), 'n':3, 'x':1 })] ,
+            [38, this.bga.gameui.format_string(_('Remove any ${x} Goods from your Outposts and/or Depots and return them to the supply. Then place the Duty tile face down in front of you. At the end of the game, each completed Duty tile is worth ${n} VP.'),{ 'tile_name':_('Duty'), 'n':5, 'x':6 } )],
+            [39, this.bga.gameui.format_string(_('At the end of the game, this tile is worth ${n} victory points.'),{ 'tile_name':_('Small Mission'), 'n':tile.end_score })] ,
+            [40, this.bga.gameui.format_string(_('At the end of the game, this tile is worth ${n} victory points.'),{ 'tile_name':_('Large Mission'), 'n':tile.end_score})] ,
         ]);
         let text = descriptionMap.get(tile.type);
         return text;
@@ -1829,18 +1835,19 @@ export class Game {
     formatTileActionText (tile) {
         this.customDebug("formatTileActionText",tile);
         let description = '';
+        let tileMaterial = this.gamedatas.material.tiles[tile.subtype][tile.type];
         switch (tile.subtype )
         {
             case this.const.TILE_SUBTTYPE_OUTPOST:
                 return this.formatTileSpicesText(tile);
             case this.const.TILE_SUBTTYPE_MARKET: 
-                switch(this.gamedatas.material.tiles[tile.subtype][tile.type].play_type){
+                switch(tileMaterial.play_type){
                     case this.const.MARKET_TYPE_PLANTATION:
                         return this.formatTileSpicesText(tile);
                     case this.const.MARKET_TYPE_ACTION_REUSEABLE:
                     case this.const.MARKET_TYPE_ACTION_DIRECT: 
                         let  returnAfterThis = false;
-                        Object.entries( this.gamedatas.material.tiles[tile.subtype][tile.type].actions ).forEach(([action_type,number]) => {
+                        Object.entries( tileMaterial.actions ).forEach(([action_type,number]) => {
                             let resource_name = '', icon_name='';
                             let number_label = number;
                             switch(parseInt(action_type)){
@@ -1891,11 +1898,11 @@ export class Game {
                         break;
                     case this.const.MARKET_TYPE_ACTION_ONCE: 
                         let actionDescriptionMap = new Map([
-                                [this.const.ACTION_SWAP, this.bga.gameui.format_string(_('Exchange : When you buy the Exchange tile, place it face up in your play area. During one of your later action turns, you may take 1 tile of your choice from the market and put it face up in your play area. Put the Exchange tile, face up, in the space previously occupied by the tile you just took. You may use the tile that you obtained with the Exchange tile as soon as you acquire it or later in the game. The Exchange tile can be auctioned again, as per the normal rules. '),{}) + '<br/>' + _('Bonanza variant: If the Exchange tile is used in one of the corners, you also take the Bonanza tile.') ],
-                                [this.const.ACTION_RESUPPLY, this.bga.gameui.format_string(_('Resupply: Reveal ${n} Exploration cards. Add together their Contract values, then gain that many Goods, Contracts, or Ships (your choice). Discard the Exploration Cards afterward.'),{n:2})],
-                                [this.const.ACTION_HARVEST, this.bga.gameui.format_string(_('Great Harvest: Fill up to ${n} of your Depots and/or Outposts with the appropriate Goods from the supply.'),{n :3})],
+                                [this.const.ACTION_SWAP, this.bga.gameui.format_string(_('When you buy the Exchange tile, place it face up in your play area. During one of your later action turns, you may take 1 tile of your choice from the market and put it face up in your play area. Put the Exchange tile, face up, in the space previously occupied by the tile you just took. You may use the tile that you obtained with the Exchange tile as soon as you acquire it or later in the game. The Exchange tile can be auctioned again, as per the normal rules. '),{}) + '<br/>' + _('Bonanza variant: If the Exchange tile is used in one of the corners, you also take the Bonanza tile.') ],
+                                [this.const.ACTION_RESUPPLY, this.bga.gameui.format_string(_('Reveal ${n} Exploration cards. Add together their Contract values, then gain that many Goods, Contracts, or Ships (your choice). Discard the Exploration Cards afterward.'),{n:2})],
+                                [this.const.ACTION_HARVEST, this.bga.gameui.format_string(_('Fill up to ${n} of your Depots and/or Outposts with the appropriate Goods from the supply.'),{n :3})],
                                 [this.const.ACTION_ESPIONAGE, this.bga.gameui.format_string(
-                                     _("Espionage: Choose an opponent and do one of these actions, using the position of this player's Progress marker in the appropriate column: ${actions} "), 
+                                     _("Choose an opponent and do one of these actions, using the position of this player's Progress marker in the appropriate column: ${actions} "), 
                                     { 
                                         'actions': '<ul>' 
                                             +  '<li>' + _('Build Ships') + '</li>'
@@ -1908,12 +1915,17 @@ export class Game {
                                     + _('That tile cannot be used to obtain Exploration cards.')],
                                 [this.const.ACTION_VICEKING, this.bga.gameui.format_string(_('Viceroy: Move your highest Progress Marker down one row for free. If several markers are tied for highest, choose one.'),{})],
                             ]);
-                        Object.entries( this.gamedatas.material.tiles[tile.subtype][tile.type].actions ).forEach(([action_type,number]) => {
+                        Object.entries( tileMaterial.actions ).forEach(([action_type,number]) => {
                             description += actionDescriptionMap.get(parseInt(action_type));
                         });
                         break;
                     default: break;
                 }
+                let tile_name = tileMaterial.name;
+                description = this.bga.gameui.format_string(
+                                _("${tile_name} : ${tile_desc}")
+                                ,{ 'tile_name': "<b>"+tile_name+"</b>", 'tile_desc': description, }
+                            );
                 break;
             default: break;
         }

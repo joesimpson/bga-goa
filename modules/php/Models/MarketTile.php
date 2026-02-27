@@ -10,6 +10,7 @@ class MarketTile extends Tile
         'spice_slots', //array of ints
         'actions', //array of ints
         ['end_score', 'int'],
+        ['name', 'string'],
     ];
 
     public function __construct($row, $datas)
@@ -21,6 +22,7 @@ class MarketTile extends Tile
     {
         $data = parent::getUiData();
         $data['subtype'] = TILE_SUBTTYPE_MARKET;
+        unset($data['name']);
         return $data;
     }
 
