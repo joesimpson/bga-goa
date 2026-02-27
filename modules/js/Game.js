@@ -2487,7 +2487,7 @@ export class Game {
     getCardTooltipSymbolsInfos(cardDatas) {
         let textSymbols = '<div class="goa_card_symbols_score">';
         if(cardDatas.subtype == this.const.CARD_SUBTTYPE_EXPLORATION){
-            textSymbols += '<br>'+_('Victory points at the end of the game (if in player hand) : ');
+            textSymbols += _('Victory points at the end of the game (if in player hand) : ');
             textSymbols += '<ul>';
             Object.entries(this.const.END_SCORE_EXPLORATION).forEach(([nbCards,score]) => {
                 textSymbols += '<li>'+this.bga.gameui.format_string( _(' ${n} identical Island Symbols => ${x} points '), {'n':nbCards, 'x': score} ) +  '</li>'; 

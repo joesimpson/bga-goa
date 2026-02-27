@@ -216,8 +216,8 @@ export class ClientSelectTileAction {
                 case this.game.const.CHOICE_FOUND_TILE:
                     let missingContracts = tile_choice.n;
                     this.bga.statusBar.setTitle(isCurrentPlayerActive ? 
-                        _('${you} must establish the outpost by spending ${n} ${icon_contracts} or abandon and receive ${x} ${icon_contracts}').replaceAll('${icon_contracts}', icon_contracts).replace('${n}', missingContracts).replace('${x}', 1): 
-                        _('${actplayer} must establish the outpost by spending ${n} ${icon_contracts} or abandon and receive ${x} ${icon_contracts}').replaceAll('${icon_contracts}', icon_contracts).replace('${n}', missingContracts).replace('${x}', 1)
+                        _('${you} must establish the outpost by spending ${n} ${icon_contracts} OR abandon to receive ${x} ${icon_contracts}').replaceAll('${icon_contracts}', icon_contracts).replace('${n}', missingContracts).replace('${x}', 1): 
+                        _('${actplayer} must establish the outpost by spending ${n} ${icon_contracts} OR abandon to receive ${x} ${icon_contracts}').replaceAll('${icon_contracts}', icon_contracts).replace('${n}', missingContracts).replace('${x}', 1)
                     );
                     let tileToFound= document.getElementById(`goa_outpost-${tile_id}-front`);
                     let colony = tileToFound.dataset.colony;
