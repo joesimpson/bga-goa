@@ -115,9 +115,11 @@ trait DebugTrait
         //Game::get()->notify->player($player_id,'reloadPage', "/!\ : Refresh page to see game has restarted...", []);
         Notifications::refreshUI(Game::get()->getAllDatas($player_id));
     }
-    function debug_changeRound(int $round = 1){
+    function debug_changeRound(int $round = 1, int $roundStep = ROUND_STEP_PLAYER_ACTIONS){
         Globals::setRound($round);
+        Globals::setRoundStep($roundStep);
         $this->debug_refreshUI();
+        $this->debug_goToState(ST_PLAYER_TURN);
     }
     function debug_Globals(){
         $player = Players::getCurrent();

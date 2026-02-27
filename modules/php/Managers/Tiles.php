@@ -107,16 +107,19 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
   }
 
   /**
-   * Get the market tile placed at [row, col]
+   * Get the market tiles placed at [row, col]
    * then give it to player
+   * @param array $blackListIds (optional) list of ids we don't want to give
+   * 
    * @throws PrematureStateChangeException when caller will need to go to another state than default one
    * */
-  public static function giveMarketTileToPlayerAt(Player $player, int $row, int $col, bool &$doCheckpoint):void
+  public static function giveMarketTileToPlayerAt(Player $player, int $row, int $col, bool &$doCheckpoint, array $blackListIds = []):void
   {
     $tilesOnMarketSpace = self::DB()
       ->where( static::$prefix . 'location', TILE_LOCATION_BOARD_MARKET)
       ->where('tile_row', $row)
       ->where('tile_col', $col)
+      ->whereNotIn(static::$prefix .'id', $blackListIds)
       ->get();
       //TODO JSA multiples if BONANZA + warning if Tile WILD spice, it adds another choice 
 
@@ -666,8 +669,8 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
             if(!isset($row) || !isset($col)){
               throw new UnexpectedException(122,("Missing coordinate to swap"));
             }
-            //TODO JSA NOT THE SWAP TILE itself !
-            Tiles::giveMarketTileToPlayerAt($player, $row, $col, $doCheckpoint );
+            //Don't forget to blacklist THE SWAP TILE itself because we just placed it in the same spot
+            Tiles::giveMarketTileToPlayerAt($player, $row, $col, $doCheckpoint, [$tileId] );
           }
           catch(PrematureStateChangeException $exc){
             $stateChange = $exc;
