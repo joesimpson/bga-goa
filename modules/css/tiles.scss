@@ -239,6 +239,11 @@ $tile_height: 108px;
             background-color: #a360a3;
         }
     }
+
+    &[data-subtype="1"]{//TILE_SUBTTYPE_OUTPOST
+        background-color: #8b7861;
+        border-radius: 5px;
+    }
 }
 
 .goa_marketTilesHelp hr,
@@ -281,7 +286,8 @@ $tile_height: 108px;
     }
 }
 .goa_outpostTilesHelp{
-    background-color: #8b7861;
+    //background-color: #8b7861;
+    //moved to .goa_tile_tooltip with subtype
 }
 
   

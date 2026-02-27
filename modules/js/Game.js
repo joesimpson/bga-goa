@@ -1736,7 +1736,7 @@ export class Game {
         }
         let textAction = this.formatTileActionText( tile );
         let div = this.tplTile(cardDatas,'_tmp'); 
-        return [`<div class='goa_tile_tooltip'>
+        return [`<div class='goa_tile_tooltip' data-subtype="${tile.subtype}">
                 <div class="goa_tooltip_block1">
                     <span class="goa_tile_title">${this.formatTileTitle( tile )}</span>
                 </div>

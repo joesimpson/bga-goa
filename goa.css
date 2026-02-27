@@ -1922,6 +1922,10 @@ Icon extract in sprite with differents layers size (so % is not useful).
   color: white;
   background-color: #a360a3;
 }
+.goa_tile_tooltip[data-subtype="1"] {
+  background-color: #8b7861;
+  border-radius: 5px;
+}
 
 .goa_marketTilesHelp hr,
 .goa_outpostTilesHelp hr,
@@ -1968,10 +1972,6 @@ Icon extract in sprite with differents layers size (so % is not useful).
 .goa_outpostTilesHelp .goa_tile_text .goa_tile_text_playType,
 .goa_marketTilesHelp .goa_tile_text .goa_tile_text_playType {
   font-size: 0.75em;
-}
-
-.goa_outpostTilesHelp {
-  background-color: #8b7861;
 }
 
 button .goa_tile {
