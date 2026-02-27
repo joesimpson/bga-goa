@@ -19,26 +19,26 @@
 --       you have to restart a game to see your changes in database.
 
 -- we don't need to represent player money with cards
-ALTER TABLE `player` ADD `money` int(2) NOT NULL DEFAULT 0 COMMENT 'This player total count of coins on cards';
-ALTER TABLE `player` ADD `ships` int(2) NOT NULL DEFAULT 0 COMMENT 'This player total count of ships on cards';
-ALTER TABLE `player` ADD `contracts` int(2) NOT NULL DEFAULT 0 COMMENT 'This player total count of contracts on cards';
-ALTER TABLE `player` ADD `compasses` int(2) NOT NULL DEFAULT 0 COMMENT 'This player total count of compasses on cards';
+ALTER TABLE `player` ADD `money` int NOT NULL DEFAULT 0 COMMENT 'This player total count of coins on cards';
+ALTER TABLE `player` ADD `ships` int NOT NULL DEFAULT 0 COMMENT 'This player total count of ships on cards';
+ALTER TABLE `player` ADD `contracts` int NOT NULL DEFAULT 0 COMMENT 'This player total count of contracts on cards';
+ALTER TABLE `player` ADD `compasses` int NOT NULL DEFAULT 0 COMMENT 'This player total count of compasses on cards';
 
-ALTER TABLE `player` ADD `nbActions` int(2) NOT NULL DEFAULT 0 COMMENT 'Current actions turn in current round/step';
-ALTER TABLE `player` ADD `passed` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Player has passed in current round/step';
-ALTER TABLE `player` ADD `actionPlayed` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Player has played an action in current actions turn';
+ALTER TABLE `player` ADD `nbActions` int NOT NULL DEFAULT 0 COMMENT 'Current actions turn in current round/step';
+ALTER TABLE `player` ADD `passed` tinyint NOT NULL DEFAULT 0 COMMENT 'Player has passed in current round/step';
+ALTER TABLE `player` ADD `actionPlayed` tinyint NOT NULL DEFAULT 0 COMMENT 'Player has played an action in current actions turn';
 ALTER TABLE `player` ADD `cardsPlayed` JSON COMMENT 'Infos about card played during a round/turn';
 
 
 CREATE TABLE IF NOT EXISTS `cards` (
-  `card_id` int(2) NOT NULL AUTO_INCREMENT,
-  `card_state` int(10) DEFAULT 0,
+  `card_id` int NOT NULL AUTO_INCREMENT,
+  `card_state` int DEFAULT 0,
   `card_location` varchar(32) NOT NULL COMMENT 'Current location of card',
-  `type` int(10) NOT NULL,
-  `subtype` int(10) NOT NULL,
-  `player_id` int(10) NULL,
+  `type` int NOT NULL,
+  `subtype` int  NOT NULL,
+  `player_id` int NULL,
   PRIMARY KEY (`card_id`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+) ENGINE = InnoDB DEFAULT CHARSET = UTF8MB4;
 
 CREATE TABLE IF NOT EXISTS `tiles` (
   `tile_id` int NOT NULL AUTO_INCREMENT,
@@ -51,30 +51,29 @@ CREATE TABLE IF NOT EXISTS `tiles` (
   `tile_col` int NULL,
   `player_id` int NULL,
   PRIMARY KEY (`tile_id`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+) ENGINE = InnoDB DEFAULT CHARSET = UTF8MB4;
 
 CREATE TABLE IF NOT EXISTS `tokens` (
-  `token_id` int(2) NOT NULL AUTO_INCREMENT,
-  `token_state` int(10) DEFAULT 0,
+  `token_id` int NOT NULL AUTO_INCREMENT,
+  `token_state` int DEFAULT 0,
   `token_location` varchar(32) NOT NULL COMMENT 'Current location of token',
-  `type` int(10) NOT NULL,
-  `subtype` int(10) NOT NULL,
-  `token_row` int(10) NULL,
-  `token_col` int(10) NULL,
-  `player_id` int(10) NULL,
+  `type` int NOT NULL,
+  `subtype` int NOT NULL,
+  `token_row` int NULL,
+  `token_col` int NULL,
+  `player_id` int NULL,
   PRIMARY KEY (`token_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
-
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4 ;
 
 -- CORE TABLES from tisaac boilerplate --
 CREATE TABLE IF NOT EXISTS `log` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
   `date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
-  `move_id` int(10) NOT NULL,
+  `move_id` int NOT NULL,
   `table` varchar(32) NOT NULL,
   `primary` varchar(32) NOT NULL,
   `type` varchar(32) NOT NULL,
   `affected` JSON,
   PRIMARY KEY (`id`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+) ENGINE = InnoDB DEFAULT CHARSET = UTF8MB4;
+
