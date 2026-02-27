@@ -461,9 +461,11 @@ trait DebugTrait
     
     //TEst different notif at a time
     function debug_sendNotif(){
+        $player = Players::getCurrent();
         $players = Players::getAll()->toArray();
         //Notifications::winsAuction($players[0], 12,$players[1]);
-        Notifications::winsAuction($players[0], 15,);
+        //Notifications::winsAuction($players[0], 15,);
+        Tokens::giveFirstPlayerToken($player);
     }
 
     //TEst different utils functions at a time

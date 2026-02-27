@@ -10,6 +10,10 @@
     @include goa_icons_sprite(0px,0px,0.25 * 198px,0.25 * 193px,198px,193px);
 }
 
+.goa_icon_nbActions{
+    @include goa_icons_sprite(0px,196px,0.2 * 178px,0.2 * 130px,178px,130px);
+}
+
 $spice_width: 29px;
 $spice_height: 30px;
 .goa_icon_spices_white, .goa_icon_spices_1{

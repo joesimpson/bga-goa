@@ -44,11 +44,15 @@ export class PlayerTurn {
                 break;
             case this.game.const.ROUND_STEP_PLAYER_ACTIONS: 
                 //let titleActive =  _('${you} must select an action (${n} done in this round, min ${x} to pass)').replace('${n}', args.nbActions).replace('${x}', args.minActions);
-                let titleActive =  _('${you} must select an action (${n} done in this round)').replace('${n}', args.nbActions);
-                let titleOthers =  _('${actplayer} must select an action (${n} done in this round)').replace('${n}', args.nbActions);
+                let titleActive =  _('${you} must select an action');
+                let titleOthers =  _('${actplayer} must select an action');
                 if(args.actionPlayed){
                     titleActive =  _('${you} may play a card or tile');
                     titleOthers =  _('${actplayer} may play a card or tile');
+                }
+                if(possibleActions.includes('actPassAction')){
+                    titleActive =  _('${you} must pass or spend 1 ${compass_card} for an action').replace('${compass_card}',this.game.formatIcon('compasses',_('Compass card')));
+                    titleOthers =  _('${actplayer} must pass or spend 1 ${compass_card} for an action').replace('${compass_card}',this.game.formatIcon('compasses',_('Compass card')));
                 }
 
                 this.bga.statusBar.setTitle(isCurrentPlayerActive ? titleActive : titleOthers);
@@ -146,7 +150,7 @@ export class PlayerTurn {
             }
 
             if(possibleActions.includes('actBuildShips')){
-                let actionName = _('Build ships');
+                let actionName = _('Build Ships');
                 let actionHint = this.bga.gameui.format_string(_('Action : ${name}'),{'name': actionName});
                 this.bga.statusBar.addActionButton(actionName, () => this.game.customPerformAction("actBuildShips"), { 'title':actionHint,destination: document.getElementById('customPrimary') }); 
                 //+ CLICK ON BOARD section

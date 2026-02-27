@@ -260,7 +260,7 @@ export class ClientSelectTileAction {
                             case this.game.const.ACTION_SHIP: 
                                 this.game.addClickHandlerOnProgressMarker(
                                     1,
-                                    this.bga.gameui.format_string(_('Action : ${name}'),{'name':  _('Build ships')}),
+                                    this.bga.gameui.format_string(_('Action : ${name}'),{'name':  _('Build Ships')}),
                                     opponentId,
                                     () => this.game.customPerformAction("actTileChoice", { 
                                                 'tile_id' : tile_id,

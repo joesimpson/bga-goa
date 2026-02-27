@@ -227,6 +227,7 @@ export class Game {
                         ${this.tplResourceCounter(player,'explo_symbol_tiny_6',this.getCardSymbolName(6))}
                     </div>
                     <div class='goa_player_counters_line goa_player_counters_lastline'>
+                        ${this.tplResourceCounter(player,'nbActions',_('Round Actions'))}
                         <div id="goa_first_player_container_${player.id}" class="goa_first_player_container" alt="${_('Nazar Stone (Starting player)')}" title="${_('Nazar Stone (Starting player)')}"></div>
                     </div>
                 </div>
@@ -238,6 +239,7 @@ export class Game {
             this.createCounter(player.id,'ships',player.ships);
             this.createCounter(player.id,'contracts',player.contracts);
             this.createCounter(player.id,'compasses',player.compasses);
+            this.createCounter(player.id,'nbActions',player.nbActions);
             if (currentPlayer && player.id == currentPlayer.id){
                 this.createCounter(player.id,'money',player.money);
                 //counters on hand symbols :
@@ -268,6 +270,7 @@ export class Game {
             this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_ships`, _('Number of Ships on ship cards'));
             this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_contracts`, _('Number of Contracts on contract cards'));
             this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_compasses`, _('Compass cards'));
+            this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_nbActions`, _('Round Actions'));
 
             
             this.const.SPICES_ALL.forEach((spice) => {
@@ -1097,6 +1100,7 @@ export class Game {
             this._counters[pId]['ships'].toValue(player.ships);
             this._counters[pId]['contracts'].toValue(player.contracts);
             this._counters[pId]['compasses'].toValue(player.compasses);
+            this._counters[pId]['nbActions'].toValue(player.nbActions);
 
             if (currentPlayer && player.id == currentPlayer.id){
 
@@ -1192,6 +1196,10 @@ export class Game {
         this.customDebug("notif_newRound",notif);
         this.gamedatas.round = notif.n;
         this.setupRoundMarker();
+        
+        Object.values(this.gamedatas.players).forEach(player => {
+            this._counters[player.id]['nbActions'].toValue(0);
+        });
     }
     async notif_resetActionsPhase(notif) {
         this.customDebug("notif_resetActionsPhase",notif);
@@ -1518,6 +1526,12 @@ export class Game {
         
     }
     
+    async notif_playAction(notif) {
+        this.customDebug("notif_playAction : ",notif);
+        let pId = notif.player_id;
+        this._counters[pId]['nbActions'].incValue(1);
+    }
+
     async notif_progress(notif) {
         this.customDebug("notif_progress : move token 1 space down",notif);
         let token = notif.token;
@@ -1525,7 +1539,6 @@ export class Game {
         let destinationDiv = document.getElementById(this.getTokenContainer(token));
         await this.animationManager.slideAndAttach(tokenDiv, destinationDiv);
     }
-
     
     async notif_addPoints (notif) {
         this.customDebug( 'notif_addPoints' , notif);
