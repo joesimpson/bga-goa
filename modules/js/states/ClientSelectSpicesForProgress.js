@@ -33,19 +33,19 @@ export class ClientSelectSpicesForProgress {
         let spicesIcons = '';
         Object.entries(costSpices).forEach( ([spice, cost]) => {
             new Array(cost.n).fill(0).forEach( x => { 
-                spicesIcons += this.game.formatIcon('spices_'+spice,_('Spices'));
+                spicesIcons += this.game.formatSpiceIcon(spice);
             });
         });
         
         this.bga.statusBar.setTitle(
-                _("${you} must select spices ${icons} to discard and progress on track ${n}").replace('${icons}',spicesIcons).replace('${n}',track)
+                _("${you} must select ${icons} Goods to discard and progress on track ${n}").replace('${icons}',spicesIcons).replace('${n}',track)
             );
             
         let progressTrack = document.getElementById(`goa_progress_track_${track}_${activePlayer}`);
         progressTrack.classList.add('selected');
         progressTrack.classList.add('selected_for_client_state');
 
-        let selectionHint = _('Select this spice token');
+        let selectionHint = _('Select this Good token');
         this.game.onSelectN(spicesDivs, nbSpices, (selectedSpices) => {
             let sortedTokens = selectedSpices.sort((a,b) =>  a - b );
             this.game.customPerformAction('actProgress', { 'track': args.track, 't_ids': sortedTokens.join(','), 'card_id': args.withCard});

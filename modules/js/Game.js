@@ -212,11 +212,11 @@ export class Game {
                         ${this.tplResourceCounter(player,'compasses',_('Compasses'))}
                     </div>
                     <div class='goa_player_counters_line goa_player_counters_line_spices'>
-                        ${this.tplResourceCounter(player,'spices_1',_('Spices'))}
-                        ${this.tplResourceCounter(player,'spices_2',_('Spices'))}
-                        ${this.tplResourceCounter(player,'spices_3',_('Spices'))}
-                        ${this.tplResourceCounter(player,'spices_4',_('Spices'))}
-                        ${this.tplResourceCounter(player,'spices_5',_('Spices'))}
+                        ${this.tplResourceCounter(player,'spices_'+this.const.SPICE_WHITE, this.getGoodsName(this.const.SPICE_WHITE))}
+                        ${this.tplResourceCounter(player,'spices_'+this.const.SPICE_YELLOW,this.getGoodsName(this.const.SPICE_YELLOW))}
+                        ${this.tplResourceCounter(player,'spices_'+this.const.SPICE_BLACK ,this.getGoodsName(this.const.SPICE_BLACK ))}
+                        ${this.tplResourceCounter(player,'spices_'+this.const.SPICE_PINK  ,this.getGoodsName(this.const.SPICE_PINK  ))}
+                        ${this.tplResourceCounter(player,'spices_'+this.const.SPICE_GREEN ,this.getGoodsName(this.const.SPICE_GREEN ))}
                     </div>
                     <div class='goa_player_counters_line goa_player_counters_line_symbols'  ${ (currentPlayer && player.id == currentPlayer.id) ? '': 'style="display:none;"'}>
                         ${this.tplResourceCounter(player,'explo_symbol_tiny_1',this.getCardSymbolName(1))}
@@ -271,7 +271,7 @@ export class Game {
 
             
             this.const.SPICES_ALL.forEach((spice) => {
-                this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_spices_${spice}`, _(`Spices`));
+                this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_spices_${spice}`, this.getGoodsName(spice));
             });
 
             let playerColoredName = this.bga.gameui.format_string(('${player_name}'), { player_name:this.coloredPlayerName(player.name)}) ;
@@ -733,6 +733,9 @@ export class Game {
         let suffix = '';
         if(tiny) suffix = 'tiny_';
         return this.formatIcon( 'explo_symbol_'+suffix+symbolType, this.getCardSymbolName( symbolType ));
+    }
+    formatSpiceIcon(spiceType,){
+        return this.formatIcon('spices_'+spiceType,this.getGoodsName(spiceType));
     }
     /**
      * Use this tpl for any counters that represent qty of tokens
@@ -1805,7 +1808,7 @@ export class Game {
         let icons = '';
         let treatArray = null;
         Object.values( tile.spice_slots ).forEach((spice_type) => {
-            icons += this.formatIcon('spices_'+spice_type, _('Spices'));
+            icons += this.formatSpiceIcon(spice_type);
             if(Array.isArray(spice_type)){
                 treatArray = spice_type;
             }
@@ -1815,18 +1818,18 @@ export class Game {
             Object.values( tile.spice_slots ).forEach((spice_type) => {
                 icons = '';
                 Object.values( spice_type ).forEach((spice_type_listElement) => {
-                    icons += this.formatIcon('spices_'+spice_type_listElement, _('Spices'));
+                    icons += this.formatSpiceIcon(spice_type_listElement);
                 });
                 text += '<li>' + this.bga.gameui.format_string(
                     _("Take ${n} ${resource_name} : ${icon_resource}.")
-                    ,{n:1, 'resource_name': _('Spices'), icon_resource : icons}
+                    ,{n:1, 'resource_name': _('Goods'), icon_resource : icons}
                 ) + '</li>';
             });
         }
         else {
             text = this.bga.gameui.format_string(
                 _("Take ${n} ${resource_name} : ${icon_resource}.")
-                ,{n:number_label, 'resource_name': _('Spices'), icon_resource : icons}
+                ,{n:number_label, 'resource_name': _('Goods'), icon_resource : icons}
             );
         }
                   
@@ -2172,7 +2175,7 @@ export class Game {
         if(token.subtype == this.const.TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER) 
             return `<div id="goa_token${prefix}-${token.id}" class="goa_token goa_token${prefix} goa_first_auction_marker" data-id="${token.id}" ></div>`;
         if(token.subtype == this.const.TOKEN_SUBTTYPE_SPICE) 
-            return `<div id="goa_token${prefix}-${token.id}" class="goa_token goa_token${prefix} goa_spice" data-id="${token.id}" data-type="${token.type}" data-pid="${token.pId}" data-state="${token.state}" data-spice="${token.spice}"></div>`;
+            return `<div id="goa_token${prefix}-${token.id}" class="goa_token goa_token${prefix} goa_spice" data-id="${token.id}" data-type="${token.type}" data-pid="${token.pId}" data-state="${token.state}" data-spice="${token.spice}" title="${this.getGoodsName(token.spice)}"></div>`;
         return '';
     }
     tplProgressTrack(datas) {
@@ -2323,6 +2326,16 @@ export class Game {
                 <div>${line2}</div>
             </div>
         `;
+    }
+    getGoodsName(goodType){
+        switch(parseInt(goodType)){
+            case this.const.SPICE_WHITE:    return _('Coconut Coir');
+            case this.const.SPICE_YELLOW:   return _('Turmeric');
+            case this.const.SPICE_BLACK:    return _('Pepper');
+            case this.const.SPICE_PINK:     return _('Silk');
+            case this.const.SPICE_GREEN:    return _('Dried fish');
+            default: return '';
+        }
     }
 
     ////////////////////////////////////////////////////////

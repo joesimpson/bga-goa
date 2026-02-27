@@ -13,6 +13,7 @@ use Bga\Games\Goa\Models\Player;
 use Bga\Games\Goa\Models\ProgressMarker;
 use Bga\Games\Goa\Models\Tile;
 use Bga\Games\Goa\Models\Token;
+use Bga\Games\Goa\Models\TokenSpice;
 
 class Notifications
 { 
@@ -474,10 +475,10 @@ class Notifications
   
     /**
    * @param Player $player
-   * @param Token $token
+   * @param TokenSpice $token
    * @param Tile $toTile
    */
-  public static function newSpiceOnTile(Player $player,Token $token,Tile $toTile)
+  public static function newSpiceOnTile(Player $player,TokenSpice $token,Tile $toTile)
   {
     $msg = clienttranslate('${player_name} places a ${token_icon} on their tile');
 
@@ -485,8 +486,9 @@ class Notifications
       'player' => $player,
       'token' => $token->getUiData(),
       //'tile_id' => $toTile->getId(),
-      'token_icon' => clienttranslate('Spice'),
+      'token_icon' => $token->getGoodsName(),
       'preserve'=>['token'],
+      'i18n' => ['token_icon'],
     ]);
   }
   
@@ -502,13 +504,17 @@ class Notifications
     usort($sortedTokens, function ($a,$b)  {
       return $a["spice"] <=>  $b["spice"];
     });
-    $msg = clienttranslate('${player_name} removes ${n} spices tokens ${token_icons} from their tiles');
+    $sortedTokensNames = $tokens->map(function($token) {return $token->getGoodsName();})->toArray();
+    $msg = clienttranslate('${player_name} removes ${n} Goods tokens ${token_icons} from their tiles');
     self::notifyAll('removeSpices', $msg, [
       'player' => $player,
       'n' => $nTokens,
       'tokens' => $sortedTokens,
-      'token_icons' => '',
+      'token_icons' => $sortedTokensNames,
       'preserve'=>['tokens',],
+
+      'i18n' => ['token_icons'],
+      'separator' => ['token_icons' => ' '],
     ]);
   }
 
@@ -521,7 +527,7 @@ class Notifications
   {
     $nTokens = $tokens->count();
     if($nTokens == 0) return;
-    $msg = clienttranslate('${player_name} removes ${n} spices tokens from their tile');
+    $msg = clienttranslate('${player_name} removes ${n} Goods tokens from their tile');
 
     self::notifyAll('removeTileSpices', $msg, [
       'player' => $player,

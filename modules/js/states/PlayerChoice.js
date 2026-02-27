@@ -186,14 +186,14 @@ export class ClientSelectTileAction {
                         tileToFill.classList.add('selected');
                         tileToFill.scrollIntoView({'behavior': 'smooth', 'block':'center'});
                     }
-                    let spice_icon = this.game.formatIcon('spices_'+choice,_('Spices'));
+                    let spice_icon = this.game.formatSpiceIcon(choice);
                     this.bga.statusBar.addActionButton( spice_icon, () => {
                         this.game.customPerformAction("actTileChoice", { 
                                 'tile_id' : tile_id,
                                 'choice': choice,
                                 'choice_index':args.choice_index,
                             })
-                    }, {  destination: document.getElementById('customPrimary'),'title':_('Select this spice'),  }); 
+                    }, {  destination: document.getElementById('customPrimary'),'title':_('Select this Good token'),  }); 
                     break;
                 case this.game.const.CHOICE_REPLACE_TILE:
                     let newtile_icon = this.game.tplTileFromType(args.tile.type, '_log');

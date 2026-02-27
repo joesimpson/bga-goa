@@ -23,13 +23,13 @@ export class ClientHarvestResources {
 
         this.bga.statusBar.setTitle(
             minSpices == maxSpices ? 
-                _("${you} must select ${n} spices to place on your tiles").replace('${n}',maxSpices)
+                _("${you} must select ${n} Goods to place on your tiles").replace('${n}',maxSpices)
                 :
-                _("${you} must select ${a} to ${b} spices to place on your tiles").replace('${a}',minSpices).replace('${b}',maxSpices)
+                _("${you} must select ${a} to ${b} Goods to place on your tiles").replace('${a}',minSpices).replace('${b}',maxSpices)
             );
         if(maxTiles){
             this.bga.statusBar.setTitle(
-                _("${you} must select spices to place on ${n} tiles").replace('${n}',maxTiles)
+                _("${you} must select Goods to place on ${n} tiles").replace('${n}',maxTiles)
             );
         }
         let displayConfirmAsDisabled = false;    
@@ -327,7 +327,7 @@ export class ClientHarvestResources {
                     let possibleSpices = this.game.const.SPICES_ALL;
                     possibleSpices = harvestSpots[id]['spices'];
                     possibleSpices.forEach((spice) => {
-                        let spice_icon = this.game.formatIcon('spices_'+spice,_('Spices'));
+                        let spice_icon = this.game.formatSpiceIcon(spice);
                         this.bga.statusBar.addActionButton( spice_icon, () => {
                             elt.classList.remove('selected_for_client_state');
                             selectedResources.set(parseInt(id),spice);
@@ -346,7 +346,7 @@ export class ClientHarvestResources {
                              
                             selectedTiles[tile_id] ++;
                             updateStatus();
-                        }, { 'id': 'btnHarvestSelect'+spice, 'destination': harvestResourcesZone,'title':_('Select this spice'),  }); 
+                        }, { 'id': 'btnHarvestSelect'+spice, 'destination': harvestResourcesZone,'title':_('Select this Good token'),  }); 
                     });
 
 

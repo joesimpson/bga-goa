@@ -35,9 +35,9 @@ export class ClientSpendSpices {
      
         this.bga.statusBar.setTitle(
             minSpices == nbSpices ? 
-                _("${you} must select ${n} spices to discard").replace('${n}',nbSpices)
+                _("${you} must select ${n} Goods to discard").replace('${n}',nbSpices)
                 :
-                _("${you} must select ${a} to ${b} spices to discard").replace('${a}',minSpices).replace('${b}',nbSpices)
+                _("${you} must select ${a} to ${b} Goods to discard").replace('${a}',minSpices).replace('${b}',nbSpices)
             );
         let actionName = 'actSpendSpices';
 
@@ -49,7 +49,7 @@ export class ClientSpendSpices {
 
         this.game.addButtonCloseClientState(args);
             
-        let selectionHint = _('Select this spice token');
+        let selectionHint = _('Select this Good token');
         this.game.onSelectN(spicesDivs, nbSpices, (selectedSpices) => {
             let sortedTokens = selectedSpices.sort((a,b) =>  a - b );
             this.game.customPerformAction(actionName, { 't_ids': sortedTokens.join(','), 'card_id': withCard, 'tile_id': withTile, });
