@@ -157,6 +157,11 @@ $tile_height: 108px;
     }
 }
 
+.goa_tile_spot_log{
+    //Don't use empty DOM elements for tile in title bar, that may hide a part of action button 
+    display: none;
+}
+
 .goa_player_tiles{
     .goa_tile{
         width: calc(var(--goa_playerboard_display_scale) * $tile_with);

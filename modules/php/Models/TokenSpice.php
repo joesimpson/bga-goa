@@ -30,7 +30,7 @@ class TokenSpice extends Token
         return null;
     }
     
-    public function getGoodsName(){
+    public function getGoodsName() : string{
         switch($this->getSpice()){
             case SPICE_WHITE:    return clienttranslate('Coconut Coir');
             case SPICE_YELLOW:   return clienttranslate('Turmeric');

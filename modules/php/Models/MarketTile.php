@@ -2,6 +2,8 @@
 
 namespace Bga\Games\Goa\Models;
 
+use Bga\Games\Goa\Managers\Tiles;
+
 class MarketTile extends Tile
 {  
 
@@ -30,5 +32,15 @@ class MarketTile extends Tile
     {
         return $this->getState() === TILE_STATE_PLAYED;
     }
+    
+    /*
+    public function getName() : string{
+
+        $allTypes = Tiles::getMarketTilesTypes();
+        if(!in_array($this->getType(), array_keys($allTypes))){
+            return '';
+        }
+        return $allTypes[$this->getType()]['name'];
+    }*/
  
 }

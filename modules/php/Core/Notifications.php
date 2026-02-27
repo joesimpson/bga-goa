@@ -8,6 +8,7 @@ use Bga\Games\Goa\Helpers\Collection;
 use Bga\Games\Goa\Helpers\Utils;
 use Bga\Games\Goa\Managers\Cards;
 use Bga\Games\Goa\Models\ExplorationCard;
+use Bga\Games\Goa\Models\MarketTile;
 use Bga\Games\Goa\Models\OutpostTile;
 use Bga\Games\Goa\Models\Player;
 use Bga\Games\Goa\Models\ProgressMarker;
@@ -228,47 +229,55 @@ class Notifications
 
   public static function discardTile(Player $player, Tile $tile)
   {
-    self::notifyAll("discardTile", clienttranslate('${player_name} discards the tile ${tile_icon}'), [
+    $tile_name = '';
+    if( $tile instanceof MarketTile ) $tile_name = $tile->getName();
+    self::notifyAll("discardTile", clienttranslate('${player_name} discards the tile ${tile_icon} ${tile_name}'), [
         "player" => $player,
         "tile" => $tile->getUiData(),
         "tile_icon" => '',
         'preserve'=>['tile'],
+        "tile_name" => $tile_name,
+        'i18n'=> ['tile_name'],
     ]);
   }
   
-  public static function playTile(Player $player, Tile $tile)
+  public static function playTile(Player $player, MarketTile $tile)
   {
-    self::notifyAll("playTile", clienttranslate('${player_name} plays the tile ${tile_icon}'), [
+    self::notifyAll("playTile", clienttranslate('${player_name} plays the tile ${tile_icon} (${tile_name})'), [
         "player" => $player,
         "tile" => $tile->getUiData(),
         "tile_icon" => '',
         'preserve'=>['tile'],
+        "tile_name" => $tile->getName(),
+        'i18n'=> ['tile_name'],
     ]);
   }
-  public static function placeTile(Player $player, Tile $tile)
+  public static function placeTile(Player $player, MarketTile $tile)
   {
-    self::notifyAll("placeTile", clienttranslate('${player_name} places the tile ${tile_icon} at row ${row}/column ${col}'), [
+    self::notifyAll("placeTile", clienttranslate('${player_name} places the tile ${tile_icon} (${tile_name}) at row ${row}/column ${col}'), [
         "player" => $player,
         "tile" => $tile->getUiData(),
         "tile_icon" => '',
         "row" => $tile->getRow(),
         "col" => $tile->getCol(),
         'preserve'=>['tile'],
+        "tile_name" => $tile->getName(),
+        'i18n'=> ['tile_name'],
     ]);
   }
   
-  public static function tryFoundOutpost(Player $player, Tile $tile, int $nbContracts)
+  public static function tryFoundOutpost(Player $player, OutpostTile $tile, int $nbContracts)
   {
     $colonyName = Utils::getColonyName($tile->getColony());
-    self::notifyAll("tryFoundOutpost", clienttranslate('${player_name} tries to establish the ${name} outpost ${tile_icon} which requires ${n} ${icon_contracts}'), [
+    self::notifyAll("tryFoundOutpost", clienttranslate('${player_name} tries to establish the ${outpostname} outpost ${tile_icon} which requires ${n} ${icon_contracts}'), [
         "player" => $player,
         "tile" => $tile->getUiData(),
         "tile_icon" => '',
         "n" => $nbContracts,
-        "name" => ($colonyName),
+        "outpostname" => ($colonyName),
         "icon_contracts" => clienttranslate('Contracts'),
         'preserve'=>['tile'],
-        'i18n'=>['name'],
+        'i18n'=>['outpostname'],
     ]);
   }
   
