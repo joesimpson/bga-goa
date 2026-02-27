@@ -97,6 +97,14 @@ $tile_height: 108px;
     }
 
 .goa_tile {
+    .goa_icon_container_greenCheck{
+        position: absolute;
+        right: 0px;
+        top: 0px;
+        //default not visible
+        visibility: hidden;
+    }
+
     //SPICE ABSOLUTE positions on TILE :
     .goa_tile_spot{
         position: absolute;

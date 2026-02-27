@@ -13,6 +13,9 @@
 .goa_icon_nbActions{
     @include goa_icons_sprite(0px,196px,0.2 * 178px,0.2 * 130px,178px,130px);
 }
+.goa_icon_greenCheck{
+    @include goa_icons_sprite(188px,258px,0.5 * 74px, 0.5 * 66px,74px,66px);
+}
 
 $spice_width: 29px;
 $spice_height: 30px;

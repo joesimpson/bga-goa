@@ -428,6 +428,12 @@ Icon extract in sprite with differents layers size (so % is not useful).
 .goa_player_tiles .goa_tile[data-play_type="6"] {
   order: 6;
 }
+.goa_player_tiles .goa_tile[data-play_type="6"][data-state="1"] {
+  filter: unset;
+}
+.goa_player_tiles .goa_tile[data-play_type="6"][data-state="1"] .goa_icon_container_greenCheck {
+  visibility: visible;
+}
 
 .goa_resizable_playerboard {
   width: calc(var(--goa_playerboard_display_scale) * 810px);
@@ -801,6 +807,15 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-position-x: 0px;
   background-position-y: -39.2px;
   background-size: 674.1573033708% 253.8461538462%;
+}
+
+.goa_icon_greenCheck {
+  width: 37px;
+  height: 33px;
+  background-image: url("img/icons.png");
+  background-position-x: -94px;
+  background-position-y: -129px;
+  background-size: 1621.6216216216% 500%;
 }
 
 .goa_icon_spices_white, .goa_icon_spices_1 {
@@ -1815,6 +1830,12 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-position-y: 100%;
 }
 
+.goa_tile .goa_icon_container_greenCheck {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  visibility: hidden;
+}
 .goa_tile .goa_tile_spot {
   position: absolute;
   left: 35px;

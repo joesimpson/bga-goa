@@ -1970,6 +1970,7 @@ export class Game {
                 data-end_score="${tile.end_score}" 
                 >
                 ${spotsDiv}
+                    ${this.formatIcon('greenCheck')}
             </div>`;
         }
         return '';
