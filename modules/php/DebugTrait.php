@@ -454,7 +454,7 @@ trait DebugTrait
         $session = Globals::getSession();
         EndSession::computeScoring($session);
         
-        $this->debug_goToState(ST_PLAYER_TURN);
+        $this->debug_goToState(Game::get()->gamestate->getCurrentMainStateId());
     }
     
     //TEst different notif at a time

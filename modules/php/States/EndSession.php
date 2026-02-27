@@ -82,8 +82,6 @@ class EndSession extends \Bga\GameFramework\States\GameState
         Notifications::computeScoring($session);
         $players = Players::getAll();
 
-        //TODO JSA reset score to 0 if score already live counted  ? (duty)
-            
         //INIT Datas to save
         $sessionScoringDatas = [];
         foreach($players as $pid => $player){

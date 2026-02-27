@@ -1021,7 +1021,8 @@ class PlayerTurn extends GameState
             Players::giveMoney($player, $amount);
         }
         if($forScore>0){
-            $player->addPointsWithTile($forScore, $tile);
+            //We want to keep score unknown until end
+            //$player->addPointsWithTile($forScore, $tile);
         }
         
     }
