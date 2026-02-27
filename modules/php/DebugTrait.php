@@ -295,7 +295,7 @@ trait DebugTrait
         $player->setContracts($contracts);
         $player->setCompasses($compasses);
         $this->debug_refreshUI();
-        $this->debug_goToState(ST_PLAYER_TURN);
+        $this->debug_goToState(Game::get()->gamestate->getCurrentMainStateId());
     }
     
     function debug_changeProgress(int $ships = 1,int $harvest = 2,int $taxes = 4,int $explo = 2,int $found = 1,){
@@ -315,7 +315,7 @@ trait DebugTrait
         $token->setRow($found);
 
         $this->debug_refreshUI();
-        $this->debug_goToState(ST_PLAYER_TURN);
+        $this->debug_goToState(Game::get()->gamestate->getCurrentMainStateId());
     }
 
     function debug_playerTiles(){
@@ -426,7 +426,7 @@ trait DebugTrait
         $player = Players::get($pid);
         Log::addStep();
         Tiles::fillPlayerTileWithSpices($player,$tile);
-        $this->debug_goToState(ST_PLAYER_TURN);
+        $this->debug_goToState(Game::get()->gamestate->getCurrentMainStateId());
     }
     function debug_removeSpicesOnTile(int $tile_id){
         $tile = Tiles::get($tile_id);
@@ -434,7 +434,7 @@ trait DebugTrait
         $player = Players::get($pid);
         Log::addStep();
         Tokens::removeSpicesOnTile($tile,$player);
-        $this->debug_goToState(ST_PLAYER_TURN);
+        $this->debug_goToState(Game::get()->gamestate->getCurrentMainStateId());
     }
     
     function debug_discardTile(int $tile_id){

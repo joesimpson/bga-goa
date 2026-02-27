@@ -365,12 +365,15 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
           ->toArray();
   }
 
-  public static function getUpgradableProgressMarkersWithCoins( Player $player, bool $free = false) : array
+  public static function getUpgradableProgressMarkersWithCoins( Player $player, bool $free = false, bool $onlyHighest = false) : array
   {
     $allMarkers = Tokens::getProgressMarkers($player->getId());
     $playerMoney = $player->getMoney();
 
-    return $allMarkers->map(function ($token) use ($free){ 
+    $maxRow = max(array_keys(PROGRESS_COST_AS_COINS));
+    $minRow = $maxRow;
+
+    return $allMarkers->map(function ($token) use ($free, &$minRow){ 
                 $map = [
                   'track' => $token->getTrackIndex(),
                   'row' => $token->getRow(),
@@ -386,12 +389,17 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
                   $map['costMoney'] = $costs[$currentRow+1];
                   if($free) $map['costMoney'] = 0;
                 }
+                if($minRow > $currentRow){
+                  $minRow = $currentRow;
+                }
                 return $map;
               })
-            ->filter(function ($tokenDatas) use ($playerMoney ) {
+            ->filter(function ($tokenDatas) use ($playerMoney , $onlyHighest, &$minRow ) {
                 if($playerMoney < $tokenDatas['costMoney'] ){
                   return false;
                 }
+                if($onlyHighest && $tokenDatas['row'] > $minRow) return false;
+
                 return true;
             }) 
           ->toArray();

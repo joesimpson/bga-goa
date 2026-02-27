@@ -553,7 +553,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
             $possiblePlay = true;
             break;
           case ACTION_VICEKING: 
-            $progressTracks = Tokens::getUpgradableProgressMarkersWithCoins($player, true);
+            $progressTracks = Tokens::getUpgradableProgressMarkersWithCoins($player, true, true);
             $possiblePlay = count($progressTracks) > 0;
             if($possiblePlay) $playDatas['progressTracks'] = $progressTracks;
             break;
