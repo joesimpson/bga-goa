@@ -452,6 +452,9 @@ export class Game {
             if('action_name' in args) {
                 args.action_name = `<span class='goa_log_action_name' data-type='${args.action_type}'>${_(args.action_name)}</span>`;
             }
+            if('step_icon' in args && args.n){
+                args.step_icon = this.formatIcon('round_step_'+args.n);
+            }
             
         }
       } catch (e) {

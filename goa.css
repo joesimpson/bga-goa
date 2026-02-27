@@ -800,6 +800,25 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-size: 606.0606060606% 170.9844559585%;
 }
 
+.goa_icon_round_step_1 {
+  width: 26px;
+  height: 25.5px;
+  background-image: url("img/icons.png");
+  background-position-x: -116.75px;
+  background-position-y: -52.75px;
+  background-size: 1153.8461538462% 323.5294117647%;
+}
+
+.goa_icon_round_step_2 {
+  width: 29px;
+  height: 21.2px;
+  background-image: url("img/icons.png");
+  background-position-x: -117.4px;
+  background-position-y: -44px;
+  background-size: 827.5862068966% 311.320754717%;
+}
+
+.goa_icon_round_step_3,
 .goa_icon_nbActions {
   width: 35.6px;
   height: 26px;

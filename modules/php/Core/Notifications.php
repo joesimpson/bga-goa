@@ -66,11 +66,12 @@ class Notifications
   
   public static function newRoundStep(int $roundStep, string $stepMessage)
   {
-    $msg = clienttranslate('Round step ${n} begins : ${stepMessage}');
+    $msg = clienttranslate('${step_icon} Round step ${n} begins : ${stepMessage}');
 
     self::notifyAll('newRoundStep', $msg, [
       'n' => $roundStep,
       'stepMessage' => $stepMessage,
+      'step_icon' => '',
       "i18n" => ['stepMessage'],
     ]);
   }
