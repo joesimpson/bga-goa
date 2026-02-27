@@ -1426,6 +1426,9 @@ Icon extract in sprite with differents layers size (so % is not useful).
   align-items: center;
   text-align: center;
 }
+.goa_card_tooltip .goa_card_title {
+  font-size: 1.5em;
+}
 .goa_card_tooltip .goa_card_title, .goa_card_tooltip .goa_card_img_wrap {
   justify-content: center;
   align-items: center;
@@ -1876,6 +1879,9 @@ Icon extract in sprite with differents layers size (so % is not useful).
   justify-content: center;
   align-items: center;
   text-align: center;
+}
+.goa_tile_tooltip .goa_tile_title {
+  font-size: 1.5em;
 }
 .goa_tile_tooltip .goa_tile_title, .goa_tile_tooltip .goa_tile_img_wrap {
   justify-content: center;

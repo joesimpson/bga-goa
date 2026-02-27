@@ -149,6 +149,9 @@ $card_height: var(--goa_explo_card_height);
         align-items: center;
         text-align: center;
     }
+    .goa_card_title{
+        font-size: 1.5em;
+    }
     .goa_card_title, .goa_card_img_wrap {
         justify-content: center;
         align-items: center;

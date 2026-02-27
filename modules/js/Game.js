@@ -1732,7 +1732,7 @@ export class Game {
         let div = this.tplTile(cardDatas,'_tmp'); 
         return [`<div class='goa_tile_tooltip'>
                 <div class="goa_tooltip_block1">
-                    <h1 class="goa_tile_title">${this.formatTileTitle( tile )}</h1>
+                    <span class="goa_tile_title">${this.formatTileTitle( tile )}</span>
                 </div>
                 <div class="goa_tooltip_block2">
                     <div class="goa_tile_img_wrap">${div}</div>
@@ -1749,7 +1749,7 @@ export class Game {
     }
     formatTileTitle (tile) {
         let descriptionMap = new Map([
-            [this.const.MARKET_TYPE_PLANTATION, this.bga.gameui.format_string(_("Plantation"),{ })] ,
+            [this.const.MARKET_TYPE_PLANTATION, this.bga.gameui.format_string(_("Depot"),{ })] ,
             [this.const.MARKET_TYPE_ACTION_REUSEABLE, this.bga.gameui.format_string( _('Multi-use action'),{ } )],
             [this.const.MARKET_TYPE_ACTION_DIRECT, this.bga.gameui.format_string(_("Immediate bonuses"),{ })] ,
             [this.const.MARKET_TYPE_ACTION_ONCE, this.bga.gameui.format_string(_("Single use Action"),{ })] ,
@@ -1772,7 +1772,7 @@ export class Game {
                 return this.bga.gameui.format_string(_("When you establish an outpost, place the outpost tile on the matching space of your personal board. After establishing an outpost, fill it with the appropriate goods from the supply. To establish an outpost with the appropriate action, a player needs to recruit a minimum number of contracts: ${n} contracts for this one."),{ n : this.getNbContractsForColony(tile.colony) });
             case this.const.TILE_SUBTTYPE_MARKET: 
                 descriptionMap = new Map([
-                    [this.const.MARKET_TYPE_PLANTATION, this.bga.gameui.format_string(_("When you build a plantation, put it face up in one of the upper spaces of your personal board. Plantations have 1 to 3 spice fields; this one have ${x}. After building a plantation, fill the field(s) with the appropriate spice token(s). If you already own 4 plantations on your personal board, you must first discard 1 plantation, and any spice tokens still on it, before placing the 5th one. If the discarded plantation has a scoring symbol on it, keep the plantation face down in your play area. This plantation is worth ${n} points at the end of the game, whether it is face up on your personal board or face down in your play area."),{ x: tile.spice_slots.length , n : tile.end_score })] ,
+                    [this.const.MARKET_TYPE_PLANTATION, this.bga.gameui.format_string(_("When you gain a Depot, place it face up in an empty upper space on your Player Board. Immediately fill these fields with the matching Goods from the supply : this one have ${x} fields. If you already have four Depots on your board, you must first discard one Depot (along with any Goods on it) before placing the new one. If the discarded Depot shows a VP symbol, keep it face down in your play area. It is worth ${n} Victory Points at the end of the game."),{ x: tile.spice_slots.length , n : tile.end_score })] ,
                     [this.const.MARKET_TYPE_ACTION_REUSEABLE, this.bga.gameui.format_string( _('Blue Tile : players must put it face up in their play area. They can use it before, during or after their action. This tile can be played during a future action, but only once per round. After using it, the player must flip it and may no longer use it for the rest of the round. At the beginning of the following round, players flip the tile face up and can use it again.'),{ } )],
                     [this.const.MARKET_TYPE_ACTION_DIRECT, this.bga.gameui.format_string(_("Teal Tile : When a player acquires this tile, they immediately take the appropriate resources. After being used, the tile is discarded."),{ })] ,
                     [this.const.MARKET_TYPE_ACTION_ONCE, this.bga.gameui.format_string(_("Yellow Tile : This tile may only be used once during the game. Once used, the tile is discarded."),{ })] ,
@@ -1786,10 +1786,10 @@ export class Game {
     }
     formatScoringTileText (tile) {
         let descriptionMap = new Map([
-            [37, this.bga.gameui.format_string(_('At the end of the game, your single Plantation tiles are worth ${n} points instead of ${x} point.'),{n:3, x:1  })] ,
-            [38, this.bga.gameui.format_string(_('You can score ${n} victory points by returning to the supply ${x} spice tokens placed on your outposts/plantations. Immediately after, flip this tile face down until the final scoring. At the end of the game, reveal this tile to add ${n} points to your score.'),{ n:5, x:6 } )],
-            [39, this.bga.gameui.format_string(_('At the end of the game, this tile is worth ${n} victory points.'),{ 'n':tile.end_score })] ,
-            [40, this.bga.gameui.format_string(_('At the end of the game, this tile is worth ${n} victory points.'),{ 'n':tile.end_score})] ,
+            [37, this.bga.gameui.format_string(_('${tile_name} : At the end of the game, each of your single-field Depots is worth ${n} points instead of ${x} points.'),{'tile_name':_('Foreman'), 'n':3, 'x':1 })] ,
+            [38, this.bga.gameui.format_string(_('${tile_name} : Remove any ${x} Goods from your Outposts and/or Depots and return them to the supply. Then place the Duty tile face down in front of you. At the end of the game, each completed Duty tile is worth ${n} VP.'),{ 'tile_name':_('Duty'), 'n':5, 'x':6 } )],
+            [39, this.bga.gameui.format_string(_('${tile_name} : At the end of the game, this tile is worth ${n} victory points.'),{ 'tile_name':_('Small Mission'), 'n':tile.end_score })] ,
+            [40, this.bga.gameui.format_string(_('${tile_name} : At the end of the game, this tile is worth ${n} victory points.'),{ 'tile_name':_('Large Mission'), 'n':tile.end_score})] ,
         ]);
         let text = descriptionMap.get(tile.type);
         return text;
@@ -2219,8 +2219,8 @@ export class Game {
                 action_desc = this.bga.gameui.format_string(
                             _("Take n ${resource_name} ${icon_resource} where n is indicated on the row of your progress marker on this column.")
                             ,{
-                                'resource_name': _('Spices (any spice matching an empty space on your own plantations or outposts)'), 
-                                icon_resource : this.formatIcon('spice_any')
+                                'resource_name': _('Goods (any good matching an empty space on your own depots or outposts)'), 
+                                icon_resource : this.formatIcon('good_any')
                             }
                         );
                 break;
@@ -2462,10 +2462,10 @@ export class Game {
     getCardTooltipSymbolsInfos(cardDatas) {
         let textSymbols = '<div class="goa_card_symbols_score">';
         if(cardDatas.subtype == this.const.CARD_SUBTTYPE_EXPLORATION){
-            textSymbols += '<br>'+_('Victory points at the end of the game (if not played) : ');
+            textSymbols += '<br>'+_('Victory points at the end of the game (if in player hand) : ');
             textSymbols += '<ul>';
             Object.entries(this.const.END_SCORE_EXPLORATION).forEach(([nbCards,score]) => {
-                textSymbols += '<li>'+this.bga.gameui.format_string( _(' ${n} identical Island Symbol => ${x} points '), {'n':nbCards, 'x': score} ) +  '</li>'; 
+                textSymbols += '<li>'+this.bga.gameui.format_string( _(' ${n} identical Island Symbols => ${x} points '), {'n':nbCards, 'x': score} ) +  '</li>'; 
             });
             textSymbols += '</ul>';
         }
@@ -2494,7 +2494,7 @@ export class Game {
         let div = this.tplCard(cardDatas,'_tmp'); 
         return [`<div class='goa_card_tooltip'>
                 <div class="goa_tooltip_block1">
-                    <h1 class="goa_card_title">${title}</h1>
+                    <span class="goa_card_title">${title}</span>
                 </div>
                 <div class="goa_tooltip_block2">
                     <div class="goa_card_img_wrap">${div}</div>
