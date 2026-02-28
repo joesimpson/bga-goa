@@ -200,28 +200,55 @@ class Notifications
   
   public static function getContracts(Player $player, int $n)
   {
-    self::notifyAll("getContracts", clienttranslate('${player_name} gets ${n} ${icon_contracts}'), [
+    if($n >= 0){
+      self::notifyAll("getContracts", clienttranslate('${player_name} gets ${n} ${icon_contracts}'), [
         "player" => $player,
         "n" => $n,
         "icon_contracts" => clienttranslate('Contracts'),
-    ]);
+      ]);
+    }
+    else {
+      self::notifyAll("spendContracts", clienttranslate('${player_name} spends ${n} ${icon_contracts}'), [
+        "player" => $player,
+        "n" => -$n,
+        "icon_contracts" => clienttranslate('Contracts'),
+      ]);
+    }
   }
   
   public static function getShips(Player $player, int $n)
   {
-    self::notifyAll("getShips", clienttranslate('${player_name} gets ${n} ${icon_ships}'), [
-        "player" => $player,
-        "n" => $n,
-        "icon_ships" => clienttranslate('Ships'),
-    ]);
+    if($n >= 0){
+      self::notifyAll("getShips", clienttranslate('${player_name} gets ${n} ${icon_ships}'), [
+          "player" => $player,
+          "n" => $n,
+          "icon_ships" => clienttranslate('Ships'),
+      ]);
+    }
+    else {
+      self::notifyAll("spendShips", clienttranslate('${player_name} spends ${n} ${icon_ships}'), [
+          "player" => $player,
+          "n" => -$n,
+          "icon_ships" => clienttranslate('Ships'),
+      ]);
+    }
   }
   public static function getCompass(Player $player, int $n)
   {
-    self::notifyAll("getCompass", clienttranslate('${player_name} gets ${n} ${icon_compass}'), [
-        "player" => $player,
-        "n" => $n,
-        "icon_compass" => clienttranslate('Compass cards'),
-    ]);
+    if($n >= 0){
+      self::notifyAll("getCompass", clienttranslate('${player_name} gets ${n} ${icon_compass}'), [
+          "player" => $player,
+          "n" => $n,
+          "icon_compass" => clienttranslate('Compass cards'),
+      ]);
+    }
+    else {
+      self::notifyAll("spendCompass", clienttranslate('${player_name} spends ${n} ${icon_compass}'), [
+          "player" => $player,
+          "n" => -$n,
+          "icon_compass" => clienttranslate('Compass cards'),
+      ]);
+    }
   }
   public static function giveTile(Player $player, Tile $tile)
   {
@@ -405,12 +432,22 @@ class Notifications
   
   public static function getMoney(Player $player, int $amount, )
   {
-    self::notifyAll("getMoney", clienttranslate('${player_name} gets ${n} ${icon_money}'), [
-        "player" => $player,
-        "n" => $amount,
-        "icon_money" => clienttranslate('Pardaos'),
-        "i18n" => ['icon_money'],
-    ]);
+    if($amount >= 0){
+      self::notifyAll("getMoney", clienttranslate('${player_name} gets ${n} ${icon_money}'), [
+          "player" => $player,
+          "n" => $amount,
+          "icon_money" => clienttranslate('Pardaos'),
+          "i18n" => ['icon_money'],
+      ]);
+    }
+    else {
+      self::notifyAll("spendMoney", clienttranslate('${player_name} spends ${n} ${icon_money}'), [
+          "player" => $player,
+          "n" => -$amount,
+          "icon_money" => clienttranslate('Pardaos'),
+          "i18n" => ['icon_money'],
+      ]);
+    }
   }
 
   public static function espionage(Player $player, Player $opponent, int $track)

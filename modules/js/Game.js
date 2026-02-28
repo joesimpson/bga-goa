@@ -1309,46 +1309,33 @@ export class Game {
         this.customDebug('notif_getContracts', notif);
         this._counters[notif.player_id]['contracts'].incValue(notif.n);
     }
+    async notif_spendContracts(notif) {
+        this.customDebug('notif_spendContracts', notif);
+        this._counters[notif.player_id]['contracts'].incValue(-notif.n);
+    }
     async notif_getShips(notif) {
         this.customDebug('notif_getShips', notif);
         this._counters[notif.player_id]['ships'].incValue(notif.n);
+    }
+    async notif_spendShips(notif) {
+        this.customDebug('notif_spendShips', notif);
+        this._counters[notif.player_id]['ships'].incValue(- notif.n);
     }
     async notif_getCompass(notif) {
         this.customDebug('notif_getCompass', notif);
         this._counters[notif.player_id]['compasses'].incValue(notif.n);
     }
+    async notif_spendCompass(notif) {
+        this.customDebug('notif_spendCompass', notif);
+        this._counters[notif.player_id]['compasses'].incValue(-notif.n);
+    }
     async notif_getMoney(notif) {
         this.customDebug('notif_getMoney', notif);
-        let amount = notif.n;
-        let toPlayer = notif.player_id;
-        let toElement = document.getElementById(`goa_reserve_${toPlayer}_money`);
-        let fromElement = document.getElementById(`goa_money_stacks`);
-
-        const floatingPieceAnimationSettings = {
-            duration: 1000,
-            ignoreScale: false,
-            ignoreRotation: true,
-        };
-        let arrayAnim = null;
-        if(amount<0){
-            //Reverse dir (spend money)
-            arrayAnim = new Array(-amount);
-            let toElement2 = fromElement;
-            fromElement = toElement;
-            toElement = toElement2;
-        }
-        else {
-            arrayAnim = new Array(amount);
-        }
-        let animations = arrayAnim.fill(0).map(index => (() => {
-            this.animationManager.slideFloatingElement(this.createCoin(), fromElement, toElement, floatingPieceAnimationSettings)
-        }));
-        await this.animationManager.playInterval(animations);
-
-        let currentPlayer = this.bga.players.getCurrentPlayer();
-        if (currentPlayer && toPlayer == currentPlayer.id){
-            this._counters[toPlayer].money.incValue(amount);
-        }
+        await this.animateGainMoney(notif.player_id, notif.n);
+    }
+    async notif_spendMoney(notif) {
+        this.customDebug('notif_spendMoney', notif);
+        await this.animateGainMoney(notif.player_id, -notif.n);
     }
     
     async notif_giveTile(notif) {
@@ -2683,6 +2670,38 @@ export class Game {
         this.explorationHand.element.parentNode.style.setProperty('--goa_stock_count', nbCards);
     }
     
+    async animateGainMoney(player_id, amount) {
+        let toPlayer = player_id;
+        let toElement = document.getElementById(`goa_reserve_${toPlayer}_money`);
+        let fromElement = document.getElementById(`goa_money_stacks`);
+
+        const floatingPieceAnimationSettings = {
+            duration: 1000,
+            ignoreScale: false,
+            ignoreRotation: true,
+        };
+        let arrayAnim = null;
+        if(amount<0){
+            //Reverse dir (spend money)
+            arrayAnim = new Array(-amount);
+            let toElement2 = fromElement;
+            fromElement = toElement;
+            toElement = toElement2;
+        }
+        else {
+            arrayAnim = new Array(amount);
+        }
+        let animations = arrayAnim.fill(0).map(index => (() => {
+            this.animationManager.slideFloatingElement(this.createCoin(), fromElement, toElement, floatingPieceAnimationSettings)
+        }));
+        await this.animationManager.playInterval(animations);
+
+        let currentPlayer = this.bga.players.getCurrentPlayer();
+        if (currentPlayer && toPlayer == currentPlayer.id){
+            this._counters[toPlayer].money.incValue(amount);
+        }
+
+    }
     /**
      * Create a coin div to animate as a temporary piece (for example for scoring animation).
      */
