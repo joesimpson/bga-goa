@@ -397,7 +397,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
 }
 
 .goa_player_tiles {
-  width: calc(var(--goa_playerboard_display_scale) * 810px);
+  width: calc(var(--goa_playerboard_display_scale) * 745px);
   align-self: baseline;
   display: flex;
   flex-wrap: wrap;
@@ -436,36 +436,35 @@ Icon extract in sprite with differents layers size (so % is not useful).
 }
 
 .goa_resizable_playerboard {
-  width: calc(var(--goa_playerboard_display_scale) * 810px);
-  height: calc(var(--goa_playerboard_display_scale) * 796px);
+  width: calc(var(--goa_playerboard_display_scale) * 745px);
+  height: calc(var(--goa_playerboard_display_scale) * 777px);
 }
 .goa_resizable_playerboard .goa_playerboard_container {
   /* prevents vertical invisible overflow on BGA bottom elements*/
   height: inherit;
 }
 .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard {
-  width: 810px;
-  height: 796px;
+  width: 745px;
+  height: 777px;
   transform: scale(var(--goa_playerboard_display_scale));
   transform-origin: top left;
   border-radius: 10px;
-  border: 2px solid black;
   position: relative;
   display: flex;
   flex-wrap: wrap;
 }
 .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_playerboard_background {
   position: absolute;
-  width: 810px;
-  height: 796px;
+  width: 745px;
+  height: 777px;
   background-size: 100% auto;
   background-repeat: no-repeat;
   border-radius: 10px;
 }
 .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_auction_markers {
   position: absolute;
-  top: 106px;
-  left: 706px;
+  top: 99px;
+  left: 671px;
   width: 58px;
   height: 304px;
 }
@@ -491,9 +490,9 @@ Icon extract in sprite with differents layers size (so % is not useful).
 }
 .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_progress_headers {
   position: absolute;
-  top: 371px;
-  left: 135px;
-  width: 543px;
+  top: 364px;
+  left: 94px;
+  width: 558px;
   height: 78px;
   grid-template-columns: repeat(5, 1fr);
   display: grid;
@@ -504,10 +503,10 @@ Icon extract in sprite with differents layers size (so % is not useful).
 }
 .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_progress_row_headers {
   position: absolute;
-  top: 455px;
-  left: 50px;
+  top: 450px;
+  left: 10px;
   width: 75px;
-  height: 317px;
+  height: 320px;
   grid-template-rows: repeat(5, 1fr);
   display: grid;
 }
@@ -517,9 +516,9 @@ Icon extract in sprite with differents layers size (so % is not useful).
 }
 .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_progress_row_ends {
   position: absolute;
-  top: 460px;
-  left: 694px;
-  width: 90px;
+  top: 455px;
+  left: 659px;
+  width: 82px;
   height: 317px;
   grid-template-rows: repeat(5, 1fr);
   display: grid;
@@ -530,10 +529,10 @@ Icon extract in sprite with differents layers size (so % is not useful).
 }
 .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_progress_tracks {
   position: absolute;
-  top: 456px;
-  left: 135px;
-  width: 545px;
-  height: 310px;
+  top: 450px;
+  left: 95px;
+  width: 552px;
+  height: 317px;
   grid-template-columns: repeat(5, 1fr);
   display: grid;
 }
@@ -634,10 +633,10 @@ Icon extract in sprite with differents layers size (so % is not useful).
 }
 .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_outposts {
   position: absolute;
-  left: 174px;
-  top: 253px;
-  width: 468px;
-  height: 111px;
+  left: 136px;
+  top: 240px;
+  width: 473px;
+  height: 110px;
 }
 .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_outposts .goa_tile {
   position: absolute;
@@ -646,18 +645,18 @@ Icon extract in sprite with differents layers size (so % is not useful).
   left: 1px;
 }
 .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_outposts .goa_tile[data-colony="2"] {
-  left: 120px;
+  left: 122px;
 }
 .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_outposts .goa_tile[data-colony="3"] {
-  left: 240px;
+  left: 243px;
 }
 .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_outposts .goa_tile[data-colony="4"] {
-  left: 359px;
+  left: 365px;
 }
 .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_playerboard_top_zone {
   position: absolute;
-  left: 150px;
-  top: 10px;
+  left: 123px;
+  top: 2px;
   color: black;
   background-color: rgba(255, 255, 255, 0.4941176471);
   border-radius: 15px;
@@ -671,8 +670,8 @@ Icon extract in sprite with differents layers size (so % is not useful).
 }
 .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_playerboard_top_zone.goa_display {
   outline: 5px dashed green;
-  width: 520px;
-  height: 110px;
+  width: 498px;
+  height: 95px;
   grid-template-rows: min-content 1fr !important;
 }
 .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_playerboard_top_zone span {
@@ -696,9 +695,9 @@ Icon extract in sprite with differents layers size (so % is not useful).
 }
 .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_plantations {
   position: absolute;
-  left: 174px;
-  top: 129px;
-  width: 468px;
+  left: 136px;
+  top: 114px;
+  width: 473px;
   height: 110px;
 }
 .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_plantations .goa_tile {
@@ -708,13 +707,13 @@ Icon extract in sprite with differents layers size (so % is not useful).
   left: 1px;
 }
 .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_plantations .goa_tile[data-state="2"] {
-  left: 120px;
+  left: 122px;
 }
 .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_plantations .goa_tile[data-state="3"] {
-  left: 240px;
+  left: 243px;
 }
 .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_plantations .goa_tile[data-state="4"] {
-  left: 359px;
+  left: 365px;
 }
 .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_tile .goa_token {
   position: absolute;
@@ -735,7 +734,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
   box-shadow: 0px 0px 0px 3px #0090ba;
 }
 .goa_player_table[data-color="0090ba"] .goa_playerboard_background {
-  background-image: url("img/boards/player_1.jpg");
+  background-image: url("img/boards/player_1.png");
 }
 .goa_player_table[data-color="0090ba"] .goa_player_avatar, .goa_player_table[data-color="0090ba"] .goa_player_table_title_content {
   outline-color: #0090ba !important;
@@ -744,7 +743,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
   box-shadow: 0px 0px 0px 3px #84cba2;
 }
 .goa_player_table[data-color="84cba2"] .goa_playerboard_background {
-  background-image: url("img/boards/player_2.jpg");
+  background-image: url("img/boards/player_2.png");
 }
 .goa_player_table[data-color="84cba2"] .goa_player_avatar, .goa_player_table[data-color="84cba2"] .goa_player_table_title_content {
   outline-color: #84cba2 !important;
@@ -753,7 +752,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
   box-shadow: 0px 0px 0px 3px #e14a9b;
 }
 .goa_player_table[data-color=e14a9b] .goa_playerboard_background {
-  background-image: url("img/boards/player_3.jpg");
+  background-image: url("img/boards/player_3.png");
 }
 .goa_player_table[data-color=e14a9b] .goa_player_avatar, .goa_player_table[data-color=e14a9b] .goa_player_table_title_content {
   outline-color: #e14a9b !important;
@@ -762,14 +761,14 @@ Icon extract in sprite with differents layers size (so % is not useful).
   box-shadow: 0px 0px 0px 3px #feb713;
 }
 .goa_player_table[data-color=feb713] .goa_playerboard_background {
-  background-image: url("img/boards/player_4.jpg");
+  background-image: url("img/boards/player_4.png");
 }
 .goa_player_table[data-color=feb713] .goa_player_avatar, .goa_player_table[data-color=feb713] .goa_player_table_title_content {
   outline-color: #feb713 !important;
 }
 
 .exploration_hand {
-  max-width: calc(var(--goa_playerboard_display_scale) * 810px);
+  max-width: calc(var(--goa_playerboard_display_scale) * 745px);
 }
 
 /**
