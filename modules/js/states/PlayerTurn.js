@@ -38,8 +38,8 @@ export class PlayerTurn {
                 }
                 var token_icon = (auctionToken) ? this.game.tplToken(auctionToken, '_log') : '';
                 this.bga.statusBar.setTitle(isCurrentPlayerActive ? 
-                    _('Auction ${token_icon} : ${you} must pass or raise the current bid of ${bid} ${icon_money}').replace('${bid}', currentBid).replace('${icon_money}', icon_money).replace('${token_icon}', token_icon) :
-                    _('Auction ${token_icon} : ${actplayer} must pass or raise the current bid of ${bid} ${icon_money}').replace('${bid}', currentBid).replace('${icon_money}', icon_money).replace('${token_icon}', token_icon)
+                    _('Auction ${token_icon} : ${you} may pass or raise the current bid of ${bid} ${icon_money}').replace('${bid}', currentBid).replace('${icon_money}', icon_money).replace('${token_icon}', token_icon) :
+                    _('Auction ${token_icon} : ${actplayer} may pass or raise the current bid of ${bid} ${icon_money}').replace('${bid}', currentBid).replace('${icon_money}', icon_money).replace('${token_icon}', token_icon)
                 );
                 break;
             case this.game.const.ROUND_STEP_PLAYER_ACTIONS: 
@@ -51,8 +51,8 @@ export class PlayerTurn {
                     titleOthers =  _('${actplayer} may play a card or tile');
                 }
                 if(possibleActions.includes('actPassAction')){
-                    titleActive =  _('${you} must pass or spend 1 ${compass_card} for an action').replace('${compass_card}',this.game.formatIcon('compasses',_('Compass card')));
-                    titleOthers =  _('${actplayer} must pass or spend 1 ${compass_card} for an action').replace('${compass_card}',this.game.formatIcon('compasses',_('Compass card')));
+                    titleActive =  _('${you} may pass or spend 1 ${compass_card} for an action').replace('${compass_card}',this.game.formatIcon('compasses',_('Compass card')));
+                    titleOthers =  _('${actplayer} may pass or spend 1 ${compass_card} for an action').replace('${compass_card}',this.game.formatIcon('compasses',_('Compass card')));
                 }
 
                 this.bga.statusBar.setTitle(isCurrentPlayerActive ? titleActive : titleOthers);

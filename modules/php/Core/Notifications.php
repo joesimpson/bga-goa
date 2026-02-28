@@ -226,12 +226,16 @@ class Notifications
   public static function giveTile(Player $player, Tile $tile)
   {
     $notifId = "giveTile";
+    $tile_name = '';
+    if( $tile instanceof MarketTile ) $tile_name = $tile->getName();
+
     //if($tile instanceof OutpostTile) $notifId = "giveOutpost";
     self::notifyAll($notifId, clienttranslate('${player_name} gets the tile ${tile_icon}'), [
         "player" => $player,
         "tile" => $tile->getUiData(),
-        "tile_icon" => '',
+        "tile_icon" => $tile_name,
         'preserve'=>['tile'],
+        'i18n'=> ['tile_icon'],
     ]);
   }
   public static function replaceTile(Player $player, Tile $tile)
