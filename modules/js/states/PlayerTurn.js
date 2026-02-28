@@ -43,16 +43,17 @@ export class PlayerTurn {
                 );
                 break;
             case this.game.const.ROUND_STEP_PLAYER_ACTIONS: 
+                let iconAction = this.game.formatIcon('nbActions');
                 //let titleActive =  _('${you} must select an action (${n} done in this round, min ${x} to pass)').replace('${n}', args.nbActions).replace('${x}', args.minActions);
-                let titleActive =  _('${you} must select an action');
-                let titleOthers =  _('${actplayer} must select an action');
+                let titleActive =  _('${you} must select an action ${icon_action}').replace('${icon_action}',iconAction);
+                let titleOthers =  _('${actplayer} must select an action ${icon_action}').replace('${icon_action}',iconAction);
                 if(args.actionPlayed){
                     titleActive =  _('${you} may play a card or tile');
                     titleOthers =  _('${actplayer} may play a card or tile');
                 }
                 if(possibleActions.includes('actPassAction')){
-                    titleActive =  _('${you} may pass or spend 1 ${compass_card} for an action').replace('${compass_card}',this.game.formatIcon('compasses',_('Compass card')));
-                    titleOthers =  _('${actplayer} may pass or spend 1 ${compass_card} for an action').replace('${compass_card}',this.game.formatIcon('compasses',_('Compass card')));
+                    titleActive =  _('${you} may pass or spend 1 ${compass_card} for an action ${icon_action}').replace('${compass_card}',this.game.formatIcon('compasses',_('Compass card'))).replace('${icon_action}',iconAction);
+                    titleOthers =  _('${actplayer} may pass or spend 1 ${compass_card} for an action ${icon_action}').replace('${compass_card}',this.game.formatIcon('compasses',_('Compass card'))).replace('${icon_action}',iconAction);
                 }
 
                 this.bga.statusBar.setTitle(isCurrentPlayerActive ? titleActive : titleOthers);
