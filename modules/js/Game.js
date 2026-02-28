@@ -471,13 +471,17 @@ export class Game {
     }
 
     addButtonCloseClientState(args){
-        this.bga.statusBar.addActionButton( _('Return'), () => {
+        let callbackOnClose = () =>{
             this.restorePreviousState(args);
+        };
+        this.bga.statusBar.addActionButton( _('Return'), () => {
+            callbackOnClose();
         }, { 
             'color':'secondary',
             'title':_('Return'), 
             'destination': document.getElementById('customSecondary') 
         }); 
+        return callbackOnClose;
     }
     
     destroyTooltip(elem) {

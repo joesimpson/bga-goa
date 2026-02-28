@@ -292,6 +292,15 @@ export class ClientHarvestResources {
         Object.keys(elements).forEach((id) => {
             let elt = elements[id];
             if(selectionHint) elt.setAttribute("title",selectionHint);
+            let unSelectAction = (id, tile_id) => {
+                let tmpTokenDiv = document.getElementById(`goa_token_tmp_for_harvest-TMP_${id}`)
+                if(tmpTokenDiv) this.game.destroy(tmpTokenDiv);
+                this.game.empty(elt);
+                elt.classList.remove('selected_for_client_state');
+                selectedResources.delete(parseInt(id));
+                selectedTiles[tile_id] --;
+                updateStatus();
+            };
             let clickAction = () => {
                 this.game.customDebug("onSelectNSpiceSpots...CLICK",id);
                 let harvestResourcesZone = harvestTopZone.getElementsByClassName('goa_harvest_resources')[0]; 
@@ -299,13 +308,16 @@ export class ClientHarvestResources {
 
                 if(!elt.classList.contains("selectable")) return;
 
-                [...document.querySelectorAll('.goa_tile_spot.selected_for_client_state')].forEach((node) => {
-                    $(node).classList.remove('selected_for_client_state');
-                });
                 let tile_spot = harvestSpots[id]['index'];
                 let tile_id = harvestSpots[id]['tile_id'];
 
-                if (!selectedResources.has(parseInt(id))) {
+                if(elt.classList.contains('selected_for_client_state')){
+                    unSelectAction(id, tile_id);
+                }
+                else if (!selectedResources.has(parseInt(id))) {
+                    [...document.querySelectorAll('.goa_tile_spot.selected_for_client_state')].forEach((node) => {
+                        $(node).classList.remove('selected_for_client_state');
+                    });
                     if (selectedResources.size >= maxElements) return;
 
                     elt.classList.add('selected_for_client_state');
@@ -351,13 +363,7 @@ export class ClientHarvestResources {
 
 
                 } else {
-                    let tmpTokenDiv = document.getElementById(`goa_token_tmp_for_harvest-TMP_${id}`)
-                    if(tmpTokenDiv) this.game.destroy(tmpTokenDiv);
-                    this.game.empty(elt);
-                    elt.classList.remove('selected_for_client_state');
-                    selectedResources.delete(parseInt(id));
-                    selectedTiles[tile_id] --;
-                    updateStatus();
+                    unSelectAction(id, tile_id);
                 }
             };
             this.game.onClick(elt, clickAction);
