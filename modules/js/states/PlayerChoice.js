@@ -166,13 +166,23 @@ export class ClientSelectTileAction {
                 break;
                 case this.game.const.CHOICE_PICK_TILE:
                     let tile_icon = this.game.tplTileFromType(choice, '_log');
-                    this.bga.statusBar.addActionButton( tile_icon, () => {
-                        this.game.customPerformAction("actTileChoice", { 
+                    let action = () => { 
+                            this.game.customPerformAction("actTileChoice", { 
                                 'tile_id' : tile_id,
                                 'choice': choice_id,
                                 'choice_index':args.choice_index,
-                            })
+                            });
+                        };
+                    this.bga.statusBar.addActionButton( tile_icon, () => {
+                            action();
                     }, {  destination: document.getElementById('customPrimary'),'title':_('Select this tile'),  }); 
+                    //+Click on tile itself if displayed (With Favor tile we displayed tiles on page)
+                    let tileToPick = document.getElementById(`goa_tile-${choice_id}`);
+                    if(tileToPick){
+                        this.game.onClick(tileToPick,() => {
+                            action();
+                        });
+                    }
                     break;
                 case this.game.const.CHOICE_PICK_SPICE:
                     this.bga.statusBar.setTitle(
