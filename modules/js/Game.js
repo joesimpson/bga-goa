@@ -2299,12 +2299,12 @@ export class Game {
                 action_gains_desc += '</ul>';
                 
                 action_desc = '<ul>'
-                            + '<li>' + this.bga.gameui.format_string( _("Choose an unestablished outpost."),{  } ) + '</li>'
+                            + '<li>' + this.bga.gameui.format_string( _("First, choose one of the four Outposts. You may not choose an Outpost you have already Established"),{  } ) + '</li>'
                             + '<li>' + this.bga.gameui.format_string( _("The row of your progress marker will give a base number of contracts."),{  } ) + '</li>'
                             + '<li>' + action_gains_desc + '</li>' 
-                            + '<li>' + this.bga.gameui.format_string( _("Flip ${n} exploration cards and add their contracts to those on your player board."),{ n: 2 } ) + '</li>'
+                            + '<li>' + this.bga.gameui.format_string( _("Draw ${n} Exploration Cards and add together the Contracts shown in the bottom-left corner of those cards."),{ n: 2 } ) + '</li>'
                             + '<li>' + this.bga.gameui.format_string( _("You may add any number of contracts from your hand."),{  } ) + '</li>'
-                            + '<li>' + this.bga.gameui.format_string( _("If you successfully meet the requirement of the chosen outpost, take it and place it on your board, filling the Goods spots on it; if not you draw ${n} ${icon_card}"),{ n:1, icon_card: this.formatIcon('contracts',_('Contracts')) } ) + '</li>'
+                            + '<li>' + this.bga.gameui.format_string( _("If you successfully meet the requirement of the chosen outpost, take it and place it on your board, filling the Goods fields on it; If you cannot (or choose not to) provide enough Contracts, the attempt fails : Take ${n} ${icon_contracts}"),{ 'n':1, 'icon_contracts': this.formatIcon('contracts',_('Contracts')) } ) + '</li>'
                         + '</ul>'
                         ;
 

@@ -193,7 +193,7 @@ export class ClientSelectTileAction {
                                 'choice': choice,
                                 'choice_index':args.choice_index,
                             })
-                    }, {  destination: document.getElementById('customPrimary'),'title':_('Select this Good token'),  }); 
+                    }, {  destination: document.getElementById('customPrimary'), }); 
                     break;
                 case this.game.const.CHOICE_REPLACE_TILE:
                     let newtile_icon = this.game.tplTileFromType(args.tile.type, '_log');

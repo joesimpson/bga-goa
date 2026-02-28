@@ -92,7 +92,7 @@
       
       ,"receivedSpices": {
         "id": 40,
-        "name": "Received goods on depots/outposts spots",
+        "name": "Received goods on depots/outposts fields",
         "type": "int"
       }
     },

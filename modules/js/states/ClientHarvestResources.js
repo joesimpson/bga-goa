@@ -55,7 +55,7 @@ export class ClientHarvestResources {
 
         this.game.addButtonCloseClientState(args);
             
-        let selectionHint = _('Select this tile spot to fill');
+        let selectionHint = _('Select this tile field to fill');
         this.onSelectNSpiceSpots(harvestSpots, minSpices, maxSpices, (selectedResources, selectedShips, selectedContracts) => {
             //SORT server params in order to keep same order in replays/tutorials
             let sortedIds = Array.from(selectedResources.keys()).sort((a,b) =>  a - b );
@@ -315,7 +315,7 @@ export class ClientHarvestResources {
                     if(!harvestResourcesZone){
                         let harvestZone = harvestTopZone.getElementsByClassName('goa_harvest_zone')[0]; 
                         harvestZone.insertAdjacentHTML('beforeend', `
-                            <span id='goa_harvest_label' class="goa_harvest_label">${_("Select a good to produce for that spot") }</span>
+                            <span id='goa_harvest_label' class="goa_harvest_label">${_("Select a good to produce for that field") }</span>
                             `);
                         harvestZone.insertAdjacentHTML('beforeend', `
                             <div class="goa_harvest_resources" id="goa_harvest_resources-${activePlayer}"></div>
@@ -346,7 +346,7 @@ export class ClientHarvestResources {
                              
                             selectedTiles[tile_id] ++;
                             updateStatus();
-                        }, { 'id': 'btnHarvestSelect'+spice, 'destination': harvestResourcesZone,'title':_('Select this Good token'),  }); 
+                        }, { 'id': 'btnHarvestSelect'+spice, 'destination': harvestResourcesZone,  }); 
                     });
 
 
