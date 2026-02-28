@@ -307,36 +307,49 @@ class Notifications
 
   public static function drawAndDiscardExploration(int $playerId, ExplorationCard $card)
   {
-    self::notifyAll("drawAndDiscardExploration", clienttranslate('${player_name} draws and discard ${card_icon}'), [
+    $symbolType = $card->getSymbol();
+
+    self::notifyAll("drawAndDiscardExploration", clienttranslate('${player_name} draws and discard ${card_icon} (${icon_symbol})'), [
        "player_id" => $playerId,
         "player_name" => Game::get()->getPlayerNameById($playerId),
         "card" => $card->getUiData(),
         "card_id" => $card->getId(),
         "card_icon" => '',
-        'preserve'=>['card'],
+        'symbolType' => $symbolType,
+        'icon_symbol' => CARD_SYMBOLS[$symbolType],
+        'i18n' => ['icon_symbol'],
+        'preserve'=>['card', 'symbolType'],
     ]);
   }
 
   public static function discardExploration(Player $player, ExplorationCard $card)
   {
-    self::notifyAll("discardExploration", clienttranslate('${player_name} discards ${card_icon} from his hand'), [
+    $symbolType = $card->getSymbol();
+    self::notifyAll("discardExploration", clienttranslate('${player_name} discards ${card_icon} (${icon_symbol}) from his hand'), [
        "player" => $player,
         "card" => $card->getUiData(),
         "card_id" => $card->getId(),
         "card_icon" => '',
-        'preserve'=>['card'],
+        'symbolType' => $symbolType,
+        'icon_symbol' => CARD_SYMBOLS[$symbolType],
+        'i18n' => ['icon_symbol'],
+        'preserve'=>['card', 'symbolType'],
     ]);
   }
   
   public static function playExploration(Player $player, ExplorationCard $card)
   {
+    $symbolType = $card->getSymbol();
     //keep same id as discardExploration to keep same UI behavior for now
-    self::notifyAll("discardExploration", clienttranslate('${player_name} plays ${card_icon} from his hand'), [
+    self::notifyAll("discardExploration", clienttranslate('${player_name} plays ${card_icon} (${icon_symbol}) from his hand'), [
        "player" => $player,
         "card" => $card->getUiData(),
         "card_id" => $card->getId(),
         "card_icon" => '',
-        'preserve'=>['card'],
+        'symbolType' => $symbolType,
+        'icon_symbol' => CARD_SYMBOLS[$symbolType],
+        'i18n' => ['icon_symbol'],
+        'preserve'=>['card', 'symbolType'],
     ]);
   }
   public static function giveExplorationCardsToPlayer(Player $player, Collection $cards)
