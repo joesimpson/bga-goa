@@ -58,7 +58,6 @@ class NextPlayer extends \Bga\GameFramework\States\GameState
                 break;
             case ROUND_STEP_PLAYER_ACTIONS: 
                 $activePlayer = Players::get($activePlayerId);
-                //$turnActions = Globals::getActionsTurns();
                 if($activePlayer->getNbActions() == 0) {
                     //FIRST TURN for player with marker
                     $firstPlayerToken = Tokens::getFirstPlayerToken();
@@ -72,9 +71,6 @@ class NextPlayer extends \Bga\GameFramework\States\GameState
                     $nextPlayer->setCardsPlayed([]);
                     $nextPlayer->setActionPlayed(false);
                 }
-                //$nextPlayer->incNbActions();
-                //TODO JSA INCREASE OnLY when same player act again or remove that global
-                //Globals::incActionsTurns();
             default : 
                 break;
         }

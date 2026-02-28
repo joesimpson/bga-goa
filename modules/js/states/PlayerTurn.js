@@ -17,7 +17,7 @@ export class PlayerTurn {
         
         let roundStep = args.roundStep;
         let possibleActions = args.possibleActions;
-        let icon_money = this.game.formatIcon('money',_('Coins'));
+        let icon_money = this.game.formatIcon('money',_('Pardaos'));
         let activePlayer = this.bga.players.getActivePlayerId();
 
         switch(roundStep){
@@ -236,8 +236,6 @@ export class PlayerTurn {
      * This method is called each time we are leaving the game state. You can use this method to perform some user interface changes at this moment.
      */
     onLeavingState(args, isCurrentPlayerActive) {
-        //TODO JSA disable selection when PLAYER change
-        //this.game.explorationHand.setSelectionMode('none');
         this.game.clearSelection();
         this.game.removeAllActionButtons();
     }

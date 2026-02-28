@@ -152,7 +152,7 @@ declare class StatusBar {
     disabled?: boolean;
     tooltip?: string;
     confirm?: string | (() => string | undefined | null); 
-    autoclick?: boolean | { abortSignal?: AbortSignal };
+    autoclick?: boolean | { abortSignal?: AbortSignal, pausable?: boolean };
   }): HTMLButtonElement;
 
   /**
@@ -238,9 +238,9 @@ declare class Players {
    * Return the current player data stored in gamedatas.players.
    * Can be undefined, if the player isn't at this table (spectator).
    * 
-   * @returns {Object | undefined} the player
+   * @returns {Player | undefined} the player
    */
-  getCurrentPlayer(): Object | undefined;
+  getCurrentPlayer(): Player | undefined;
 
   /**
    * Returns true if the player on whose browser the code is running is a spectator.
@@ -273,17 +273,17 @@ declare class Players {
   /**
    * Return the active player, or null if we are not in an ACTIVE_PLAYER type state.
    * 
-   * @returns {Object | null} the active player
+   * @returns {Player | null} the active player
    */
-  getActivePlayer(): Object | null;
+  getActivePlayer(): Player | null;
 
   /**
    * Return the player data stored in gamedatas.players.
    * Can be undefined, if the player isn't at this table (spectator).
    * 
-   * @returns {Object | undefined} the player
+   * @returns {Player | undefined} the player
    */
-  getPlayer(playerId: number) : Object | undefined;
+  getPlayer(playerId: number) : Player | undefined;
 
   /**
    * Return the HTML code for a player name, colored and with optional background.

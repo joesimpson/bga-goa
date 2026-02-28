@@ -42,7 +42,6 @@ class NewRound extends \Bga\GameFramework\States\GameState
 
         Globals::setBidTurns(0);
         Globals::setCurrentBid(0);
-        Globals::setActionsTurns(0);
         Players::resetActionsPhase();
         Tiles::resetActionsPhase();
 

@@ -206,7 +206,7 @@ export class Game {
                 <div class='goa_panel'>
                     <div class='goa_player_counters_line goa_player_counters_line_cards'>
                         ${this.tplResourceCounter(player,'exploration_hand_size',_('Exploration card'))}
-                        ${this.tplResourceCounter(player,'money',_('Coins'))}
+                        ${this.tplResourceCounter(player,'money',_('Pardaos'))}
                         ${this.tplResourceCounter(player,'ships',_('Ships'))}
                         ${this.tplResourceCounter(player,'contracts',_('Contracts'))}
                         ${this.tplResourceCounter(player,'compasses',_('Compasses'))}
@@ -431,7 +431,7 @@ export class Game {
                 args.tile_icon = this.tplTile(args.tile, '_log');
             }
             if('icon_money' in args) {
-                args.icon_money = this.formatIcon('money', _('Gold'));
+                args.icon_money = this.formatIcon('money', _('Pardaos'));
             }
             if('icon_ships' in args) {
                 args.icon_ships = this.formatIcon('ships', _('Ships'));
@@ -454,6 +454,9 @@ export class Game {
             }
             if('step_icon' in args && args.n){
                 args.step_icon = this.formatIcon('round_step_'+args.n);
+            }
+            if('icon_action' in args){
+                args.icon_action = this.formatIcon('nbActions');
             }
             
         }
@@ -485,7 +488,7 @@ export class Game {
     }
     
     destroyTooltip(elem) {
-        /*TODO JSA destroyTooltip ?
+        /* 
         if (this.tooltips[elem.id]) {
             clearTimeout(this.tooltips[elem.id].showTimeout);
             this.tooltips[elem.id].close();
@@ -2261,8 +2264,8 @@ export class Game {
                 action_desc = this.bga.gameui.format_string(
                             _("Take n ${resource_name} ${icon_resource} where n is indicated on the row of your progress marker on this column.")
                             ,{
-                                'resource_name': _('Coins'), 
-                                icon_resource : this.formatIcon('money',_('Coins'))
+                                'resource_name': _('Pardaos'), 
+                                icon_resource : this.formatIcon('money',_('Pardaos'))
                             }
                         );
                 break;
@@ -2482,8 +2485,6 @@ export class Game {
         else {
             cardDiv.dataset.state = tile.state;//refresh state if already exists
         }
-        //TODO JSA CALL when remove card
-        this.updateCardsStackCounters();
         return $(`goa_card-${card.id}`);
     }
     
@@ -2583,7 +2584,7 @@ export class Game {
             case this.const.CARD_ACTION_5_COINS              : return this.bga.gameui.format_string(_('Ability ${x} : ${gain}') ,
              { 'x':'i', 'gain': this.bga.gameui.format_string(
                     _("Take ${n} ${resource_name} : ${icon_resource}.")
-                    ,{n:5, 'resource_name': _('Coins'), icon_resource : this.formatIcon('money',_('Coins'))}
+                    ,{n:5, 'resource_name': _('Pardaos'), icon_resource : this.formatIcon('money',_('Pardaos'))}
                 )
              }
             );
@@ -2660,16 +2661,6 @@ export class Game {
         `;
     }
 
-    updateCardsStackCounters() { 
-        this.customDebug("updateCardsStackCounters");
-        let currentPlayer = this.bga.players.getCurrentPlayer();
-        if (! currentPlayer) {
-            return;
-        }
-        let nbCards = this.explorationHand.getCardCount();
-        this.explorationHand.element.parentNode.style.setProperty('--goa_stock_count', nbCards);
-    }
-    
     async animateGainMoney(player_id, amount) {
         let toPlayer = player_id;
         let toElement = document.getElementById(`goa_reserve_${toPlayer}_money`);
@@ -2706,7 +2697,7 @@ export class Game {
      * Create a coin div to animate as a temporary piece (for example for scoring animation).
      */
     createCoin() {
-        return this.createTempElement(this.formatIcon('money', _('Coins')));
+        return this.createTempElement(this.formatIcon('money', _('Pardaos')));
     }
     createTempElement(html) {
         const div = document.createElement('div');

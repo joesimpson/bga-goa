@@ -28,7 +28,6 @@ class Globals extends \Bga\Games\Goa\Helpers\DB_Manager
     'firstPlayer' => 'int',
     'currentBid' => 'int',
     'bidTurns' => 'int',
-    'actionsTurns' => 'int',
     'highBidPlayer' => 'int',
     
     'endScoring' => 'obj',
@@ -58,7 +57,6 @@ class Globals extends \Bga\Games\Goa\Helpers\DB_Manager
     self::setRound(0);
     self::setTurn(0);
     self::setBidTurns(0);
-    self::setActionsTurns(0);
     self::setHighBidPlayer(null);
     self::setChoiceTiles([]);
     self::setEndScoring([]);

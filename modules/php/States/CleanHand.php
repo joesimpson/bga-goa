@@ -83,7 +83,6 @@ class CleanHand extends GameState
     { 
         Utils::checkVersion($v);
         PlayerTurn::actDiscard_content($card_id, $activePlayerId, $args);
-        //TODO JSA WHEN max is reached, return to playerTurn, or do it in onEnteringState
         return self::class;
     }
     
@@ -102,7 +101,6 @@ class CleanHand extends GameState
         
         Utils::refreshFoundTileChoice($activePlayerId);
 
-        //TODO JSA WHEN max is reached, return to playerTurn
         return self::class;
     }
     

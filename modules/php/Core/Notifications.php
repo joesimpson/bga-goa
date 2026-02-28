@@ -484,10 +484,11 @@ class Notifications
 
     if($action_name == '') return;
 
-    self::notifyAll("playAction", clienttranslate('${player_name} plays the action ${action_name}'), [
+    self::notifyAll("playAction", clienttranslate('${player_name} plays an action ${icon_action} : ${action_name}'), [
         "player" => $player,
         "action_name" => $action_name,
         "action_type" => $action_type,
+        "icon_action" => '',
         'i18n'=>['action_name'],
         'preserve'=>['action_type'],
     ]);
