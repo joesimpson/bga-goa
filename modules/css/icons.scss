@@ -147,3 +147,39 @@ $symbol_tiny_height: 25px;
     background-position-x: 0%;
     background-position-y: 100%;
 }
+
+
+.goa_button_action{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    word-wrap: break-word;
+    max-width: 50px;
+
+    .goa_action_text{
+        white-space: normal;
+    }
+
+    .goa_action_image{
+        margin: 5px;
+
+        &[data-type="0"]{//progress
+            @include goa_icons_sprite(270px,267px,0.9 * 34px,0.9 * 50px,34px,50px);
+        }
+        &[data-type="1"]{//build ships
+            @include goa_icons_sprite(312px,259px,0.6 * 140px,0.6 * 69px,140px,69px);
+        }
+        &[data-type="2"]{//harvest
+            @include goa_icons_sprite(739px,226px,0.5 * 132px,0.5 * 98px,132px,98px);
+        }
+        &[data-type="3"]{//taxes
+            @include goa_icons_sprite(879px,230px,0.5 * 98px,0.5 * 98px,98px,98px);
+        }
+        &[data-type="4"]{//Explore
+            @include goa_icons_sprite(982px,230px,0.5 * 87px,0.5 * 97px,87px,97px);
+        }
+        &[data-type="5"]{//Found
+            @include goa_icons_sprite(1073px,235px,0.5 * 119px,0.5 * 90px,119px,90px);
+        }
+    }
+}

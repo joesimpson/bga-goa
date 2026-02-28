@@ -1045,6 +1045,68 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-position-y: 100%;
 }
 
+.goa_button_action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  word-wrap: break-word;
+  max-width: 50px;
+}
+.goa_button_action .goa_action_text {
+  white-space: normal;
+}
+.goa_button_action .goa_action_image {
+  margin: 5px;
+}
+.goa_button_action .goa_action_image[data-type="0"] {
+  width: 30.6px;
+  height: 45px;
+  background-image: url("img/icons.png");
+  background-position-x: -243px;
+  background-position-y: -240.3px;
+  background-size: 3529.4117647059% 660%;
+}
+.goa_button_action .goa_action_image[data-type="1"] {
+  width: 84px;
+  height: 41.4px;
+  background-image: url("img/icons.png");
+  background-position-x: -187.2px;
+  background-position-y: -155.4px;
+  background-size: 857.1428571429% 478.2608695652%;
+}
+.goa_button_action .goa_action_image[data-type="2"] {
+  width: 66px;
+  height: 49px;
+  background-image: url("img/icons.png");
+  background-position-x: -369.5px;
+  background-position-y: -113px;
+  background-size: 909.0909090909% 336.7346938776%;
+}
+.goa_button_action .goa_action_image[data-type="3"] {
+  width: 49px;
+  height: 49px;
+  background-image: url("img/icons.png");
+  background-position-x: -439.5px;
+  background-position-y: -115px;
+  background-size: 1224.4897959184% 336.7346938776%;
+}
+.goa_button_action .goa_action_image[data-type="4"] {
+  width: 43.5px;
+  height: 48.5px;
+  background-image: url("img/icons.png");
+  background-position-x: -491px;
+  background-position-y: -115px;
+  background-size: 1379.3103448276% 340.206185567%;
+}
+.goa_button_action .goa_action_image[data-type="5"] {
+  width: 59.5px;
+  height: 45px;
+  background-image: url("img/icons.png");
+  background-position-x: -536.5px;
+  background-position-y: -117.5px;
+  background-size: 1008.4033613445% 366.6666666667%;
+}
+
 /**
  *------
  * BGA framework: Gregory Isabelli & Emmanuel Colin & BoardGameArena

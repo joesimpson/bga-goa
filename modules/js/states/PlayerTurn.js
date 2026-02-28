@@ -141,7 +141,8 @@ export class PlayerTurn {
             }
             
             if(possibleActions.includes('actProgress') && args.progressTracks && args.progressTracks.length>0){
-                this.bga.statusBar.addActionButton(_('Progress'), () => {
+                let actionButton = this.game.formatActionButton(0, _('Progress'));
+                this.bga.statusBar.addActionButton(actionButton, () => {
                     this.bga.states.setClientState("ClientSelectProgress", {
                         descriptionmyturn: '',
                         //description : _("${actplayer} must select a progress track to improve on his board"),
@@ -152,14 +153,16 @@ export class PlayerTurn {
 
             if(possibleActions.includes('actBuildShips')){
                 let actionName = _('Build Ships');
+                let actionButton = this.game.formatActionButton(1, actionName);
                 let actionHint = this.bga.gameui.format_string(_('Action : ${name}'),{'name': actionName});
-                this.bga.statusBar.addActionButton(actionName, () => this.game.customPerformAction("actBuildShips"), { 'title':actionHint,destination: document.getElementById('customPrimary') }); 
+                this.bga.statusBar.addActionButton(actionButton, () => this.game.customPerformAction("actBuildShips"), { 'title':actionHint,destination: document.getElementById('customPrimary') }); 
                 //+ CLICK ON BOARD section
                 this.game.addClickHandlerOnProgressMarker(1,actionHint,activePlayer,() => this.game.customPerformAction("actBuildShips"));
             }
             
             if(possibleActions.includes('actHarvest') && args.harvestSpots &&  Object.keys(args.harvestSpots).length > 0){
                 let actionName = _('Produce');
+                let actionButton = this.game.formatActionButton(2, actionName);
                 let actionHint = this.bga.gameui.format_string(_('Action : ${name}'),{'name': actionName});
                 let goToNext = () => {
                     this.bga.states.setClientState("ClientHarvestResources", {
@@ -172,32 +175,37 @@ export class PlayerTurn {
                         },
                     });
                 };
-                this.bga.statusBar.addActionButton(actionName, () => goToNext(), { 'title':actionHint,destination: document.getElementById('customPrimary') }); 
+                this.bga.statusBar.addActionButton(actionButton, () => goToNext(), { 'title':actionHint,destination: document.getElementById('customPrimary') }); 
                 //+ CLICK ON BOARD section
                 this.game.addClickHandlerOnProgressMarker(2,actionHint,activePlayer,() => goToNext());
             }
             if(possibleActions.includes('actTaxes')){
                 let actionName = _('Collect Taxes');
+                let actionButton = this.game.formatActionButton(3, actionName);
                 let actionHint = this.bga.gameui.format_string(_('Action : ${name}'),{'name': actionName});
-                this.bga.statusBar.addActionButton(actionName, () => this.game.customPerformAction("actTaxes"), { 'title':actionHint,destination: document.getElementById('customPrimary') }); 
+                this.bga.statusBar.addActionButton(actionButton, () => this.game.customPerformAction("actTaxes"), { 'title':actionHint,destination: document.getElementById('customPrimary') }); 
                 //+ CLICK ON BOARD section
                 this.game.addClickHandlerOnProgressMarker(3,actionHint,activePlayer,() => this.game.customPerformAction("actTaxes"));
             }
             
             if(possibleActions.includes('actExploration') && args.nbCardsExploration>0){
-                let actionName = _('Exploration');
+                let actionName = _('Explore');
+                let actionButton = this.game.formatActionButton(4, actionName);
                 let actionHint = this.bga.gameui.format_string(_('Action : ${name}'),{'name': actionName});
                 this.bga.statusBar.addActionButton(
-                    this.bga.gameui.format_string( 
+                    actionButton,
+                    /*this.bga.gameui.format_string( 
                         _('Explore : +${n} ${icon_explo}'),
                         {'n' : args.nbCardsExploration, 'icon_explo': this.game.formatIcon('exploration_card',_('Exploration card'))},
-                    ), () => this.game.customPerformAction("actExploration"), { 'title':actionHint,destination: document.getElementById('customPrimary') }); 
+                    ), */
+                    () => this.game.customPerformAction("actExploration"), { 'title':actionHint,destination: document.getElementById('customPrimary') }); 
                 //+ CLICK ON BOARD section
                 this.game.addClickHandlerOnProgressMarker(4,actionHint,activePlayer,() => this.game.customPerformAction("actExploration"));
             }
             
             if(possibleActions.includes('actFoundOutpost') && args.outpostsToFound.length>0){
                 let actionName = _('Establish Outpost');
+                let actionButton = this.game.formatActionButton(5, actionName);
                 let actionHint = this.bga.gameui.format_string(_('Action : ${name}'),{'name': actionName});
                 let goToNext = () => {
                     this.bga.states.setClientState("ClientFoundOutpost", {
@@ -208,7 +216,7 @@ export class PlayerTurn {
                         },
                     });
                 };
-                this.bga.statusBar.addActionButton(actionName, () => goToNext()
+                this.bga.statusBar.addActionButton(actionButton, () => goToNext()
                     , { 'title':actionHint,destination: document.getElementById('customPrimary') }); 
                 //+ CLICK ON BOARD section
                 this.game.addClickHandlerOnProgressMarker(5,actionHint,activePlayer,() => goToNext());

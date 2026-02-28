@@ -750,6 +750,15 @@ export class Game {
     formatSpiceIcon(spiceType,){
         return this.formatIcon('spices_'+spiceType,this.getGoodsName(spiceType));
     }
+
+    formatActionButton(actionType, actionText){
+        let actionButton = `<div class='goa_button_action'>
+                                <div class='goa_action_text'>`+_(actionText)+`</div>
+                                <div class='goa_action_image' data-type='${actionType}'></div>
+                            </div>`;
+        return actionButton;
+    }
+
     /**
      * Use this tpl for any counters that represent qty of tokens
      */
