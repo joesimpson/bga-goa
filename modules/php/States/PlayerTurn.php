@@ -161,6 +161,12 @@ class PlayerTurn extends GameState
                 }
             }
         }
+        if(in_array('actBid',$possibleActions) && !in_array('actPassBid',$possibleActions)){
+            if($args['minBid'] == $args['maxBid'] && $args['maxBid'] == 0){
+                //AUTO BID MIN BID if we cannot pass (because it is linked to "auto win tile")
+                return $this->actBid($args['minBid'], $activePlayerId, $args, Utils::gameVersion(),true);
+            }
+        }
     }
 
     /**
@@ -212,6 +218,7 @@ class PlayerTurn extends GameState
         int $n, 
         int $activePlayerId, array $args,
         int $v,
+        bool $auto = false,
         )
     {
         Utils::checkVersion($v);
@@ -230,7 +237,7 @@ class PlayerTurn extends GameState
             throw new UnexpectedException(110,"Invalid action actBid");
         }
         
-        Log::addStep();
+        if(!$auto) Log::addStep();
         $player = Players::get($activePlayerId);
 
         // game logic 
@@ -255,7 +262,8 @@ class PlayerTurn extends GameState
         Log::addStep();
         $player = Players::get($activePlayerId);
         $player->setPassed(true);
-        Notifications::passBid($player);
+        $auctionToken = Tokens::getCurrentAuctionToken();
+        Notifications::passBid($player, $auctionToken);
 
         // at the end of the action, move to the next state
         return ConfirmTurn::class;
@@ -1082,7 +1090,7 @@ class PlayerTurn extends GameState
                 if(in_array('actBid',$actions)){
                     $possibleBids = range($args['minBid'],$args['maxBid']);
                     $zombieChoice = $possibleBids[array_rand($possibleBids)];
-                    return $this->actBid($zombieChoice, $playerId, $args, $gameVersion);
+                    return $this->actBid($zombieChoice, $playerId, $args, $gameVersion,true);
                 }
                 else {
                     return $this->actPassBid($gameVersion, $playerId);

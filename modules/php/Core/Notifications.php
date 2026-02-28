@@ -7,6 +7,7 @@ use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Collection;
 use Bga\Games\Goa\Helpers\Utils;
 use Bga\Games\Goa\Managers\Cards;
+use Bga\Games\Goa\Models\AuctionMarker;
 use Bga\Games\Goa\Models\ExplorationCard;
 use Bga\Games\Goa\Models\MarketTile;
 use Bga\Games\Goa\Models\OutpostTile;
@@ -138,10 +139,13 @@ class Notifications
     ]);
   }
   
-  public static function passBid(Player $player, )
+  public static function passBid(Player $player, AuctionMarker $token )
   {
-    self::notifyAll("passBid", clienttranslate('${player_name} passes'), [
+    self::notifyAll("passBid", clienttranslate('${player_name} passes the auction ${token_icon}'), [
         "player" => $player,
+        "token" => $token->getUiData(),
+        "token_icon" => '',
+        'preserve'=>['token'],
     ]);
   }
   
