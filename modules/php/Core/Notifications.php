@@ -49,6 +49,8 @@ class Notifications
 
   public static function newRound(int $round)
   {
+    self::logsLineSeparator();
+
     $msg = clienttranslate('Round ${n} begins');
 
     self::notifyAll('newRound', $msg, [
@@ -63,10 +65,20 @@ class Notifications
     self::notifyAll('endRound', $msg, [
       'n' => $round,
     ]);
+    //Not needed if separator before newRound
+    //self::logsLineSeparator();
+  }
+  
+  public static function logsLineSeparator()
+  {
+    self::notifyAll('lineSeparator', '<hr>', [
+    ]);
   }
   
   public static function newRoundStep(int $roundStep, string $stepMessage)
   {
+    self::logsLineSeparator();
+
     $msg = clienttranslate('${step_icon} Round step ${n} begins : ${stepMessage}');
 
     self::notifyAll('newRoundStep', $msg, [

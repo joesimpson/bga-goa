@@ -1204,6 +1204,14 @@ export class Game {
             this._counters[player.id]['nbActions'].toValue(0);
         });
     }
+    async notif_endRound(notif) {
+        this.customDebug("notif_endRound",notif);
+    }
+    async notif_lineSeparator(notif) {
+        this.customDebug("notif_lineSeparator",notif);
+        //showMessage is not enough for mobile view and other things, lets use "<hr>" in message
+        //this.bga.dialogs.showMessage('<hr>','only_to_log');
+    }
     async notif_resetActionsPhase(notif) {
         this.customDebug("notif_resetActionsPhase",notif);
         let newState = notif.newState;
