@@ -20,6 +20,7 @@ export class ClientHarvestResources {
         let withCard = args.withCard;
         let withTile = args.withTile;
         let otherResources = (args.others) ? args.others : [];
+        let activePlayer = this.bga.players.getActivePlayerId();
 
         this.bga.statusBar.setTitle(
             minSpices == maxSpices ? 
@@ -54,6 +55,9 @@ export class ClientHarvestResources {
         }
 
         this.game.addButtonCloseClientState(args);
+        
+        let harvestTopZone = document.getElementById(`goa_playerboard_top_zone-${activePlayer}`);
+        harvestTopZone.scrollIntoView({'behavior': 'smooth', 'block':'center'});
             
         let selectionHint = _('Select this tile field to fill');
         this.onSelectNSpiceSpots(harvestSpots, minSpices, maxSpices, (selectedResources, selectedShips, selectedContracts) => {
