@@ -16,6 +16,7 @@ use Bga\Games\Goa\Exceptions\UnexpectedException;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Log;
 use Bga\Games\Goa\Helpers\Utils;
+use Bga\Games\Goa\Managers\Cards;
 use Bga\Games\Goa\Managers\Effects;
 use Bga\Games\Goa\Managers\Players;
 use Bga\Games\Goa\Managers\Tiles;
@@ -85,8 +86,9 @@ class PlayerChoice extends GameState
             $args['effects'] = $effects->uiAssoc();
             $args['possibleActions'][] = 'actTileChoice';
         }
-        PlayerTurn::addArgsForCardPlay($player,$args, $actionsWhiteList );
-        PlayerTurn::addArgsForTilePlay($player,$args, $actionsWhiteList);
+        //Allow to play any card/tile during any effect, it may add new effects to the list
+        PlayerTurn::addArgsForCardPlay($player,$args);
+        PlayerTurn::addArgsForTilePlay($player,$args);
 
         ConfirmTurn::addArgsForUndo($args);
         return $args;
@@ -322,6 +324,120 @@ class PlayerChoice extends GameState
         if($doCheckpoint) Log::addStateCheckpoint($nextStateClass);
         
         return $nextStateClass;
+    }
+    
+    /**
+     * Copy of PlayerTurn action for some cards (e) or tiles
+     */
+    #[PossibleAction]
+    public function actSpendSpices(
+        #[IntArrayParam] array $t_ids, 
+        int|null $card_id = null, 
+        int|null $tile_id = null,
+        int $activePlayerId, array $args,
+        int $v,)
+    { 
+        Utils::checkVersion($v);
+        $doCheckpoint = false;
+        $nextStateClass = self::class;
+        PlayerTurn::actSpendSpices_content(
+            $t_ids, 
+            $card_id,
+            $tile_id,
+            $activePlayerId,
+            $args,
+            $doCheckpoint,
+            $prematureStateChange,
+        );
+        
+        if(isset($prematureStateChange) ){//should not happen in this use case
+            $nextStateClass = $prematureStateChange->nextStateClass;
+        }
+        if($doCheckpoint) Log::addStateCheckpoint($nextStateClass);
+        return $nextStateClass;
+    }
+    
+    /**
+     * Copy of PlayerTurn action for some cards (f) or tiles
+     */
+    #[PossibleAction]
+    public function actHarvest(
+        #[IntArrayParam] array $spots, 
+        #[IntArrayParam(name:'res')] array $resources, 
+        int|null $card_id = null, 
+        int|null $tile_id = null, 
+        int $ships, 
+        int $contracts, 
+        int $activePlayerId, array $args,
+        int $v,
+    )
+    { 
+        Utils::checkVersion($v);
+        Log::addStep();
+        $this->game->trace("actHarvest(".json_encode($spots).",".json_encode($resources).",$card_id, $tile_id, $ships, $contracts, $activePlayerId)");
+        $possibleActions = $args['possibleActions'];
+        if(!in_array('actHarvest',$possibleActions)){
+            throw new UnexpectedException(110,"Invalid action actHarvest, see ".json_encode($possibleActions));
+        }
+        $player = Players::get($activePlayerId);
+        $doCheckpoint = false;
+        $nextStateClass = self::class;
+
+        if(isset($card_id)){
+            Cards::playExploration($player, $card_id, );
+        } 
+        else if(isset($tile_id)){
+            $tile = Tiles::playTile($player, $tile_id, null, $doCheckpoint, $prematureStateChange );
+        }
+
+        PlayerTurn::actHarvest_content(
+            $spots, 
+            $resources, 
+            $card_id , 
+            $tile_id , 
+            $ships, 
+            $contracts, 
+            $activePlayerId,   
+            $activePlayerId, 
+            $args,
+        );
+ 
+        if(isset($prematureStateChange) ){
+            //SHOULD NOT HAPPEN IN this use case
+            $nextStateClass = $prematureStateChange->nextStateClass;
+        }
+        if($doCheckpoint) Log::addStateCheckpoint($nextStateClass);
+        return $nextStateClass;
+    }
+
+    /** Copy of PlayerTurn action for some cards or tiles with progress (j) */
+    #[PossibleAction]
+    public function actProgress(
+        int $track, 
+        #[IntArrayParam] array|null $t_ids = null, 
+        int|null $card_id = null, 
+        int|null $tile_id = null, 
+        int $activePlayerId, array $args,
+        int $v,
+    )
+    { 
+        Utils::checkVersion($v);
+        $this->game->trace(__CLASS__.".".__FUNCTION__."($track,$card_id,$tile_id,$activePlayerId)");
+
+        Log::addStep();
+        $doCheckpoint = false;
+        PlayerTurn::actProgress_Content(
+            $track, 
+            $t_ids, 
+            $card_id, 
+            $tile_id, 
+            $activePlayerId, 
+            $args,
+            $doCheckpoint,
+        );
+
+        if($doCheckpoint) Log::addStateCheckpoint(self::class);
+        return self::class;
     }
 
     function zombie(int $playerId, array $args) {

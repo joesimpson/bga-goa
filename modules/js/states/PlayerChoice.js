@@ -25,7 +25,6 @@ export class PlayerChoice {
             _('${actplayer} must choose an effect to resolve')
         );
 
-        //We should not select cards to play now in order to not loose our current server choices
         if(isCurrentPlayerActive) this.game.updateHandSelectable(args);
       
         if (isCurrentPlayerActive || true) { // display buttons choices for other players to let them know
@@ -44,6 +43,11 @@ export class PlayerChoice {
                                     args: { 'effect':effect, 'tile':tile, 'choice_index': effectId
                                         , 'cancelable' : !directState, 'undo': args.undo,
                                         'previousArgs' : args,
+                                        //Allow to play Cards/tiles
+                                        'possibleDiscards': args.possibleDiscards,
+                                        'possiblePlayCards': args.possiblePlayCards,
+                                        'possibleActions': args.possibleActions,
+                                        'possiblePlayTiles': args.possiblePlayTiles,
                                     },
                                 });
                             };
@@ -106,7 +110,9 @@ export class ClientSelectTileAction {
             );
             //TODO JSA tile_name in title
 
-        if(isCurrentPlayerActive) this.game.updateTilesHandSelectable(args.previousArgs);
+        if(isCurrentPlayerActive){
+            this.game.updateHandSelectable(args.previousArgs, true);
+        }
       
         let choices = args.effect.result;
 

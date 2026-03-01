@@ -786,7 +786,7 @@ export class Game {
         let isOnClientState = this.bga.states.isOnClientState();
         let currentClientState = isOnClientState ? this.bga.states.getCurrentMainStateClass():null;
         if(currentClientState){
-            let stateName = currentClientState.constructor.name;
+            let stateName = this.bga.states.getCurrentMainStateName();
             return { 
                 'name' : stateName,
                 'args' : currentClientState.args,
@@ -807,7 +807,7 @@ export class Game {
     }
 
     updateHandSelectableList(args){
-        this.customDebug("updateHandSelectableList",args);
+        this.customDebug("updateHandSelectableList",this.bga.states.getCurrentMainStateName(),args);
         let possibleActions = args.possibleActions;
         //Manage various actions on hand cards with a unique handler
         let possibleDiscards = args.possibleDiscards; 

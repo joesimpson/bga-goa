@@ -60,7 +60,7 @@ class CleanHand extends GameState
     }     
     
     public function onEnteringState(int $activePlayerId, array $args) {
-        $this->game->trace("CleanHand.onEnteringState($activePlayerId)");
+        $this->game->trace(__CLASS__.".".__FUNCTION__."($activePlayerId)");
 
         $player = Players::get($activePlayerId);
         if( $args['handSize'] <=  $args['maxCards'])
@@ -202,7 +202,7 @@ class CleanHand extends GameState
     )
     { 
         Utils::checkVersion($v);
-        $this->game->trace("CleanHand.actProgress($track,$card_id,$tile_id,$activePlayerId)");
+        $this->game->trace(__CLASS__.".".__FUNCTION__."($track,$card_id,$tile_id,$activePlayerId)");
 
         Log::addStep();
         $doCheckpoint = false;
