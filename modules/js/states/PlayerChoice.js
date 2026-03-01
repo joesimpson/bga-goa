@@ -16,13 +16,13 @@ export class PlayerChoice {
     onEnteringState(args, isCurrentPlayerActive) {
         
         let possibleActions = args.possibleActions;
-        let tiles_choices = args.tiles_choices;
+        let effects = args.effects;
         let tiles = args.tiles;
         let directState = false;
 
         this.bga.statusBar.setTitle(isCurrentPlayerActive ? 
-            _('${you} must choose a tile action'):
-            _('${actplayer} must choose a tile action')
+            _('${you} must choose an effect to resolve'):
+            _('${actplayer} must choose an effect to resolve')
         );
 
         //We should not select cards to play now in order to not loose our current server choices
@@ -31,18 +31,17 @@ export class PlayerChoice {
         if (isCurrentPlayerActive || true) { // display buttons choices for other players to let them know
 
             if(possibleActions.includes('actTileChoice')){
-                Object.values(tiles_choices).forEach( tile_choice_entry => {
-                    //Object.values(tile_choice_entry).forEach( tile_choice => {
-                    Object.entries(tile_choice_entry).forEach( ([tile_choice_entry_index,tile_choice])  => {
-                        let tile_id = tile_choice.tile_id;
+                Object.entries(effects).forEach( ([effectId,effect])  => {
+                    if(effect.sourceTile){
+                        let tile_id = effect.sourceTile;
                         let tile = tiles[tile_id];
-                        directState = (Object.entries(tiles_choices).length == 1) && (Object.entries(tile_choice_entry).length == 1);
+                        directState = (Object.entries(effects).length == 1) ;
                         if(tile){
                             let tile_icon = this.game.tplTile(tile, '_log');
                             let nextState = function (bga) {
                                 bga.states.setClientState("ClientSelectTileAction", {
                                     descriptionmyturn: '',
-                                    args: { 'tile_choice':tile_choice, 'tile':tile, 'choice_index': tile_choice_entry_index
+                                    args: { 'effect':effect, 'tile':tile, 'choice_index': effectId
                                         , 'cancelable' : !directState, 'undo': args.undo,
                                         'previousArgs' : args,
                                     },
@@ -50,15 +49,14 @@ export class PlayerChoice {
                             };
                             this.bga.statusBar.addActionButton( tile_icon, () => {
                                 nextState(this.bga);
-                            }, {  destination: document.getElementById('customPrimary'),'title':_('Select this tile'),  }); 
+                            }, {  destination: document.getElementById('customPrimary'),'title':_('Select this tile effect'),  }); 
                             if(directState){
                                 //UNIQUE CHOICE => go for it
                                 nextState(this.bga);
                             }
                         }
-                    });
+                    }
                 });
-
             }
 
         }
@@ -94,7 +92,7 @@ export class ClientSelectTileAction {
      */
     onEnteringState(args, isCurrentPlayerActive) {
         
-        let tile_choice = args.tile_choice;
+        let tile_choice = args.effect;
         let tile_id = args.tile.id;
         let icon_contracts = this.game.formatIcon('contracts',_('Contracts'));
         let isOutpost = args.tile.subtype == this.game.const.TILE_SUBTTYPE_OUTPOST;
@@ -102,22 +100,26 @@ export class ClientSelectTileAction {
 
         this.bga.statusBar.setTitle(
                 isCurrentPlayerActive ? 
-                _("${you} must select one of these")
+                _("${you} must select one of these gains")
                 :
-                _("${actplayer} must select one of these")
+                _("${actplayer} must select one of these gains")
             );
+            //TODO JSA tile_name in title
 
         if(isCurrentPlayerActive) this.game.updateTilesHandSelectable(args.previousArgs);
       
-        Object.entries(tile_choice.choices).forEach( ([choice_id,choice])  => {
-            switch(tile_choice.selectType){
-                case this.game.const.CHOICE_PICK_ACTION:
+        let choices = args.effect.result;
+
+        Object.entries(choices).forEach( ([choice_id,choice])  => {
+            switch(tile_choice.type){
+                case this.game.const.EFFECT_TYPE_HARVEST:
+                case this.game.const.EFFECT_TYPE_PICK_ACTION:
                 default:
                     switch(choice){
                         case this.game.const.ACTION_HARVEST:
                             let buttonText2 = this.bga.gameui.format_string(
                                         _("Produce ${n} goods")
-                                        ,{ 'n':tile_choice.n, }
+                                        ,{ 'n':tile_choice.quantity, }
                                     );
                             this.bga.statusBar.addActionButton( buttonText2, () => {
                                 this.bga.states.setClientState("ClientHarvestResources", {
@@ -125,7 +127,7 @@ export class ClientSelectTileAction {
                                     args: {
                                         'harvestSpots': args.previousArgs.harvestSpots , 
                                         'min': 1,
-                                        'max': tile_choice.n,
+                                        'max': tile_choice.quantity,
                                         'withTile':tile_id,
                                         'serverAction': 'actTileChoice',
                                         'choice_index':args.choice_index,
@@ -137,7 +139,7 @@ export class ClientSelectTileAction {
                         case this.game.const.ACTION_SHIP:
                             let buttonText = this.bga.gameui.format_string(
                                         _("Take ${n} ${resource_name} : ${icon_resource}")
-                                        ,{n:tile_choice.n, 'resource_name': _('Ships'), icon_resource : this.game.formatIcon('ships',_('Ships'))}
+                                        ,{n:tile_choice.quantity, 'resource_name': _('Ships'), icon_resource : this.game.formatIcon('ships',_('Ships'))}
                                     );
                             this.bga.statusBar.addActionButton( buttonText, () => {
                                 this.game.customPerformAction("actTileChoice", { 
@@ -150,7 +152,7 @@ export class ClientSelectTileAction {
                         case this.game.const.ACTION_CONTRACT:
                             let buttonText1 = this.bga.gameui.format_string(
                                         _("Take ${n} ${resource_name} : ${icon_resource}")
-                                        ,{n:tile_choice.n, 'resource_name': _('Contracts'), icon_resource : this.game.formatIcon('contracts',_('Contracts'))}
+                                        ,{n:tile_choice.quantity, 'resource_name': _('Contracts'), icon_resource : this.game.formatIcon('contracts',_('Contracts'))}
                                     );
                             this.bga.statusBar.addActionButton( buttonText1, () => {
                                 this.game.customPerformAction("actTileChoice", { 
@@ -164,7 +166,7 @@ export class ClientSelectTileAction {
                         default: break;
                     }
                 break;
-                case this.game.const.CHOICE_PICK_TILE:
+                case this.game.const.EFFECT_TYPE_PICK_TILE:
                     let tile_icon = this.game.tplTileFromType(choice, '_log');
                     let action = () => { 
                             this.game.customPerformAction("actTileChoice", { 
@@ -184,7 +186,7 @@ export class ClientSelectTileAction {
                         });
                     }
                     break;
-                case this.game.const.CHOICE_PICK_SPICE:
+                case this.game.const.EFFECT_TYPE_PICK_SPICE:
                     this.bga.statusBar.setTitle(
                             isCurrentPlayerActive ? 
                             _("${you} must select the next good to fill that depot/outpost") :
@@ -205,7 +207,7 @@ export class ClientSelectTileAction {
                             })
                     }, {  destination: document.getElementById('customPrimary'), }); 
                     break;
-                case this.game.const.CHOICE_REPLACE_TILE:
+                case this.game.const.EFFECT_TYPE_REPLACE_TILE:
                     let newtile_icon = this.game.tplTileFromType(args.tile.type, '_log');
                     this.bga.statusBar.setTitle(isCurrentPlayerActive ? 
                         _('${you} must choose a Depot to replace on your board by ${tile_icon}').replace('${tile_icon}',newtile_icon) : 
@@ -223,8 +225,8 @@ export class ClientSelectTileAction {
                         });
                         
                     break;
-                case this.game.const.CHOICE_FOUND_TILE:
-                    let missingContracts = tile_choice.n;
+                case this.game.const.EFFECT_TYPE_FOUND_TILE:
+                    let missingContracts = tile_choice.quantity;
                     this.bga.statusBar.setTitle(isCurrentPlayerActive ? 
                         _('${you} must establish the outpost by spending ${n} ${icon_contracts} OR abandon to receive ${x} ${icon_contracts}').replaceAll('${icon_contracts}', icon_contracts).replace('${n}', missingContracts).replace('${x}', 1): 
                         _('${actplayer} must establish the outpost by spending ${n} ${icon_contracts} OR abandon to receive ${x} ${icon_contracts}').replaceAll('${icon_contracts}', icon_contracts).replace('${n}', missingContracts).replace('${x}', 1)
@@ -256,7 +258,7 @@ export class ClientSelectTileAction {
                     }
                     
                     break;
-                case this.game.const.CHOICE_ESPIONAGE:
+                case this.game.const.EFFECT_TYPE_ESPIONAGE:
                     this.bga.statusBar.setTitle(
                         isCurrentPlayerActive ? 
                         _('Espionage : ${you} must choose an action from an opponent board') 

@@ -154,7 +154,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
           if(!isset($nextAvailableSpaceOnPlayerBoard)){
             // IF no more space ask player to discard 1  
             $playerPlantations = Tiles::getPlantations($player);
-            Globals::addChoiceTile($tile,0, 1, $playerPlantations->getIds(), CHOICE_REPLACE_TILE);
+            Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_REPLACE_TILE, 1, $playerPlantations->getIds());
             throw new PrematureStateChangeException (3,PlayerChoice::class, $player);
             //don't modify tile location before this exception !
           }
@@ -231,7 +231,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
       if(is_array($spice)){
         //IF WILD SPICE, ASK PLAYER choice ! 
         //Save datas for next state
-        Globals::addChoiceTile($tile,ACTION_SPICE, $slotPosition, $spice, CHOICE_PICK_SPICE);
+        Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_PICK_SPICE, $slotPosition, $spice);
         $stateExc = new PrematureStateChangeException (3,PlayerChoice::class, $player);
       }
       else {
@@ -684,13 +684,13 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
             $sum += $card->getContracts();
           }
           Notifications::resultDrawNCards($player,$sum);
-          Globals::addChoiceTile($tile,ACTION_HARVEST, $sum, [ACTION_HARVEST, ACTION_CONTRACT, ACTION_SHIP], CHOICE_PICK_ACTION);
+          Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_HARVEST, $sum, [ACTION_HARVEST, ACTION_CONTRACT, ACTION_SHIP]);
           $stateChange = new PrematureStateChangeException (5,PlayerChoice::class,$player);
           break;
         case ACTION_HARVEST:  //done in actHarvest
           break;
         case ACTION_ESPIONAGE: 
-          Globals::addChoiceTile($tile,0, 1, [ACTION_SHIP, ACTION_HARVEST, ACTION_MONEY, ACTION_FOUND_ABANDON], CHOICE_ESPIONAGE);
+          Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_ESPIONAGE, 1, [ACTION_SHIP, ACTION_HARVEST, ACTION_MONEY, ACTION_FOUND_ABANDON]);
           $stateChange = new PrematureStateChangeException (5,PlayerChoice::class,$player);
           break;
         case ACTION_VICEKING: //done in actProgress

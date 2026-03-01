@@ -16,10 +16,15 @@ use Bga\Games\Goa\Exceptions\UnexpectedException;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Log;
 use Bga\Games\Goa\Helpers\Utils;
+use Bga\Games\Goa\Managers\Effects;
 use Bga\Games\Goa\Managers\Players;
 use Bga\Games\Goa\Managers\Tiles;
 use Bga\Games\Goa\Managers\Tokens;
+use Bga\Games\Goa\Models\Effect;
 
+/**
+ * State to resolve different player effects during player turn, before returning to player turn (or confirmturn)
+ */
 class PlayerChoice extends GameState
 {
     function __construct(
@@ -40,42 +45,44 @@ class PlayerChoice extends GameState
 
         $args = [
             'possibleActions' => [],
-            'tiles_choices' => [],
+            'effects' => [],
             'tiles' => [],
         ];
         $player = Players::getActive();
 
         //Use a whitelist of possible card actions, because we don't want complex actions to interfere with multiple steps
         $actionsWhiteList = [];
-        $choiceTiles = Globals::getChoiceTiles(); 
-        if(isset($choiceTiles)){
-            foreach($choiceTiles as $tileId => $tileChoices){
+        $effects = Effects::listToResolve($player->getId()); 
+        if(isset($effects)){
+            foreach($effects as $effectId => $effect){
+                $tileId = $effect->getSourceTile();
+                if(!isset($tileId)) continue;
                 $tile = Tiles::get((int)$tileId);
                 $args['tiles'][$tileId] = $tile->getUiData();
-                foreach($tileChoices as $tileChoiceDatas){
-                    if($tileChoiceDatas['selectType'] === CHOICE_FOUND_TILE ){
+                //foreach($tileChoices as $tileChoiceDatas){
+                    if($effect->getType() === EFFECT_TYPE_FOUND_TILE ){
                         //IF we are near abandon, let player play a card to receive contracts
                         $actionsWhiteList[] = CARD_ACTION_2_CONTRACTS;
                         //IF we are near abandon, let player play a tile to receive contracts
                         $actionsWhiteList[] = ACTION_CONTRACT;
                     }
-                    else if($tileChoiceDatas['type'] === ACTION_HARVEST ){
+                    else if($effect->getType() === EFFECT_TYPE_HARVEST ){
                         $args['harvestSpots'] = Tiles::getPlayerAvailableSpotsForSpices($player);
-                        $args['playerBaseHarvest'] = $tileChoiceDatas['n'];
+                        $args['playerBaseHarvest'] = $effect->getQuantity();
                     }
-                    else if($tileChoiceDatas['selectType'] === CHOICE_ESPIONAGE){
-                        if(in_array(ACTION_HARVEST, $tileChoiceDatas['choices'])){
+                    else if($effect->getType() === EFFECT_TYPE_ESPIONAGE){
+                        if(in_array(ACTION_HARVEST, $effect->getResult())){
                             $args['harvestSpots'] = Tiles::getPlayerAvailableSpotsForSpices($player);
                             $args['playersBaseHarvest'] = Players::getAllHarvestBaseGain();
                         }
-                        if(in_array(ACTION_HARVEST, $tileChoiceDatas['choices'])){
+                        if(in_array(ACTION_FOUND_ABANDON, $effect->getResult())){
                             $args['outpostsToFound'] = Tiles::getFoundableOutposts($player)->getIds();
                             $args['playersBaseContracts'] = Players::getAllFoundBaseContracts();
                         }
                     }
-                }
+                //}
             }
-            $args['tiles_choices'] = $choiceTiles;
+            $args['effects'] = $effects->uiAssoc();
             $args['possibleActions'][] = 'actTileChoice';
         }
         PlayerTurn::addArgsForCardPlay($player,$args, $actionsWhiteList );
@@ -112,17 +119,12 @@ class PlayerChoice extends GameState
         if ( !in_array($tile_id,array_keys($tiles))) {
             throw new UnexpectedException(502,"Invalid tile $tile_id");
         } 
-        $choiceTiles = $args['tiles_choices'];
-        if ( !in_array($tile_id,array_keys($choiceTiles))) {
-            throw new UnexpectedException(503,"Invalid tile $tile_id");
+        $effects = $args['effects'];
+        if ( !in_array($choice_index,array_keys($effects))) {
+            throw new UnexpectedException(503,"Invalid effect $choice_index");
         } 
         $tile = Tiles::get($tile_id);
-        $tile_choices = $args['tiles_choices'][$tile_id];
-        $this->game->trace("actTileChoice()... tiles_choices= ".json_encode($tile_choices));
-        if ( !in_array($choice_index,array_keys($tile_choices))) {
-            throw new UnexpectedException(504,"Invalid tile choice $choice_index");
-        } 
-        $tile_choice = $tile_choices[$choice_index];
+        $effect = $effects[$choice_index];
         
         Log::addStep();
         $player = Players::get($activePlayerId);
@@ -132,30 +134,30 @@ class PlayerChoice extends GameState
         $doCheckpoint = false;
         $roundStep = Globals::getRoundStep();
         try{
-            switch($tile_choice['selectType']){
+            switch($effect['type']){
                 //use 2 different switches, because in case of DB elements ids (like tiles ids), we cannot tell in advance if the id is the same as an predefined action id
-                case CHOICE_PICK_TILE:
+                case EFFECT_TYPE_PICK_TILE:
                     //SELECT A TILE : choice is a tile id
-                    $foundChoice = $this->checkChoiceAsKey($tile_choice,$tile_id,$choice);
+                    $foundChoice = $this->checkChoiceAsKey($effect,$tile_id,$choice);
                     $selectedTile = Tiles::get($choice);
                     Tiles::giveMarketTileToPlayer($player, $selectedTile, $doCheckpoint);
                     break;
-                case CHOICE_REPLACE_TILE:
+                case EFFECT_TYPE_REPLACE_TILE:
                     //SELECT A TILE : choice is a tile id
-                    $foundChoice = $this->checkChoiceAsValue($tile_choice,$tile_id,$choice);
+                    $foundChoice = $this->checkChoiceAsValue($effect,$tile_id,$choice);
                     $selectedTile = Tiles::get($choice);
                     Tiles::discardTileFromPlayer($player, $selectedTile);
                     Tiles::giveMarketTileToPlayer($player, $tile, $doCheckpoint);
                     break;
-                case CHOICE_PICK_SPICE:
+                case EFFECT_TYPE_PICK_SPICE:
                     //SELECT A SPICE : choice is a spice type
-                    $foundChoice = $this->checkChoiceAsValue($tile_choice,$tile_id,$choice);
-                    $slotPosition = $foundChoice['n'];
+                    $foundChoice = $this->checkChoiceAsValue($effect,$tile_id,$choice);
+                    $slotPosition = $foundChoice['quantity'];
                     $spiceTokenType = Tokens::getTokenSpiceTypeFromSpice($choice);
                     Tokens::addSpiceOnTile($tile, $player, $spiceTokenType, $slotPosition);
                     break;
-                case CHOICE_ESPIONAGE:
-                    $foundChoice = $this->checkChoiceAsValue($tile_choice,$tile_id,$choice);
+                case EFFECT_TYPE_ESPIONAGE:
+                    $foundChoice = $this->checkChoiceAsValue($effect,$tile_id,$choice);
                     if(isset($progressRefPlayerId)){
                         $opponentId = $progressRefPlayerId;
                         $opponent = Players::get($opponentId);
@@ -199,21 +201,22 @@ class PlayerChoice extends GameState
                             throw new UnexpectedException(505,"Wrong espionage choice $choice for tile $tile_id");
                     }
                     break;
-                case CHOICE_PICK_ACTION:
+                case EFFECT_TYPE_HARVEST:
+                case EFFECT_TYPE_PICK_ACTION:
                 default:
                     //SELECT AN ACTION : choice is an action id
-                    $foundChoice = $this->checkChoiceAsValue($tile_choice,$tile_id,$choice);
+                    $foundChoice = $this->checkChoiceAsValue($effect,$tile_id,$choice);
                     switch($choice){
                         case ACTION_SHIP:
                         case ACTION_CONTRACT:
-                            Players::directGain($player,$choice, $foundChoice['n'], $tile, $doCheckpoint );
+                            Players::directGain($player,$choice, $foundChoice['quantity'], $tile, $doCheckpoint );
                             break;
                         case ACTION_FOUND_ABANDON:
                             Notifications::abandonOutpost($player,$tile);
                             Players::giveContracts($player, 1);
                             break;
                         case ACTION_FOUND_FORWARD:
-                            $amount = $foundChoice['n'];
+                            $amount = $foundChoice['quantity'];
                             Players::giveContracts($player, -$amount);
                             Tiles::giveOutpostToPlayer($player,$tile);
                             break;
@@ -239,8 +242,8 @@ class PlayerChoice extends GameState
             $prematureStateChange = $exc;
         }
 
-        //remove the right tile choice in Globals
-        $remainingChoices = Globals::removeChoiceTile($tile_id, $choice_index);
+        Effects::resolve($choice_index);
+        $remainingChoices = Effects::countPlayerEffectsToResolve($activePlayerId);
 
         // at the end of the action, move to the next state
         if(isset($prematureStateChange) ){
@@ -248,7 +251,7 @@ class PlayerChoice extends GameState
             //Should not be necessary, but we cannot change active player in active state
             $nextStateClass = $prematureStateChange->nextStateClass;
         }
-        if(count($remainingChoices) > 0){
+        if($remainingChoices > 0){
             //continue to have choices
             $nextStateClass = PlayerChoice::class;
         }
@@ -371,14 +374,14 @@ class PlayerChoice extends GameState
     /**
      * @throws UnexpectedException when incorrect player inputs
      * */
-    function checkChoiceAsKey(array $tile_choice, int $tile_id, int $choice): array{
+    function checkChoiceAsKey(array $effect, int $tile_id, int $choice): array{
         $foundChoice = null;
-        $this->game->trace("checkChoiceAsKey()... choice $choice for tile $tile_id in ".json_encode($tile_choice));
+        $this->game->trace("checkChoiceAsKey()... choice $choice for tile $tile_id in ".json_encode($effect));
         
-        $choices = $tile_choice['choices'];
+        $choices = $effect['result'];
         foreach($choices as $key => $value){
             if ( intval( $key) == $choice) {
-                $foundChoice = $tile_choice;
+                $foundChoice = $effect;
             }
         }
         if ( !isset($foundChoice)) {
@@ -389,12 +392,12 @@ class PlayerChoice extends GameState
     /**
      * @throws UnexpectedException when incorrect player inputs
      * */
-    function checkChoiceAsValue(array $tile_choice, int $tile_id, int $choice) : array{
+    function checkChoiceAsValue(array $effect, int $tile_id, int $choice) : array{
         $foundChoice = null;
-        $choices = $tile_choice['choices'];
+        $choices = $effect['result'];
         foreach($choices as $key => $value){
             if ( intval( $value) == $choice) {
-                $foundChoice = $tile_choice;
+                $foundChoice = $effect;
                 break;
             }
         }

@@ -395,13 +395,13 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
         break;
       case ACTION_SHIPS_OR_CONTRACTS: 
         //Save datas for next state
-        Globals::addChoiceTile($tile,$gainType, $gainQuantity, [ACTION_SHIP, ACTION_CONTRACT]);
+        Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_PICK_ACTION, $gainQuantity, [ACTION_SHIP, ACTION_CONTRACT]);
         throw new PrematureStateChangeException (1,PlayerChoice::class,$player);
       case ACTION_FAVOR: 
         $tilesToChoose = Tiles::getTilesForFavor()->map(function ($tile) {
           return $tile->getType();
         })->toAssoc();
-        Globals::addChoiceTile($tile,$gainType, $gainQuantity, $tilesToChoose,CHOICE_PICK_TILE);
+        Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_PICK_TILE, $gainQuantity, $tilesToChoose);
         throw new PrematureStateChangeException (2,PlayerChoice::class,$player);
         break;
       default: break;

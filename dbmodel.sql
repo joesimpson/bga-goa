@@ -65,6 +65,20 @@ CREATE TABLE IF NOT EXISTS `tokens` (
   PRIMARY KEY (`token_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4 ;
 
+CREATE TABLE IF NOT EXISTS `effects` (
+  `effect_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `effect_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  `effect_state` int DEFAULT 0,
+  `effect_location` varchar(32),
+  `effect_type` int NOT NULL COMMENT 'Type of effect to resolve' ,
+  `effect_qty` int COMMENT 'Amount/Power of the effect' ,
+  `effect_source_tile` int COMMENT 'Tile id if the effect comes from a tile',
+  `effect_source_action` int COMMENT 'Action id if the effect comes from a a standard action',
+  `player_id` int NULL COMMENT 'Player affected : who need to resolve the effect' ,
+  `effect_result` JSON COMMENT 'Result may be different things : a list of choices to apply the effect...',
+  PRIMARY KEY (`effect_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4 ;
+
 -- CORE TABLES from tisaac boilerplate --
 CREATE TABLE IF NOT EXISTS `log` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,

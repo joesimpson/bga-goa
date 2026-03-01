@@ -25,6 +25,7 @@ const ALL_ROUND_STEPS = [
    ROUND_STEP_PLAYER_ACTIONS  ,
 ];
 
+//Actions from tiles or standard action
 const ACTION_MONEY               = 1;
 const ACTION_CONTRACT            = 2;
 const ACTION_SHIP                = 3;
@@ -41,13 +42,6 @@ const ACTION_VICEKING            = 13;
 const ACTION_SPEND_SPICES        = 14;
 const ACTION_FOUND_ABANDON       = 30;
 const ACTION_FOUND_FORWARD       = 31;
-
-const CHOICE_PICK_ACTION         = 1;
-const CHOICE_PICK_TILE           = 2;
-const CHOICE_PICK_SPICE          = 3;
-const CHOICE_REPLACE_TILE        = 4;
-const CHOICE_FOUND_TILE          = 5;
-const CHOICE_ESPIONAGE           = 7;
 
 const SPICE_WHITE     = 1;
 const SPICE_YELLOW    = 2;
@@ -264,6 +258,23 @@ const PROGRESS_COST_AS_COINS = [
 ];
 
 /////////////////////////////////////////////////////////
+//          EFFECTS
+/////////////////////////////////////////////////////////
+const EFFECT_LOCATION_TO_RESOLVE = 'to_resolve';
+const EFFECT_LOCATION_SOLVED = 'solved';
+
+const EFFECT_STATE_TO_SOLVE   = 0;
+const EFFECT_STATE_SOLVED     = 1;
+
+const EFFECT_TYPE_PICK_ACTION    = 1;
+const EFFECT_TYPE_PICK_TILE      = 2;
+const EFFECT_TYPE_PICK_SPICE     = 3;
+const EFFECT_TYPE_REPLACE_TILE   = 4;
+const EFFECT_TYPE_FOUND_TILE     = 5;
+const EFFECT_TYPE_HARVEST        = 6;
+const EFFECT_TYPE_ESPIONAGE      = 7;
+
+/////////////////////////////////////////////////////////
 //          SCORING
 /////////////////////////////////////////////////////////
 /** Score by marker on row */
@@ -404,12 +415,12 @@ CONST ALL_MY_UI_CONSTANTS= [
    'ACTION_FOUND_FORWARD'     => ACTION_FOUND_FORWARD            ,  
    'ACTION_FOUND_ABANDON'     => ACTION_FOUND_ABANDON            ,  
 
-   'CHOICE_PICK_ACTION'       => CHOICE_PICK_ACTION          ,  
-   'CHOICE_PICK_TILE'         => CHOICE_PICK_TILE            ,  
-   'CHOICE_PICK_SPICE'        => CHOICE_PICK_SPICE           ,  
-   'CHOICE_REPLACE_TILE'      => CHOICE_REPLACE_TILE         ,  
-   'CHOICE_FOUND_TILE'        => CHOICE_FOUND_TILE         ,  
-   'CHOICE_ESPIONAGE'         => CHOICE_ESPIONAGE            ,
+   'EFFECT_TYPE_PICK_ACTION'       => EFFECT_TYPE_PICK_ACTION          ,  
+   'EFFECT_TYPE_PICK_TILE'         => EFFECT_TYPE_PICK_TILE            ,  
+   'EFFECT_TYPE_PICK_SPICE'        => EFFECT_TYPE_PICK_SPICE           ,  
+   'EFFECT_TYPE_REPLACE_TILE'      => EFFECT_TYPE_REPLACE_TILE         ,  
+   'EFFECT_TYPE_FOUND_TILE'        => EFFECT_TYPE_FOUND_TILE         ,  
+   'EFFECT_TYPE_ESPIONAGE'         => EFFECT_TYPE_ESPIONAGE            ,
 
    'SPICE_WHITE'  => SPICE_WHITE ,
    'SPICE_YELLOW' => SPICE_YELLOW,

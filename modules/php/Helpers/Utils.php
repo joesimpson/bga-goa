@@ -4,6 +4,7 @@ namespace Bga\Games\Goa\Helpers;
 use Bga\GameFramework\UserException;
 use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Game;
+use Bga\Games\Goa\Managers\Effects;
 use Bga\Games\Goa\Managers\Players;
 use Bga\Games\Goa\States\CleanHand;
 use Bga\Games\Goa\States\ConfirmTurn;
@@ -212,21 +213,16 @@ abstract class Utils {
     public static function refreshFoundTileChoice(int $playerId){
 
         $player = Players::get($playerId);
-        $choiceTiles = Globals::getChoiceTiles(); 
-        //REFRESH TILES CHOICES DATAS according to played card/tile adding contracts
-        foreach($choiceTiles as $tileId => &$tileChoices){
-            foreach($tileChoices as &$tileChoiceDatas){
-                if($tileChoiceDatas['selectType'] === CHOICE_FOUND_TILE 
-                && !in_array(ACTION_FOUND_FORWARD,$tileChoiceDatas['choices']) ){
-                    //
-                    $missingContracts = $tileChoiceDatas['n'];
+        $effectsToFound = Effects::getEffectToResolveByType(EFFECT_TYPE_FOUND_TILE,$playerId);
+        //REFRESH Effect data according to played card/tile adding contracts
+        foreach($effectsToFound as &$effect){
+                if(!in_array(ACTION_FOUND_FORWARD,$effect->getResult()) ){
+                    $missingContracts = $effect->getQuantity();
                     if($player->getContracts() >= $missingContracts){
-                        $tileChoiceDatas['choices'][] = ACTION_FOUND_FORWARD;
+                        $effect->addChoiceInResult(ACTION_FOUND_FORWARD);
                     }
                 }
-            }
         }
-        Globals::setChoiceTiles($choiceTiles);
     }
 
     

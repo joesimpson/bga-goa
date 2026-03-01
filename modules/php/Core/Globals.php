@@ -32,9 +32,6 @@ class Globals extends \Bga\Games\Goa\Helpers\DB_Manager
     
     'endScoring' => 'obj',
 
-    //save infos about tiles between states
-    'choiceTiles' => 'obj',
-
     //For Undo log module
     'choices' => 'int',
 
@@ -58,7 +55,6 @@ class Globals extends \Bga\Games\Goa\Helpers\DB_Manager
     self::setTurn(0);
     self::setBidTurns(0);
     self::setHighBidPlayer(null);
-    self::setChoiceTiles([]);
     self::setEndScoring([]);
 
     //Randomize first player selection
@@ -108,28 +104,6 @@ class Globals extends \Bga\Games\Goa\Helpers\DB_Manager
     //Stats::inc("turns_number");
   }
 
-  public static function addChoiceTile(Tile $tile, int $choiceType, int $choiceQuantity, array $choices, int $selectType = CHOICE_PICK_ACTION) : array
-  {
-    $choiceTiles = Globals::getChoiceTiles(); 
-    $tileId = $tile->getId();
-    if(!array_key_exists($tileId,$choiceTiles) )  $choiceTiles[$tileId] = [];
-    //use tile id as key to keep track (in case of future multiples bonuses on same tile)
-    $choiceTiles[$tileId][] = ['tile_id'=>$tileId, 'type' => $choiceType, 'n' => $choiceQuantity, 'choices' => $choices, 'selectType' => $selectType ];
-    Globals::setChoiceTiles($choiceTiles);
-    return $choiceTiles;
-  }
-
-  public static function removeChoiceTile(int $tileId, int $index) : array
-  {
-    $choiceTiles = Globals::getChoiceTiles(); 
-    if(!array_key_exists($tileId,$choiceTiles) ) return $choiceTiles;
-    unset($choiceTiles[$tileId][$index]);
-    if(count($choiceTiles[$tileId]) == 0){
-      unset($choiceTiles[$tileId]);
-    }
-    Globals::setChoiceTiles($choiceTiles);
-    return $choiceTiles;
-  }
 
   //////////////////////////////////////////////////////////////////////////////////////
   protected static function cast($row)

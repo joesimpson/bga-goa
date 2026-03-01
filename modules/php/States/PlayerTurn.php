@@ -19,6 +19,7 @@ use Bga\Games\Goa\Helpers\GridUtils;
 use Bga\Games\Goa\Helpers\Log;
 use Bga\Games\Goa\Helpers\Utils;
 use Bga\Games\Goa\Managers\Cards;
+use Bga\Games\Goa\Managers\Effects;
 use Bga\Games\Goa\Managers\Players;
 use Bga\Games\Goa\Managers\Tiles;
 use Bga\Games\Goa\Managers\Tokens;
@@ -799,8 +800,8 @@ class PlayerTurn extends GameState
         }
         $playerChoices[] = ACTION_FOUND_ABANDON;//always possible
 
-        Globals::addChoiceTile($tile,0, $missingContracts, $playerChoices, CHOICE_FOUND_TILE);
         
+        Effects::addEffectOnTile($player,$tile_id, EFFECT_TYPE_FOUND_TILE, $missingContracts, $playerChoices);
     }
     
     /**

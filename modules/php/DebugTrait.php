@@ -8,6 +8,7 @@ use Bga\Games\Goa\Helpers\Log;
 use Bga\Games\Goa\Helpers\QueryBuilder;
 use Bga\Games\Goa\Helpers\Utils;
 use Bga\Games\Goa\Managers\Cards;
+use Bga\Games\Goa\Managers\Effects;
 use Bga\Games\Goa\Managers\Players;
 use Bga\Games\Goa\Managers\Tiles;
 use Bga\Games\Goa\Managers\Tokens;
@@ -121,19 +122,18 @@ trait DebugTrait
         $this->debug_refreshUI();
         $this->debug_goToState(ST_PLAYER_TURN);
     }
-    function debug_Globals(){
+    function debug_Effects(){
         $player = Players::getCurrent();
-        Globals::setChoiceTiles([]);
+        Log::addStep();
         $tile = Tiles::getByType(26,TILE_SUBTTYPE_MARKET)->first();
-        Globals::addChoiceTile($tile,ACTION_SHIPS_OR_CONTRACTS, 3, [ACTION_SHIP, ACTION_CONTRACT]);
+        $effects = [];
+        $effects[] = Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_PICK_ACTION, 3, [ACTION_SHIP, ACTION_CONTRACT]);
         //simulate 2 choices
-        Globals::addChoiceTile($tile,ACTION_SHIPS_OR_CONTRACTS, 1, [ACTION_SHIP, ACTION_CONTRACT]);
-        Globals::addChoiceTile($tile,ACTION_SHIPS_OR_CONTRACTS, 2, [ACTION_SHIP, ACTION_CONTRACT]);
+        $effects[] = Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_PICK_ACTION, 1, [ACTION_SHIP, ACTION_CONTRACT]);
+        $effects[] = Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_PICK_ACTION, 2, [ACTION_SHIP, ACTION_CONTRACT]);
 
         //TEST removing an element of the list by index
-        $allChoices = Globals::getChoiceTiles();
-        unset($allChoices[$tile->getId()][1]);
-        Globals::setChoiceTiles($allChoices);
+        Effects::delete($effects[1]->getId());
 
         //FAVOR
         $tile = Tiles::getByType(30,TILE_SUBTTYPE_MARKET)->first();
@@ -142,18 +142,26 @@ trait DebugTrait
             ->map(function ($tile) {
                 return $tile->getType();
             })->toAssoc();
-        
-        Globals::addChoiceTile($tile,ACTION_FAVOR, 1, $tilesToChoose,CHOICE_PICK_TILE);
+        Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_PICK_TILE, 1, $tilesToChoose);
         
         //Spices
-        //$tile = Tiles::getByType(2,TILE_SUBTTYPE_MARKET)->first();
-        //Globals::addChoiceTile($tile,ACTION_SPICE, 1, SPICES_ALL, CHOICE_PICK_SPICE);
+        $tile = Tiles::getByType(2,TILE_SUBTTYPE_MARKET)->first();
+        Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_PICK_SPICE, 1, SPICES_ALL);
 
         //Plantation
         $tile = Tiles::getByType(2,TILE_SUBTTYPE_MARKET)->first();
         $playerPlantations = Tiles::getPlantations($player);
-        Globals::addChoiceTile($tile,0, 1, $playerPlantations->getIds(), CHOICE_REPLACE_TILE);
+        Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_REPLACE_TILE, 1, $playerPlantations->getIds());
 
+        //ACTION_RESUPPLY
+        $tile = Tiles::getByType(32,TILE_SUBTTYPE_MARKET)->first();
+        Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_HARVEST, 7, [ACTION_HARVEST, ACTION_CONTRACT, ACTION_SHIP],);
+
+        //ACTION_ESPIONAGE
+        $tile = Tiles::getByType(34,TILE_SUBTTYPE_MARKET)->first();
+        Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_REPLACE_TILE, 1, [ACTION_SHIP, ACTION_HARVEST, ACTION_MONEY, ACTION_FOUND_ABANDON]);
+
+        $this->debug_refreshUI();
         Game::get()->gamestate->jumpToState(ST_PLAYER_CHOICE);
     }
 
