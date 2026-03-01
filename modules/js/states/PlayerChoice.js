@@ -31,13 +31,14 @@ export class PlayerChoice {
 
             if(possibleActions.includes('actTileChoice')){
                 Object.entries(effects).forEach( ([effectId,effect])  => {
+                    directState = (Object.entries(effects).length == 1) ;
+                    let nextState = function () { };
                     if(effect.sourceTile){
                         let tile_id = effect.sourceTile;
                         let tile = tiles[tile_id];
-                        directState = (Object.entries(effects).length == 1) ;
                         if(tile){
                             let tile_icon = this.game.tplTile(tile, '_log');
-                            let nextState = function (bga) {
+                            nextState = function (bga) {
                                 bga.states.setClientState("ClientSelectTileAction", {
                                     descriptionmyturn: '',
                                     args: { 'effect':effect, 'tile':tile, 'choice_index': effectId
@@ -54,11 +55,34 @@ export class PlayerChoice {
                             this.bga.statusBar.addActionButton( tile_icon, () => {
                                 nextState(this.bga);
                             }, {  destination: document.getElementById('customPrimary'),'title':_('Select this tile effect'),  }); 
-                            if(directState){
-                                //UNIQUE CHOICE => go for it
-                                nextState(this.bga);
-                            }
                         }
+                    }
+                    else if(effect.sourceAction){
+                        nextState = function (bga) {
+                            bga.states.setClientState("ClientSelectActionEffect", {
+                                descriptionmyturn: '',
+                                args: { 'effect':effect,
+                                    'choice_index': effectId,
+                                    'cancelable' : !directState, 
+                                    'undo': args.undo,
+                                    'previousArgs' : args,
+                                    //Allow to play Cards/tiles
+                                    'possibleDiscards': args.possibleDiscards,
+                                    'possiblePlayCards': args.possiblePlayCards,
+                                    'possibleActions': args.possibleActions,
+                                    'possiblePlayTiles': args.possiblePlayTiles,
+                                },
+                            });
+                        };
+                        let actionName = this.game.formatActionName(effect.sourceAction);
+                        let actionHint = this.bga.gameui.format_string(_('Action : ${name}'),{'name': actionName});
+                        this.bga.statusBar.addActionButton(actionHint, () => {
+                            nextState(this.bga);
+                        }, {  destination: document.getElementById('customPrimary'),'title':_('Select this action effect'),  }); 
+                    }
+                    if(directState){
+                        //UNIQUE CHOICE => go for it
+                        nextState(this.bga);
                     }
                 });
             }
@@ -349,6 +373,70 @@ export class ClientSelectTileAction {
                     break;
             }
         });
+
+        if(args.cancelable){
+            this.game.addButtonCloseClientState(args);
+        }
+        
+        if(isCurrentPlayerActive) this.game.confirmTurn.displayUndoButtons(args);
+
+    }
+
+    /**
+     * This method is called each time we are leaving the game state. You can use this method to perform some user interface changes at this moment.
+     */
+    onLeavingState(args, isCurrentPlayerActive) {
+        this.game.clearSelection();
+        this.game.removeAllActionButtons();
+    }
+ 
+}
+
+/// -----------------------------------------------------------
+/// -----------------------------------------------------------
+/// -----------------------------------------------------------
+/// -----------------------------------------------------------
+
+/**
+ * Client STATE
+ */
+export class ClientSelectActionEffect {
+    constructor(game, bga) {
+        this.game = game;
+        this.bga = bga;
+    }
+
+    /**
+     * This method is called each time we are entering the game state. You can use this method to perform some user interface changes at this moment.
+     */
+    onEnteringState(args, isCurrentPlayerActive) {
+        
+        let effect = args.effect;
+        let activePlayerId = this.bga.players.getActivePlayerId();
+
+        if(isCurrentPlayerActive){
+            this.game.updateHandSelectable(args.previousArgs, true);
+        }
+      
+        switch(effect.type){
+            case this.game.const.EFFECT_TYPE_CLEAN_HAND:
+                //CleanHand was before designed as a server state
+                this.bga.states.setClientState("CleanHand", {
+                    descriptionmyturn: '',
+                    args: { 
+                        'previousArgs' : args,
+                        'maxCards' : args.previousArgs.maxCards,
+                        //Allow to play Cards/tiles
+                        'possibleDiscards': args.possibleDiscards,
+                        'possiblePlayCards': args.possiblePlayCards,
+                        'possibleActions': args.possibleActions,
+                        'possiblePlayTiles': args.possiblePlayTiles,
+                    },
+                });
+                break;
+            default:
+                break;
+        }
 
         if(args.cancelable){
             this.game.addButtonCloseClientState(args);

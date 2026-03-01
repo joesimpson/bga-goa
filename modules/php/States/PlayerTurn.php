@@ -710,14 +710,16 @@ class PlayerTurn extends GameState
         $nbMaxToKeep = Cards::maxExplorationToKeep($player);
         $nbCardsInHand = Cards::countInExplorationHand($activePlayerId);
         if($nbCardsInHand > $nbMaxToKeep){
-            /*
-            Globals::addActionChoice($activePlayerId,ACTION_CLEAN_HAND, [ACTION_PLAY_CARD, ACTION_DISCARD_CARD], );
-            Log::addStateCheckpoint(PlayerChoice::class);
-            return PlayerChoice::class;
-            */
             Notifications::cleanHandStart($player, $nbMaxToKeep);
+            /*
+            //TODO JSA REMOVE Class CleanHand
             Log::addStateCheckpoint(CleanHand::class);
             return CleanHand::class;
+            */
+            Effects::addEffectOnAction($player,ACTION_TYPE_EXP, EFFECT_TYPE_CLEAN_HAND, null, []);
+
+            Log::addStateCheckpoint(PlayerChoice::class);
+            return PlayerChoice::class;
         }
 
         Log::addStateCheckpoint(PlayerTurn::class);

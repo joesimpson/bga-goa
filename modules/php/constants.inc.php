@@ -25,6 +25,13 @@ const ALL_ROUND_STEPS = [
    ROUND_STEP_PLAYER_ACTIONS  ,
 ];
 
+const ACTION_TYPE_PROGRESS    = 0;
+const ACTION_TYPE_BUILD_SHIPS = 1;
+const ACTION_TYPE_PRODUCE     = 2;
+const ACTION_TYPE_TAXES       = 3;
+const ACTION_TYPE_EXP         = 4;
+const ACTION_TYPE_FOUND       = 5;
+
 //Actions from tiles or standard action
 const ACTION_MONEY               = 1;
 const ACTION_CONTRACT            = 2;
@@ -273,6 +280,7 @@ const EFFECT_TYPE_REPLACE_TILE   = 4;
 const EFFECT_TYPE_FOUND_TILE     = 5;
 const EFFECT_TYPE_HARVEST        = 6;
 const EFFECT_TYPE_ESPIONAGE      = 7;
+const EFFECT_TYPE_CLEAN_HAND     = 8;
 
 /////////////////////////////////////////////////////////
 //          SCORING
@@ -399,6 +407,13 @@ CONST ALL_MY_UI_CONSTANTS= [
    'ROUND_STEP_TILE_AUCTIONS' => ROUND_STEP_TILE_AUCTIONS  ,
    'ROUND_STEP_PLAYER_ACTIONS' => ROUND_STEP_PLAYER_ACTIONS ,
 
+   'ACTION_TYPE_PROGRESS'     => ACTION_TYPE_PROGRESS    ,
+   'ACTION_TYPE_BUILD_SHIPS'  => ACTION_TYPE_BUILD_SHIPS ,
+   'ACTION_TYPE_PRODUCE'      => ACTION_TYPE_PRODUCE     ,
+   'ACTION_TYPE_TAXES'        => ACTION_TYPE_TAXES       ,
+   'ACTION_TYPE_EXP'          => ACTION_TYPE_EXP         ,
+   'ACTION_TYPE_FOUND'        => ACTION_TYPE_FOUND       ,
+
    'ACTION_MONEY'             => ACTION_MONEY               ,  
    'ACTION_CONTRACT'          => ACTION_CONTRACT            ,  
    'ACTION_SHIP'              => ACTION_SHIP                ,  
@@ -421,6 +436,7 @@ CONST ALL_MY_UI_CONSTANTS= [
    'EFFECT_TYPE_REPLACE_TILE'      => EFFECT_TYPE_REPLACE_TILE         ,  
    'EFFECT_TYPE_FOUND_TILE'        => EFFECT_TYPE_FOUND_TILE         ,  
    'EFFECT_TYPE_ESPIONAGE'         => EFFECT_TYPE_ESPIONAGE            ,
+   'EFFECT_TYPE_CLEAN_HAND'        => EFFECT_TYPE_CLEAN_HAND            ,
 
    'SPICE_WHITE'  => SPICE_WHITE ,
    'SPICE_YELLOW' => SPICE_YELLOW,

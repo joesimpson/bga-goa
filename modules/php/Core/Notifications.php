@@ -422,6 +422,7 @@ class Notifications
     ]);
   }
   
+  //TODO JSA Check if obsolete
   public static function cleanHandEnd(Player $player, int $handSize)
   {
     self::notifyAll("cleanHandEnd", clienttranslate('${player_name} now reaches his hand limit (${n})'), [
@@ -474,12 +475,12 @@ class Notifications
 
     $action_name = '';
     switch($serverAction){
-      case 'actProgress':     $action_type = 0; $action_name = clienttranslate("Progress"); break;
-      case 'actBuildShips':   $action_type = 1; $action_name = clienttranslate("Build Ships"); break;
-      case 'actHarvest':      $action_type = 2; $action_name = clienttranslate("Produce"); break;
-      case 'actTaxes':        $action_type = 3; $action_name = clienttranslate("Collect Taxes"); break;
-      case 'actExploration':  $action_type = 4; $action_name = clienttranslate("Explore"); break;
-      case 'actFoundOutpost': $action_type = 5; $action_name = clienttranslate("Establish an Outpost"); break;
+      case 'actProgress':     $action_type = ACTION_TYPE_PROGRESS   ; $action_name = clienttranslate("Progress"); break;
+      case 'actBuildShips':   $action_type = ACTION_TYPE_BUILD_SHIPS; $action_name = clienttranslate("Build Ships"); break;
+      case 'actHarvest':      $action_type = ACTION_TYPE_PRODUCE    ; $action_name = clienttranslate("Produce"); break;
+      case 'actTaxes':        $action_type = ACTION_TYPE_TAXES      ; $action_name = clienttranslate("Collect Taxes"); break;
+      case 'actExploration':  $action_type = ACTION_TYPE_EXP        ; $action_name = clienttranslate("Explore"); break;
+      case 'actFoundOutpost': $action_type = ACTION_TYPE_FOUND      ; $action_name = clienttranslate("Establish an Outpost"); break;
     }
 
     if($action_name == '') return;

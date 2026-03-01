@@ -67,6 +67,28 @@ class Effects extends \Bga\Games\Goa\Helpers\Pieces
     $elt = self::singleCreate($effect);
     return $elt;
   }
+  
+  public static function addEffectOnAction(
+    Player $player,
+    int $action_id,
+    int $type,
+    int|null $quantity,
+    array $result,
+  ): Effect
+  {
+    $effect = [
+      'player_id' => $player->getId(),
+      'effect_type' => $type,
+      'location' => EFFECT_LOCATION_TO_RESOLVE, //for the class Pieces
+      static::$prefix .'state' => EFFECT_STATE_TO_SOLVE,
+      'effect_qty' => $quantity,
+      'effect_source_tile' => null,
+      'effect_source_action' => $action_id,
+      'effect_result' => json_encode($result),
+    ];
+    $elt = self::singleCreate($effect);
+    return $elt;
+  }
 
   /**
    * @return Collection list of effects to resolve for param player

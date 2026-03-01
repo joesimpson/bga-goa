@@ -32,7 +32,7 @@ import { ClientSelectSpicesForProgress } from "./states/ClientSelectSpicesForPro
 import { ClientSpendSpices } from "./states/ClientSpendSpices.js";
 import { ClientFoundOutpost } from "./states/ClientFoundOutpost.js";
 import { NextPlayer } from "./states/NextPlayer.js";
-import { PlayerChoice, ClientSelectTileAction } from "./states/PlayerChoice.js";
+import { PlayerChoice, ClientSelectTileAction,ClientSelectActionEffect } from "./states/PlayerChoice.js";
 import { PlayerTurn } from "./states/PlayerTurn.js";
 
 var isDebug = window.location.host == 'studio.boardgamearena.com' || window.location.hash.indexOf('debug') > -1;
@@ -59,6 +59,8 @@ export class Game {
         this.bga.states.register('ClientCardAction', this.clientCardAction);
         this.clientSelectTileAction = new ClientSelectTileAction(this, bga);
         this.bga.states.register('ClientSelectTileAction', this.clientSelectTileAction);
+        this.clientSelectActionEffect = new ClientSelectActionEffect(this, bga);
+        this.bga.states.register('ClientSelectActionEffect', this.clientSelectActionEffect);
         this.clientSelectMarketPlace = new ClientSelectMarketPlace(this, bga);
         this.bga.states.register('ClientSelectMarketPlace', this.clientSelectMarketPlace);
         this.clientSelectProgress = new ClientSelectProgress(this, bga);
@@ -757,6 +759,18 @@ export class Game {
                                 <div class='goa_action_image' data-type='${actionType}'></div>
                             </div>`;
         return actionButton;
+    }
+    formatActionName(actionType){
+        //TODO JSA reuse
+        switch(actionType){
+            case this.const.ACTION_TYPE_PROGRESS    : return _("Progress");
+            case this.const.ACTION_TYPE_BUILD_SHIPS : return _("Build Ships");
+            case this.const.ACTION_TYPE_PRODUCE     : return _("Produce");
+            case this.const.ACTION_TYPE_TAXES       : return _("Collect Taxes");
+            case this.const.ACTION_TYPE_EXP         : return _("Explore");
+            case this.const.ACTION_TYPE_FOUND       : return _("Establish an Outpost");
+        }
+        return '';
     }
 
     /**

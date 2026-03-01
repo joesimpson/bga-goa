@@ -53,14 +53,15 @@ class PlayerChoice extends GameState
 
         //Use a whitelist of possible card actions, because we don't want complex actions to interfere with multiple steps
         $actionsWhiteList = [];
+        $lookForDiscardCards = false;
         $effects = Effects::listToResolve($player->getId()); 
         if(isset($effects)){
             foreach($effects as $effectId => $effect){
                 $tileId = $effect->getSourceTile();
-                if(!isset($tileId)) continue;
-                $tile = Tiles::get((int)$tileId);
-                $args['tiles'][$tileId] = $tile->getUiData();
-                //foreach($tileChoices as $tileChoiceDatas){
+                if(isset($tileId)) {
+                    $tile = Tiles::get((int)$tileId);
+                    $args['tiles'][$tileId] = $tile->getUiData();
+                }
                     if($effect->getType() === EFFECT_TYPE_FOUND_TILE ){
                         //IF we are near abandon, let player play a card to receive contracts
                         $actionsWhiteList[] = CARD_ACTION_2_CONTRACTS;
@@ -80,19 +81,43 @@ class PlayerChoice extends GameState
                             $args['outpostsToFound'] = Tiles::getFoundableOutposts($player)->getIds();
                             $args['playersBaseContracts'] = Players::getAllFoundBaseContracts();
                         }
+                    } else  if($effect->getType() === EFFECT_TYPE_CLEAN_HAND){
+                        $args['maxCards'] = Cards::maxExplorationToKeep($player);
+                        $nbCardsInHand = Cards::countInExplorationHand($player->getId());
+                        if( $nbCardsInHand <=  $args['maxCards'])
+                        {
+                            // hand is clean
+                            $args['auto_resolve_hand'] = $effect->getId();
+                            $args['handSize'] = $nbCardsInHand;
+                        }
+                        else {
+                            $lookForDiscardCards = true;
+                        }
                     }
-                //}
             }
             $args['effects'] = $effects->uiAssoc();
             $args['possibleActions'][] = 'actTileChoice';
         }
         //Allow to play any card/tile during any effect, it may add new effects to the list
-        PlayerTurn::addArgsForCardPlay($player,$args);
+        PlayerTurn::addArgsForCardPlay($player,$args, null,$lookForDiscardCards);
         PlayerTurn::addArgsForTilePlay($player,$args);
 
         ConfirmTurn::addArgsForUndo($args);
         return $args;
     }     
+    
+    public function onEnteringState(int $activePlayerId, array $args) {
+        $this->game->trace(__CLASS__.".".__FUNCTION__."($activePlayerId)");
+
+        $player = Players::get($activePlayerId);
+        if(isset( $args['auto_resolve_hand']))
+        {
+            $effectId = $args['auto_resolve_hand'];
+            Notifications::cleanHandEnd($player,$args['handSize']);
+            Effects::resolve($effectId);
+            return self::class;
+        }
+    }
     /**
      * Player action in round step 2
      *
