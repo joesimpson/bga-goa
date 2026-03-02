@@ -2594,10 +2594,18 @@ export class Game {
 
     formatCardActionText(card){
         switch(card.action){
-            case this.const.CARD_ACTION_PROGRESS_NO_SPICE:  return _('Ability a: When performing the Progress action, you only need to pay the Ships, you can ignore the Goods costs');
-            case this.const.CARD_ACTION_PROGRESS_NO_SHIP:   return _('Ability b: When performing the Progress action, you only need to pay the Goods, you can ignore the Ship costs');
-            case this.const.CARD_ACTION_HARVEST_AND_CARDS:  return _('Ability c: When performing the Produce action, you may take any combination of Goods, Ships, and/or Contracts instead of only Goods.');
-            case this.const.CARD_ACTION_OUTPOST_EXTRA_CONTRACTS : return _('Ability d: When performing the Establish an Outpost action, you may draw one extra Exploration Card and add its Contracts to your total. You may play this card after revealing the first 2 cards.');
+            case this.const.CARD_ACTION_PROGRESS_NO_SPICE: return this.bga.gameui.format_string(_('Ability a ${icon_action}: When performing the Progress action, you only need to pay the Ships, you can ignore the Goods costs.') ,
+                    {  'icon_action': this.formatIcon('nbActions'), }
+                );
+            case this.const.CARD_ACTION_PROGRESS_NO_SHIP: return this.bga.gameui.format_string(_('Ability b ${icon_action}: When performing the Progress action, you only need to pay the Goods, you can ignore the Ship costs.') ,
+                    {  'icon_action': this.formatIcon('nbActions'), }
+                );
+            case this.const.CARD_ACTION_HARVEST_AND_CARDS: return this.bga.gameui.format_string(_('Ability c ${icon_action}: When performing the Produce action, you may take any combination of Goods, Ships, and/or Contracts instead of only Goods.') ,
+                    {  'icon_action': this.formatIcon('nbActions'), }
+                );
+            case this.const.CARD_ACTION_OUTPOST_EXTRA_CONTRACTS : return this.bga.gameui.format_string(_('Ability d ${icon_action}: When performing the Establish an Outpost action, you may draw one extra Exploration Card and add its Contracts to your total. You may play this card after revealing the first 2 cards.') ,
+                    {  'icon_action': this.formatIcon('nbActions'), }
+                );
             case this.const.CARD_ACTION_RESSOURCES_TO_COINS  : 
                 let gains = this.const.CARD_GAINS_RESSOURCES_TO_COINS;
                 let [a,b,c,d] =  Object.keys(gains);
