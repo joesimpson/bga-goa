@@ -32,7 +32,7 @@ import { ClientSelectSpicesForProgress } from "./states/ClientSelectSpicesForPro
 import { ClientSpendSpices } from "./states/ClientSpendSpices.js";
 import { ClientFoundOutpost } from "./states/ClientFoundOutpost.js";
 import { NextPlayer } from "./states/NextPlayer.js";
-import { PlayerChoice, ClientSelectTileAction,ClientSelectActionEffect } from "./states/PlayerChoice.js";
+import { PlayerChoice, ClientSelectTileEffect,ClientSelectActionEffect } from "./states/PlayerChoice.js";
 import { PlayerTurn } from "./states/PlayerTurn.js";
 
 var isDebug = window.location.host == 'studio.boardgamearena.com' || window.location.hash.indexOf('debug') > -1;
@@ -57,8 +57,8 @@ export class Game {
         //CLIENT STATES :
         this.clientCardAction = new ClientCardAction(this, bga);
         this.bga.states.register('ClientCardAction', this.clientCardAction);
-        this.clientSelectTileAction = new ClientSelectTileAction(this, bga);
-        this.bga.states.register('ClientSelectTileAction', this.clientSelectTileAction);
+        this.clientSelectTileEffect = new ClientSelectTileEffect(this, bga);
+        this.bga.states.register('ClientSelectTileEffect', this.clientSelectTileEffect);
         this.clientSelectActionEffect = new ClientSelectActionEffect(this, bga);
         this.bga.states.register('ClientSelectActionEffect', this.clientSelectActionEffect);
         this.clientSelectMarketPlace = new ClientSelectMarketPlace(this, bga);

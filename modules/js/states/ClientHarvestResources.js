@@ -71,7 +71,7 @@ export class ClientHarvestResources {
             let actionArgs = {};
             switch(actionName){
                 case 'actTileChoice' : 
-                    //when we come from ClientSelectTileAction
+                    //when we come from ClientSelectTileEffect
                     let progressRefPlayerId = args.progressRefPlayerId;
                     actionArgs = { 
                         'tile_id' : withTile,

@@ -65,7 +65,7 @@ export class PlayerChoice {
                     else if(tile){
                             let tile_icon = this.game.tplTile(tile, '_log');
                             nextState = function (bga) {
-                                bga.states.setClientState("ClientSelectTileAction", {
+                                bga.states.setClientState("ClientSelectTileEffect", {
                                     descriptionmyturn: '',
                                     args: { 'effect':effect, 'tile':tile, 'choice_index': effectId
                                         , 'cancelable' : !directState, 'undo': args.undo,
@@ -111,7 +111,7 @@ export class PlayerChoice {
 /**
  * Client STATE
  */
-export class ClientSelectTileAction {
+export class ClientSelectTileEffect {
     constructor(game, bga) {
         this.game = game;
         this.bga = bga;
@@ -425,7 +425,7 @@ export class ClientSelectActionEffect {
       
         switch(effect.type){
             case this.game.const.EFFECT_TYPE_FOUND_TILE:
-                this.bga.states.setClientState("ClientSelectTileAction", {
+                this.bga.states.setClientState("ClientSelectTileEffect", {
                                     descriptionmyturn: '',
                                     args: { 
                                         'effect':args.effect, 
