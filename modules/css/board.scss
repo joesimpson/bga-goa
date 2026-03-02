@@ -705,6 +705,15 @@ $playerboard_img_height: calc(1 * 777px);
                 }
             }
 
+            .goa_player_waiting_tiles{
+                position: absolute;
+                .goa_tile{
+                    &:not(.selectable){
+                        outline: 4px dashed black;
+                    }
+                }
+            }
+
             .goa_tile{
                 .goa_token {
                     position: absolute;

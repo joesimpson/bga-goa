@@ -194,7 +194,10 @@ class PlayerChoice extends GameState
                     $foundChoice = $this->checkChoiceAsValue($effect,$tile_id,$choice);
                     $selectedTile = Tiles::get($choice);
                     Tiles::discardTileFromPlayer($player, $selectedTile);
-                    Tiles::giveMarketTileToPlayer($player, $tile, $doCheckpoint);
+                    if($selectedTile->getId() != $tile->getId()){
+                        //if we effectively replaces a tile, we give this one after
+                        Tiles::giveMarketTileToPlayer($player, $tile, $doCheckpoint);
+                    }
                     break;
                 case EFFECT_TYPE_PICK_SPICE:
                     //SELECT A SPICE : choice is a spice type

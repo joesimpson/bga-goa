@@ -61,6 +61,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
     return 
       self::getInLocation(TILE_LOCATION_BOARD_MARKET)
       ->merge(self::getInLocation(TILE_LOCATION_PLAYER_BOARD))
+      ->merge(self::getInLocation(TILE_LOCATION_PLAYER_WAITING_PLANTATION))
       ->merge(self::getInLocation(TILE_LOCATION_BOARD_OUTPOSTS[COLONY_KOLLAM    ]))
       ->merge(self::getInLocation(TILE_LOCATION_BOARD_OUTPOSTS[COLONY_KOCHI     ]))
       ->merge(self::getInLocation(TILE_LOCATION_BOARD_OUTPOSTS[COLONY_MADRAS    ]))
@@ -140,11 +141,16 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
     
     if(isset($tile)){
 
-      $updateTileDatas = function ( $player, &$tile,) {
+      $updateTileDatas = function ( $player, &$tile, bool $waiting = false) {
         $tile->setPId($player->getId());
         $tile->setRow(null);
         $tile->setCol(null);
-        $tile->setLocation(TILE_LOCATION_PLAYER_BOARD);
+        if($waiting){
+          $tile->setLocation(TILE_LOCATION_PLAYER_WAITING_PLANTATION);
+        }
+        else {
+          $tile->setLocation(TILE_LOCATION_PLAYER_BOARD);
+        }
         $tile->setState(null);
       };
       
@@ -153,12 +159,16 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
           $nextAvailableSpaceOnPlayerBoard = Tiles::getNextAvailablePlantationSpot($player);
           if(!isset($nextAvailableSpaceOnPlayerBoard)){
             // IF no more space ask player to discard 1  
+            $updateTileDatas($player,$tile, true);
+            Notifications::giveTile($player,$tile);
             $playerPlantations = Tiles::getPlantations($player);
-            Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_REPLACE_TILE, 1, $playerPlantations->getIds());
+            $replacableIds = $playerPlantations->getIds();
+            $replacableIds[] = $tile->getId(); //allow to discard waiting tile
+            Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_REPLACE_TILE, 1, $replacableIds);
             throw new PrematureStateChangeException (3,PlayerChoice::class, $player);
             //don't modify tile location before this exception !
           }
-          $updateTileDatas($player,$tile);
+          $updateTileDatas($player,$tile, false);
 
           $tile->setState($nextAvailableSpaceOnPlayerBoard);
           Notifications::giveTile($player,$tile);
@@ -166,7 +176,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
           Stats::inc("playedPlantations", $player->getId());
           break;
         case MARKET_TYPE_ACTION_DIRECT:
-          $updateTileDatas($player,$tile);
+          $updateTileDatas($player,$tile, false);
           Tiles::discardTileFromPlayer($player, $tile);
           Stats::inc("playedTiles", $player->getId());
           $gains = $tile->getActions();
@@ -180,7 +190,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
           }
           break;
         default:
-          $updateTileDatas($player,$tile);
+          $updateTileDatas($player,$tile, false);
           Notifications::giveTile($player,$tile);
           break;
       }
