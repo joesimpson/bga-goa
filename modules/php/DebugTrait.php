@@ -125,6 +125,13 @@ trait DebugTrait
     function debug_Effects(){
         $player = Players::getCurrent();
         Log::addStep();
+
+        //clean all
+        Effects::DB()->delete()->run();
+
+        //Effect after Explore
+        Effects::addEffectOnAction($player,ACTION_TYPE_EXP, EFFECT_TYPE_CLEAN_HAND, null, []);
+
         $tile = Tiles::getByType(26,TILE_SUBTTYPE_MARKET)->first();
         $effects = [];
         $effects[] = Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_PICK_ACTION, 3, [ACTION_SHIP, ACTION_CONTRACT]);
@@ -159,7 +166,7 @@ trait DebugTrait
 
         //ACTION_ESPIONAGE
         $tile = Tiles::getByType(34,TILE_SUBTTYPE_MARKET)->first();
-        Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_REPLACE_TILE, 1, [ACTION_SHIP, ACTION_HARVEST, ACTION_MONEY, ACTION_FOUND_ABANDON]);
+        Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_ESPIONAGE, 1, [ACTION_SHIP, ACTION_HARVEST, ACTION_MONEY, ACTION_FOUND_ABANDON]);
 
         $this->debug_refreshUI();
         Game::get()->gamestate->jumpToState(ST_PLAYER_CHOICE);

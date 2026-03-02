@@ -422,7 +422,6 @@ class Notifications
     ]);
   }
   
-  //TODO JSA Check if obsolete
   public static function cleanHandEnd(Player $player, int $handSize)
   {
     self::notifyAll("cleanHandEnd", clienttranslate('${player_name} now reaches his hand limit (${n})'), [

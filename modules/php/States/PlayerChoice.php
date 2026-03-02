@@ -470,18 +470,26 @@ class PlayerChoice extends GameState
         $actions = $args['possibleActions'];
         $gameVersion = Utils::gameVersion();
 
-        $tile_choices = $args['tiles_choices'];
-        if(count($tile_choices) > 0){
+        $effects = $args['effects'];
+        if(count($effects) > 0){
             //We must treat all choices one by one
-            $tile_choice_entry = $tile_choices[array_keys($tile_choices)[0] ];
-            $choice_index = array_keys($tile_choice_entry)[0];
-            $tile_choice = $tile_choice_entry[$choice_index];
-            $tile_id = $tile_choice['tile_id'];
-            $choices = $tile_choice['choices'];
-            $choice = $choices[array_rand($choices)];
-            $choice_array1 = null;
-            $choice_array2 = null;
-            return $this->actTileChoice($tile_id, $choice, $choice_index, $playerId, $args, $gameVersion, $choice_array1, $choice_array2, $playerId );
+            $choice_index = array_keys($effects)[0];
+            $tile_choice = $effects[$choice_index];
+            $tile_id = $tile_choice['sourceTile'];
+            $choices = $tile_choice['result'];
+            if(isset($tile_id) && isset($choices)){
+                $choice = $choices[array_rand($choices)];
+                //TODO JSA sometimes choice is a key (ex : favor tile choices)
+                $choice_array1 = null;
+                $choice_array2 = null;
+                return $this->actTileChoice($tile_id, $choice, $choice_index, $playerId, $args, $gameVersion, $choice_array1, $choice_array2, $playerId );
+            }
+            
+            if(in_array('actDiscard',$actions)){
+                $possibleDiscards = $args['possibleDiscards'];
+                $card_id = $this->getRandomZombieChoice($possibleDiscards);
+                return $this->actDiscard($card_id,$playerId, $args, $gameVersion);
+            }
         }
     }
 
