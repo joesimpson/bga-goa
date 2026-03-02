@@ -452,8 +452,11 @@ export class Game {
                 args.icon_symbol = this.formatSymbolIcon(args.symbolType, true);
             }
             
-            if('action_name' in args) {
-                args.action_name = `<span class='goa_log_action_name' data-type='${args.action_type}'>${_(args.action_name)}</span>`;
+            if('action_name' in args && 'action_type' in args) {
+                args.action_name = this.formatActionLog(args.action_type, true );
+            }
+            if('action_icon' in args && 'action_type' in args) {
+                args.action_icon = this.formatActionLog(args.action_type, false );
             }
             if('step_icon' in args && args.n){
                 args.step_icon = this.formatIcon('round_step_'+args.n);
@@ -760,6 +763,15 @@ export class Game {
                                 <div class='goa_action_text'>`+_(actionText)+`</div>
                                 <div class='goa_action_image' data-type='${actionType}'></div>
                             </div>`;
+        return actionButton;
+    }
+    formatActionLog(actionType, withText){
+        let action_name = this.formatActionName(actionType);
+        let actionButton = `<div class='goa_log_action'>
+                <span class='goa_log_action_name' data-type='${actionType}'>${withText ? _(action_name) : ''}</span>
+                <div class='goa_action_image' data-type='${actionType}'></div>
+                
+            </div>`;
         return actionButton;
     }
     formatActionName(actionType){

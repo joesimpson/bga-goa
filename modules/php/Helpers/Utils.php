@@ -210,6 +210,16 @@ abstract class Utils {
             default: return '';
         }
     }
+    public static function getActionType(int $track) : int|null {
+        switch($track){
+            case 1: return ACTION_TYPE_BUILD_SHIPS;
+            case 2: return ACTION_TYPE_PRODUCE    ;
+            case 3: return ACTION_TYPE_TAXES      ;
+            case 4: return ACTION_TYPE_EXP        ;
+            case 5: return ACTION_TYPE_FOUND      ;
+        }
+        return null;
+    }
 
     /**
      * @return true if an effect has been updated

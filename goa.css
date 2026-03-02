@@ -1072,10 +1072,11 @@ Icon extract in sprite with differents layers size (so % is not useful).
 .goa_button_action .goa_action_text {
   white-space: normal;
 }
-.goa_button_action .goa_action_image {
+
+.goa_action_image {
   margin: 5px;
 }
-.goa_button_action .goa_action_image[data-type="0"] {
+.goa_action_image[data-type="0"] {
   width: 30.6px;
   height: 45px;
   background-image: url("img/icons.png");
@@ -1083,7 +1084,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-position-y: -240.3px;
   background-size: 3529.4117647059% 660%;
 }
-.goa_button_action .goa_action_image[data-type="1"] {
+.goa_action_image[data-type="1"] {
   width: 84px;
   height: 41.4px;
   background-image: url("img/icons.png");
@@ -1091,7 +1092,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-position-y: -155.4px;
   background-size: 857.1428571429% 478.2608695652%;
 }
-.goa_button_action .goa_action_image[data-type="2"] {
+.goa_action_image[data-type="2"] {
   width: 66px;
   height: 49px;
   background-image: url("img/icons.png");
@@ -1099,7 +1100,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-position-y: -113px;
   background-size: 909.0909090909% 336.7346938776%;
 }
-.goa_button_action .goa_action_image[data-type="3"] {
+.goa_action_image[data-type="3"] {
   width: 49px;
   height: 49px;
   background-image: url("img/icons.png");
@@ -1107,7 +1108,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-position-y: -115px;
   background-size: 1224.4897959184% 336.7346938776%;
 }
-.goa_button_action .goa_action_image[data-type="4"] {
+.goa_action_image[data-type="4"] {
   width: 43.5px;
   height: 48.5px;
   background-image: url("img/icons.png");
@@ -1115,7 +1116,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-position-y: -115px;
   background-size: 1379.3103448276% 340.206185567%;
 }
-.goa_button_action .goa_action_image[data-type="5"] {
+.goa_action_image[data-type="5"] {
   width: 59.5px;
   height: 45px;
   background-image: url("img/icons.png");
@@ -2562,10 +2563,18 @@ body.lockedInterface #restartActions {
   margin-right: 2px;
 }
 
+.goa_log_action {
+  text-align: center;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+}
+
 .goa_log_action_name {
   font-style: italic;
   font-weight: bold;
   text-decoration: underline;
+  align-content: center;
 }
 
 .tundra #dijit__MasterTooltip_0.dijitTooltip .dijitTooltipContainer {

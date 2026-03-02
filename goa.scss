@@ -299,10 +299,17 @@ body.lockedInterface{
     margin-right: 2px;
 }
 
+.goa_log_action{
+    text-align: center;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
 .goa_log_action_name{
     font-style: italic;
     font-weight: bold;
     text-decoration: underline;
+    align-content: center;
 }
 // ------------------------------------------------------------------------------
 

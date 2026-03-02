@@ -462,20 +462,29 @@ class Notifications
 
   public static function espionage(Player $player, Player $opponent, int $track)
   {
-    self::notifyAll("espionage", clienttranslate('${player_name} spies ${player_name2} board to use track #${n}'), [
+    $action_type = Utils::getActionType($track);
+    self::notifyAll("espionage", clienttranslate('${player_name} spies ${player_name2} board to use track #${n} : ${action_icon}'), [
         "player" => $player,
         "player2" => $opponent,
         "n" => $track,
+        "action_type" => $action_type,
+        "action_icon" => '',
+        'preserve'=>['action_type'],
     ]);
   }
   
   public static function progress(Player $player, ProgressMarker $token)
   {
-    self::notifyAll("progress", clienttranslate('${player_name} progresses on track #${n}'), [
+    $track = $token->getTrackIndex();
+    $action_type = Utils::getActionType($track);
+
+    self::notifyAll("progress", clienttranslate('${player_name} progresses on track #${n} : ${action_icon}'), [
         "player" => $player,
-        "n" => $token->getTrackIndex(),
+        "n" => $track,
         "token" => $token->getUiData(),
-        'preserve'=>['token'],
+        "action_type" => $action_type,
+        "action_icon" => '',
+        'preserve'=>['token', 'action_type'],
     ]);
   }
   
