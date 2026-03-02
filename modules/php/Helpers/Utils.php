@@ -3,9 +3,12 @@ namespace Bga\Games\Goa\Helpers;
 
 use Bga\GameFramework\UserException;
 use Bga\Games\Goa\Core\Globals;
+use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Managers\Effects;
 use Bga\Games\Goa\Managers\Players;
+use Bga\Games\Goa\Models\OutpostTile;
+use Bga\Games\Goa\Models\Player;
 use Bga\Games\Goa\States\ConfirmTurn;
 use Bga\Games\Goa\States\EndPlayerTurn;
 use Bga\Games\Goa\States\EndRound;
@@ -208,8 +211,8 @@ abstract class Utils {
         }
     }
 
-    public static function refreshFoundTileChoice(int $playerId){
-
+    public static function refreshFoundTileChoice(int $playerId) : bool {
+        $updated = false;
         $player = Players::get($playerId);
         $effectsToFound = Effects::getEffectToResolveByType(EFFECT_TYPE_FOUND_TILE,$playerId);
         //REFRESH Effect data according to played card/tile adding contracts
@@ -218,10 +221,28 @@ abstract class Utils {
                     $missingContracts = $effect->getQuantity();
                     if($player->getContracts() >= $missingContracts){
                         $effect->addChoiceInResult(ACTION_FOUND_FORWARD);
+                        $updated = true;
                     }
                 }
         }
+        return $updated;
     }
+    
+    public static function abandonOtherEffectsFoundTileChoice(int $refEffectId, Player $player, OutpostTile $tile,){
+        $effectsToFound = Effects::getEffectToResolveByType(EFFECT_TYPE_FOUND_TILE,$player->getId());
+        foreach($effectsToFound as &$effect){
+            if($effect->getSourceTile() == $tile->getId() && $refEffectId != $effect->getId()){
+                Utils::abandonEffectFoundTileChoice($player, $tile, $effect->getId());
+            }
+        }
+    }
+    
+    public static function abandonEffectFoundTileChoice(Player $player, OutpostTile $tile, int $effectId){
+        Notifications::abandonOutpost($player,$tile);
+        Players::giveContracts($player, 1);
+        Effects::resolve($effectId);
+    }
+
 
     
     /**

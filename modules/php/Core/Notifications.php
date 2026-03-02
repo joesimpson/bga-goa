@@ -345,10 +345,20 @@ class Notifications
         "icon_contracts" => clienttranslate('Contracts'),
     ]);
   }
-  public static function abandonOutpost(Player $player, Tile $tile)
+  public static function abandonOutpost(Player $player, OutpostTile $tile)
   {
-    self::notifyAll("abandonOutpost", clienttranslate('${player_name} chooses not to establish the outpost'), [
+    self::notifyAll("abandonOutpost", clienttranslate('${player_name} chooses not to establish the ${outpostname} outpost'), [
         "player" => $player,
+        "outpostname" => Utils::getColonyName($tile->getColony()),
+        'i18n'=>['outpostname'],
+    ]);
+  }
+  public static function foundOutpost(Player $player, OutpostTile $tile)
+  {
+    self::notifyAll("foundOutpost", clienttranslate('${player_name} establishes the ${outpostname} outpost'), [
+        "player" => $player,
+        "outpostname" => Utils::getColonyName($tile->getColony()),
+        'i18n'=>['outpostname'],
     ]);
   }
 

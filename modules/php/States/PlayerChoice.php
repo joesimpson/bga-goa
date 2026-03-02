@@ -67,6 +67,7 @@ class PlayerChoice extends GameState
                         $actionsWhiteList[] = CARD_ACTION_2_CONTRACTS;
                         //IF we are near abandon, let player play a tile to receive contracts
                         $actionsWhiteList[] = ACTION_CONTRACT;
+                        $args['doublecheckfound'] = true;
                     }
                     else if($effect->getType() === EFFECT_TYPE_HARVEST ){
                         $args['harvestSpots'] = Tiles::getPlayerAvailableSpotsForSpices($player);
@@ -116,6 +117,10 @@ class PlayerChoice extends GameState
             Notifications::cleanHandEnd($player,$args['handSize']);
             Effects::resolve($effectId);
             return self::class;
+        }
+        if(isset($args['doublecheckfound'])){
+            $updated = Utils::refreshFoundTileChoice($activePlayerId);
+            if($updated) return self::class;
         }
     }
     /**
@@ -239,11 +244,14 @@ class PlayerChoice extends GameState
                             Players::directGain($player,$choice, $foundChoice['quantity'], $tile, $doCheckpoint );
                             break;
                         case ACTION_FOUND_ABANDON:
-                            Notifications::abandonOutpost($player,$tile);
-                            Players::giveContracts($player, 1);
+                            Utils::abandonEffectFoundTileChoice($player, $tile, $choice_index);
                             break;
                         case ACTION_FOUND_FORWARD:
+                            //if other FOUND effect on same tile (example with espionage), auto choice ABANDON because we cannot found it 2 times
+                            Utils::abandonOtherEffectsFoundTileChoice($choice_index,$player,$tile);
+
                             $amount = $foundChoice['quantity'];
+                            Notifications::foundOutpost($player,$tile);
                             Players::giveContracts($player, -$amount);
                             Tiles::giveOutpostToPlayer($player,$tile);
                             break;
@@ -323,8 +331,6 @@ class PlayerChoice extends GameState
         Utils::checkVersion($v);
         PlayerTurn::actPlayCard_content($card_id, $activePlayerId, $args);
         
-        Utils::refreshFoundTileChoice($activePlayerId);
-
         return self::class;
     }
 
@@ -346,7 +352,6 @@ class PlayerChoice extends GameState
             $nextStateClass = $prematureStateChange->nextStateClass;
         }
         
-        Utils::refreshFoundTileChoice($activePlayerId);
         if($doCheckpoint) Log::addStateCheckpoint($nextStateClass);
         
         return $nextStateClass;
