@@ -33,10 +33,36 @@ export class PlayerChoice {
                 Object.entries(effects).forEach( ([effectId,effect])  => {
                     directState = (Object.entries(effects).length == 1) ;
                     let nextState = function () { };
+                    let tile_id, tile = null;
                     if(effect.sourceTile){
-                        let tile_id = effect.sourceTile;
-                        let tile = tiles[tile_id];
-                        if(tile){
+                        tile_id = effect.sourceTile;
+                        tile = tiles[tile_id];
+                    }
+                    if(effect.sourceAction){
+                        nextState = function (bga) {
+                            bga.states.setClientState("ClientSelectActionEffect", {
+                                descriptionmyturn: '',
+                                args: { 'effect':effect,
+                                    'tile':tile,
+                                    'choice_index': effectId,
+                                    'cancelable' : !directState, 
+                                    'undo': args.undo,
+                                    'previousArgs' : args,
+                                    //Allow to play Cards/tiles
+                                    'possibleDiscards': args.possibleDiscards,
+                                    'possiblePlayCards': args.possiblePlayCards,
+                                    'possibleActions': args.possibleActions,
+                                    'possiblePlayTiles': args.possiblePlayTiles,
+                                },
+                            });
+                        };
+                        let actionName = this.game.formatActionName(effect.sourceAction);
+                        let actionHint = this.bga.gameui.format_string(_('Action : ${name}'),{'name': actionName});
+                        this.bga.statusBar.addActionButton(actionHint, () => {
+                            nextState(this.bga);
+                        }, {  destination: document.getElementById('customPrimary'),'title':_('Select this action effect'),  }); 
+                    }
+                    else if(tile){
                             let tile_icon = this.game.tplTile(tile, '_log');
                             nextState = function (bga) {
                                 bga.states.setClientState("ClientSelectTileAction", {
@@ -55,30 +81,6 @@ export class PlayerChoice {
                             this.bga.statusBar.addActionButton( tile_icon, () => {
                                 nextState(this.bga);
                             }, {  destination: document.getElementById('customPrimary'),'title':_('Select this tile effect'),  }); 
-                        }
-                    }
-                    else if(effect.sourceAction){
-                        nextState = function (bga) {
-                            bga.states.setClientState("ClientSelectActionEffect", {
-                                descriptionmyturn: '',
-                                args: { 'effect':effect,
-                                    'choice_index': effectId,
-                                    'cancelable' : !directState, 
-                                    'undo': args.undo,
-                                    'previousArgs' : args,
-                                    //Allow to play Cards/tiles
-                                    'possibleDiscards': args.possibleDiscards,
-                                    'possiblePlayCards': args.possiblePlayCards,
-                                    'possibleActions': args.possibleActions,
-                                    'possiblePlayTiles': args.possiblePlayTiles,
-                                },
-                            });
-                        };
-                        let actionName = this.game.formatActionName(effect.sourceAction);
-                        let actionHint = this.bga.gameui.format_string(_('Action : ${name}'),{'name': actionName});
-                        this.bga.statusBar.addActionButton(actionHint, () => {
-                            nextState(this.bga);
-                        }, {  destination: document.getElementById('customPrimary'),'title':_('Select this action effect'),  }); 
                     }
                     if(directState){
                         //UNIQUE CHOICE => go for it
@@ -261,10 +263,13 @@ export class ClientSelectTileAction {
                         _('${you} must establish the outpost by spending ${n} ${icon_contracts} OR abandon to receive ${x} ${icon_contracts}').replaceAll('${icon_contracts}', icon_contracts).replace('${n}', missingContracts).replace('${x}', 1): 
                         _('${actplayer} must establish the outpost by spending ${n} ${icon_contracts} OR abandon to receive ${x} ${icon_contracts}').replaceAll('${icon_contracts}', icon_contracts).replace('${n}', missingContracts).replace('${x}', 1)
                     );
+                    document.getElementById(`goa_board_outposts_1`).scrollIntoView({'behavior': 'smooth', 'block':'center'});
                     let tileToFound= document.getElementById(`goa_outpost-${tile_id}-front`);
-                    let colony = tileToFound.dataset.colony;
-                    let stock = this.game.outpostsTilesStocks[colony];
-                    stock.setLastPlayedCards([args.tile]);
+                    if(tileToFound){
+                        let colony = tileToFound.dataset.colony;
+                        let stock = this.game.outpostsTilesStocks[colony];
+                        stock.setLastPlayedCards([args.tile]);
+                    }
                     
                     switch(choice){
                         case this.game.const.ACTION_FOUND_ABANDON: 
@@ -419,6 +424,24 @@ export class ClientSelectActionEffect {
         }
       
         switch(effect.type){
+            case this.game.const.EFFECT_TYPE_FOUND_TILE:
+                this.bga.states.setClientState("ClientSelectTileAction", {
+                                    descriptionmyturn: '',
+                                    args: { 
+                                        'effect':args.effect, 
+                                        'tile':args.tile, 
+                                        'choice_index': args.choice_index,
+                                        'cancelable' : false, //false because 2 successive client states
+                                        'undo': false, //false because 2 successive client states
+                                        'previousArgs' : args,
+                                        //Allow to play Cards/tiles
+                                        'possibleDiscards': args.possibleDiscards,
+                                        'possiblePlayCards': args.possiblePlayCards,
+                                        'possibleActions': args.possibleActions,
+                                        'possiblePlayTiles': args.possiblePlayTiles,
+                                    },
+                                });
+                break;
             case this.game.const.EFFECT_TYPE_CLEAN_HAND:
                 //CleanHand was before designed as a server state
                 this.bga.states.setClientState("CleanHand", {

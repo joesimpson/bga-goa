@@ -52,6 +52,7 @@ class Effects extends \Bga\Games\Goa\Helpers\Pieces
     int $type,
     int|null $quantity,
     array $result,
+    int|null $source_action = null,
   ): Effect
   {
     $effect = [
@@ -61,7 +62,7 @@ class Effects extends \Bga\Games\Goa\Helpers\Pieces
       static::$prefix .'state' => EFFECT_STATE_TO_SOLVE,
       'effect_qty' => $quantity,
       'effect_source_tile' => $tile_id,
-      'effect_source_action' => null,
+      'effect_source_action' => $source_action,
       'effect_result' => json_encode($result),
     ];
     $elt = self::singleCreate($effect);
