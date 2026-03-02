@@ -215,6 +215,43 @@ html {
     outline: 3px solid black;
 }
 
+.goa_action_desc{
+    table{
+        position: relative;
+        border-radius: 10px;
+
+        th {
+            font-size: 1.2em;
+            height: 10px;
+            min-width: 20px;
+            text-align: center;
+            vertical-align: middle;
+            padding: 0 5px;
+            div{
+                display: inline-block;
+            } 
+        }  
+        thead{
+            th{
+                padding: 0 5px;
+            }
+        }
+        td{
+            //border: 1px solid rgba(0,0,0,.2);
+            word-wrap: anywhere;
+            font-size: 1em;
+            padding: 5px 8px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        tbody{
+            tr{
+                border-top: 1px solid rgba(0,0,0,.2);
+            }
+        }
+    }
+}
+
 
 // ------------------------------------------------------------------------------
 // BUTTONS

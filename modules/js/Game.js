@@ -775,7 +775,6 @@ export class Game {
         return actionButton;
     }
     formatActionName(actionType){
-        //TODO JSA reuse
         switch(actionType){
             case this.const.ACTION_TYPE_PROGRESS    : return _("Progress");
             case this.const.ACTION_TYPE_BUILD_SHIPS : return _("Build Ships");
@@ -1967,10 +1966,10 @@ export class Game {
                                      _("Choose an opponent and do one of these actions, using the position of this player's Progress marker in the appropriate column: ${actions} "), 
                                     { 
                                         'actions': '<ul>' 
-                                            +  '<li>' + _('Build Ships') + '</li>'
-                                            +  '<li>' + _('Produce') + '</li>'
-                                            +  '<li>' + _('Collect Taxes') + '</li>'
-                                            +  '<li>' + _('Establish an Outpost') + '</li>'
+                                            +  '<li>' + this.formatActionName(this.const.ACTION_TYPE_BUILD_SHIPS) + '</li>'
+                                            +  '<li>' + this.formatActionName(this.const.ACTION_TYPE_PRODUCE) + '</li>'
+                                            +  '<li>' + this.formatActionName(this.const.ACTION_TYPE_TAXES) + '</li>'
+                                            +  '<li>' + this.formatActionName(this.const.ACTION_TYPE_FOUND) + '</li>'
                                             + '</ul>', 
                                     }) 
                                     + '<br/>' 
@@ -2277,7 +2276,7 @@ export class Game {
         let action_gains = [];
         switch(track){
             case 1: 
-                action_label = _('Build Ships');
+                action_label = this.formatActionName(track);
                 action_desc = this.bga.gameui.format_string(
                             _("Take n ${resource_name} ${icon_resource} where n is indicated on the row of your progress marker on this column.")
                             ,{
@@ -2289,7 +2288,7 @@ export class Game {
                 action_gains = this.const.PROGRESS_GAINS_SHIPS;
                 break;
             case 2:  
-                action_label = _('Produce');
+                action_label = this.formatActionName(track);
                 action_gains = this.const.PROGRESS_GAINS_HARVEST;
                 action_desc = this.bga.gameui.format_string(
                             _("Take n ${resource_name} ${icon_resource} where n is indicated on the row of your progress marker on this column.")
@@ -2300,7 +2299,7 @@ export class Game {
                         );
                 break;
             case 3:  
-                action_label = _('Collect Taxes');
+                action_label = this.formatActionName(track);
                 action_gains = this.const.PROGRESS_GAINS_TAXES;
                 action_desc = this.bga.gameui.format_string(
                             _("Take n ${resource_name} ${icon_resource} where n is indicated on the row of your progress marker on this column.")
@@ -2311,20 +2310,27 @@ export class Game {
                         );
                 break;
             case 4:  
-                action_label = _('Exploration');
+                action_label = this.formatActionName(track);
                 action_desc = this.bga.gameui.format_string(
-                            _("Draw Exploration cards from the supply. Each row of the Exploration column shows two numbers. The number on the left is the maximum number of cards a player can draw whereas the one on the right is the player's hand limit, i.e., the maximum number of Exploration cards a player can have in their hand at any time when doing the Exploration action.")
+                            _("Draw Exploration cards from the supply. Each row of the Exploration column shows two numbers. The number on the left is the maximum number of cards a player can draw whereas the one on the right is the player hand limit, i.e., the maximum number of Exploration cards a player can have in their hand after doing the Exploration action.")
                             ,{ }
                         );
-                //['1 -> 1','1 -> 2','2 -> 3','2 -> 4','3 -> 5']
-                action_gains = [];
+                action_desc += `<table>
+                    <thead>
+                        <th>${_('Draw value')}</th>
+                        <th>${_('Hand limit')}</th>
+                    </thead>
+                    <tbody>`; 
                 this.const.PROGRESS_GAINS_EXPLO.forEach(element => {
-                    action_gains.push('<span class="goa_plus">'+element.plus+'</span>' 
-                                    +'-> <span class="goa_max">'+element.max+'</span>');
+                    action_desc += `<tr>`; 
+                    action_desc += '<td class="goa_plus">'+element.plus+'</td>';
+                    action_desc += '<td class="goa_max">'+element.max+'</td>';
+                    action_desc += `</tr>`; 
                 });
+                action_desc += `</table>`;
                 break;
             case 5: 
-                action_label = _('Establish Outpost');
+                action_label = this.formatActionName(track);
                 action_gains = this.const.PROGRESS_GAINS_OUTPOST;
 
                 let action_gains_desc = '<ul>';

@@ -52,7 +52,7 @@
       }
       ,"progressExploration": {
         "id": 24,
-        "name": "Progress row : Exploration",
+        "name": "Progress row : Explore",
         "type": "int"
       }
       ,"progressFound": {

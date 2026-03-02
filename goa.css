@@ -2504,6 +2504,35 @@ html.goa_pref_background_none #goa_overall_background {
   outline: 3px solid black;
 }
 
+.goa_action_desc table {
+  position: relative;
+  border-radius: 10px;
+}
+.goa_action_desc table th {
+  font-size: 1.2em;
+  height: 10px;
+  min-width: 20px;
+  text-align: center;
+  vertical-align: middle;
+  padding: 0 5px;
+}
+.goa_action_desc table th div {
+  display: inline-block;
+}
+.goa_action_desc table thead th {
+  padding: 0 5px;
+}
+.goa_action_desc table td {
+  word-wrap: anywhere;
+  font-size: 1em;
+  padding: 5px 8px;
+  text-align: center;
+  vertical-align: middle;
+}
+.goa_action_desc table tbody tr {
+  border-top: 1px solid rgba(0, 0, 0, 0.2);
+}
+
 html.goa_undo_style_text #btnIconUndoLastStep,
 html.goa_undo_style_text #btnIconRestartTurn {
   display: none !important;
