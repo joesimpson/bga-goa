@@ -111,6 +111,7 @@ class PlayerChoice extends GameState
         $this->game->trace(__CLASS__.".".__FUNCTION__."($activePlayerId)");
 
         $player = Players::get($activePlayerId);
+        $roundStep = Globals::getRoundStep();
         if(isset( $args['auto_resolve_hand']))
         {
             $effectId = $args['auto_resolve_hand'];
@@ -121,6 +122,20 @@ class PlayerChoice extends GameState
         if(isset($args['doublecheckfound'])){
             $updated = Utils::refreshFoundTileChoice($activePlayerId);
             if($updated) return self::class;
+        }
+        
+        $remainingChoices = Effects::countPlayerEffectsToResolve($activePlayerId);
+        if($remainingChoices == 0){
+            //END Choices selection when no more choices
+            if(ROUND_STEP_PLAYER_ACTIONS === $roundStep ){
+                // return to player turn to see if something else to play
+                $nextStateClass = PlayerTurn::class;
+            }
+            else {
+                //Else end
+                $nextStateClass = ConfirmTurn::class;
+            }
+            return $nextStateClass;
         }
     }
     /**
@@ -279,7 +294,6 @@ class PlayerChoice extends GameState
         }
 
         Effects::resolve($choice_index);
-        $remainingChoices = Effects::countPlayerEffectsToResolve($activePlayerId);
 
         // at the end of the action, move to the next state
         if(isset($prematureStateChange) ){
@@ -287,17 +301,8 @@ class PlayerChoice extends GameState
             //Should not be necessary, but we cannot change active player in active state
             $nextStateClass = $prematureStateChange->nextStateClass;
         }
-        if($remainingChoices > 0){
-            //continue to have choices
-            $nextStateClass = PlayerChoice::class;
-        }
-        else if(ROUND_STEP_PLAYER_ACTIONS === $roundStep ){
-            //Else return to player turn to see if something else to play
-            $nextStateClass = PlayerTurn::class;
-        }
         else {
-            //Else end
-            $nextStateClass = ConfirmTurn::class;
+            $nextStateClass = PlayerChoice::class;
         }
         if($doCheckpoint) Log::addStateCheckpoint($nextStateClass);
         return $nextStateClass;
