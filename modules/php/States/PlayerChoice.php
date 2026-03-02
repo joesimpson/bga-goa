@@ -258,6 +258,7 @@ class PlayerChoice extends GameState
                                 $activePlayerId,  
                                 $activePlayerId,   
                                 $args,
+                                false,
                             );
                             break;
                         default: break;

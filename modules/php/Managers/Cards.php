@@ -39,7 +39,7 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
    * @param int $currentPlayerId Id of current player loading the game
    * @return array all cards visible by this player
    */
-  public static function getUiData($currentPlayerId)
+  public static function getUiData($currentPlayerId): array
   {
     //$privateCards = self::getExplorationHand($currentPlayerId);
 
@@ -52,14 +52,14 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
       ->toArray();
   } 
   
-  public static function getByType(int $cardType)
+  public static function getByType(int $cardType): Collection
   {
     return self::DB()
       ->where('type', $cardType)
       ->get();
   }
    
-  public static function getExplorationDiscardPile()
+  public static function getExplorationDiscardPile(): Collection
   {
     return self::DB()
       ->where( 'subType', CARD_SUBTTYPE_EXPLORATION)
@@ -67,20 +67,20 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
       ->get();
   }
 
-  public static function getAllDeckSizes()
+  public static function getAllDeckSizes(): array
   {
     return [
             'exploration' => Cards::countInExplorationDeck(),
         ];
   }
-  public static function countInExplorationDeck()
+  public static function countInExplorationDeck() : int
   {
     return self::DB()
       ->where( 'subType', CARD_SUBTTYPE_EXPLORATION)
       ->where(static::$prefix . 'location', CARD_LOCATION_EXP_DECK)
       ->count();
   }
-  public static function getExplorationHand(int $pId)
+  public static function getExplorationHand(int $pId) : Collection
   {
     return self::DB()
       ->where( 'subType', CARD_SUBTTYPE_EXPLORATION)
@@ -252,14 +252,14 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
     ;
   }
   
-  public static function getPrivateDatas(int $pId)
+  public static function getPrivateDatas(int $pId) : array
   {
     return [ 
       'hand' => Cards::getExplorationHand($pId)->ui(),
     ];
   }
   
-  public static function drawExplorationCardsToPlayer(Player $player,int $nb, bool &$doCheckpoint)
+  public static function drawExplorationCardsToPlayer(Player $player,int $nb, bool &$doCheckpoint) : Collection
   {
     Game::get()->trace("drawExplorationCardsToPlayer($nb)");
     //$nbDiscardBefore = Cards::countInLocation(CARD_LOCATION_EXP_DISCARD);

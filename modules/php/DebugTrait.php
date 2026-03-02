@@ -292,6 +292,23 @@ trait DebugTrait
         Cards::drawExplorationCardsToPlayer($player, $size, $doCheckpoint);
        
     }
+    function debug_discardCards(int $nb = 10){
+        $player = Players::getCurrent();
+        $player_id = $player->getId();
+        Log::addStep();
+
+        $cards = Cards::getExplorationHand($player_id);
+        $i = 0;
+        foreach($cards as $card){
+            $i++;
+            if($i>$nb){
+                break;
+            }
+            Cards::discardExploration($player,$card->getId());
+        }
+
+        $this->debug_refreshUI();
+    }
     
     function debug_changePlayerCurrencies(int $money = 15,int $ships = 5,int $contracts = 3,int $compasses = 1,){
         $player = Players::getCurrent();
