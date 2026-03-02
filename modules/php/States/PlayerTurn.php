@@ -453,6 +453,7 @@ class PlayerTurn extends GameState
                 return $token->getRow() < $upgradedToken->getRow();
             })->count();
         if($nbTokensToUpgradeBeforeExtraCompass == 0) {
+            Notifications::progressBonusAllColumns($player, $upgradedToken->getRow());
             Players::giveExtraActionCards($player,1);
         }
 
@@ -461,6 +462,7 @@ class PlayerTurn extends GameState
             $nbTokensBelowRow = Tokens::countProgressMarkersBelowRow($upgradedToken->getRow());
             if($nbTokensBelowRow == 1) //consider =1 because the token has already moved down
             {
+                Notifications::progressBonusFirst($player, $upgradedToken->getRow());
                 Cards::drawExplorationCardsToPlayer($player,1, $doCheckpoint);
             }
         }

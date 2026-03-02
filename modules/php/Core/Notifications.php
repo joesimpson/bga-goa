@@ -473,6 +473,22 @@ class Notifications
     ]);
   }
   
+  public static function progressBonusFirst(Player $player, int $n)
+  {
+    self::notifyAll("progressBonusFirst", clienttranslate('${player_name} receives a bonus for being the first one to reach progress row ${n}'), [
+      "player" => $player,
+      "n" => $n,
+    ]);
+  }
+  
+  public static function progressBonusAllColumns(Player $player, int $n)
+  {
+    self::notifyAll("progressCol", clienttranslate('${player_name} receives a bonus for having all progress markers at row ${n} or below'), [
+      "player" => $player,
+      "n" => $n,
+    ]);
+  }
+
   public static function progress(Player $player, ProgressMarker $token)
   {
     $track = $token->getTrackIndex();
