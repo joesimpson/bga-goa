@@ -394,7 +394,7 @@ class PlayerTurn extends GameState
         $withShips = $selectedTrack['withShips'];
         $withSpices = $selectedTrack['withSpices'];
         if(isset($card_id)){
-            Cards::playExploration($player, $card_id, );
+            Cards::playExploration($player, $card_id, $doCheckpoint );
         } else if(isset($tile_id)){
             Tiles::playTile($player, $tile_id, null, $doCheckpoint );
         }
@@ -524,7 +524,7 @@ class PlayerTurn extends GameState
         $nextStateClass = self::class;
 
         if(isset($card_id)){
-            Cards::playExploration($player, $card_id, );
+            Cards::playExploration($player, $card_id, $doCheckpoint);
         } else if(isset($tile_id)){
             $tile = Tiles::playTile($player, $tile_id, null, $doCheckpoint, $prematureStateChange );
         }
@@ -772,14 +772,16 @@ class PlayerTurn extends GameState
             throw new UnexpectedException(111,"Invalid outpost $tile_id, see ".json_encode($outpostsToFound));
         }
         
+        $doCheckpoint = false;
         if(isset($card_id)){
-            Cards::playExploration($player, $card_id, );
+            Cards::playExploration($player, $card_id, $doCheckpoint);
         }
 
         $tile = Tiles::get($tile_id);
         $nbNeededContracts = Utils::getNbContractsForColony($tile->getColony());
         Notifications::tryFoundOutpost($player, $tile, $nbNeededContracts);
         $cards = Cards::drawAndDiscardExploration($player, $nbCardsToDraw);
+        $doCheckpoint = true;
         if(isset($args['playersBaseContracts'])) $base = $args['playersBaseContracts'][$progressRefPlayerId];
         else $base = $args['playerBaseContracts'];
         $sum = 0;
@@ -837,12 +839,19 @@ class PlayerTurn extends GameState
     public function actPlayCard(int $card_id, int $v, int $activePlayerId, array $args)
     { 
         Utils::checkVersion($v);
-        PlayerTurn::actPlayCard_content($card_id, $activePlayerId, $args);
-        return PlayerTurn::class;
+        $doCheckpoint = false;
+        PlayerTurn::actPlayCard_content($card_id, $activePlayerId, $args, $doCheckpoint);
+        if($doCheckpoint) Log::addStateCheckpoint(self::class);
+        return self::class;
     }
     
     /**Reusable action content */
-    static function actPlayCard_content(int $card_id, int $activePlayerId, array $args)
+    public static function actPlayCard_content(
+        int $card_id, 
+        int $activePlayerId, 
+        array $args,
+        bool &$doCheckpoint, 
+    )
     { 
         Game::get()->trace("actPlayCard_content($card_id,$activePlayerId)");
         $possibleActions = $args['possibleActions'];
@@ -857,7 +866,7 @@ class PlayerTurn extends GameState
         Log::addStep();
         $player = Players::get($activePlayerId);
 
-        Cards::playExploration($player, $card_id, );
+        Cards::playExploration($player, $card_id, $doCheckpoint);
     }
     
     /**
@@ -1012,7 +1021,7 @@ class PlayerTurn extends GameState
         Log::addStep();
         $doCheckpoint = false;
         if(isset($card_id)){
-            Cards::playExploration($player, $card_id, );
+            Cards::playExploration($player, $card_id, $doCheckpoint );
         }
         if(isset($tile_id)){
             $tile = Tiles::playTile($player, $tile_id, null, $doCheckpoint, $prematureStateChange);

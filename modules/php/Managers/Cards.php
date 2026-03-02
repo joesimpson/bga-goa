@@ -7,6 +7,7 @@ use Bga\Games\Goa\Core\Stats;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Collection;
 use Bga\Games\Goa\Helpers\Log;
+use Bga\Games\Goa\Helpers\Utils;
 use Bga\Games\Goa\Models\ExplorationCard;
 use Bga\Games\Goa\Models\Player;
 use InvalidArgumentException;
@@ -185,6 +186,8 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
           } 
           break;
         case CARD_ACTION_OUTPOST_EXTRA_CONTRACTS:
+          /* REPLACED by a rule to play the Card AFTER seeing the result of FOUND Outpost{ 
+            
           // Not possible if the arg outpostsToFound is not set for playerTurn
           $playDatas['outpostsToFound'] = Tiles::getFoundableOutposts($player)->getIds();
           if(isset($playDatas['outpostsToFound'])){
@@ -195,6 +198,12 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
           }
           //not possible if player already performed an action in this round
           if($actionPlayed) $possiblePlay = false;
+
+          }*/
+          {
+            $effectsToFound = Effects::getEffectToResolveByType(EFFECT_TYPE_FOUND_TILE,$player->getId());
+            $possiblePlay = ($effectsToFound->count()>0);
+          }
           break;
         case CARD_ACTION_RESSOURCES_TO_COINS:
           if($playerSpices->count()>0){
@@ -320,7 +329,16 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
     return $card;
   }
    
-  public static function playExploration(Player &$player,int $cardId): ExplorationCard
+  /**
+   * @param Player &$player : who is playing the card
+   * @param int $cardId : which card is played
+   * @param bool &$doCheckpoint (auto updated arg) : whether the card action leads to a need for a checkpoint
+   */
+  public static function playExploration(
+    Player &$player,
+    int $cardId,
+    bool &$doCheckpoint, 
+  ): ExplorationCard
   { 
     $card = Cards::get($cardId);
     
@@ -342,7 +360,15 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
         break;
       case CARD_ACTION_HARVEST_AND_CARDS: //done in actHarvest
         break;
-      case CARD_ACTION_OUTPOST_EXTRA_CONTRACTS: //done in actFoundOutpost
+      case CARD_ACTION_OUTPOST_EXTRA_CONTRACTS:
+        $cards = Cards::drawAndDiscardExploration($player, 1);
+        $sum = 0;
+        foreach($cards as $card){
+          $sum += $card->getContracts();
+        }
+        Notifications::resultFoundOutpost($player, $sum);
+        $doCheckpoint = true;
+        Utils::refreshFoundTileEffectWithContracts($player->getId(), $sum);
         break;
       case CARD_ACTION_RESSOURCES_TO_COINS: //done in actSpendSpices
         break;

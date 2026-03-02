@@ -211,6 +211,9 @@ abstract class Utils {
         }
     }
 
+    /**
+     * @return true if an effect has been updated
+     */
     public static function refreshFoundTileChoice(int $playerId) : bool {
         $updated = false;
         $player = Players::get($playerId);
@@ -224,6 +227,30 @@ abstract class Utils {
                         $updated = true;
                     }
                 }
+        }
+        return $updated;
+    }
+    
+    /**
+     * @return true if an effect has been updated
+     */
+    public static function refreshFoundTileEffectWithContracts(int $playerId, int $nContracts) : bool {
+        if($nContracts < 1 ) return false;
+        $updated = false;
+        $player = Players::get($playerId);
+        $effectsToFound = Effects::getEffectToResolveByType(EFFECT_TYPE_FOUND_TILE,$playerId);
+        //REFRESH Effect data according to param adding contracts
+        foreach($effectsToFound as &$effect){
+            if(!in_array(ACTION_FOUND_FORWARD,$effect->getResult()) ){
+                $missingContracts = $effect->getQuantity();
+                $missingContracts = max(0, ($missingContracts - $nContracts));
+                $effect->setQuantity($missingContracts);
+                $updated = true;
+                if($player->getContracts() >= $missingContracts){
+                    $effect->addChoiceInResult(ACTION_FOUND_FORWARD);
+                    $updated = true;
+                }
+            }
         }
         return $updated;
     }

@@ -334,8 +334,10 @@ class PlayerChoice extends GameState
         )
     { 
         Utils::checkVersion($v);
-        PlayerTurn::actPlayCard_content($card_id, $activePlayerId, $args);
+        $doCheckpoint = false;
+        PlayerTurn::actPlayCard_content($card_id, $activePlayerId, $args, $doCheckpoint);
         
+        if($doCheckpoint) Log::addStateCheckpoint(self::class);
         return self::class;
     }
 
@@ -420,7 +422,7 @@ class PlayerChoice extends GameState
         $nextStateClass = self::class;
 
         if(isset($card_id)){
-            Cards::playExploration($player, $card_id, );
+            Cards::playExploration($player, $card_id, $doCheckpoint );
         } 
         else if(isset($tile_id)){
             $tile = Tiles::playTile($player, $tile_id, null, $doCheckpoint, $prematureStateChange );
