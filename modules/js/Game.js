@@ -1944,6 +1944,7 @@ export class Game {
                                         _("Look through the ${n} tiles that were returned to the box during setup for phases Day and Night. Take the tile of your choice among them. You may use it immediately if the tile allows it.")
                                         ,{n: 8}
                                     );
+                                    description += '<br>'+ _('Those tiles can be seen at the bottom of the game area.');
                                     returnAfterThis = true;
                                 default: break;
                             }
