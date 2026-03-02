@@ -23,8 +23,14 @@
 .goa_icon_nbActions{
     @include goa_icons_sprite(0px,196px,0.2 * 178px,0.2 * 130px,178px,130px);
 }
+.goa_action_image[data-type="31"], //ACTION_FOUND_FORWARD
 .goa_icon_greenCheck{
     @include goa_icons_sprite(188px,258px,0.5 * 74px, 0.5 * 66px,74px,66px);
+}
+
+.goa_action_image[data-type="30"], //ACTION_FOUND_ABANDON
+.goa_icon_redCross{
+    @include goa_icons_sprite(1040px,134px,0.35 * 102px, 0.35 * 95px,102px,95px);
 }
 
 $spice_width: 29px;
@@ -181,5 +187,6 @@ $symbol_tiny_height: 25px;
         &[data-type="5"]{//Found
             @include goa_icons_sprite(1073px,235px,0.5 * 119px,0.5 * 90px,119px,90px);
         }
+        
     }
 }

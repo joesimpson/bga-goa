@@ -69,6 +69,7 @@ trait DebugTrait
         Cards::DB()->delete()->run();
         Tokens::DB()->delete()->run();
         Tiles::DB()->delete()->run();
+        Effects::DB()->delete()->run();
         Globals::DB()->delete()->run();
         Players::DB()->delete()->run();
 

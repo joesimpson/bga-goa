@@ -299,7 +299,7 @@ export class ClientSelectTileEffect {
                     
                     switch(choice){
                         case this.game.const.ACTION_FOUND_ABANDON: 
-                            this.bga.statusBar.addActionButton( _("Abandon Outpost"), () => {
+                            this.bga.statusBar.addActionButton( this.game.formatActionButton(choice,_("Abandon Outpost")), () => {
                             this.game.customPerformAction("actResolveEffect", { 
                                     'tile_id' : tile_id,
                                     'choice': choice,
@@ -312,7 +312,7 @@ export class ClientSelectTileEffect {
                         }); 
                         break;
                         case this.game.const.ACTION_FOUND_FORWARD: 
-                            this.bga.statusBar.addActionButton( _("Establish Outpost"), () => {
+                            this.bga.statusBar.addActionButton( this.game.formatActionButton(choice,_("Establish Outpost")), () => {
                                 this.game.customPerformAction("actResolveEffect", { 
                                         'tile_id' : tile_id,
                                         'choice': choice,

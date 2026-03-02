@@ -827,6 +827,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-size: 674.1573033708% 253.8461538462%;
 }
 
+.goa_action_image[data-type="31"],
 .goa_icon_greenCheck {
   width: 37px;
   height: 33px;
@@ -834,6 +835,16 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-position-x: -94px;
   background-position-y: -129px;
   background-size: 1621.6216216216% 500%;
+}
+
+.goa_action_image[data-type="30"],
+.goa_icon_redCross {
+  width: 35.7px;
+  height: 33.25px;
+  background-image: url("img/icons.png");
+  background-position-x: -364px;
+  background-position-y: -46.9px;
+  background-size: 1176.4705882353% 347.3684210526%;
 }
 
 .goa_icon_spices_white, .goa_icon_spices_1 {
