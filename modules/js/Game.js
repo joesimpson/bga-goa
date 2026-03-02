@@ -482,6 +482,7 @@ export class Game {
         this.bga.statusBar.addActionButton( _('Return'), () => {
             callbackOnClose();
         }, { 
+            'id':`goa_btn_return`,
             'color':'secondary',
             'title':_('Return'), 
             'destination': document.getElementById('customSecondary') 

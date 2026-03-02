@@ -60,7 +60,11 @@ export class PlayerChoice {
                         let actionHint = this.bga.gameui.format_string(_('Action : ${name}'),{'name': actionName});
                         this.bga.statusBar.addActionButton(actionHint, () => {
                             nextState(this.bga);
-                        }, {  destination: document.getElementById('customPrimary'),'title':_('Select this action effect'),  }); 
+                        }, {  
+                            'id': `btnEffect_${effectId}`,
+                            'destination': document.getElementById('customPrimary'),
+                            'title':_('Select this action effect'),  
+                        }); 
                     }
                     else if(tile){
                             let tile_icon = this.game.tplTile(tile, '_log');
@@ -80,7 +84,11 @@ export class PlayerChoice {
                             };
                             this.bga.statusBar.addActionButton( tile_icon, () => {
                                 nextState(this.bga);
-                            }, {  destination: document.getElementById('customPrimary'),'title':_('Select this tile effect'),  }); 
+                            }, {   
+                                'id': `btnEffect_${effectId}`,
+                                'destination': document.getElementById('customPrimary'),
+                                'title':_('Select this tile effect'),  
+                            }); 
                     }
                     if(directState){
                         //UNIQUE CHOICE => go for it
@@ -166,7 +174,11 @@ export class ClientSelectTileEffect {
                                         'previousClientState' : this.game.getCurrentClientStateDatas(),
                                     },
                                 });
-                            }, {'destination': document.getElementById('customPrimary'),'title':_('Produce'),  }); 
+                            }, {
+                                'id': `btnEffectChoice_${args.choice_index}_${choice}`,
+                                'destination': document.getElementById('customPrimary'),
+                                'title':_('Produce'),  
+                            }); 
                             break;
                         case this.game.const.ACTION_SHIP:
                             let buttonText = this.bga.gameui.format_string(
@@ -179,7 +191,11 @@ export class ClientSelectTileEffect {
                                         'choice': choice,
                                         'choice_index':args.choice_index,
                                     })
-                            }, {destination: document.getElementById('customPrimary'),'title':_('Take ships'),  }); 
+                            }, {
+                                'id': `btnEffectChoice_${args.choice_index}_${choice}`,
+                                'destination': document.getElementById('customPrimary'),
+                                'title':_('Take ships'),  
+                            }); 
                             break;
                         case this.game.const.ACTION_CONTRACT:
                             let buttonText1 = this.bga.gameui.format_string(
@@ -192,7 +208,10 @@ export class ClientSelectTileEffect {
                                         'choice': choice,
                                         'choice_index':args.choice_index,
                                     })
-                            }, { destination: document.getElementById('customPrimary'),'title':_('Take contracts'),  }); 
+                            }, {
+                                'id': `btnEffectChoice_${args.choice_index}_${choice}`,
+                                'destination': document.getElementById('customPrimary'),
+                                'title':_('Take contracts'),  }); 
 
                             break;
                         default: break;
@@ -209,7 +228,11 @@ export class ClientSelectTileEffect {
                         };
                     this.bga.statusBar.addActionButton( tile_icon, () => {
                             action();
-                    }, {  destination: document.getElementById('customPrimary'),'title':_('Select this tile'),  }); 
+                    }, { 
+                            'id': `btnEffectChoice_${args.choice_index}_${choice}`,
+                            'destination': document.getElementById('customPrimary'),
+                            'title':_('Select this tile'),  
+                        }); 
                     //+Click on tile itself if displayed (With Favor tile we displayed tiles on page)
                     let tileToPick = document.getElementById(`goa_tile-${choice_id}`);
                     if(tileToPick){
@@ -237,7 +260,10 @@ export class ClientSelectTileEffect {
                                 'choice': choice,
                                 'choice_index':args.choice_index,
                             })
-                    }, {  destination: document.getElementById('customPrimary'), }); 
+                    }, {  
+                            'id': `btnEffectChoice_${args.choice_index}_${choice}`,
+                            'destination': document.getElementById('customPrimary'),
+                        }); 
                     break;
                 case this.game.const.EFFECT_TYPE_REPLACE_TILE:
                     let newtile_icon = this.game.tplTileFromType(args.tile.type, '_log');
@@ -279,7 +305,11 @@ export class ClientSelectTileEffect {
                                     'choice': choice,
                                     'choice_index':args.choice_index,
                                 })
-                        }, {destination: document.getElementById('customPrimary'),'title':_('Abandon Outpost'),  }); 
+                        }, {
+                            'id': `btnEffectChoice_${args.choice_index}_${choice}`,
+                            'destination': document.getElementById('customPrimary'),
+                            'title':_('Abandon Outpost'),
+                        }); 
                         break;
                         case this.game.const.ACTION_FOUND_FORWARD: 
                             this.bga.statusBar.addActionButton( _("Establish Outpost"), () => {
@@ -288,7 +318,11 @@ export class ClientSelectTileEffect {
                                         'choice': choice,
                                         'choice_index':args.choice_index,
                                     })
-                            }, {destination: document.getElementById('customPrimary') ,'title':_('Establish Outpost'),}); 
+                            }, {
+                                'id': `btnEffectChoice_${args.choice_index}_${choice}`,
+                                'destination': document.getElementById('customPrimary'),
+                                'title':_('Establish Outpost'),
+                            }); 
                         break;
                     }
                     
