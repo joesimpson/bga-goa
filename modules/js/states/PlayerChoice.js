@@ -29,7 +29,7 @@ export class PlayerChoice {
       
         if (isCurrentPlayerActive || true) { // display buttons choices for other players to let them know
 
-            if(possibleActions.includes('actTileChoice')){
+            if(possibleActions.includes('actResolveEffect')){
                 Object.entries(effects).forEach( ([effectId,effect])  => {
                     directState = (Object.entries(effects).length == 1) ;
                     let nextState = function () { };
@@ -161,7 +161,7 @@ export class ClientSelectTileEffect {
                                         'min': 1,
                                         'max': tile_choice.quantity,
                                         'withTile':tile_id,
-                                        'serverAction': 'actTileChoice',
+                                        'serverAction': 'actResolveEffect',
                                         'choice_index':args.choice_index,
                                         'previousClientState' : this.game.getCurrentClientStateDatas(),
                                     },
@@ -174,7 +174,7 @@ export class ClientSelectTileEffect {
                                         ,{n:tile_choice.quantity, 'resource_name': _('Ships'), icon_resource : this.game.formatIcon('ships',_('Ships'))}
                                     );
                             this.bga.statusBar.addActionButton( buttonText, () => {
-                                this.game.customPerformAction("actTileChoice", { 
+                                this.game.customPerformAction("actResolveEffect", { 
                                         'tile_id' : tile_id,
                                         'choice': choice,
                                         'choice_index':args.choice_index,
@@ -187,7 +187,7 @@ export class ClientSelectTileEffect {
                                         ,{n:tile_choice.quantity, 'resource_name': _('Contracts'), icon_resource : this.game.formatIcon('contracts',_('Contracts'))}
                                     );
                             this.bga.statusBar.addActionButton( buttonText1, () => {
-                                this.game.customPerformAction("actTileChoice", { 
+                                this.game.customPerformAction("actResolveEffect", { 
                                         'tile_id' : tile_id,
                                         'choice': choice,
                                         'choice_index':args.choice_index,
@@ -201,7 +201,7 @@ export class ClientSelectTileEffect {
                 case this.game.const.EFFECT_TYPE_PICK_TILE:
                     let tile_icon = this.game.tplTileFromType(choice, '_log');
                     let action = () => { 
-                            this.game.customPerformAction("actTileChoice", { 
+                            this.game.customPerformAction("actResolveEffect", { 
                                 'tile_id' : tile_id,
                                 'choice': choice_id,
                                 'choice_index':args.choice_index,
@@ -232,7 +232,7 @@ export class ClientSelectTileEffect {
                     }
                     let spice_icon = this.game.formatSpiceIcon(choice);
                     this.bga.statusBar.addActionButton( spice_icon, () => {
-                        this.game.customPerformAction("actTileChoice", { 
+                        this.game.customPerformAction("actResolveEffect", { 
                                 'tile_id' : tile_id,
                                 'choice': choice,
                                 'choice_index':args.choice_index,
@@ -249,7 +249,7 @@ export class ClientSelectTileEffect {
                     let tileDiv = document.getElementById(`goa_tile-${choice}`);
                     tileDiv.setAttribute("title",_('Select this tile'));
                     this.game.onClick(tileDiv,() => {
-                            this.game.customPerformAction("actTileChoice", { 
+                            this.game.customPerformAction("actResolveEffect", { 
                                 'tile_id' : tile_id,
                                 'choice': choice,
                                 'choice_index':args.choice_index,
@@ -274,7 +274,7 @@ export class ClientSelectTileEffect {
                     switch(choice){
                         case this.game.const.ACTION_FOUND_ABANDON: 
                             this.bga.statusBar.addActionButton( _("Abandon Outpost"), () => {
-                            this.game.customPerformAction("actTileChoice", { 
+                            this.game.customPerformAction("actResolveEffect", { 
                                     'tile_id' : tile_id,
                                     'choice': choice,
                                     'choice_index':args.choice_index,
@@ -283,7 +283,7 @@ export class ClientSelectTileEffect {
                         break;
                         case this.game.const.ACTION_FOUND_FORWARD: 
                             this.bga.statusBar.addActionButton( _("Establish Outpost"), () => {
-                                this.game.customPerformAction("actTileChoice", { 
+                                this.game.customPerformAction("actResolveEffect", { 
                                         'tile_id' : tile_id,
                                         'choice': choice,
                                         'choice_index':args.choice_index,
@@ -309,7 +309,7 @@ export class ClientSelectTileEffect {
                                     1,
                                     this.bga.gameui.format_string(_('Action : ${name}'),{'name':  _('Build Ships')}),
                                     opponentId,
-                                    () => this.game.customPerformAction("actTileChoice", { 
+                                    () => this.game.customPerformAction("actResolveEffect", { 
                                                 'tile_id' : tile_id,
                                                 'choice': choice,
                                                 'choice_index':args.choice_index,
@@ -330,7 +330,7 @@ export class ClientSelectTileEffect {
                                             'min': 1,
                                             'max': playersBaseHarvest,
                                             'withTile':tile_id,
-                                            'serverAction': 'actTileChoice',
+                                            'serverAction': 'actResolveEffect',
                                             'choice_index':args.choice_index,
                                             'progressRefPlayerId': opponentId,
                                             'previousClientState' : this.game.getCurrentClientStateDatas(),
@@ -343,7 +343,7 @@ export class ClientSelectTileEffect {
                                     3,
                                     this.bga.gameui.format_string(_('Action : ${name}'),{'name':  _('Collect Taxes')}),
                                     opponentId,
-                                    () => this.game.customPerformAction("actTileChoice", { 
+                                    () => this.game.customPerformAction("actResolveEffect", { 
                                                 'tile_id' : tile_id,
                                                 'choice': choice,
                                                 'choice_index':args.choice_index,

@@ -97,7 +97,7 @@ class PlayerChoice extends GameState
                     }
             }
             $args['effects'] = $effects->uiAssoc();
-            $args['possibleActions'][] = 'actTileChoice';
+            $args['possibleActions'][] = 'actResolveEffect';
         }
         //Allow to play any card/tile during any effect, it may add new effects to the list
         PlayerTurn::addArgsForCardPlay($player,$args, null,$lookForDiscardCards);
@@ -139,12 +139,12 @@ class PlayerChoice extends GameState
         }
     }
     /**
-     * Player action in round step 2
+     * Player action in round step 2 + resolve effects in round step 3
      *
      * @throws UserException
      */
     #[PossibleAction]
-    public function actTileChoice(
+    public function actResolveEffect(
         int $tile_id, 
         int $choice, 
         int $choice_index, 
@@ -157,10 +157,10 @@ class PlayerChoice extends GameState
         )
     {
         Utils::checkVersion($v);
-        $this->game->trace("actTileChoice( $tile_id, $choice, $choice_index, $activePlayerId)");
+        $this->game->trace("actResolveEffect( $tile_id, $choice, $choice_index, $activePlayerId)");
         // check input values
-        if ( !in_array('actTileChoice',$args['possibleActions'])) {
-            throw new UnexpectedException(501,"Invalid action actTileChoice");
+        if ( !in_array('actResolveEffect',$args['possibleActions'])) {
+            throw new UnexpectedException(501,"Invalid action actResolveEffect");
         } 
         $tiles = $args['tiles'];
         if ( !in_array($tile_id,array_keys($tiles))) {
@@ -492,7 +492,7 @@ class PlayerChoice extends GameState
                 //TODO JSA sometimes choice is a key (ex : favor tile choices)
                 $choice_array1 = null;
                 $choice_array2 = null;
-                return $this->actTileChoice($tile_id, $choice, $choice_index, $playerId, $args, $gameVersion, $choice_array1, $choice_array2, $playerId );
+                return $this->actResolveEffect($tile_id, $choice, $choice_index, $playerId, $args, $gameVersion, $choice_array1, $choice_array2, $playerId );
             }
             
             if(in_array('actDiscard',$actions)){

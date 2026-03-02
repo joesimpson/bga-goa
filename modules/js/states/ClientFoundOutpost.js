@@ -17,7 +17,7 @@ export class ClientFoundOutpost {
         let actionArgs = {};
         let fromTileChoice = args.tile_choice;
         if(fromTileChoice){
-            actionName = 'actTileChoice';
+            actionName = 'actResolveEffect';
             actionArgs = { 
                         'tile_id' : fromTileChoice.tile_id,
                         'choice': fromTileChoice.choice,

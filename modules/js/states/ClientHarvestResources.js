@@ -70,7 +70,7 @@ export class ClientHarvestResources {
 
             let actionArgs = {};
             switch(actionName){
-                case 'actTileChoice' : 
+                case 'actResolveEffect' : 
                     //when we come from ClientSelectTileEffect
                     let progressRefPlayerId = args.progressRefPlayerId;
                     actionArgs = { 
