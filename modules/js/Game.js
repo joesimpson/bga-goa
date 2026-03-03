@@ -1533,6 +1533,7 @@ export class Game {
         this.customDebug("notif_discardExploration",notif);
         this._counters[notif.player_id]['exploration_hand_size'].incValue( -1);
         let currentPlayerId = this.bga.players.getCurrentPlayerId();
+        let cardMaterial = this.gamedatas.material.cards[notif.card.subtype][notif.card.type];
         let addCardSettings = { 
                 fromElement: document.getElementById(`goa_reserve_${notif.player_id}_exploration_hand_size`)
             };
@@ -1540,7 +1541,7 @@ export class Game {
             addCardSettings = { 
                 fromStock: this.explorationHand
             };
-            this._counters[currentPlayerId]['explo_symbol_tiny_'+notif.card.symbol].incValue(-1);
+            this._counters[currentPlayerId]['explo_symbol_tiny_'+cardMaterial.symbol].incValue(-1);
         }
         await this.explorationDiscard.addCard(notif.card, addCardSettings);
     }
@@ -1553,7 +1554,8 @@ export class Game {
         if (currentPlayer && currentPlayer.id == notif.player_id && notif._private) {
             this.explorationHand.addCards(notif._private.cards, { fromStock: this.explorationDeck});
             Object.values(notif._private.cards).forEach((card) => {
-                this._counters[currentPlayer.id]['explo_symbol_tiny_'+card.symbol].incValue(1);
+                let cardMaterial = this.gamedatas.material.cards[card.subtype][card.type];
+                this._counters[currentPlayer.id]['explo_symbol_tiny_'+cardMaterial.symbol].incValue(1);
             });
         }
         else {
@@ -1717,6 +1719,7 @@ export class Game {
         });
     }
     getTileContainer(tile) {
+        let tileMaterial = this.gamedatas.material.tiles[tile.subtype][tile.type];
         if(tile.subtype == this.const.TILE_SUBTTYPE_OUTPOST){
             if (tile.location.startsWith(this.const.TILE_LOCATION_BOARD_OUTPOST) ) {
                 return `goa_board_outposts_${tile.colony}`;
@@ -1733,7 +1736,7 @@ export class Game {
                 }
             }
             if (tile.location == (this.const.TILE_LOCATION_PLAYER_BOARD) ) {
-                if (tile.play_type == this.const.MARKET_TYPE_PLANTATION && [1,2,3,4].includes(tile.state) ) {
+                if (tileMaterial.play_type == this.const.MARKET_TYPE_PLANTATION && [1,2,3,4].includes(tile.state) ) {
                     return `goa_player_plantations-${tile.pId}`;
                 }
                 return `goa_player_tiles-${tile.pId}`;
@@ -1811,7 +1814,7 @@ export class Game {
                         ${textLine1 == '' ? '' : '<span class="goa_tile_text_line1">'+textLine1+'</span>'}
                         ${textAction == '' ? '' : '<hr><span class="goa_tile_text_action">'+textAction+'</span>'}
                         <hr>
-                        <span class="goa_tile_text_playType" data-playType="${tile.play_type}">${this.formatTilePlayTypeText( tile )}</span>
+                        <span class="goa_tile_text_playType" data-playType="${tileMaterial.play_type}">${this.formatTilePlayTypeText( tile )}</span>
                         
                     </div>
                 </div>
@@ -1819,6 +1822,7 @@ export class Game {
 
     }
     formatTileTitle (tile) {
+        let tileMaterial = this.gamedatas.material.tiles[tile.subtype][tile.type];
         let descriptionMap = new Map([
             [this.const.MARKET_TYPE_PLANTATION, this.bga.gameui.format_string(_("Depot"),{ })] ,
             [this.const.MARKET_TYPE_ACTION_REUSEABLE, this.bga.gameui.format_string( _('Multi-use action'),{ } )],
@@ -1831,19 +1835,20 @@ export class Game {
         if(tile.subtype == this.const.TILE_SUBTTYPE_OUTPOST){
             return this.bga.gameui.format_string(_("Outpost : ${name}"),{ name : this.getColonyName(tile.colony)});
         }
-        else description = descriptionMap.get(tile.play_type);
+        else description = descriptionMap.get(tileMaterial.play_type);
         let text = '<b><i>' + description + '</i></b>';
         return text;
     }
     formatTilePlayTypeText (tile) {
         let descriptionMap;
+        let tileMaterial = this.gamedatas.material.tiles[tile.subtype][tile.type];
         switch (tile.subtype )
         {
             case this.const.TILE_SUBTTYPE_OUTPOST:
                 return this.bga.gameui.format_string(_("When you establish an outpost, place the outpost tile on the matching space of your personal board. After establishing an outpost, fill it with the appropriate goods from the supply. To establish an outpost with the appropriate action, a player needs to recruit a minimum number of contracts: ${n} contracts for this one."),{ n : this.getNbContractsForColony(tile.colony) });
             case this.const.TILE_SUBTTYPE_MARKET: 
                 descriptionMap = new Map([
-                    [this.const.MARKET_TYPE_PLANTATION, this.bga.gameui.format_string(_("When you gain a Depot, place it face up in an empty upper space on your Player Board. Immediately fill these fields with the matching Goods from the supply : this one have ${x} fields. If you already have four Depots on your board, you must first discard one Depot (along with any Goods on it) before placing the new one. If the discarded Depot shows a VP symbol, keep it face down in your play area. It is worth ${n} Victory Points at the end of the game."),{ x: tile.spice_slots.length , n : tile.end_score })] ,
+                    [this.const.MARKET_TYPE_PLANTATION, this.bga.gameui.format_string(_("When you gain a Depot, place it face up in an empty upper space on your Player Board. Immediately fill these fields with the matching Goods from the supply : this one have ${x} fields. If you already have four Depots on your board, you must first discard one Depot (along with any Goods on it) before placing the new one. If the discarded Depot shows a VP symbol, keep it face down in your play area. It is worth ${n} Victory Points at the end of the game."),{ x: tileMaterial.spice_slots.length , n : tileMaterial.end_score })] ,
                     [this.const.MARKET_TYPE_ACTION_REUSEABLE, this.bga.gameui.format_string( _('Blue Tile : players must put it face up in their play area. They can use it before, during or after their action. This tile can be played during a future action, but only once per round. After using it, the player must flip it and may no longer use it for the rest of the round. At the beginning of the following round, players flip the tile face up and can use it again.'),{ } )],
                     [this.const.MARKET_TYPE_ACTION_DIRECT, this.bga.gameui.format_string(_("Teal Tile : When a player acquires this tile, they immediately take the appropriate resources. After being used, the tile is discarded."),{ })] ,
                     [this.const.MARKET_TYPE_ACTION_ONCE, this.bga.gameui.format_string(_("Yellow Tile : This tile may only be used once during the game. Once used, the tile is discarded."),{ })] ,
@@ -1852,24 +1857,25 @@ export class Game {
                 break;
             default : return '';
         }
-        let text = descriptionMap.get(tile.play_type);
+        let text = descriptionMap.get(tileMaterial.play_type);
         return text;
     }
     formatScoringTileText (tile) {
+        let tileMaterial = this.gamedatas.material.tiles[tile.subtype][tile.type];
         let descriptionMap = new Map([
             [37, this.bga.gameui.format_string(_('At the end of the game, each of your single-field Depots is worth ${n} points instead of ${x} points.'),{'tile_name':_('Foreman'), 'n':3, 'x':1 })] ,
             [38, this.bga.gameui.format_string(_('Remove any ${x} Goods from your Outposts and/or Depots and return them to the supply. Then place the Duty tile face down in front of you. At the end of the game, each completed Duty tile is worth ${n} VP.'),{ 'tile_name':_('Duty'), 'n':5, 'x':6 } )],
-            [39, this.bga.gameui.format_string(_('At the end of the game, this tile is worth ${n} victory points.'),{ 'tile_name':_('Small Mission'), 'n':tile.end_score })] ,
-            [40, this.bga.gameui.format_string(_('At the end of the game, this tile is worth ${n} victory points.'),{ 'tile_name':_('Large Mission'), 'n':tile.end_score})] ,
+            [39, this.bga.gameui.format_string(_('At the end of the game, this tile is worth ${n} victory points.'),{ 'tile_name':_('Small Mission'), 'n':tileMaterial.end_score })] ,
+            [40, this.bga.gameui.format_string(_('At the end of the game, this tile is worth ${n} victory points.'),{ 'tile_name':_('Large Mission'), 'n':tileMaterial.end_score})] ,
         ]);
         let text = descriptionMap.get(tile.type);
         return text;
     }
-    formatTileSpicesText (tile) {
-        let number_label = tile.spice_slots.length;  
+    formatTileSpicesText (spice_slots) {
+        let number_label = spice_slots.length;  
         let icons = '';
         let treatArray = null;
-        Object.values( tile.spice_slots ).forEach((spice_type) => {
+        Object.values( spice_slots ).forEach((spice_type) => {
             icons += this.formatSpiceIcon(spice_type);
             if(Array.isArray(spice_type)){
                 treatArray = spice_type;
@@ -1877,7 +1883,7 @@ export class Game {
         });
         let text = '';
         if(treatArray){
-            Object.values( tile.spice_slots ).forEach((spice_type) => {
+            Object.values( spice_slots ).forEach((spice_type) => {
                 icons = '';
                 Object.values( spice_type ).forEach((spice_type_listElement) => {
                     icons += this.formatSpiceIcon(spice_type_listElement);
@@ -1904,11 +1910,11 @@ export class Game {
         switch (tile.subtype )
         {
             case this.const.TILE_SUBTTYPE_OUTPOST:
-                return this.formatTileSpicesText(tile);
+                return this.formatTileSpicesText(tileMaterial.spice_slots);
             case this.const.TILE_SUBTTYPE_MARKET: 
                 switch(tileMaterial.play_type){
                     case this.const.MARKET_TYPE_PLANTATION:
-                        return this.formatTileSpicesText(tile);
+                        return this.formatTileSpicesText(tileMaterial.spice_slots);
                     case this.const.MARKET_TYPE_ACTION_REUSEABLE:
                     case this.const.MARKET_TYPE_ACTION_DIRECT: 
                         let  returnAfterThis = false;
@@ -1918,7 +1924,7 @@ export class Game {
                             switch(parseInt(action_type)){
                                 case this.const.ACTION_SPICE:
                                     returnAfterThis = true;
-                                    description = this.formatTileSpicesText(tile);
+                                    description = this.formatTileSpicesText(tileMaterial.spice_slots);
                                 case this.const.ACTION_MONEY:
                                     resource_name = _('Gold Pardau cards');
                                     icon_name = this.formatIcon('money', resource_name);
@@ -2009,15 +2015,15 @@ export class Game {
         if(tile.subtype == this.const.TILE_SUBTTYPE_OUTPOST) {
             return `<div class="goa_tile goa_tile${prefix} goa_outpost" id="goa_tile${prefix}-${tile.id}" data-id="${tile.id}" data-type="${tile.type}"
                 data-id="${tile.id}"
-                data-colony="${tile.colony}" data-spots="${tile.spice_slots ? tile.spice_slots.length : 0}">
+                data-colony="${tile.colony}" data-spots="${tileMaterial.spice_slots ? tileMaterial.spice_slots.length : 0}">
                 ${spotsDiv}
             </div>`;   
         }
         if(tile.subtype == this.const.TILE_SUBTTYPE_MARKET) {
             return `<div class="goa_tile goa_tile${prefix} goa_market" id="goa_tile${prefix}-${tile.id}" data-id="${tile.id}" data-type="${tile.type}"
                 data-id="${tile.id}"
-                data-play_type="${tile.play_type}" data-state="${tile.state}" data-spots="${tile.spice_slots ? tile.spice_slots.length : 0}"
-                data-end_score="${tile.end_score}" 
+                data-play_type="${tileMaterial.play_type}" data-state="${tile.state}" data-spots="${tileMaterial.spice_slots ? tileMaterial.spice_slots.length : 0}"
+                data-end_score="${tileMaterial.end_score}" 
                 >
                 ${spotsDiv}
                     ${this.formatIcon('greenCheck')}
@@ -2458,7 +2464,7 @@ export class Game {
                 });
             }
             this.explorationDeck = new BgaCards.Deck(this.explorationCardsManager, document.getElementById('goa_exploration_deck'), {
-                cardNumber: this.gamedatas.cards.deck_size.exploration,
+                cardNumber: this.gamedatas.cards.deck_size[this.const.CARD_SUBTTYPE_EXPLORATION] ,
                 counter: {
                     position: 'center',
                     extraClasses: 'text-shadow',
@@ -2466,7 +2472,7 @@ export class Game {
             });
         }
         
-        await this.explorationDeck.setCardNumber(this.gamedatas.cards.deck_size.exploration);
+        await this.explorationDeck.setCardNumber(this.gamedatas.cards.deck_size[this.const.CARD_SUBTTYPE_EXPLORATION]);
         
         // This function is refreshUI compatible
         //destroy previous cards
@@ -2525,7 +2531,8 @@ export class Game {
                 this.updateHandSelectable(this.gamedatas.gamestate.args, false);
                 let currentPlayer = this.bga.players.getCurrentPlayer();
                 if (currentPlayer) {
-                    this._counters[currentPlayer.id]['explo_symbol_tiny_'+card.symbol].incValue(1);
+                    let cardMaterial = this.gamedatas.material.cards[card.subtype][card.type];
+                    this._counters[currentPlayer.id]['explo_symbol_tiny_'+cardMaterial.symbol].incValue(1);
                 }
             }
             else {//manual add
@@ -2570,21 +2577,23 @@ export class Game {
         let textLine1 = ''
         let title = '';
         let textSymbols = '';
+        if(! (cardDatas.subtype)) return '';
+        let cardMaterial = this.gamedatas.material.cards[cardDatas.subtype][cardDatas.type];
         if(cardDatas.subtype == this.const.CARD_SUBTTYPE_EXPLORATION){
             let iconsContracts = this.formatIcon('contracts',_('Contracts'));
-            for(let k=2;k<=cardDatas.contracts;k++) iconsContracts += this.formatIcon('contracts',_('Contracts'));
+            for(let k=2;k<=cardMaterial.contracts;k++) iconsContracts += this.formatIcon('contracts',_('Contracts'));
             textLine1 = this.bga.gameui.format_string( 
                 _('When revealing and discarding this card to establish an outpost, this gives ${n} ${resource_name} : ${icon_resource}'),
-                {'n': cardDatas.contracts , resource_name: _('Contracts'), icon_resource: iconsContracts}
+                {'n': cardMaterial.contracts , resource_name: _('Contracts'), icon_resource: iconsContracts}
             );
             title = _('Exploration card');
             textSymbols = this.bga.gameui.format_string( 
                 _('Gives the Island Symbol ${s_icon} (${s_name})'),
-                { s_name: this.getCardSymbolName( cardDatas.symbol ), s_icon: this.formatSymbolIcon(cardDatas.symbol)}
+                { s_name: this.getCardSymbolName( cardMaterial.symbol ), s_icon: this.formatSymbolIcon(cardMaterial.symbol)}
             );
             textSymbols += this.getCardTooltipSymbolsInfos(cardDatas);
         }
-        let textAction = this.formatCardActionText( cardDatas );
+        let textAction = this.formatCardActionText( cardMaterial );
         let div = this.tplCard(cardDatas,'_tmp'); 
         return [`<div class='goa_card_tooltip'>
                 <div class="goa_tooltip_block1">
@@ -2625,7 +2634,7 @@ export class Game {
                     { 'a':a,'b':b,'c':c,'d':d,  'w':w,'x':x,'y':y,'z':z, }
                 );
             case this.const.CARD_ACTION_2_SPICES             : return this.bga.gameui.format_string(_('Ability ${x} : ${gain}') ,
-                    { 'x':'f', 'gain': this.formatTileSpicesText({'spice_slots':[this.const.SPICES_ALL,this.const.SPICES_ALL]}) }
+                    { 'x':'f', 'gain': this.formatTileSpicesText([this.const.SPICES_ALL,this.const.SPICES_ALL]) }
                 );
             case this.const.CARD_ACTION_2_CONTRACTS          : return this.bga.gameui.format_string(_('Ability ${x} : ${gain}') ,
                     { 'x':'g', 'gain': this.bga.gameui.format_string(

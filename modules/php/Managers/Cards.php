@@ -71,7 +71,7 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
   public static function getAllDeckSizes(): array
   {
     return [
-            'exploration' => Cards::countInExplorationDeck(),
+          CARD_SUBTTYPE_EXPLORATION => Cards::countInExplorationDeck(),
         ];
   }
   public static function countInExplorationDeck() : int

@@ -24,6 +24,11 @@ class MarketTile extends Tile
     {
         $data = parent::getUiData();
         $data['subtype'] = TILE_SUBTTYPE_MARKET;
+        //keep json as short as possible by removing static datas (we can get it with material sent at page load)
+        unset($data['play_type']);
+        unset($data['spice_slots']);
+        unset($data['actions']);
+        unset($data['end_score']);
         unset($data['name']);
         return $data;
     }
