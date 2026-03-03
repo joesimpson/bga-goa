@@ -17,6 +17,7 @@
 
 const BgaAnimations = await importEsmLib('bga-animations', '1.x');
 const BgaCards = await importEsmLib('bga-cards', '1.x');
+const BgaAutofit = await importEsmLib('bga-autofit', '1.x');
 const [BgaHelp,BgaZoom] = await globalThis.importDojoLibs([g_gamethemeurl + "modules/js/ext/bga-help.js", g_gamethemeurl + "modules/js/ext/bga-zoom.js"]);
 
 //import * as bgz from "./ext/bga-zoom.js";
@@ -383,6 +384,8 @@ export class Game {
 
         // Setup game notifications to handle (see "setupNotifications" method below)
         this.setupNotifications();
+
+        BgaAutofit.init();
 
         this.customDebug( "Ending game setup" );
     }
@@ -759,8 +762,10 @@ export class Game {
     }
 
     formatActionButton(actionType, actionText){
+        //let testAutoFit = true;
+        //if(testAutoFit) actionText = "TEST TRANSLATED "+_(actionText)+ " ddddddddddddd";
         let actionButton = `<div class='goa_button_action'>
-                                <div class='goa_action_text'>`+_(actionText)+`</div>
+                                <div class='goa_action_text bga-autofit'>`+_(actionText)+`</div>
                                 <div class='goa_action_image' data-type='${actionType}'></div>
                             </div>`;
         return actionButton;

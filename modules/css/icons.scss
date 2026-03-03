@@ -164,11 +164,16 @@ $symbol_tiny_height: 25px;
 
     .goa_action_text{
         white-space: normal;
+        //width + height for bga-autofit class
+        width: 62px;
+        height: 50px;
     }
 }
 
     .goa_action_image{
         margin: 5px;
+        //always keep original width because the sprite position depends on width
+        flex-shrink: 0;
 
         &[data-type="0"]{//progress
             @include goa_icons_sprite(270px,267px,0.9 * 34px,0.9 * 50px,34px,50px);

@@ -1071,10 +1071,13 @@ Icon extract in sprite with differents layers size (so % is not useful).
 }
 .goa_button_action .goa_action_text {
   white-space: normal;
+  width: 62px;
+  height: 50px;
 }
 
 .goa_action_image {
   margin: 5px;
+  flex-shrink: 0;
 }
 .goa_action_image[data-type="0"] {
   width: 30.6px;
