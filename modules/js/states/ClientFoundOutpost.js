@@ -66,7 +66,7 @@ export class ClientFoundOutpost {
                         }
                         this.game.customPerformAction(actionName, actionArgs);
                     }
-                , { id:'goa_button_found', 'title':this.bga.gameui.format_string(_('Action : ${name}'),{'name':  _('Establish Outpost')}), destination: document.getElementById('customPrimary') }); 
+                , { id:'goa_button_found', 'title':this.bga.gameui.format_string(_('Player action : ${name}'),{'name': this.game.formatActionName(this.game.const.ACTION_TYPE_FOUND)}), destination: document.getElementById('customPrimary') }); 
             });
         });
     

@@ -141,8 +141,13 @@ export class PlayerTurn {
             }
             
             if(possibleActions.includes('actProgress') && args.progressTracks && args.progressTracks.length>0){
-                let actionButton = this.game.formatActionButton(0, _('Progress'));
-                let actionHint = _('Action : Progress. Progressing on your Development board has 3 benefits: + At the end of the game, you score points according to the position of your Progress markers, more progress means more points. + Moving your Progress markers down increases the resources you receive or can use with the other actions. + Progressing also allows you to obtain Compasses and Exploration cards');
+                let actionName = this.game.formatActionName(this.game.const.ACTION_TYPE_PROGRESS);
+                let actionButton = this.game.formatActionButton(0, actionName);
+                let actionHint = this.bga.gameui.format_string(_('Player action : ${name}'),{'name': actionName});
+                actionHint += "\r\n"+ _('Progressing on your Development board has 3 benefits: ');
+                actionHint += "\r\n"+ _('At the end of the game, you score points according to the position of your Progress markers, more progress means more points.');
+                actionHint += "\r\n"+ _('Moving your Progress markers down increases the resources you receive or can use with the other actions.');
+                actionHint += "\r\n"+ _('Progressing also allows you to obtain some Compasses and Exploration cards as bonuses.');
                 this.bga.statusBar.addActionButton(actionButton, () => {
                     this.bga.states.setClientState("ClientSelectProgress", {
                         descriptionmyturn: '',
@@ -153,18 +158,18 @@ export class PlayerTurn {
             }
 
             if(possibleActions.includes('actBuildShips')){
-                let actionName = _('Build Ships');
+                let actionName = this.game.formatActionName(this.game.const.ACTION_TYPE_BUILD_SHIPS);
                 let actionButton = this.game.formatActionButton(1, actionName);
-                let actionHint = this.bga.gameui.format_string(_('Action : ${name}'),{'name': actionName});
+                let actionHint = this.bga.gameui.format_string(_('Player action : ${name}'),{'name': actionName});
                 this.bga.statusBar.addActionButton(actionButton, () => this.game.customPerformAction("actBuildShips"), { 'id':`goa_button_action_${1}`,'title':actionHint,'destination': document.getElementById('customPrimary') }); 
                 //+ CLICK ON BOARD section
                 this.game.addClickHandlerOnProgressMarker(1,actionHint,activePlayer,() => this.game.customPerformAction("actBuildShips"));
             }
             
             if(possibleActions.includes('actHarvest') && args.harvestSpots &&  Object.keys(args.harvestSpots).length > 0){
-                let actionName = _('Produce');
+                let actionName = this.game.formatActionName(this.game.const.ACTION_TYPE_PRODUCE);
                 let actionButton = this.game.formatActionButton(2, actionName);
-                let actionHint = this.bga.gameui.format_string(_('Action : ${name}'),{'name': actionName});
+                let actionHint = this.bga.gameui.format_string(_('Player action : ${name}'),{'name': actionName});
                 let goToNext = () => {
                     this.bga.states.setClientState("ClientHarvestResources", {
                         descriptionmyturn: '',
@@ -181,18 +186,18 @@ export class PlayerTurn {
                 this.game.addClickHandlerOnProgressMarker(2,actionHint,activePlayer,() => goToNext());
             }
             if(possibleActions.includes('actTaxes')){
-                let actionName = _('Collect Taxes');
+                let actionName = this.game.formatActionName(this.game.const.ACTION_TYPE_TAXES);
                 let actionButton = this.game.formatActionButton(3, actionName);
-                let actionHint = this.bga.gameui.format_string(_('Action : ${name}'),{'name': actionName});
+                let actionHint = this.bga.gameui.format_string(_('Player action : ${name}'),{'name': actionName});
                 this.bga.statusBar.addActionButton(actionButton, () => this.game.customPerformAction("actTaxes"), { 'id':`goa_button_action_${3}`,'title':actionHint,'destination': document.getElementById('customPrimary') }); 
                 //+ CLICK ON BOARD section
                 this.game.addClickHandlerOnProgressMarker(3,actionHint,activePlayer,() => this.game.customPerformAction("actTaxes"));
             }
             
             if(possibleActions.includes('actExploration') && args.nbCardsExploration>0){
-                let actionName = _('Explore');
+                let actionName = this.game.formatActionName(this.game.const.ACTION_TYPE_EXP);
                 let actionButton = this.game.formatActionButton(4, actionName);
-                let actionHint = this.bga.gameui.format_string(_('Action : ${name}'),{'name': actionName});
+                let actionHint = this.bga.gameui.format_string(_('Player action : ${name}'),{'name': actionName});
                 this.bga.statusBar.addActionButton(
                     actionButton,
                     /*this.bga.gameui.format_string( 
@@ -205,9 +210,9 @@ export class PlayerTurn {
             }
             
             if(possibleActions.includes('actFoundOutpost') && args.outpostsToFound.length>0){
-                let actionName = _('Establish Outpost');
+                let actionName = this.game.formatActionName(this.game.const.ACTION_TYPE_FOUND);
                 let actionButton = this.game.formatActionButton(5, actionName);
-                let actionHint = this.bga.gameui.format_string(_('Action : ${name}'),{'name': actionName});
+                let actionHint = this.bga.gameui.format_string(_('Player action : ${name}'),{'name': actionName});
                 let goToNext = () => {
                     this.bga.states.setClientState("ClientFoundOutpost", {
                         descriptionmyturn: '',

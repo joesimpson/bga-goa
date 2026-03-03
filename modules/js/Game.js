@@ -2359,8 +2359,8 @@ export class Game {
 
         }
         action_label = this.bga.gameui.format_string( 
-            _('Player action ${action_label}'),
-             {'action_label': '<b><u>'+ action_label +'</u></b>'}
+            _('Player action : ${name}'),
+             {'name': '<b><u>'+ action_label +'</u></b>'}
         );
         action_desc += '<ul>';
         action_gains.forEach(element => {

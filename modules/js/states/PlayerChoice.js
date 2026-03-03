@@ -57,7 +57,7 @@ export class PlayerChoice {
                             });
                         };
                         let actionName = this.game.formatActionName(effect.sourceAction);
-                        let actionHint = this.bga.gameui.format_string(_('Action : ${name}'),{'name': actionName});
+                        let actionHint = this.bga.gameui.format_string(_('Player action : ${name}'),{'name': actionName});
                         this.bga.statusBar.addActionButton(actionHint, () => {
                             nextState(this.bga);
                         }, {  
@@ -178,7 +178,7 @@ export class ClientSelectTileEffect {
                             }, {
                                 'id': `btnEffectChoice_${args.choice_index}_${choice}`,
                                 'destination': document.getElementById('customPrimary'),
-                                'title':_('Produce'),  
+                                'title': this.game.formatActionName(this.game.const.ACTION_TYPE_PRODUCE),  
                             }); 
                             break;
                         case this.game.const.ACTION_SHIP:
@@ -342,7 +342,7 @@ export class ClientSelectTileEffect {
                             case this.game.const.ACTION_SHIP: 
                                 this.game.addClickHandlerOnProgressMarker(
                                     1,
-                                    this.bga.gameui.format_string(_('Action : ${name}'),{'name':  _('Build Ships')}),
+                                    this.bga.gameui.format_string(_('Player action : ${name}'),{'name': this.game.formatActionName(this.game.const.ACTION_TYPE_BUILD_SHIPS)}),
                                     opponentId,
                                     () => this.game.customPerformAction("actResolveEffect", { 
                                                 'tile_id' : tile_id,
@@ -356,7 +356,7 @@ export class ClientSelectTileEffect {
                                 let playersBaseHarvest = args.previousArgs.playersBaseHarvest[opponentId];
                                 this.game.addClickHandlerOnProgressMarker(
                                     2,
-                                    this.bga.gameui.format_string(_('Action : ${name}'),{'name':  _('Produce')}),
+                                    this.bga.gameui.format_string(_('Player action : ${name}'),{'name': this.game.formatActionName(this.game.const.ACTION_TYPE_PRODUCE)}),
                                     opponentId,
                                     () => this.bga.states.setClientState("ClientHarvestResources", {
                                         descriptionmyturn: '',
@@ -376,7 +376,7 @@ export class ClientSelectTileEffect {
                             case this.game.const.ACTION_MONEY: 
                                 this.game.addClickHandlerOnProgressMarker(
                                     3,
-                                    this.bga.gameui.format_string(_('Action : ${name}'),{'name':  _('Collect Taxes')}),
+                                    this.bga.gameui.format_string(_('Player action : ${name}'),{'name': this.game.formatActionName(this.game.const.ACTION_TYPE_TAXES)}),
                                     opponentId,
                                     () => this.game.customPerformAction("actResolveEffect", { 
                                                 'tile_id' : tile_id,
@@ -390,7 +390,7 @@ export class ClientSelectTileEffect {
                                 let playerBaseContracts = args.previousArgs.playersBaseContracts[opponentId];
                                 this.game.addClickHandlerOnProgressMarker(
                                     5,
-                                    this.bga.gameui.format_string(_('Action : ${name}'),{'name':  _('Establish Outpost')}),
+                                    this.bga.gameui.format_string(_('Player action : ${name}'),{'name': this.game.formatActionName(this.game.const.ACTION_TYPE_FOUND)}),
                                     opponentId,
                                     () => this.bga.states.setClientState("ClientFoundOutpost", {
                                             descriptionmyturn: '',
