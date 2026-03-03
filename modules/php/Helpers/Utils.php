@@ -281,6 +281,11 @@ abstract class Utils {
     }
 
 
+    public static function addPossibleActionInArgs(string $action, array &$args){
+        if(!isset($args['possibleActions'])) $args['possibleActions'] = [];
+        if(in_array($action,$args['possibleActions'])) return;
+        $args['possibleActions'][] = $action;
+    }
     
     /**
      * @param array $array

@@ -10,6 +10,7 @@ use Bga\Games\Goa\Exceptions\UnexpectedException;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Collection;
 use Bga\Games\Goa\Helpers\GridUtils;
+use Bga\Games\Goa\Helpers\Utils;
 use Bga\Games\Goa\Models\MarketTile;
 use Bga\Games\Goa\Models\OutpostTile;
 use Bga\Games\Goa\Models\Player;
@@ -521,7 +522,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
                 'min' => 1,
                 'max' => 1,
               ];
-              $args['possibleActions'][] = 'actHarvest';
+              Utils::addPossibleActionInArgs('actHarvest', $args);
             }
             break;
           case ACTION_CONTRACT:
@@ -556,7 +557,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
                 'min'=> 1,
                 'maxTiles' => 3,
               ];
-              $args['possibleActions'][] = 'actHarvest';
+              Utils::addPossibleActionInArgs('actHarvest', $args);
             }
             break;
           case ACTION_ESPIONAGE: 
@@ -579,7 +580,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
                 'forScore' => $tile->getEnd_score(), 
                 't_ids' => $playerSpices->getIds(),
               ];
-              $args['possibleActions'][] = 'actSpendSpices';
+              Utils::addPossibleActionInArgs('actSpendSpices', $args);
             }
             break;
           default:

@@ -59,7 +59,7 @@ class PlayerTurn extends GameState
                 if(isset($nextAuctionToken)) {
                     $args['token'] = $nextAuctionToken->getUiData();
                     $args['pAuctionableSpots'] = GridUtils::listPossibleSpotsForNextAuctionMarker($nextAuctionToken);
-                    $args['possibleActions'][] = 'actPlaceAuction';
+                    Utils::addPossibleActionInArgs('actPlaceAuction', $args);
                 }
                 break;
             case ROUND_STEP_TILE_AUCTIONS: 
@@ -95,10 +95,10 @@ class PlayerTurn extends GameState
                 if($args['minBid'] + $args['bidRebate'] >= 0 
                 && $args['maxBid'] >= $args['minBid'] 
                 ){
-                    $args['possibleActions'][] = 'actBid';
+                    Utils::addPossibleActionInArgs('actBid', $args);
                 }
                 if($canPass){
-                    $args['possibleActions'][] = 'actPassBid';
+                    Utils::addPossibleActionInArgs('actPassBid', $args);
                 }
                 break;
             case ROUND_STEP_PLAYER_ACTIONS:
@@ -108,28 +108,28 @@ class PlayerTurn extends GameState
                 $args['minActions'] = NB_MIN_ACTIONS_PER_ROUND + max(0,$player->getCompasses()-1);
                 if(! $actionPlayed) {
                     if($player->getNbActions() <NB_MIN_ACTIONS_PER_ROUND || $player->getCompasses()>0){
-                        $args['possibleActions'][] = 'actProgress';
+                        Utils::addPossibleActionInArgs('actProgress', $args);
                         $args['progressTracks'] = Tokens::getUpgradableProgressMarkers($player);
-                        $args['possibleActions'][] = 'actBuildShips';
+                        Utils::addPossibleActionInArgs('actBuildShips', $args);
                         $args['harvestSpots'] = Tiles::getPlayerAvailableSpotsForSpices($player);
                         if(count($args['harvestSpots'])>0) {
-                            $args['possibleActions'][] = 'actHarvest';
+                            Utils::addPossibleActionInArgs('actHarvest', $args);
                             $args['playerBaseHarvest'] = Players::getHarvestBaseGain($player);
                         }
-                        $args['possibleActions'][] = 'actTaxes';
-                        $args['possibleActions'][] = 'actFoundOutpost';
+                        Utils::addPossibleActionInArgs('actTaxes', $args);
+                        Utils::addPossibleActionInArgs('actFoundOutpost', $args);
                         $args['playerBaseContracts'] = Players::getFoundBaseContracts($player);
                         $args['outpostsToFound'] = Tiles::getFoundableOutposts($player)->getIds();
                         $args['nbCardsExploration'] = Cards::maxExplorationToDraw($player);
-                        $args['possibleActions'][] = 'actExploration';
+                        Utils::addPossibleActionInArgs('actExploration', $args);
                     }
                     //if($player->getNbActions() >= $args['minActions'] ) {
                     if($player->getNbActions() >= NB_MIN_ACTIONS_PER_ROUND && $player->getCompasses()<=1){
                         //Game rule : player must keep max 1 compass card
-                        $args['possibleActions'][] = 'actPassAction';
+                        Utils::addPossibleActionInArgs('actPassAction', $args);
                     }
                 } else {
-                    $args['possibleActions'][] = 'actStopAction';
+                    Utils::addPossibleActionInArgs('actStopAction', $args);
                 }
                 break;
             default : break;
@@ -1188,10 +1188,10 @@ class PlayerTurn extends GameState
                 $playableCards = Cards::getPossibleToPlay($player, $args,$actionsWhiteList);
                 $args['possiblePlayCards'] = $playableCards;
                 if( $discardableCards->count()>0 && $withDiscard){
-                    $args['possibleActions'][] = 'actDiscard';
+                    Utils::addPossibleActionInArgs('actDiscard', $args);
                 }
                 if( $playableCards->count()>0){
-                    $args['possibleActions'][] = 'actPlayCard';
+                    Utils::addPossibleActionInArgs('actPlayCard', $args);
                 }
                 break;
             default: return;
@@ -1212,7 +1212,7 @@ class PlayerTurn extends GameState
                 $playableTiles = Tiles::getPossibleToPlay($player, $args, $actionsWhiteList);
                 $args['possiblePlayTiles'] = $playableTiles;
                 if( $playableTiles->count()>0){
-                    $args['possibleActions'][] = 'actPlayTile';
+                    Utils::addPossibleActionInArgs('actPlayTile', $args);
                 }
                 break;
             default: return;

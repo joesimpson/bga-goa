@@ -214,7 +214,7 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
               'forCoins' => true, 
               't_ids' => $playerSpices->getIds(),
             ];
-            $args['possibleActions'][] = 'actSpendSpices';
+            Utils::addPossibleActionInArgs('actSpendSpices', $args);
           }
           break;
         case CARD_ACTION_2_SPICES:
@@ -232,14 +232,14 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
               'min' => 1,
               'max' => 2,
             ];
-            $args['possibleActions'][] = 'actHarvest';
+            Utils::addPossibleActionInArgs('actHarvest', $args);
           }
           break;
         case CARD_ACTION_PROGRESS_WITH_COINS:
           $progressTracks = Tokens::getUpgradableProgressMarkersWithCoins($player);
           $possiblePlay = count($progressTracks)>0;
           $playDatas['progressTracks'] = $progressTracks;
-          if($possiblePlay) $args['possibleActions'][] = 'actProgress';
+          if($possiblePlay) Utils::addPossibleActionInArgs('actProgress', $args);
           break;
         case CARD_ACTION_2_CONTRACTS:
         case CARD_ACTION_2_SHIPS:

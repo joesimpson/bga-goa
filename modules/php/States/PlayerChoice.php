@@ -108,7 +108,7 @@ class PlayerChoice extends GameState
                 }
             }
             $args['effects'] = $effects->uiAssoc();
-            $args['possibleActions'][] = 'actResolveEffect';
+            Utils::addPossibleActionInArgs('actResolveEffect', $args);
         }
         //Allow to play any card/tile during any effect, it may add new effects to the list
         PlayerTurn::addArgsForCardPlay($player,$args, null,$lookForDiscardCards);
