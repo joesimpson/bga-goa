@@ -739,7 +739,7 @@ export class Game {
             await this.animationManager.slideAndAttach(meepleDiv, destinationDiv);
         }
         else {
-            //TODO JSA reset round between sessions ?
+            //TODO JSA  for option CAMPAIGN reset round between sessions ?
         }
     }
     
@@ -1240,7 +1240,7 @@ export class Game {
         }));
         await this.animationManager.playInterval(animationsBox);
 
-        //TODO JSA clean player tiles
+        //TODO JSA  for option CAMPAIGN clean player tiles
     }
 
     async notif_newRound(notif) {

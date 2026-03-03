@@ -46,7 +46,7 @@ class NextPlayer extends \Bga\GameFramework\States\GameState
                     //Recall this switch with new step value
                     return $this->onEnteringState($activePlayerId);
                 }
-                //TODO JSA INCREASE OnLY when same player bid again (when multiple bid turns)
+                //TODO JSA for option GAMBIT INCREASE OnLY when same player bid again (when multiple bid turns)
                 Globals::incBidTurns();
                 $bidTurns = Globals::getBidTurns();
                 if($bidTurns == 1){

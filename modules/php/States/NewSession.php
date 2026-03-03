@@ -44,7 +44,7 @@ class NewSession extends \Bga\GameFramework\States\GameState
         Cards::setupSession($session);
         Players::setupSession($session);
         Tiles::setupMarket();
-        //TODO JSA TIles setupOutposts
+        //TODO JSA for option CAMPAIGN TIles setupOutposts
         Tokens::setupSession($session);
 
         // Go to another gamestate

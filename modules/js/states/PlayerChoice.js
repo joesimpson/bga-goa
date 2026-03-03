@@ -132,18 +132,20 @@ export class ClientSelectTileEffect {
     onEnteringState(args, isCurrentPlayerActive) {
         
         let tile_choice = args.effect;
-        let tile_type = args.tile.type;
-        let tile_id = args.tile.id;
+        let tile = args.tile;
+        let tile_type = tile.type;
+        let tile_id = tile.id;
+        let tileMaterial = this.game.gamedatas.material.tiles[tile.subtype][tile.type];
+        let tile_name = tileMaterial.name;
         let icon_contracts = this.game.formatIcon('contracts',_('Contracts'));
         let activePlayerId = this.bga.players.getActivePlayerId();
 
         this.bga.statusBar.setTitle(
                 isCurrentPlayerActive ? 
-                _("${you} must select one of these gains")
+                _("${tile_name} : ${you} must select one of these gains").replace('${tile_name}',tile_name)
                 :
-                _("${actplayer} must select one of these gains")
+                _("${tile_name} : ${actplayer} must select one of these gains").replace('${tile_name}',tile_name)
             );
-            //TODO JSA tile_name in title
 
         if(isCurrentPlayerActive){
             this.game.updateHandSelectable(args.previousArgs, true);
@@ -331,8 +333,8 @@ export class ClientSelectTileEffect {
                 case this.game.const.EFFECT_TYPE_ESPIONAGE:
                     this.bga.statusBar.setTitle(
                         isCurrentPlayerActive ? 
-                        _('Espionage : ${you} must choose an action from an opponent board') 
-                        : _('Espionage : ${actplayer} must choose an action from an opponent board') 
+                        _('${tile_name} : ${you} must choose an action from an opponent board').replace('${tile_name}',tile_name)
+                        : _('${tile_name} : ${actplayer} must choose an action from an opponent board').replace('${tile_name}',tile_name)
                     );
                     Object.entries(this.game.gamedatas.players).forEach(([pId, player]) => {
                         if(pId == activePlayerId) return;
