@@ -62,18 +62,27 @@ class PlayerChoice extends GameState
                     $tile = Tiles::get((int)$tileId);
                     $args['tiles'][$tileId] = $tile->getUiData();
                 }
-                    if($effect->getType() === EFFECT_TYPE_FOUND_TILE ){
+                switch($effect->getType())
+                {
+                    case EFFECT_TYPE_PICK_TILE:
+                        $tilesToChoose = $effect->getResult();
+                        foreach($tilesToChoose as $t_id){
+                            $tile = Tiles::get((int)$t_id);
+                            $args['tiles'][$t_id] = $tile->getUiData();
+                        }
+                        break;
+                    case EFFECT_TYPE_FOUND_TILE:
                         //IF we are near abandon, let player play a card to receive contracts
                         $actionsWhiteList[] = CARD_ACTION_2_CONTRACTS;
                         //IF we are near abandon, let player play a tile to receive contracts
                         $actionsWhiteList[] = ACTION_CONTRACT;
                         $args['doublecheckfound'] = true;
-                    }
-                    else if($effect->getType() === EFFECT_TYPE_HARVEST ){
+                        break;
+                    case EFFECT_TYPE_HARVEST:
                         $args['harvestSpots'] = Tiles::getPlayerAvailableSpotsForSpices($player);
                         $args['playerBaseHarvest'] = $effect->getQuantity();
-                    }
-                    else if($effect->getType() === EFFECT_TYPE_ESPIONAGE){
+                        break;
+                    case EFFECT_TYPE_ESPIONAGE:
                         if(in_array(ACTION_HARVEST, $effect->getResult())){
                             $args['harvestSpots'] = Tiles::getPlayerAvailableSpotsForSpices($player);
                             $args['playersBaseHarvest'] = Players::getAllHarvestBaseGain();
@@ -82,7 +91,8 @@ class PlayerChoice extends GameState
                             $args['outpostsToFound'] = Tiles::getFoundableOutposts($player)->getIds();
                             $args['playersBaseContracts'] = Players::getAllFoundBaseContracts();
                         }
-                    } else  if($effect->getType() === EFFECT_TYPE_CLEAN_HAND){
+                        break;
+                    case EFFECT_TYPE_CLEAN_HAND:
                         $args['maxCards'] = Cards::maxExplorationToKeep($player);
                         $nbCardsInHand = Cards::countInExplorationHand($player->getId());
                         if( $nbCardsInHand <=  $args['maxCards'])
@@ -94,7 +104,8 @@ class PlayerChoice extends GameState
                         else {
                             $lookForDiscardCards = true;
                         }
-                    }
+                        break;
+                }
             }
             $args['effects'] = $effects->uiAssoc();
             $args['possibleActions'][] = 'actResolveEffect';
@@ -185,7 +196,7 @@ class PlayerChoice extends GameState
                 //use 2 different switches, because in case of DB elements ids (like tiles ids), we cannot tell in advance if the id is the same as an predefined action id
                 case EFFECT_TYPE_PICK_TILE:
                     //SELECT A TILE : choice is a tile id
-                    $foundChoice = $this->checkChoiceAsKey($effect,$tile_id,$choice);
+                    $foundChoice = $this->checkChoiceAsValue($effect,$tile_id,$choice);
                     $selectedTile = Tiles::get($choice);
                     Tiles::giveMarketTileToPlayer($player, $selectedTile, $doCheckpoint);
                     break;
@@ -486,18 +497,46 @@ class PlayerChoice extends GameState
         $gameVersion = Utils::gameVersion();
 
         $effects = $args['effects'];
+        $possible = true;
         if(count($effects) > 0){
             //We must treat all choices one by one
             $choice_index = array_keys($effects)[0];
             $tile_choice = $effects[$choice_index];
+            $effectType = $tile_choice['type'];
             $tile_id = $tile_choice['sourceTile'];
             $choices = $tile_choice['result'];
             if(isset($tile_id) && isset($choices)){
                 $choice = $choices[array_rand($choices)];
-                //TODO JSA sometimes choice is a key (ex : favor tile choices)
                 $choice_array1 = null;
                 $choice_array2 = null;
-                return $this->actResolveEffect($tile_id, $choice, $choice_index, $playerId, $args, $gameVersion, $choice_array1, $choice_array2, $playerId );
+                $progressRefPlayerId = $playerId;
+                switch($effectType){
+                    case EFFECT_TYPE_ESPIONAGE:
+                        $progressRefPlayerId = Players::getNextId($playerId);
+                        //easier choice and best challenge ?
+                        $choice = ACTION_MONEY;
+                        break;
+                }
+                switch($choice){
+                    case ACTION_HARVEST:
+                        $harvestSpots = $args['harvestSpots'];
+                        $spot1 = array_key_first($harvestSpots);
+                        if(isset($harvestSpots[$spot1]) && isset($harvestSpots[$spot1]['spices']) ){
+                            $res1 = $harvestSpots[$spot1]['spices'][0];
+                            $choice_array1 = [$spot1];
+                            $choice_array2 = [$res1];
+                        }
+                        else {
+                            $possible = false;
+                        }
+                        break;
+                }
+                if($possible) 
+                    return $this->actResolveEffect($tile_id, $choice, $choice_index, $playerId, $args, $gameVersion, $choice_array1, $choice_array2, $progressRefPlayerId );
+                else {
+                    Effects::resolve($choice_index);
+                    return self::class;
+                }
             }
             
             if(in_array('actDiscard',$actions)){

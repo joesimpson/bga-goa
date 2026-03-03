@@ -135,8 +135,11 @@ trait DebugTrait
 
         //Effect after Found
         $tile = Tiles::getByType(1,TILE_SUBTTYPE_OUTPOST)->first();
+        //effect from action
         Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_FOUND_TILE, 2, [ACTION_FOUND_ABANDON, ACTION_FOUND_FORWARD], ACTION_TYPE_FOUND);
-
+        //effect from Espionage found
+        Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_FOUND_TILE, 6, [ACTION_FOUND_ABANDON, ], ACTION_TYPE_FOUND);
+        
         $tile = Tiles::getByType(26,TILE_SUBTTYPE_MARKET)->first();
         $effects = [];
         $effects[] = Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_PICK_ACTION, 3, [ACTION_SHIP, ACTION_CONTRACT]);
@@ -153,12 +156,19 @@ trait DebugTrait
             ->merge(Tiles::getByType(2,TILE_SUBTTYPE_MARKET))//+ Test chaining with SPICES_ALL
             ->map(function ($tile) {
                 return $tile->getType();
-            })->toAssoc();
+            })->getIds();
         Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_PICK_TILE, 1, $tilesToChoose);
         
         //Spices
         $tile = Tiles::getByType(2,TILE_SUBTTYPE_MARKET)->first();
         Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_PICK_SPICE, 1, SPICES_ALL);
+        
+        $tile = Tiles::getByType(12,TILE_SUBTTYPE_OUTPOST)->first();
+        $tile->setLocation(TILE_LOCATION_PLAYER_BOARD);
+        $tile->setPId($player->getId());
+        Notifications::giveTile($player,$tile);
+        Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_PICK_SPICE, 1, SPICES_ALL);
+        Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_PICK_SPICE, 2, SPICES_ALL);
 
         //Plantation
         $tile = Tiles::getByType(2,TILE_SUBTTYPE_MARKET)->first();

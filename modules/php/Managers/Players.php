@@ -400,7 +400,7 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
       case ACTION_FAVOR: 
         $tilesToChoose = Tiles::getTilesForFavor()->map(function ($tile) {
           return $tile->getType();
-        })->toAssoc();
+        })->getIds();
         Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_PICK_TILE, $gainQuantity, $tilesToChoose);
         throw new PrematureStateChangeException (2,PlayerChoice::class,$player);
         break;

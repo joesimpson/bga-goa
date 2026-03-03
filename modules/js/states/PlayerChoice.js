@@ -21,8 +21,8 @@ export class PlayerChoice {
         let directState = false;
 
         this.bga.statusBar.setTitle(isCurrentPlayerActive ? 
-            _('${you} must choose an effect to resolve'):
-            _('${actplayer} must choose an effect to resolve')
+            _('${you} must choose the next effect to resolve'):
+            _('${actplayer} must choose the next effect to resolve')
         );
 
         if(isCurrentPlayerActive) this.game.updateHandSelectable(args);
@@ -73,6 +73,7 @@ export class PlayerChoice {
                                     descriptionmyturn: '',
                                     args: { 'effect':effect, 'tile':tile, 'choice_index': effectId
                                         , 'cancelable' : !directState, 'undo': args.undo,
+                                        'tiles' : tiles,
                                         'previousArgs' : args,
                                         //Allow to play Cards/tiles
                                         'possibleDiscards': args.possibleDiscards,
@@ -131,9 +132,9 @@ export class ClientSelectTileEffect {
     onEnteringState(args, isCurrentPlayerActive) {
         
         let tile_choice = args.effect;
+        let tile_type = args.tile.type;
         let tile_id = args.tile.id;
         let icon_contracts = this.game.formatIcon('contracts',_('Contracts'));
-        let isOutpost = args.tile.subtype == this.game.const.TILE_SUBTTYPE_OUTPOST;
         let activePlayerId = this.bga.players.getActivePlayerId();
 
         this.bga.statusBar.setTitle(
@@ -218,11 +219,11 @@ export class ClientSelectTileEffect {
                     }
                 break;
                 case this.game.const.EFFECT_TYPE_PICK_TILE:
-                    let tile_icon = this.game.tplTileFromType(choice, '_log');
+                    let tile_icon = this.game.tplTileFromType(args.tiles[choice].type, '_log');
                     let action = () => { 
                             this.game.customPerformAction("actResolveEffect", { 
                                 'tile_id' : tile_id,
-                                'choice': choice_id,
+                                'choice': choice,
                                 'choice_index':args.choice_index,
                             });
                         };
