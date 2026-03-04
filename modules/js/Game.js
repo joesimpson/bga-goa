@@ -1531,6 +1531,9 @@ export class Game {
             await this.animationManager.slideIn(tileDiv, voidDiv, {duration: 1000});
         } else if(isOutpost) {
             let stock = this.outpostsTilesStocks[tile.colony];
+            //KO with this type of stock ?
+            //await stock.removeCard(tile);
+            this.destroy(tileDiv);
             tileDiv = this.addTile(tile);
             await this.animationManager.slideIn(tileDiv, stock.element, {duration: 800});
         } else {
