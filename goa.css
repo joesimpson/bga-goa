@@ -32,6 +32,58 @@ Icon extract in sprite with differents layers size (so % is not useful).
  * width, height : dimensions of icon to be displayed
  * layer_width, layer_height : dimensions of icon in sprite
 */
+#goa_end_score_recap {
+  display: flex;
+  flex-flow: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 5px;
+}
+#goa_end_score_recap table {
+  position: relative;
+  background-color: #ebd5bd;
+  color: black;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+#goa_end_score_recap table th {
+  height: 20px;
+  min-width: 20px;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 20px;
+  padding: 0 5px;
+}
+#goa_end_score_recap table th div {
+  display: inline-block;
+}
+#goa_end_score_recap table thead {
+  background-color: #f3e5a9;
+}
+#goa_end_score_recap table thead th {
+  padding: 0 5px;
+}
+#goa_end_score_recap table td {
+  word-wrap: anywhere;
+  font-size: 20px;
+  padding: 5px 8px;
+  text-align: center;
+  vertical-align: middle;
+}
+#goa_end_score_recap table td .goa_counter_empty:not(.goa_resource_holder_scoringRecap_total) {
+  opacity: 0.1;
+}
+#goa_end_score_recap table tbody tr {
+  border-top: 1px solid rgba(0, 0, 0, 0.2);
+}
+#goa_end_score_recap table .goa_score_total {
+  color: black;
+  background-color: #b16325;
+  font-weight: bold;
+}
+
 #goa_resizable_board {
   align-self: flex-start;
   width: calc(var(--goa_board_display_scale) * 1000px);

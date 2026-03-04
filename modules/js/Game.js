@@ -121,6 +121,7 @@ export class Game {
                 <div></div>
                 <div id="goa_top_zone_content" ></div>
             </div>
+            <div id="goa_end_score_recap"></div>
             <div id="goa_game_container">
                 <div id="goa_main_zone">
                     <div id='goa_resizable_board'>
@@ -351,6 +352,7 @@ export class Game {
         );
 
         this.setupRoundMarker();
+        this.displayFinalScoringTable(false, this.gamedatas.endScoring);
 
         document.getElementById(`generalactions`).insertAdjacentHTML('afterend', "<div id='customPrimary' style='display:inline-block'></div>");
         document.getElementById(`customPrimary`).insertAdjacentHTML('afterend', "<div id='customSecondary' style='display:inline-block'></div>");
@@ -813,12 +815,36 @@ export class Game {
     }
 
     createCounter(player_id, resourceName, initValue){
-        let counter = new ebg.counter();
+        let refreshCounterClasses = (value) => {
+            if(value == 0){
+                counter.span.parentNode.classList.add("goa_counter_empty");
+            }
+            else {
+                counter.span.parentNode.classList.remove("goa_counter_empty");
+            }
+        };
+        class CustomCounter extends ebg.counter {
+            incValue(by) {
+                super.incValue(by);
+                refreshCounterClasses(this.getValue());
+            };
+            setValue(value) {
+                super.setValue(value);
+                refreshCounterClasses(value);
+            };
+            toValue(value) {
+                super.toValue(value);
+                refreshCounterClasses(value);
+            };
+        }
+
+        let counter = new CustomCounter();
         counter.create(`goa_counter_${player_id}_${resourceName}`, {
             value: initValue,
             playerCounter: resourceName,
             playerId: player_id
         });
+        refreshCounterClasses(initValue);
         this._counters[player_id][resourceName] = counter;
     }
 
@@ -1024,6 +1050,103 @@ export class Game {
             icon.classList.remove("icon20_collapse");
         }
     }
+
+    /**
+     * 
+     * @param {array} datas : if we already have computed datas
+     */
+    displayFinalScoringTable(forceDisplay = false,datas = null){
+        this.customDebug("displayFinalScoringTable()",forceDisplay,datas);
+        
+        let session = this.gamedatas.session;
+        this.empty('goa_end_score_recap');
+        if(!datas || !(datas[session]) ){
+            if(!forceDisplay ) return;
+            if(!datas ) datas = [];
+            if(! datas[session] ) datas[session] = [];
+            
+        }
+
+        document.getElementById('goa_end_score_recap').insertAdjacentHTML('beforeend', this.tplFinalScoringTable());
+        
+        Object.values(this.gamedatas.players).forEach((player) => {
+            let pId = player.id;
+            let endScoreDatas = datas && datas[session] ? datas[session][pId] : undefined;
+            this.createCounter(pId,`scoringRecap_${this.const.SCORING_PROGRESS}`,endScoreDatas ? endScoreDatas[this.const.SCORING_PROGRESS] : 0);
+            this.createCounter(pId,`scoringRecap_${this.const.SCORING_OUTPOSTS}`,endScoreDatas ? endScoreDatas[this.const.SCORING_OUTPOSTS] : 0);
+            this.createCounter(pId,`scoringRecap_${this.const.SCORING_COINS}`,endScoreDatas ? endScoreDatas[this.const.SCORING_COINS] : 0);
+
+            Object.keys(this.const.CARD_SYMBOLS).forEach((symbol) =>{
+                this.createCounter(pId,`scoringRecap_${this.const.SCORING_EXPLORATION}_${symbol}`, endScoreDatas && endScoreDatas[this.const.SCORING_EXPLORATION][symbol] ? endScoreDatas[this.const.SCORING_EXPLORATION][symbol] : 0);
+            });
+            this.createCounter(pId,`scoringRecap_${this.const.SCORING_TILES}`,endScoreDatas ? endScoreDatas[this.const.SCORING_TILES] : 0);
+            this.createCounter(pId,`scoringRecap_total`,player.score);
+        });
+    }
+    tplFinalScoringTable(){
+        this.customDebug("tplFinalScoringTable()");
+        let playersNames = '';
+        let playersScoreProgress = '';
+        let playersScoreOutposts = '';
+        let playersScoreRichest = '';
+        let playersScoreTiles = '';
+        let playersTotal = '';
+        let symbolsScores = '';
+        Object.keys(this.const.CARD_SYMBOLS).forEach((symbol) =>{
+            let playersScoreSymbols = '';
+            Object.values(this.gamedatas.players).forEach(player => {
+                playersScoreSymbols +=`<td>${this.tplResourceCounter(player,'scoringRecap_'+this.const.SCORING_EXPLORATION+"_"+symbol)}</td>`;
+            });
+            let symbolIcon = this.formatSymbolIcon(symbol);
+            symbolsScores += `<tr>
+                <th>${this.bga.gameui.format_string( 
+                    _('Island Symbols : ${icon_symbol}'),
+                    { 'icon_symbol': symbolIcon }
+                )}</th>
+                ${playersScoreSymbols}
+            </tr>`;
+        });
+        Object.values(this.gamedatas.players).forEach((player) => {
+            playersNames +=`<th>${this.coloredPlayerName(player.name)}</th>`;
+            playersScoreProgress +=`<td>${this.tplResourceCounter(player,'scoringRecap_'+this.const.SCORING_PROGRESS)}</td>`;
+            playersScoreOutposts +=`<td>${this.tplResourceCounter(player,'scoringRecap_'+this.const.SCORING_OUTPOSTS)}</td>`;
+            playersScoreRichest += `<td>${this.tplResourceCounter(player,'scoringRecap_'+this.const.SCORING_COINS)}</div></td>`;
+            playersScoreTiles += `<td>${this.tplResourceCounter(player,'scoringRecap_'+this.const.SCORING_TILES)}</div></td>`;
+
+            playersTotal +=`<td>${this.tplResourceCounter(player,'scoringRecap_total')}</td>`;
+        });
+        let html = `<table id="goa_end_score_recap_table">
+                <thead>
+                    <th>${_('Score')} <div class='goa_icon_score'></th>
+                    ${playersNames}
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>${_('Progress Markers')}</th>
+                        ${playersScoreProgress}
+                    </tr>
+                    <tr>
+                        <th>${_('Outposts')}</th>
+                        ${playersScoreOutposts}
+                    </tr>
+                    ${symbolsScores}
+                    <tr>
+                        <th>${_('Richest player')}</th>
+                        ${playersScoreRichest}
+                    </tr>
+                    <tr>
+                        <th>${_('Tiles')}</th>
+                        ${playersScoreTiles}
+                    </tr>
+                    <tr class ='goa_score_total'>
+                        <th>${_('Total')} <div class='goa_icon_score'></th>
+                        ${playersTotal}
+                    </tr>
+                </tbody>
+            </table>
+        `;
+        return html;
+    }
     
     refreshPlayersDatas(players){
         this.customDebug("refreshPlayersDatas()",players);
@@ -1182,6 +1305,9 @@ export class Game {
     async notif_newSession(notif) {
         this.customDebug("notif_newSession",notif);
         this.gamedatas.session = notif.n;
+
+        //TODO JSA for campaign : do we keep an eye on previous session results ? (with a collapsable zone ?)
+        this.empty('goa_end_score_recap');
      
         //RESET Players progress :
         let row = 1;
@@ -1595,7 +1721,11 @@ export class Game {
         let destinationDiv = document.getElementById(this.getTokenContainer(token));
         await this.animationManager.slideAndAttach(tokenDiv, destinationDiv);
     }
-    
+
+    async notif_computeScoring(notif) {
+        this.customDebug('notif_computeScoring', notif);
+        this.displayFinalScoringTable(true,);
+    }
     async notif_addPoints (notif) {
         this.customDebug( 'notif_addPoints' , notif);
         let player_id = notif.player_id;
@@ -1606,6 +1736,15 @@ export class Game {
         this.bga.gameui.displayScoring(scoreCounter.span, player_color, amount,800);
         await this.bga.gameui.wait(800); 
         scoreCounter.incValue(amount);
+    
+        if(this._counters[player_id].scoringRecap_total !=undefined){
+            //IF end scoring recap displayed
+            this._counters[player_id].scoringRecap_total.incValue(amount);
+                
+            if(notif.scoringType){
+                this._counters[player_id]['scoringRecap_'+notif.scoringType].incValue(amount);
+            }
+        }
     }
     
     async notif_addPointsWithTile (notif) {
@@ -1623,10 +1762,12 @@ export class Game {
     
     async notif_addPointsWithSymbols (notif) {
         this.customDebug( 'notif_addPointsWithSymbols' , notif);
+        notif.scoringType = `${this.const.SCORING_EXPLORATION}_${notif.symbolType}`;
         await this.notif_addPoints(notif);
     }
     async notif_addPointsWithMoney (notif) {
         this.customDebug( 'notif_addPointsWithMoney' , notif);
+        notif.scoringType = this.const.SCORING_COINS;
         await this.notif_addPoints(notif);
     }
 
@@ -2682,7 +2823,7 @@ export class Game {
         //let symbols = this.const.CARD_SYMBOLS;
         //if(symbols[card_symbol]) return _(symbols[card_symbol]);
         //Client side def in order to use clienttranslate on server side
-        switch(card_symbol){
+        switch(parseInt(card_symbol)){
             case this.const.CARD_SYMBOL_ELEPHANT: return _('Elephant');
             case this.const.CARD_SYMBOL_TIGER: return _('Tiger');
             case this.const.CARD_SYMBOL_URN: return _('Urn');

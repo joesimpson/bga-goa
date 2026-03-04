@@ -104,7 +104,7 @@ class EndSession extends \Bga\GameFramework\States\GameState
             }
             $sessionScoringDatas[$pId][SCORING_PROGRESS] = $points;
             $player->addPoints($points, false);
-            Notifications::addPoints($player,$points, clienttranslate('${player_name} scores ${n} points with progress markers'));
+            Notifications::addPointsWithProgress($player,$points,);
         }
 
         //Players LOOP 2 : SCORING_OUTPOSTS
@@ -114,7 +114,7 @@ class EndSession extends \Bga\GameFramework\States\GameState
             $points = END_SCORE_OUTPOSTS[$nbTiles];
             $sessionScoringDatas[$pId][SCORING_OUTPOSTS] = $points;
             $player->addPoints($points, false);
-            Notifications::addPoints($player,$points, clienttranslate('${player_name} scores ${n} points with ${n2} outposts'), $nbTiles);
+            Notifications::addPointsWithOutposts($player,$points, $nbTiles);
         }
         
         //Players LOOP 3 : SCORING_EXPLORATION

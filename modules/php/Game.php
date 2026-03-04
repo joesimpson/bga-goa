@@ -180,6 +180,8 @@ class Game extends \Bga\GameFramework\Table
         ];
         $result["tokens"] = Tokens::getUiData($current_player_id);
         
+        $result["endScoring"] = Globals::getEndScoring();
+
         $result["constants"] = ALL_MY_UI_CONSTANTS;
         $result["version"] = Utils::gameVersion();
 

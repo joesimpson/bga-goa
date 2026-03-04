@@ -532,6 +532,7 @@ class Notifications
   public static function computeScoring(int $session)
   {
     self::notifyAll("computeScoring", clienttranslate('Computing scores...'), [
+      'n' => $session,
     ]);
   }
   /**
@@ -589,6 +590,28 @@ class Notifications
     self::notifyAll('addPointsWithSymbols',$msg, $args, );
   }
   
+  public static function addPointsWithProgress(Player $player,int $points){
+    $msg = clienttranslate('${player_name} scores ${n} points with progress markers');
+    $args = [ 
+      'player' => $player,
+      'n' => $points,
+      'scoringType' => SCORING_PROGRESS,
+      'preserve'=>['scoringType'],
+    ];
+    self::notifyAll('addPoints',$msg, $args, );
+  }
+  
+  public static function addPointsWithOutposts(Player $player,int $points, int $nbTiles){
+    $msg = clienttranslate('${player_name} scores ${n} points with ${n2} outposts');
+    $args = [ 
+      'player' => $player,
+      'n' => $points,
+      'n2' => $nbTiles,
+      'scoringType' => SCORING_OUTPOSTS,
+      'preserve'=>['scoringType'],
+    ];
+    self::notifyAll('addPoints',$msg, $args, );
+  }
     /**
    * @param Player $player
    * @param TokenSpice $token

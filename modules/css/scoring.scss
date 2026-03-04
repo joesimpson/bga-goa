@@ -1,0 +1,66 @@
+#goa_end_score_recap{
+    display: flex;
+    flex-flow: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5px;
+
+    table{
+        position: relative;
+        background-color: #ebd5bd;
+        color: black;
+        border-radius: 10px;
+        //border-collapse: separate;
+        overflow: hidden;
+        box-shadow: 0 3px 8px rgba(0,0,0,.3);
+
+        //border: 1px solid rgba(0,0,0,.2);
+        th {
+            //border: 1px solid rgba(0,0,0,.2);
+            height: 20px;
+            min-width: 20px;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 20px;
+            padding: 0 5px;
+            div{
+                display: inline-block;
+            } 
+        }  
+        thead{
+            //taken from river score track background
+            background-color: #f3e5a9;
+            th{
+                //font-size: 30px;
+                padding: 0 5px;
+            }
+        }
+        td{
+            //border: 1px solid rgba(0,0,0,.2);
+            word-wrap: anywhere;
+            font-size: 20px;
+            padding: 5px 8px;
+            text-align: center;
+            vertical-align: middle;
+                
+            .goa_counter_empty{
+                &:not(.goa_resource_holder_scoringRecap_total){
+                    //Don't hide 0 as total
+                    opacity: 0.1;
+                }
+            }
+        }
+        tbody{
+            tr{
+                border-top: 1px solid rgba(0,0,0,.2);
+            }
+        }
+        .goa_score_total{
+            //color: red;
+            color: black;
+            background-color: #b16325;
+            font-weight: bold;
+        }
+    }
+}
