@@ -2142,7 +2142,7 @@ export class Game {
                         break;
                     default: break;
                 }
-                let tile_name = tileMaterial.name;
+                let tile_name = _(tileMaterial.name);
                 description = this.bga.gameui.format_string(
                                 _("${tile_name} : ${tile_desc}")
                                 ,{ 'tile_name': "<b>"+tile_name+"</b>", 'tile_desc': description, }

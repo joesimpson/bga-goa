@@ -136,7 +136,7 @@ export class ClientSelectTileEffect {
         let tile_type = tile.type;
         let tile_id = tile.id;
         let tileMaterial = this.game.gamedatas.material.tiles[tile.subtype][tile.type];
-        let tile_name = tileMaterial.name;
+        let tile_name = _(tileMaterial.name);
         let icon_contracts = this.game.formatIcon('contracts',_('Contracts'));
         let activePlayerId = this.bga.players.getActivePlayerId();
 
