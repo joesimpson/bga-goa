@@ -88,6 +88,8 @@ export class Game {
         this._connections = [];
         this._notif_uid_to_log_id = {};
         this._notif_uid_to_mobile_log_id = {};
+        
+        this._displayNotifsOnTop = true;
 
     }
     
@@ -1236,8 +1238,16 @@ export class Game {
         this.bga.notifications.setupPromiseNotifications({
             logger: this.customDebug,
             onStart: (notifName, msg, args) => {
+                if (this._displayNotifsOnTop && msg != '') {
+                    $('gameaction_status').innerHTML = msg;
+                    $('pagemaintitletext').innerHTML = msg;
+                    this.removeAllActionButtons();
+                }
                 this.clearSelection();
             }, 
+            onEnd: (notifName, msg, args) => { 
+            //To see log 
+            },
         });
     }
     
