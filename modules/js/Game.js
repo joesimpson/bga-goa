@@ -205,6 +205,14 @@ export class Game {
         let currentPlayer = this.bga.players.getCurrentPlayer();
         // Setting up player boards
         Object.values(gamedatas.players).forEach(player => {
+                
+            switch(player.color){
+                case "0090ba" : this.bga.images.preloadImage('boards/player_1.png'); break;
+                case "84cba2" : this.bga.images.preloadImage('boards/player_2.png'); break;
+                case "e14a9b" : this.bga.images.preloadImage('boards/player_3.png'); break;
+                case "feb713" : this.bga.images.preloadImage('boards/player_4.png'); break;
+            }
+            
             this.bga.playerPanels.getElement(player.id).insertAdjacentHTML('beforeend', `
                 <div class='goa_panel'>
                     <div class='goa_player_counters_line goa_player_counters_line_cards'>
