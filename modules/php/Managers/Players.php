@@ -8,6 +8,7 @@ use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Core\Stats;
 use Bga\Games\Goa\Exceptions\PrematureStateChangeException;
+use Bga\Games\Goa\Helpers\Utils;
 use Bga\Games\Goa\Models\Player;
 use Bga\Games\Goa\Models\Tile;
 use Bga\Games\Goa\States\PlayerChoice;
@@ -161,7 +162,9 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
     }
     $player->incNbActions();
     $player->setActionPlayed(true);
-    Notifications::playAction($player, $serverAction);
+    $action_type = Utils::getActionTypeFromServerAction($serverAction);
+    Notifications::playAction($player, $action_type);
+    Stats::registerNewAction($player, $action_type);
   }
   /**
    * Save the information that the player played one of their card

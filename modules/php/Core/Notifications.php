@@ -504,17 +504,17 @@ class Notifications
     ]);
   }
   
-  public static function playAction(Player $player, string $serverAction)
+  public static function playAction(Player $player, int $action_type)
   {
 
     $action_name = '';
-    switch($serverAction){
-      case 'actProgress':     $action_type = ACTION_TYPE_PROGRESS   ; $action_name = clienttranslate("Progress"); break;
-      case 'actBuildShips':   $action_type = ACTION_TYPE_BUILD_SHIPS; $action_name = clienttranslate("Build Ships"); break;
-      case 'actHarvest':      $action_type = ACTION_TYPE_PRODUCE    ; $action_name = clienttranslate("Produce"); break;
-      case 'actTaxes':        $action_type = ACTION_TYPE_TAXES      ; $action_name = clienttranslate("Collect Taxes"); break;
-      case 'actExploration':  $action_type = ACTION_TYPE_EXP        ; $action_name = clienttranslate("Explore"); break;
-      case 'actFoundOutpost': $action_type = ACTION_TYPE_FOUND      ; $action_name = clienttranslate("Establish an Outpost"); break;
+    switch($action_type){
+      case ACTION_TYPE_PROGRESS   : $action_name = clienttranslate("Progress"); break;
+      case ACTION_TYPE_BUILD_SHIPS: $action_name = clienttranslate("Build Ships"); break;
+      case ACTION_TYPE_PRODUCE    : $action_name = clienttranslate("Produce"); break;
+      case ACTION_TYPE_TAXES      : $action_name = clienttranslate("Collect Taxes"); break;
+      case ACTION_TYPE_EXP        : $action_name = clienttranslate("Explore"); break;
+      case ACTION_TYPE_FOUND      : $action_name = clienttranslate("Establish an Outpost"); break;
     }
 
     if($action_name == '') return;

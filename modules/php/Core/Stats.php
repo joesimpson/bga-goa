@@ -228,4 +228,20 @@ class Stats extends \Bga\Games\Goa\Helpers\DB_Manager
       }
     }
   }
+
+  
+  public static function registerNewAction(Player $player, int $actionType){
+    $statName = null;
+    switch($actionType){
+      case ACTION_TYPE_PROGRESS    : $statName = "actionA"; break;
+      case ACTION_TYPE_BUILD_SHIPS : $statName = "actionB"; break;
+      case ACTION_TYPE_PRODUCE     : $statName = "actionC"; break;
+      case ACTION_TYPE_TAXES       : $statName = "actionD"; break;
+      case ACTION_TYPE_EXP         : $statName = "actionE"; break;
+      case ACTION_TYPE_FOUND       : $statName = "actionF"; break;
+    }
+    if(isset($statName)) {
+      Stats::inc($statName,$player);
+    }
+  }
 }

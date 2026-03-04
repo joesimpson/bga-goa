@@ -220,6 +220,17 @@ abstract class Utils {
         }
         return null;
     }
+    public static function getActionTypeFromServerAction(string $serverAction) : int|null {
+        switch($serverAction){
+            case 'actProgress':     return ACTION_TYPE_PROGRESS;
+            case 'actBuildShips':   return ACTION_TYPE_BUILD_SHIPS;
+            case 'actHarvest':      return ACTION_TYPE_PRODUCE    ;
+            case 'actTaxes':        return ACTION_TYPE_TAXES      ;
+            case 'actExploration':  return ACTION_TYPE_EXP        ;
+            case 'actFoundOutpost': return ACTION_TYPE_FOUND      ;
+        }
+        return null;
+    }
 
     /**
      * @return true if an effect has been updated

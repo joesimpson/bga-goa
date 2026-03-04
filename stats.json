@@ -78,23 +78,55 @@
         "type": "int"
       }
       
-      ,"playedTiles": {
+      ,"receivedSpices": {
         "id": 33,
+        "name": "Received goods on depots/outposts fields",
+        "type": "int"
+      }
+      
+      ,"playedTiles": {
+        "id": 34,
         "name": "Played other tiles",
         "type": "int"
       }
       
       ,"playedExplorations": {
-        "id": 34,
+        "id": 35,
         "name": "Played Exploration cards",
         "type": "int"
       }
-      
-      ,"receivedSpices": {
+
+      ,"actionA": {
         "id": 40,
-        "name": "Received goods on depots/outposts fields",
+        "name": "Progress",
         "type": "int"
       }
+      ,"actionB": {
+        "id": 41,
+        "name": "Build Ships",
+        "type": "int"
+      }
+      ,"actionC": {
+        "id": 42,
+        "name": "Produce",
+        "type": "int"
+      }
+      ,"actionD": {
+        "id": 43,
+        "name": "Collect Taxes",
+        "type": "int"
+      }
+      ,"actionE": {
+        "id": 44,
+        "name": "Explore",
+        "type": "int"
+      }
+      ,"actionF": {
+        "id": 45,
+        "name": "Establish an Outpost",
+        "type": "int"
+      }
+      
     },
     "value_labels": { 
     }
