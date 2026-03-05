@@ -237,7 +237,7 @@ export class ClientSelectTileEffect {
                             'title':_('Select this tile'),  
                         }); 
                     //+Click on tile itself if displayed (With Favor tile we displayed tiles on page)
-                    let tileToPick = document.getElementById(`goa_tile-${choice_id}`);
+                    let tileToPick = document.getElementById(`goa_tile-${choice}`);
                     if(tileToPick){
                         this.game.onClick(tileToPick,() => {
                             action();

@@ -124,7 +124,7 @@ trait DebugTrait
         $this->debug_goToState(ST_PLAYER_TURN);
     }
     function debug_Effects(){
-        $player = Players::getCurrent();
+        $player = Players::getActive();
         Log::addStep();
 
         //clean all
@@ -183,7 +183,7 @@ trait DebugTrait
         $tile = Tiles::getByType(34,TILE_SUBTTYPE_MARKET)->first();
         Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_ESPIONAGE, 1, [ACTION_SHIP, ACTION_HARVEST, ACTION_MONEY, ACTION_FOUND_ABANDON]);
 
-        $this->debug_refreshUI();
+        //$this->debug_refreshUI();
         Game::get()->gamestate->jumpToState(ST_PLAYER_CHOICE);
     }
 
