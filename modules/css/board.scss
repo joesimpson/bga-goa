@@ -688,18 +688,21 @@ $playerboard_img_height: calc(1 * 777px);
                 //for debug
                 //outline: 2px solid red;
 
-                .goa_tile{
+                .goa_plantation_spot{
                     position: absolute;
-                    &[data-state="1"] { // &:nth-child(1) {
+                    .goa_tile{
+                        position: absolute;
+                    }
+                    &[data-index="1"] {
                         left: 1px;
                     }
-                    &[data-state="2"] { //  &:nth-child(2) {
+                    &[data-index="2"] {
                         left: 122px;
                     }
-                    &[data-state="3"] { // &:nth-child(3) {
+                    &[data-index="3"] {
                         left: 243px;
                     }
-                    &[data-state="4"] { // &:nth-child(4){
+                    &[data-index="4"] {
                         left: 365px;
                     }
                 }

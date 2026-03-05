@@ -320,7 +320,7 @@ export class Game {
                                     <div></div>
                                     <div class="goa_harvest_zone"></div>
                                 </div>
-                                <div id="goa_player_plantations-${player.id}" class="goa_player_plantations"></div>
+                                <div id="goa_player_plantations-${player.id}" class="goa_player_plantations">${ [1,2,3,4].map((i) => {return this.tplPlantationSpot(player.id, i);}).join('')}</div>
                                 <div id="goa_player_outposts-${player.id}" class="goa_player_outposts"></div>
                                 <div id="goa_player_waiting_tiles-${player.id}" class="goa_player_waiting_tiles"></div>
                                 <div id="goa_player_auction_markers-${player.id}" class="goa_player_auction_markers">
@@ -1940,7 +1940,8 @@ export class Game {
             }
             if (tile.location == (this.const.TILE_LOCATION_PLAYER_BOARD) ) {
                 if (tileMaterial.play_type == this.const.MARKET_TYPE_PLANTATION && [1,2,3,4].includes(tile.state) ) {
-                    return `goa_player_plantations-${tile.pId}`;
+                    //return `goa_player_plantations-${tile.pId}`;
+                    return `goa_plantation_spot-${tile.pId}-${tile.state}`;
                 }
                 return `goa_player_tiles-${tile.pId}`;
             }
@@ -2233,6 +2234,10 @@ export class Game {
             </div>`;
         }
         return '';
+    }
+    tplPlantationSpot(player_id, index, ) {
+        return `<div class="goa_plantation_spot" id="goa_plantation_spot-${player_id}-${index}" data-index="${index}">
+            </div>`; 
     }
     
     tplTileSpot(tile_id, index, spotContent, prefix ='') {
