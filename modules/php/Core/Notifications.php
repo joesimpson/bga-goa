@@ -666,14 +666,23 @@ class Notifications
   {
     $nTokens = $tokens->count();
     if($nTokens == 0) return;
-    $msg = clienttranslate('${player_name} removes ${n} Goods tokens from their tile');
+    $sortedTokens = $tokens->ui();
+    usort($sortedTokens, function ($a,$b)  {
+      return $a["spice"] <=>  $b["spice"];
+    });
+    $sortedTokensNames = $tokens->map(function($token) {return $token->getGoodsName();})->toArray();
+    
+    $msg = clienttranslate('${player_name} removes ${n} Goods tokens ${token_icons} from their tiles');
 
     self::notifyAll('removeTileSpices', $msg, [
       'player' => $player,
       'n' => $nTokens,
-      'tokens' => $tokens->ui(),
+      'tokens' => $sortedTokens,
+      'token_icons' => $sortedTokensNames,
       'tile_id' => $tile->getId(),
       'preserve'=>['tokens','tile_id'],
+      'i18n' => ['token_icons'],
+      'separator' => ['token_icons' => ' '],
     ]);
   }
 
