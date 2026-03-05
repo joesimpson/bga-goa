@@ -51,7 +51,8 @@ export class ClientSelectSpicesForProgress {
             this.game.customPerformAction('actProgress', { 'track': args.track, 't_ids': sortedTokens.join(','), 'card_id': args.withCard});
         }, spicesSets, true, _('Confirm'), selectionHint );
     
-        this.game.addButtonCloseClientState(args);
+        let callbackOnClose = this.game.addButtonCloseClientState(args);
+        this.game.onClick(progressTrack, callbackOnClose);
     }
 
     /**
