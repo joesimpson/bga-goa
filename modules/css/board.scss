@@ -78,12 +78,6 @@ $board_img_height: calc(1 * calc(1429px + var(--goa_board_height_offset)));
                             //box-shadow: 0px 0px 0px 5px blue;
                             outline: 5px dashed var(--goa_selectable_color);;
                             border-radius: 15px;
-                            &:hover{
-                                transform: scale(1.1);
-                                outline-color: var(--goa_selectable_hover_color);
-                                outline-style: solid;
-                                z-index: 2;
-                            }
                         }
                         &.selected{
                             cursor: crosshair;
@@ -99,14 +93,6 @@ $board_img_height: calc(1 * calc(1429px + var(--goa_board_height_offset)));
                             z-index: 2;
                             transition: margin .5s;
 
-                        }
-                        &:hover .goa_token{
-                            opacity: 0.7;
-                            //display: none;
-                            //width: 0;
-                            //height: 0;
-                            //View behind token : 
-                            margin-top: -50%;
                         }
                         .goa_auction_marker{
                             left: 50%;
@@ -248,10 +234,6 @@ $board_img_height: calc(1 * calc(1429px + var(--goa_board_height_offset)));
                         position: absolute;
                         width: 55px;
                         height: 55px;
-                        &:hover{//tooltipable
-                            outline: 2px solid green;
-                            cursor: help;
-                        }
                         #goa_board_round_marker{
                             width: 100%;
                             height: 100%;
@@ -469,12 +451,6 @@ $playerboard_img_height: calc(1 * 777px);
 
                 grid-template-columns: repeat(5, 1fr);
                 display: grid;
-                .goa_progress_header{
-                    &:hover{//tooltipable
-                        outline: 2px solid green;
-                        cursor: help;
-                    }
-                }
 
             }
             
@@ -487,12 +463,6 @@ $playerboard_img_height: calc(1 * 777px);
                 
                 grid-template-rows: repeat(5, 1fr);
                 display: grid;
-                .goa_progress_row_header{
-                    &:hover{//tooltipable
-                        outline: 2px solid green;
-                        cursor: help;
-                    }
-                }
             }
             
             .goa_player_progress_row_ends{
@@ -504,12 +474,6 @@ $playerboard_img_height: calc(1 * 777px);
                 
                 grid-template-rows: repeat(5, 1fr);
                 display: grid;
-                .goa_progress_row_end{
-                    &:hover:not(.disabled){//tooltipable
-                        outline: 2px solid green;
-                        cursor: help;
-                    }
-                }
             }
 
             .goa_player_progress_tracks{
@@ -533,11 +497,6 @@ $playerboard_img_height: calc(1 * 777px);
                         outline: 10px dashed var(--goa_selectable_color);
                         background: var(--goa_selectable_color_back);
                         border-radius: 5%;
-                        &:hover{
-                            outline-color: var(--goa_selectable_hover_color);
-                            background: var(--goa_selectable_hover_color_back);
-                            outline-style: solid;
-                        }
                     }
                     &.selected, &.selected_for_client_state{
                         cursor: crosshair;
@@ -591,11 +550,6 @@ $playerboard_img_height: calc(1 * 777px);
                             outline: 10px dashed var(--goa_selectable_color);
                             border-radius: 5%;
                             background: var(--goa_selectable_color_back);
-                            &:hover{
-                                outline-color: var(--goa_selectable_hover_color);
-                                outline-style: solid;
-                                background: var(--goa_selectable_hover_color_back);
-                            }
                         }
 
                         .goa_progress_marker{
@@ -722,16 +676,51 @@ $playerboard_img_height: calc(1 * 777px);
                     position: absolute;
                     transition: margin 0.5s;
                 }
-                //&:hover .goa_token{
-                .goa_token.selectable:hover {
-                    //View behind token on tile (spices): 
-                    opacity: 0.2;
-                }
-                &:hover .goa_token:not(.selectable){
-                    margin-top: -85%;
-                    opacity: 0.7;
-                }
             }
+        }
+    }
+}
+
+body.notouch-device{
+    #goa_board_market .goa_grid_space{
+        &:hover .goa_token{
+            opacity: 0.7;
+            //display: none;
+            //width: 0;
+            //height: 0;
+            //View behind token : 
+            margin-top: -50%;
+        }
+        &.selectable:hover{
+                transform: scale(1.1) !important;
+                outline-color: var(--goa_selectable_hover_color) !important;
+                outline-style: solid !important;
+                z-index: 2 !important;
+        }
+    }
+    .goa_board_round_cell:hover,
+    .goa_progress_header:hover,
+    .goa_progress_row_header:hover,
+    .goa_progress_row_end:hover:not(.disabled){
+            //tooltipable
+            outline: 2px solid green;
+            cursor: help;
+    }
+    .goa_progress_track.selectable:hover,
+    .goa_progress_track_space.selectable:hover{
+        outline-color: var(--goa_selectable_hover_color) !important;
+        background: var(--goa_selectable_hover_color_back) !important;
+        outline-style: solid !important;
+
+    }
+    .goa_tile{
+        .goa_token.selectable:hover {
+            //View behind token on tile (spices): 
+            opacity: 0.2 !important;
+        }
+        &:hover .goa_token:not(.selectable){
+            margin-top: -85% !important;
+            opacity: 0.7 !important;
         }
     }
 }

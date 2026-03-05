@@ -25,12 +25,6 @@ $tile_height: 108px;
         outline: 5px dashed var(--goa_selectable_color);
         border-radius: 15px;
         z-index: 1;
-        &:hover{
-            transform: scale(1.1);
-            outline-color: var(--goa_selectable_hover_color);
-            outline-style: solid;
-            z-index: 2;
-        }
     }
     &.selected{
         cursor: crosshair;
@@ -50,13 +44,6 @@ $tile_height: 108px;
         //sprite positions
         background-size: 500% 400%;
         background-image: url("img/outposts.jpg");
-        
-        &.selectable{
-            &:hover{
-                outline-color: var(--goa_selectable_hover_color) !important;
-                outline-style: solid !important;
-            }
-        }
 
         &.bga-cards_last-played-card{
             cursor: crosshair;
@@ -117,10 +104,6 @@ $tile_height: 108px;
         &.selectable{
             cursor: pointer;
             outline: 5px dashed var(--goa_selectable_color);
-            &:hover{
-                outline-color: var(--goa_selectable_hover_color) !important;
-                outline-style: solid !important;
-            }
         }
         &.selected{
             outline: 8px solid var(--goa_selected_color);
@@ -162,6 +145,30 @@ $tile_height: 108px;
                 top: 53px;
             }
         } 
+    }
+}
+
+body.notouch-device{
+    .goa_tile{
+        &.selectable{
+            &:hover{
+                transform: scale(1.1) !important;;
+                outline-color: var(--goa_selectable_hover_color) !important;;
+                outline-style: solid !important;
+                z-index: 2 !important;;
+            }
+        }
+    }
+    .goa_tile.goa_outpost,
+    .goa_outpost-front, .goa_outpost-back, //for bga-cards manager 
+    .goa_tile_spot
+    { 
+        &.selectable{
+            &:hover{
+                outline-color: var(--goa_selectable_hover_color) !important;
+                outline-style: solid !important;
+            }
+        }
     }
 }
 

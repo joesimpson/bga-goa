@@ -155,12 +155,6 @@ Icon extract in sprite with differents layers size (so % is not useful).
   outline: 5px dashed var(--goa_selectable_color);
   border-radius: 15px;
 }
-#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market .goa_grid_space.selectable:hover {
-  transform: scale(1.1);
-  outline-color: var(--goa_selectable_hover_color);
-  outline-style: solid;
-  z-index: 2;
-}
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market .goa_grid_space.selected {
   cursor: crosshair;
   outline: 8px solid var(--goa_selected_color);
@@ -172,10 +166,6 @@ Icon extract in sprite with differents layers size (so % is not useful).
   top: 25%;
   z-index: 2;
   transition: margin 0.5s;
-}
-#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market .goa_grid_space:hover .goa_token {
-  opacity: 0.7;
-  margin-top: -50%;
 }
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market .goa_grid_space .goa_auction_marker {
   left: 50%;
@@ -348,10 +338,6 @@ Icon extract in sprite with differents layers size (so % is not useful).
   position: absolute;
   width: 55px;
   height: 55px;
-}
-#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_rounds .goa_board_round_cell:hover {
-  outline: 2px solid green;
-  cursor: help;
 }
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_rounds .goa_board_round_cell #goa_board_round_marker {
   width: 100%;
@@ -549,10 +535,6 @@ Icon extract in sprite with differents layers size (so % is not useful).
   grid-template-columns: repeat(5, 1fr);
   display: grid;
 }
-.goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_progress_headers .goa_progress_header:hover {
-  outline: 2px solid green;
-  cursor: help;
-}
 .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_progress_row_headers {
   position: absolute;
   top: 450px;
@@ -562,10 +544,6 @@ Icon extract in sprite with differents layers size (so % is not useful).
   grid-template-rows: repeat(5, 1fr);
   display: grid;
 }
-.goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_progress_row_headers .goa_progress_row_header:hover {
-  outline: 2px solid green;
-  cursor: help;
-}
 .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_progress_row_ends {
   position: absolute;
   top: 455px;
@@ -574,10 +552,6 @@ Icon extract in sprite with differents layers size (so % is not useful).
   height: 317px;
   grid-template-rows: repeat(5, 1fr);
   display: grid;
-}
-.goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_progress_row_ends .goa_progress_row_end:hover:not(.disabled) {
-  outline: 2px solid green;
-  cursor: help;
 }
 .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_progress_tracks {
   position: absolute;
@@ -598,11 +572,6 @@ Icon extract in sprite with differents layers size (so % is not useful).
   outline: 10px dashed var(--goa_selectable_color);
   background: var(--goa_selectable_color_back);
   border-radius: 5%;
-}
-.goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_progress_tracks .goa_progress_track.selectable:hover {
-  outline-color: var(--goa_selectable_hover_color);
-  background: var(--goa_selectable_hover_color_back);
-  outline-style: solid;
 }
 .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_progress_tracks .goa_progress_track.selected, .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_progress_tracks .goa_progress_track.selected_for_client_state {
   cursor: crosshair;
@@ -670,11 +639,6 @@ Icon extract in sprite with differents layers size (so % is not useful).
   outline: 10px dashed var(--goa_selectable_color);
   border-radius: 5%;
   background: var(--goa_selectable_color_back);
-}
-.goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_progress_tracks .goa_progress_track .goa_progress_track_space.selectable:hover {
-  outline-color: var(--goa_selectable_hover_color);
-  outline-style: solid;
-  background: var(--goa_selectable_hover_color_back);
 }
 .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_progress_tracks .goa_progress_track .goa_progress_track_space .goa_progress_marker {
   width: 30px;
@@ -780,12 +744,36 @@ Icon extract in sprite with differents layers size (so % is not useful).
   position: absolute;
   transition: margin 0.5s;
 }
-.goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_tile .goa_token.selectable:hover {
-  opacity: 0.2;
-}
-.goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_tile:hover .goa_token:not(.selectable) {
-  margin-top: -85%;
+
+body.notouch-device #goa_board_market .goa_grid_space:hover .goa_token {
   opacity: 0.7;
+  margin-top: -50%;
+}
+body.notouch-device #goa_board_market .goa_grid_space.selectable:hover {
+  transform: scale(1.1) !important;
+  outline-color: var(--goa_selectable_hover_color) !important;
+  outline-style: solid !important;
+  z-index: 2 !important;
+}
+body.notouch-device .goa_board_round_cell:hover,
+body.notouch-device .goa_progress_header:hover,
+body.notouch-device .goa_progress_row_header:hover,
+body.notouch-device .goa_progress_row_end:hover:not(.disabled) {
+  outline: 2px solid green;
+  cursor: help;
+}
+body.notouch-device .goa_progress_track.selectable:hover,
+body.notouch-device .goa_progress_track_space.selectable:hover {
+  outline-color: var(--goa_selectable_hover_color) !important;
+  background: var(--goa_selectable_hover_color_back) !important;
+  outline-style: solid !important;
+}
+body.notouch-device .goa_tile .goa_token.selectable:hover {
+  opacity: 0.2 !important;
+}
+body.notouch-device .goa_tile:hover .goa_token:not(.selectable) {
+  margin-top: -85% !important;
+  opacity: 0.7 !important;
 }
 
 .goa_player_table {
@@ -1332,12 +1320,13 @@ Icon extract in sprite with differents layers size (so % is not useful).
   cursor: pointer;
   outline: 5px dashed var(--goa_selectable_color);
 }
-.goa_spice.selectable:hover {
-  outline-color: var(--goa_selectable_hover_color) !important;
-  outline-style: solid !important;
-}
 .goa_spice.selected {
   outline: 8px solid var(--goa_selected_color);
+}
+
+body.notouch-device .goa_spice.selectable:hover {
+  outline-color: var(--goa_selectable_hover_color) !important;
+  outline-style: solid !important;
 }
 
 .goa_exploration_card {
@@ -1399,12 +1388,6 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-image: url("img/exp_cards.jpg");
   background-position-x: 0%;
   background-position-y: 0%;
-}
-.goa_exploration_card.selectable:hover, .goa_exploration_card.bga-cards_selectable-card:hover,
-.goa_exploration_card-front.selectable:hover,
-.goa_exploration_card-front.bga-cards_selectable-card:hover, .goa_exploration_card-back.selectable:hover, .goa_exploration_card-back.bga-cards_selectable-card:hover {
-  outline-color: var(--goa_selectable_hover_color) !important;
-  outline-style: solid !important;
 }
 .goa_exploration_card[data-type="2"],
 .goa_exploration_card-front[data-type="2"], .goa_exploration_card-back[data-type="2"] {
@@ -1557,6 +1540,13 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-position-y: 100%;
 }
 
+body.notouch-device .goa_exploration_card.selectable:hover, body.notouch-device .goa_exploration_card.bga-cards_selectable-card:hover,
+body.notouch-device .goa_exploration_card-front.selectable:hover,
+body.notouch-device .goa_exploration_card-front.bga-cards_selectable-card:hover, body.notouch-device .goa_exploration_card-back.selectable:hover, body.notouch-device .goa_exploration_card-back.bga-cards_selectable-card:hover {
+  outline-color: var(--goa_selectable_hover_color) !important;
+  outline-style: solid !important;
+}
+
 .goa_money_card {
   width: 120px;
   height: 182px;
@@ -1684,12 +1674,6 @@ Icon extract in sprite with differents layers size (so % is not useful).
   border-radius: 15px;
   z-index: 1;
 }
-.goa_tile.selectable:hover {
-  transform: scale(1.1);
-  outline-color: var(--goa_selectable_hover_color);
-  outline-style: solid;
-  z-index: 2;
-}
 .goa_tile.selected {
   cursor: crosshair;
   outline: 8px solid var(--goa_selected_color);
@@ -1703,11 +1687,6 @@ Icon extract in sprite with differents layers size (so % is not useful).
   --bga-cards_selected-card_outline-color: var(--goa_selected_color);
   background-size: 500% 400%;
   background-image: url("img/outposts.jpg");
-}
-.goa_tile.goa_outpost.selectable:hover,
-.goa_outpost-front.selectable:hover, .goa_outpost-back.selectable:hover {
-  outline-color: var(--goa_selectable_hover_color) !important;
-  outline-style: solid !important;
 }
 .goa_tile.goa_outpost.bga-cards_last-played-card,
 .goa_outpost-front.bga-cards_last-played-card, .goa_outpost-back.bga-cards_last-played-card {
@@ -2003,10 +1982,6 @@ Icon extract in sprite with differents layers size (so % is not useful).
   cursor: pointer;
   outline: 5px dashed var(--goa_selectable_color);
 }
-.goa_tile .goa_tile_spot.selectable:hover {
-  outline-color: var(--goa_selectable_hover_color) !important;
-  outline-style: solid !important;
-}
 .goa_tile .goa_tile_spot.selected {
   outline: 8px solid var(--goa_selected_color);
 }
@@ -2033,6 +2008,19 @@ Icon extract in sprite with differents layers size (so % is not useful).
 .goa_tile[data-spots="3"] .goa_tile_spot[data-index="3"] {
   left: 55px;
   top: 53px;
+}
+
+body.notouch-device .goa_tile.selectable:hover {
+  transform: scale(1.1) !important;
+  outline-color: var(--goa_selectable_hover_color) !important;
+  outline-style: solid !important;
+  z-index: 2 !important;
+}
+body.notouch-device .goa_tile.goa_outpost.selectable:hover,
+body.notouch-device .goa_outpost-front.selectable:hover, body.notouch-device .goa_outpost-back.selectable:hover,
+body.notouch-device .goa_tile_spot.selectable:hover {
+  outline-color: var(--goa_selectable_hover_color) !important;
+  outline-style: solid !important;
 }
 
 .goa_tile_spot_log {
@@ -2220,11 +2208,6 @@ button .goa_tile {
   width: 100%;
   height: 100%;
 }
-.goa_panel .goa_player_resource .goa_reserve:hover {
-  outline: 2px solid green;
-  z-index: 2;
-  cursor: help;
-}
 .goa_panel .goa_player_resource .goa_resource_exploration_hand_size {
   font-size: 15px;
   font-weight: bold;
@@ -2232,6 +2215,12 @@ button .goa_tile {
 .goa_panel .goa_icon_container {
   margin: 0 0.1em;
   display: block;
+}
+
+body.notouch-device .goa_panel .goa_player_resource .goa_reserve:hover {
+  outline: 2px solid green;
+  z-index: 2;
+  cursor: help;
 }
 
 html.goa_pref_panel_details_off .goa_player_counters_line_symbols,

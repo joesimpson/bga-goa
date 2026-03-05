@@ -82,13 +82,6 @@ $card_height: var(--goa_explo_card_height);
     background-position-x: 0%;
     background-position-y: 0%;
 
-    &.selectable, &.bga-cards_selectable-card{
-        &:hover{
-            outline-color: var(--goa_selectable_hover_color) !important;
-            outline-style: solid !important;
-        }
-    }
-
     @for $i from 1 through 30 {
         &[data-type="#{$i + 1}"] {
             background-position-x: math.div(($i % 7) * 100%, 6);//7 columns
@@ -97,6 +90,18 @@ $card_height: var(--goa_explo_card_height);
     }
 }
 
+body.notouch-device{
+    .goa_exploration_card,
+    .goa_exploration_card-front, .goa_exploration_card-back //for bga-cards manager 
+    { 
+        &.selectable, &.bga-cards_selectable-card{
+            &:hover{
+                outline-color: var(--goa_selectable_hover_color) !important;
+                outline-style: solid !important;
+            }
+        }
+    }
+}
 .goa_money_card{
     width: 120px;
     height: 182px;
