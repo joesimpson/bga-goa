@@ -298,6 +298,7 @@ export class ClientSelectTileEffect {
                         let colony = tileToFound.dataset.colony;
                         let stock = this.game.outpostsTilesStocks[colony];
                         stock.setLastPlayedCards([args.tile]);
+                        stock.setOpened(true);
                     }
                     
                     switch(choice){

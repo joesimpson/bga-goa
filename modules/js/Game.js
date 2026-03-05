@@ -588,6 +588,7 @@ export class Game {
         this.outpostsTilesStocks.forEach((stock) => { 
             stock.setSelectionMode('none');
             stock.removeLastPlayedCardsClass();
+            stock.setOpened(false);
         });
 
         document.getElementById('goa_top_zone').classList.remove('goa_display');
@@ -1582,6 +1583,7 @@ export class Game {
             let stock = this.outpostsTilesStocks[tile.colony];
             //KO with this type of stock ?
             //await stock.removeCard(tile);
+            await stock.cardRemoved(tile);
             this.destroy(tileDiv);
             tileDiv = this.addTile(tile);
             await this.animationManager.slideIn(tileDiv, stock.element, {duration: 800});
