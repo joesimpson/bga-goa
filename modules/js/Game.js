@@ -897,6 +897,7 @@ export class Game {
         }
         else {
             this.explorationHand.element.parentNode.dataset.emptyhand = 'false';
+            this.explorationHand.setSort(BgaCards.sort('action','contracts'));
         }
     }
 
@@ -1773,8 +1774,9 @@ export class Game {
         let currentPlayer = this.bga.players.getCurrentPlayer();
         if (currentPlayer && currentPlayer.id == notif.player_id && notif._private) {
             this.refreshHandCount(notif._private.cards.length);
-            this.explorationHand.addCards(notif._private.cards, { fromStock: this.explorationDeck});
-            Object.values(notif._private.cards).forEach((card) => {
+            let cards = this.readCardsMaterial(notif._private.cards);
+            this.explorationHand.addCards(cards, { fromStock: this.explorationDeck});
+            Object.values(cards).forEach((card) => {
                 let cardMaterial = this.gamedatas.material.cards[card.subtype][card.type];
                 this._counters[currentPlayer.id]['explo_symbol_tiny_'+cardMaterial.symbol].incValue(1);
             });
@@ -2780,11 +2782,7 @@ export class Game {
         let cardDiv = $(`goa_card-${card.id}`);
         if (!cardDiv){
             let container = location == null ? this.getCardContainer(card) : location;
-            let cardMaterial = this.gamedatas.material.cards[this.const.CARD_SUBTTYPE_EXPLORATION][card.type];
-            if(cardMaterial){
-                card.action = cardMaterial.action; 
-                card.contracts = cardMaterial.contracts; 
-            }
+            [card] = this.readCardsMaterial([card]);
             
             if(container == `goa_exploration_discard`){
                 //use bga-cards stock
@@ -2792,7 +2790,7 @@ export class Game {
             } else if(container.startsWith(`goa_exploration_hand`)){
                 //use bga-cards stock
                 this.refreshHandCount(1);
-                await this.explorationHand.addCard(card);
+                await this.explorationHand.addCards([card]);
                 this.updateHandSelectable(this.gamedatas.gamestate.args, false);
                 let currentPlayer = this.bga.players.getCurrentPlayer();
                 if (currentPlayer) {
@@ -2993,6 +2991,18 @@ export class Game {
             </div>
         </div>
         `;
+    }
+
+    readCardsMaterial(cards){
+        let cardsDatas = cards;
+        Object.values(cardsDatas).forEach((card) => {
+            let cardMaterial = this.gamedatas.material.cards[card.subtype][card.type];
+            if(cardMaterial){
+                card.action = cardMaterial.action; 
+                card.contracts = cardMaterial.contracts; 
+            }
+        });
+        return cardsDatas;
     }
 
     async animateGainMoney(player_id, amount) {
