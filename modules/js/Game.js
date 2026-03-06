@@ -186,6 +186,8 @@ export class Game {
                     <div id="goa_box_tiles">
                     </div>
                 </div>
+                <div id="goa_floating_hand_holder">
+                </div>
             </div>
         `);
 
@@ -334,7 +336,9 @@ export class Game {
                             </div>
                         </div>
                     </div>
-                    <div id="goa_exploration_hand-${player.id}" class="exploration_hand"></div>
+                    <div id="goa_exploration_hand_holder-${player.id}" class="exploration_hand_holder">
+                        <div id="goa_exploration_hand-${player.id}" class="exploration_hand"></div>
+                    </div>
                 </div>
             `);
             
@@ -1205,6 +1209,22 @@ export class Game {
                 //We could hide pref "undo button style", but We also use undo button during a player turn before the action of confirm
                 //this.bga.userPreferences.toggleVisibility(this.const.PREF_UNDO_STYLE, pref_value != this.const.PREF_CONFIRM_DISABLED);
                 break;
+            case this.const.PREF_HAND_POSITION: 
+                //goa_pref_hand_float
+                let isFloat = (pref_value == this.const.PREF_HAND_POSITION_FLOAT);
+                this.onChangeHandLocationPref(isFloat);
+                break;
+        }
+    }
+
+    onChangeHandLocationPref(isFloat) {
+        this.customDebug('onChangeHandLocationPref()',isFloat);
+        if(!this.explorationHand) return;
+        //let hand = this.explorationHand.element;
+        let hand = document.getElementById(`goa_exploration_hand-${this.bga.gameui.player_id}`);
+        if (hand) {
+            let container = isFloat ? 'goa_floating_hand_holder' : `goa_exploration_hand_holder-${this.bga.gameui.player_id}`;
+            $(container).insertAdjacentElement('beforeend', hand);
         }
     }
     

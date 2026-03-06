@@ -52,7 +52,7 @@ $card_height: var(--goa_explo_card_height);
         margin: 5px 0px;
         border: 2px solid #17768a;
         border-radius: 15px;
-        //TODO JSA hide for opponents when no cards are displayed
+        background-color: rgba(40, 39, 36, 0.78);
         button{
             width: 25px !important;
             color: white;
@@ -65,7 +65,7 @@ $card_height: var(--goa_explo_card_height);
             &.right{
                 border-radius: 0px 10px 10px 0px;
                 position: absolute;
-                right: 0;
+                right: -20px;
                 height: 100%;
             }
         }
@@ -83,6 +83,27 @@ $card_height: var(--goa_explo_card_height);
         &[data-emptyhand="true"]{
             display: none;
         }
+    }
+}
+.exploration_hand_holder{
+    width: calc(100% - 20px);
+}
+html.goa_pref_hand_default{
+    #goa_floating_hand_holder{
+        display: none;
+    }
+}
+#goa_floating_hand_holder{
+    border-radius: 15px;
+    position: fixed;
+    z-index: 1000;
+    left: 100px;
+    bottom: 0px;
+
+    width: min(60%,70vw);
+    
+    .scrollable-stock{
+        min-width: 100%;
     }
 }
 

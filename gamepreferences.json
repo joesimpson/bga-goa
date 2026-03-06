@@ -59,5 +59,20 @@
         },
         "default": 1
     }
+    ,"113": {
+        "name": "Hand of cards",
+        "needReload": false,
+        "values": {
+            "1": {
+                "name": "Near player board",
+                "cssPref": "goa_pref_hand_default"
+            },
+            "2": {
+                "name": "Bottom of window",
+                "cssPref": "goa_pref_hand_float"
+            }
+        },
+        "default": 1
+    }
 
 }
