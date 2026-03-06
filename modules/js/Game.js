@@ -634,6 +634,8 @@ export class Game {
 
     async autoScrollTo(divId){
         this.customDebug("autoScrollTo", divId);
+        //FAST MODE => do nothing
+        if(this.bga.gameui.instantaneousMode) return;
         await this.bga.gameui.wait(100);
         document.getElementById(divId).scrollIntoView({'behavior': 'smooth', 'block':'center'});
     }
