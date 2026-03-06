@@ -174,12 +174,13 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
           else if(isset($args['harvestSpots'])){
             $possiblePlay = (count($args['harvestSpots']) > 0);
             if($possiblePlay){
+              $playerBaseHarvest = Players::getHarvestBaseGain($player);
               $playDatas['harvest'] = [
                 'countAction' => true,
                 'spots' => $args['harvestSpots'],
                 //in order to not let players loose ships/contracts, set min to max
-                'min' => $args['playerBaseHarvest'],
-                'max' => $args['playerBaseHarvest'],
+                'min' => $playerBaseHarvest,
+                'max' => $playerBaseHarvest,
                 'others' => [ACTION_SHIP, ACTION_CONTRACT],
               ];
             }
