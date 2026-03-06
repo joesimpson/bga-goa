@@ -160,8 +160,7 @@ body.notouch-device{
         }
     }
     .goa_tile.goa_outpost,
-    .goa_outpost-front, .goa_outpost-back, //for bga-cards manager 
-    .goa_tile_spot
+    .goa_outpost-front, .goa_outpost-back //for bga-cards manager 
     { 
         &.selectable{
             &:hover{
@@ -169,6 +168,13 @@ body.notouch-device{
                 outline-style: solid !important;
             }
         }
+    }
+    .goa_tile_spot.selectable:hover
+    { 
+                outline-color: var(--goa_selectable_hover_color) !important;
+                //better readability :
+                outline-color: #afff00 !important;
+                outline-style: solid !important;
     }
 }
 

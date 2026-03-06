@@ -28,7 +28,9 @@ export class ClientSelectSpicesForProgress {
             });
         });
         Object.values(allSpicesIds).forEach((tId) => {
-            spicesDivs[tId] = $(`goa_token-${tId}`);
+            //spicesDivs[tId] = $(`goa_token-${tId}`);
+            //click on goa_tile_spot
+            spicesDivs[tId] = $(`goa_token-${tId}`).parentNode;
         });
         let spicesIcons = '';
         Object.entries(costSpices).forEach( ([spice, cost]) => {

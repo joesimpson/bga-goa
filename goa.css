@@ -2084,9 +2084,13 @@ body.notouch-device .goa_tile.selectable:hover {
   z-index: 2 !important;
 }
 body.notouch-device .goa_tile.goa_outpost.selectable:hover,
-body.notouch-device .goa_outpost-front.selectable:hover, body.notouch-device .goa_outpost-back.selectable:hover,
+body.notouch-device .goa_outpost-front.selectable:hover, body.notouch-device .goa_outpost-back.selectable:hover {
+  outline-color: var(--goa_selectable_hover_color) !important;
+  outline-style: solid !important;
+}
 body.notouch-device .goa_tile_spot.selectable:hover {
   outline-color: var(--goa_selectable_hover_color) !important;
+  outline-color: #afff00 !important;
   outline-style: solid !important;
 }
 

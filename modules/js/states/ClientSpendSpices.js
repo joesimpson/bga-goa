@@ -30,7 +30,9 @@ export class ClientSpendSpices {
         });
         */
         Object.values(tokens_ids).forEach((tId) => {
-            spicesDivs[tId] = $(`goa_token-${tId}`);
+            //spicesDivs[tId] = $(`goa_token-${tId}`);
+            //click on goa_tile_spot
+            spicesDivs[tId] = $(`goa_token-${tId}`).parentNode;
         });
      
         this.bga.statusBar.setTitle(
