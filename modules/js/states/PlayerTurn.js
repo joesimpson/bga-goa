@@ -77,9 +77,11 @@ export class PlayerTurn {
                     this.game.onClick(marketSpace,() => this.onMarketSpotClick(spot.row,spot.col));
                     marketSpace.setAttribute("title",_('Select this spot for the auction'));
                 }); 
+                this.game.autoScrollTo('goa_board_market');
             }
             
             if(possibleActions.includes('actBid')){
+                this.game.autoScrollTo('goa_board_market');
                 this.currentBid = args.bid ; //- args.bidRebate;
                 this.selectedBid = args.minBid; // - args.bidRebate;
                 

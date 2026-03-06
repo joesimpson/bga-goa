@@ -274,6 +274,7 @@ export class ClientSelectTileEffect {
                         _('${you} must choose a Depot to replace on your board by ${tile_icon}').replace('${tile_icon}',newtile_icon) : 
                         _('${actplayer} must choose a Depot to replace on his board by ${tile_icon}').replace('${tile_icon}',newtile_icon) 
                     );
+                    this.game.autoScrollTo(`goa_player_plantations-${activePlayerId}`);
                     //click on each selectable tile
                     let tileDiv = document.getElementById(`goa_tile-${choice}`);
                     tileDiv.setAttribute("title",_('Select this tile'));
