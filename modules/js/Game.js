@@ -2589,11 +2589,21 @@ export class Game {
                 action_label = this.formatActionName(track);
                 action_gains = this.const.PROGRESS_GAINS_OUTPOST;
 
-                let action_gains_desc = '<ul>';
-                action_gains.forEach(element => {
-                    action_gains_desc += '<li>'+element+'</li>';
-                });
-                action_gains_desc += '</ul>';
+                let action_gains_desc = `<table>
+                        <thead>
+                            <th>${_('Progress row')}</th>
+                            <th>${_('Gain')}</th>
+                        </thead>
+                        <tbody>`; 
+                    let row = 0;
+                    action_gains.forEach(element => {
+                        row++;
+                        action_gains_desc += `<tr>`; 
+                        action_gains_desc += '<td>'+row+'</td>';
+                        action_gains_desc += '<td>'+element+'</td>';
+                        action_gains_desc += `</tr>`; 
+                    });
+                action_gains_desc += `</table>`;
                 
                 action_desc = '<ul>'
                             + '<li>' + this.bga.gameui.format_string( _("First, choose one of the four Outposts. You may not choose an Outpost you have already Established"),{  } ) + '</li>'
@@ -2613,11 +2623,24 @@ export class Game {
             _('Player action : ${name}'),
              {'name': '<b><u>'+ action_label +'</u></b>'}
         );
-        action_desc += '<ul>';
-        action_gains.forEach(element => {
-            action_desc += '<li>'+element+'</li>';
-        });
-        action_desc += '</ul>';
+
+        if(action_gains.length>0){
+            action_desc += `<table>
+                    <thead>
+                        <th>${_('Progress row')}</th>
+                        <th>${_('Gain')}</th>
+                    </thead>
+                    <tbody>`; 
+                let row = 0;
+                action_gains.forEach(element => {
+                    row++;
+                    action_desc += `<tr>`; 
+                    action_desc += '<td>'+row+'</td>';
+                    action_desc += '<td>'+element+'</td>';
+                    action_desc += `</tr>`; 
+                });
+            action_desc += `</table>`;
+        }
 
         return `<div class="goa_custom_tooltip">
             <div class="goa_action_label">${action_label}</div>
