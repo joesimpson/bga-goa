@@ -1277,7 +1277,7 @@ body.notouch-device .goa_tile:hover .goa_token:not(.selectable) {
   background-size: 458.0152671756% 129.4117647059%;
 }
 
-.goa_icon_spice_shadow {
+.goa_tile_spot .goa_icon_spice_shadow {
   position: absolute;
   left: -5px;
   top: -5px;
