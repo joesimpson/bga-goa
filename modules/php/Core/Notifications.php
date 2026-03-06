@@ -704,7 +704,9 @@ class Notifications
   }
   public static function reshuffleExplorationDeck(Player|null $player, int $deck_size)
   {
-    self::notifyAll('reshuffleExplorationDeck', '', [
+    $msg = clienttranslate('Exploration deck is reshuffled');
+
+    self::notifyAll('reshuffleExplorationDeck', $msg, [
       'deck_size' => $deck_size,
     ]);
   }
