@@ -111,6 +111,9 @@ trait DebugTrait
     }
     
     ////////////////////////////////////////////////////
+    function refresh_state(){
+        $this->debug_goToState(Game::get()->gamestate->getCurrentMainStateId());
+    }
     function debug_refreshUI(){
         $player_id = Players::getCurrent()->getId();
         //Game::get()->notify->player($player_id,'reloadPage', "/!\ : Refresh page to see game has restarted...", []);
@@ -121,7 +124,7 @@ trait DebugTrait
         Globals::setRound($round);
         Globals::setRoundStep($roundStep);
         $this->debug_refreshUI();
-        $this->debug_goToState(ST_PLAYER_TURN);
+        $this->refresh_state();
     }
     function debug_Effects(){
         $player = Players::getActive();
@@ -280,6 +283,7 @@ trait DebugTrait
         Tokens::create($tokens);
 
         $this->debug_refreshUI();
+        $this->refresh_state();
     }
 
     
@@ -289,6 +293,7 @@ trait DebugTrait
         Cards::moveAllInLocation(CARD_LOCATION_EXP_DISCARD,CARD_LOCATION_EXP_DECK);
         Cards::shuffle(CARD_LOCATION_EXP_DECK);
         $this->debug_refreshUI();
+        $this->refresh_state();
     }
     // Test board UI : 
     function debug_boardCards(bool $keepOne = true){
@@ -300,18 +305,21 @@ trait DebugTrait
         if($keepOne) Cards::getTopOf(CARD_LOCATION_EXP_DISCARD)->setLocation(CARD_LOCATION_EXP_DECK);
         Cards::shuffle(CARD_LOCATION_EXP_DISCARD);
         $this->debug_refreshUI();
+        $this->refresh_state();
     }
     function debug_drawAndDiscardExplo(int $nb = 1){
         $player = Players::getCurrent();
         Log::addStep();
 
         Cards::drawAndDiscardExploration($player, $nb);
+        $this->refresh_state();
     }
     function debug_HandExplo(int $size = 1){
         $player = Players::getCurrent();
         Log::addStep();
         $doCheckpoint = true;
         Cards::drawExplorationCardsToPlayer($player, $size, $doCheckpoint);
+        $this->refresh_state();
        
     }
     function debug_discardCards(int $nb = 10){
@@ -330,6 +338,7 @@ trait DebugTrait
         }
 
         $this->debug_refreshUI();
+        $this->refresh_state();
     }
     
     function debug_changePlayerCurrencies(int $money = 15,int $ships = 5,int $contracts = 3,int $compasses = 1,){
@@ -342,7 +351,7 @@ trait DebugTrait
         $player->setContracts($contracts);
         $player->setCompasses($compasses);
         $this->debug_refreshUI();
-        $this->debug_goToState(Game::get()->gamestate->getCurrentMainStateId());
+        $this->refresh_state();
     }
     
     function debug_changeProgress(int $ships = 1,int $harvest = 2,int $taxes = 4,int $explo = 2,int $found = 1,){
@@ -362,7 +371,7 @@ trait DebugTrait
         $token->setRow($found);
 
         $this->debug_refreshUI();
-        $this->debug_goToState(Game::get()->gamestate->getCurrentMainStateId());
+        $this->refresh_state();;
     }
 
     function debug_playerTiles(){
@@ -464,7 +473,7 @@ trait DebugTrait
         }
         
         //$this->debug_refreshUI();
-        $this->debug_goToState(Game::get()->gamestate->getCurrentMainStateId());
+        $this->refresh_state();
     }
     
     function debug_fillTileWithSpices(int $tile_id){
@@ -473,7 +482,7 @@ trait DebugTrait
         $player = Players::get($pid);
         Log::addStep();
         Tiles::fillPlayerTileWithSpices($player,$tile);
-        $this->debug_goToState(Game::get()->gamestate->getCurrentMainStateId());
+        $this->refresh_state();;
     }
     function debug_removeSpicesOnTile(int $tile_id){
         $tile = Tiles::get($tile_id);
@@ -481,7 +490,7 @@ trait DebugTrait
         $player = Players::get($pid);
         Log::addStep();
         Tokens::removeSpicesOnTile($tile,$player);
-        $this->debug_goToState(Game::get()->gamestate->getCurrentMainStateId());
+        $this->refresh_state();;
     }
     
     function debug_discardTile(int $tile_id){
@@ -496,14 +505,14 @@ trait DebugTrait
         $tile->setLocation(TILE_LOCATION_DISCARD);
         Notifications::discardTile($player,$tile);
 
-        $this->debug_refreshUI();
+        $this->debug_refreshUI(); $this->refresh_state();
     }
     function debug_scoring(){
         Log::addStep();
         $session = Globals::getSession();
         EndSession::computeScoring($session);
         
-        $this->debug_goToState(Game::get()->gamestate->getCurrentMainStateId());
+        $this->refresh_state();
     }
     
     //TEst different notif at a time
@@ -513,6 +522,7 @@ trait DebugTrait
         //Notifications::winsAuction($players[0], 12,$players[1]);
         //Notifications::winsAuction($players[0], 15,);
         Tokens::giveFirstPlayerToken($player);
+        $this->refresh_state();
     }
 
     //TEst different utils functions at a time

@@ -18,6 +18,7 @@
   --goa_playerboard_display_scale: 0.60;
   --goa_explo_card_with: 131px;
   --goa_explo_card_height: 200px;
+  --goa_hand_card_scale: 0.80;
   --goa_board_height_offset: -230px;
   --goa_selectable_color: blue;
   --goa_selectable_color_back: rgba(20, 0, 255, 0.2);
@@ -1335,7 +1336,7 @@ body.notouch-device .goa_spice.selectable:hover {
   height: var(--goa_explo_card_height);
   --bga-cards_card-border-radius: 5%;
   border-radius: var(--bga-cards_card-border-radius);
-  box-shadow: 0px 0px 0px 2px black;
+  --bga-cards_card-side_shadow-color: black !important;
 }
 .goa_exploration_card.goa_card_log {
   width: 50px;
@@ -1348,31 +1349,76 @@ body.notouch-device .goa_spice.selectable:hover {
 }
 
 .exploration_hand {
-  --bga-cards_hand-stock-height: calc(1.05 * var(--goa_explo_card_height)) !important;
-  height: inherit !important;
+  /*
+      //if we don't want the bga-cards rotated style, no need to keep more height
+      --bga-cards_hand-stock-height : calc(1.05 * var(--goa_explo_card_height)) !important;
+      .goa_exploration_card{
+          //we need to see the card details
+          --bga-cards_hand-stock-card-overlap: 0px !important;
+          //or may hide the left part because contracts numbers are useless in hand
+          //margin-right: -220px !important;
+          margin-left: 0px !important;
+      }
+      //margin-left: calc((var(--goa_stock_count) - 1) * -50px);
+      height: inherit !important;
+      .hand-stock:not(.floating){
+          display: flex;
+          flex-wrap: wrap;
+          flex-direction: row;
+          height: inherit !important;
+      }
+
+  */
 }
-.exploration_hand .goa_exploration_card {
-  --bga-cards_hand-stock-card-overlap: 0px !important;
-  margin-left: 0px !important;
+.exploration_hand.scrollable-stock {
+  --gap: 10px !important;
+  margin: 5px 0px;
+  border: 2px solid #17768a;
+  border-radius: 15px;
 }
-.exploration_hand .hand-stock:not(.floating) {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-  height: inherit !important;
+.exploration_hand.scrollable-stock button {
+  width: 25px !important;
+  color: white;
+  background-color: #17768a;
+  cursor: pointer;
+  font-size: x-large;
+}
+.exploration_hand.scrollable-stock button.left {
+  border-radius: 10px 0px 0px 10px;
+}
+.exploration_hand.scrollable-stock button.right {
+  border-radius: 0px 10px 10px 0px;
+  position: absolute;
+  right: 0;
+  height: 100%;
+}
+.exploration_hand.scrollable-stock .bga-cards_card-side {
+  transition: transform 0.5s;
+}
+.exploration_hand.scrollable-stock .scrollable-stock-inner {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+.exploration_hand.scrollable-stock .bga-cards_selected-card {
+  transform: translateY(calc(var(--bga-cards_card-height) / -10));
+}
+.exploration_hand.scrollable-stock[data-emptyhand=true] {
+  display: none;
 }
 
 .exploration_hand .hand-stock {
-  --bga-cards_hand-stock-floating-height:calc((var(--goa_board_display_scale) + 0.025) * var(--goa_explo_card_height)) !important;
+  --bga-cards_hand-stock-floating-height:calc((var(--goa_hand_card_scale) + 0.025) * var(--goa_explo_card_height)) !important;
+}
+.exploration_hand.scrollable-stock .goa_exploration_card {
+  margin: 5px;
 }
 .exploration_hand .goa_exploration_card {
-  width: calc(var(--goa_board_display_scale) * var(--goa_explo_card_with));
-  height: calc(var(--goa_board_display_scale) * var(--goa_explo_card_height));
-  transform: scale(var(--goa_board_display_scale));
-  --bga-cards_card-width: calc(var(--goa_board_display_scale) * var(--goa_explo_card_with)) !important;
-  --bga-cards_card-height: calc(var(--goa_board_display_scale) * var(--goa_explo_card_height)) !important;
-  --bga-cards_card-effective-width: calc(var(--goa_board_display_scale) * var(--goa_explo_card_with)) !important;
-  --bga-cards_card-effective-height: calc(var(--goa_board_display_scale) * var(--goa_explo_card_height)) !important;
+  width: calc(var(--goa_hand_card_scale) * var(--goa_explo_card_with)) !important;
+  height: calc(var(--goa_hand_card_scale) * var(--goa_explo_card_height)) !important;
+  --bga-cards_card-width: calc(var(--goa_hand_card_scale) * var(--goa_explo_card_with)) !important;
+  --bga-cards_card-height: calc(var(--goa_hand_card_scale) * var(--goa_explo_card_height)) !important;
+  --bga-cards_card-effective-width: calc(var(--goa_hand_card_scale) * var(--goa_explo_card_with)) !important;
+  --bga-cards_card-effective-height: calc(var(--goa_hand_card_scale) * var(--goa_explo_card_height)) !important;
 }
 
 .goa_exploration_card,

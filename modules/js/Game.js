@@ -884,6 +884,18 @@ export class Game {
         }
     }
 
+    refreshHandCount(delta = 0) {
+        this.customDebug("refreshHandCount",delta);
+        if(!this.explorationHand) return;
+        let nb = this.explorationHand.getCardCount() + delta;
+        if(nb == 0){
+            this.explorationHand.element.parentNode.dataset.emptyhand = 'true';
+        }
+        else {
+            this.explorationHand.element.parentNode.dataset.emptyhand = 'false';
+        }
+    }
+
     updateHandSelectableList(args){
         this.customDebug("updateHandSelectableList",this.bga.states.getCurrentMainStateName(),args);
         let possibleActions = args.possibleActions;
@@ -1740,6 +1752,7 @@ export class Game {
         this._counters[notif.player_id]['exploration_hand_size'].incValue( notif.n);
         let currentPlayer = this.bga.players.getCurrentPlayer();
         if (currentPlayer && currentPlayer.id == notif.player_id && notif._private) {
+            this.refreshHandCount(notif._private.cards.length);
             this.explorationHand.addCards(notif._private.cards, { fromStock: this.explorationDeck});
             Object.values(notif._private.cards).forEach((card) => {
                 let cardMaterial = this.gamedatas.material.cards[card.subtype][card.type];
@@ -2645,6 +2658,11 @@ export class Game {
                 setupFrontDiv: (card, div) => {
                     div.dataset.type = card.type; 
                     div.dataset.state = card.state; 
+                    let cardMaterial = this.gamedatas.material.cards[this.const.CARD_SUBTTYPE_EXPLORATION][card.type];
+                    if(cardMaterial){
+                        div.dataset.action = cardMaterial.action; 
+                        div.dataset.contracts = cardMaterial.contracts; 
+                    }
                     this.bga.gameui.addTooltipHtml(div.id, this.getCardTooltip(card));
                 },
                 cardWidth: 131,
@@ -2664,12 +2682,25 @@ export class Game {
             
             let currentPlayer = this.bga.players.getCurrentPlayer();
             if (currentPlayer) {
-                this.explorationHand = new BgaCards.HandStock(this.explorationCardsManager, document.getElementById(`goa_exploration_hand-${currentPlayer.id}`), {
-                    //sort: BgaCards.sort('type'),
+                //this.explorationHand = new BgaCards.HandStock(
+                this.explorationHand = new BgaCards.ScrollableStock(
+                    this.explorationCardsManager, 
+                    document.getElementById(`goa_exploration_hand-${currentPlayer.id}`), 
+                {
                     sort: BgaCards.sort('action','contracts'),
-                    //cardOverlap: -25,
-                    //fanShaped: false,
+
+                    //ScrollableStock
+                        leftButton: {
+                            html: '&lt;'
+                        },
+                        rightButton: {
+                            html: '&gt;'
+                        },
                 });
+                this.refreshHandCount();
+                this.explorationHand.onCardRemoved = (x, card) => { 
+                    this.refreshHandCount();
+                };
             }
             this.explorationDeck = new BgaCards.Deck(this.explorationCardsManager, document.getElementById('goa_exploration_deck'), {
                 cardNumber: this.gamedatas.cards.deck_size[this.const.CARD_SUBTTYPE_EXPLORATION] ,
@@ -2729,12 +2760,18 @@ export class Game {
         let cardDiv = $(`goa_card-${card.id}`);
         if (!cardDiv){
             let container = location == null ? this.getCardContainer(card) : location;
+            let cardMaterial = this.gamedatas.material.cards[this.const.CARD_SUBTTYPE_EXPLORATION][card.type];
+            if(cardMaterial){
+                card.action = cardMaterial.action; 
+                card.contracts = cardMaterial.contracts; 
+            }
             
             if(container == `goa_exploration_discard`){
                 //use bga-cards stock
                 await this.explorationDiscard.addCard(card);
             } else if(container.startsWith(`goa_exploration_hand`)){
                 //use bga-cards stock
+                this.refreshHandCount(1);
                 await this.explorationHand.addCard(card);
                 this.updateHandSelectable(this.gamedatas.gamestate.args, false);
                 let currentPlayer = this.bga.players.getCurrentPlayer();

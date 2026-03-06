@@ -10,7 +10,8 @@ $card_height: var(--goa_explo_card_height);
     --bga-cards_card-border-radius: 5%;
     border-radius: var(--bga-cards_card-border-radius);
 
-    box-shadow: 0px 0px 0px 2px black;
+    //box-shadow: 0px 0px 0px 2px black;
+    --bga-cards_card-side_shadow-color: black !important;
 
     &.goa_card_log{
         //REDUCE SIZE
@@ -26,7 +27,7 @@ $card_height: var(--goa_explo_card_height);
 }
 
 .exploration_hand{
-
+/*
     //if we don't want the bga-cards rotated style, no need to keep more height
     --bga-cards_hand-stock-height : calc(1.05 * var(--goa_explo_card_height)) !important;
     .goa_exploration_card{
@@ -44,20 +45,62 @@ $card_height: var(--goa_explo_card_height);
         flex-direction: row;
         height: inherit !important;
     }
+
+*/ //-> change for ScrollableStock : 
+    &.scrollable-stock{
+        --gap: 10px !important;
+        margin: 5px 0px;
+        border: 2px solid #17768a;
+        border-radius: 15px;
+        //TODO JSA hide for opponents when no cards are displayed
+        button{
+            width: 25px !important;
+            color: white;
+            background-color: #17768a;
+            cursor: pointer;
+            font-size: x-large;
+            &.left{
+                border-radius: 10px 0px 0px 10px;
+            }
+            &.right{
+                border-radius: 0px 10px 10px 0px;
+                position: absolute;
+                right: 0;
+                height: 100%;
+            }
+        }
+        .bga-cards_card-side{
+            transition: transform .5s;
+        }
+        .scrollable-stock-inner{
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+            
+        .bga-cards_selected-card{
+            transform: translateY(calc(var(--bga-cards_card-height)/-10));
+        }
+        &[data-emptyhand="true"]{
+            display: none;
+        }
+    }
 }
 
 .exploration_hand{
     .hand-stock{
-        --bga-cards_hand-stock-floating-height:calc((var(--goa_board_display_scale) + 0.025) * var(--goa_explo_card_height)) !important; 
+        --bga-cards_hand-stock-floating-height:calc((var(--goa_hand_card_scale) + 0.025) * var(--goa_explo_card_height)) !important; 
+    }
+    &.scrollable-stock .goa_exploration_card{
+        margin: 5px;
     }
     .goa_exploration_card{
-        width: calc(var(--goa_board_display_scale) * $card_with);
-        height: calc(var(--goa_board_display_scale) * $card_height);
-        transform: scale(var(--goa_board_display_scale));
-        --bga-cards_card-width: calc(var(--goa_board_display_scale) * var(--goa_explo_card_with)) !important;
-        --bga-cards_card-height: calc(var(--goa_board_display_scale) * var(--goa_explo_card_height)) !important;
-        --bga-cards_card-effective-width: calc(var(--goa_board_display_scale) * var(--goa_explo_card_with)) !important;
-        --bga-cards_card-effective-height: calc(var(--goa_board_display_scale) * var(--goa_explo_card_height)) !important;
+        width: calc(var(--goa_hand_card_scale) * $card_with) !important;
+        height: calc(var(--goa_hand_card_scale) * $card_height) !important;
+        //transform: scale(var(--goa_hand_card_scale)) !important;
+        --bga-cards_card-width: calc(var(--goa_hand_card_scale) * var(--goa_explo_card_with)) !important;
+        --bga-cards_card-height: calc(var(--goa_hand_card_scale) * var(--goa_explo_card_height)) !important;
+        --bga-cards_card-effective-width: calc(var(--goa_hand_card_scale) * var(--goa_explo_card_with)) !important;
+        --bga-cards_card-effective-height: calc(var(--goa_hand_card_scale) * var(--goa_explo_card_height)) !important;
     }
 }
 
@@ -88,6 +131,7 @@ $card_height: var(--goa_explo_card_height);
             background-position-y: math.div(math.div($i - ($i % 7), 7) * 100%, 4);//5 columns , 5 rows
         }
     }
+
 }
 
 body.notouch-device{
