@@ -1873,6 +1873,12 @@ export class Game {
         this.bga.gameui.displayScoring(tileDiv, player_color, amount,800);
         await this.bga.gameui.wait(800); 
         scoreCounter.incValue(amount);
+        
+        if(this._counters[player_id].scoringRecap_total !=undefined){
+            //IF end scoring recap displayed
+            this._counters[player_id].scoringRecap_total.incValue(amount);
+            this._counters[player_id][`scoringRecap_${this.const.SCORING_TILES}`].incValue(amount);
+        }
     }
     
     async notif_addPointsWithSymbols (notif) {
