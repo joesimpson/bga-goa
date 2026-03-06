@@ -30,7 +30,7 @@ export class ClientFoundOutpost {
                    _("${you} must select a new outpost to establish with a base of ${n} ${icon_contracts}").replace('${icon_contracts}', this.game.formatIcon('contracts',_('Contracts'))).replace('${n}', baseContractsWithAction)
                 );
     
-        document.getElementById(`goa_board_outposts_1`).scrollIntoView({'behavior': 'smooth', 'block':'center'});
+        this.game.autoScrollTo(`goa_board_outposts_1`);
             
         this.game.outpostsTilesStocks.forEach((stock) => { 
             stock.setSelectionMode('single');

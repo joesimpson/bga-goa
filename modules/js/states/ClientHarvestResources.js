@@ -56,8 +56,7 @@ export class ClientHarvestResources {
 
         this.game.addButtonCloseClientState(args);
         
-        let harvestTopZone = document.getElementById(`goa_playerboard_top_zone-${activePlayer}`);
-        harvestTopZone.scrollIntoView({'behavior': 'smooth', 'block':'center'});
+        this.game.autoScrollTo(`goa_playerboard_top_zone-${activePlayer}`);
             
         let selectionHint = _('Select this tile field to fill');
         this.onSelectNSpiceSpots(harvestSpots, minSpices, maxSpices, (selectedResources, selectedShips, selectedContracts) => {
@@ -338,7 +337,7 @@ export class ClientHarvestResources {
                             `);
                         harvestResourcesZone = harvestTopZone.getElementsByClassName('goa_harvest_resources')[0]; 
                     }
-                    harvestResourcesZone.scrollIntoView({'behavior': 'smooth', 'block':'center'});
+                    this.game.autoScrollTo(harvestResourcesZone.id);
 
                     let possibleSpices = this.game.const.SPICES_ALL;
                     possibleSpices = harvestSpots[id]['spices'];

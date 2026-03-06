@@ -254,7 +254,7 @@ export class ClientSelectTileEffect {
                     //if(!tileToFill && isOutpost) tileToFill = document.getElementById(`goa_outpost-${tile_id}`);
                     if(tileToFill){
                         tileToFill.classList.add('selected');
-                        tileToFill.scrollIntoView({'behavior': 'smooth', 'block':'center'});
+                        this.game.autoScrollTo(tileToFill.id);
                     }
                     let spice_icon = this.game.formatSpiceIcon(choice);
                     this.bga.statusBar.addActionButton( spice_icon, () => {
@@ -292,7 +292,7 @@ export class ClientSelectTileEffect {
                         _('${you} must establish the outpost by spending ${n} ${icon_contracts} OR abandon to receive ${x} ${icon_contracts}').replaceAll('${icon_contracts}', icon_contracts).replace('${n}', missingContracts).replace('${x}', 1): 
                         _('${actplayer} must establish the outpost by spending ${n} ${icon_contracts} OR abandon to receive ${x} ${icon_contracts}').replaceAll('${icon_contracts}', icon_contracts).replace('${n}', missingContracts).replace('${x}', 1)
                     );
-                    document.getElementById(`goa_board_outposts_1`).scrollIntoView({'behavior': 'smooth', 'block':'center'});
+                    this.game.autoScrollTo(`goa_board_outposts_1`);
                     let tileToFound= document.getElementById(`goa_outpost-${tile_id}-front`);
                     if(tileToFound){
                         let colony = tileToFound.dataset.colony;

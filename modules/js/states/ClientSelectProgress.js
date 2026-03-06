@@ -19,8 +19,7 @@ export class ClientSelectProgress {
                     _("${you} must select an action track to improve on your board")
                 );
 
-        let progressTracksDiv = document.getElementById(`goa_player_progress_tracks-${activePlayer}`);
-        progressTracksDiv.scrollIntoView({'behavior': 'smooth', 'block':'center'});
+        this.game.autoScrollTo(`goa_player_progress_tracks-${activePlayer}`);
         
         if(args.withTile){
             let tileSelected = document.getElementById(`goa_tile-${args.withTile}`);

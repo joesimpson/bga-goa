@@ -200,7 +200,7 @@ export class Game {
                     <div>${text}</div>
                 </div>
             `;
-            this.bga.gameui.addTooltipHtml(`goa_board_round_cell_${round}`, tooltip);
+            this.addCustomTooltip(`goa_board_round_cell_${round}`, tooltip);
         }
         for(let round=this.const.NB_ROUNDS_DAY + 1;round<=this.const.NB_ROUNDS_DAY +this.const.NB_ROUNDS_NIGHT ;round++){
             let text = this.bga.gameui.format_string( 
@@ -211,7 +211,7 @@ export class Game {
                     <div>${text}</div>
                 </div>
             `;
-            this.bga.gameui.addTooltipHtml(`goa_board_round_cell_${round}`, tooltip);
+            this.addCustomTooltip(`goa_board_round_cell_${round}`, tooltip);
         }
         
         let currentPlayerNo = 1;
@@ -257,7 +257,7 @@ export class Game {
                     </div>
                 </div>
             `);
-            this.bga.gameui.addTooltipHtmlToClass(`goa_first_player_container`, _('Nazar Stone (Starting player)'));
+            this.addCustomTooltipToClass(`goa_first_player_container`, _('Nazar Stone (Starting player)'));
 
             this._counters[player.id] = {};
             this.createCounter(player.id,'exploration_hand_size',player.exploration_hand_size);
@@ -275,12 +275,12 @@ export class Game {
                 this.createCounter(player.id,'explo_symbol_tiny_5' , 0);
                 this.createCounter(player.id,'explo_symbol_tiny_6' , 0);
                 
-                this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_explo_symbol_tiny_1`, this.getCardSymbolName(1));
-                this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_explo_symbol_tiny_2`, this.getCardSymbolName(2));
-                this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_explo_symbol_tiny_3`, this.getCardSymbolName(3));
-                this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_explo_symbol_tiny_4`, this.getCardSymbolName(4));
-                this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_explo_symbol_tiny_5`, this.getCardSymbolName(5));
-                this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_explo_symbol_tiny_6`, this.getCardSymbolName(6));
+                this.addCustomTooltip(`goa_reserve_${player.id}_explo_symbol_tiny_1`, this.getCardSymbolName(1));
+                this.addCustomTooltip(`goa_reserve_${player.id}_explo_symbol_tiny_2`, this.getCardSymbolName(2));
+                this.addCustomTooltip(`goa_reserve_${player.id}_explo_symbol_tiny_3`, this.getCardSymbolName(3));
+                this.addCustomTooltip(`goa_reserve_${player.id}_explo_symbol_tiny_4`, this.getCardSymbolName(4));
+                this.addCustomTooltip(`goa_reserve_${player.id}_explo_symbol_tiny_5`, this.getCardSymbolName(5));
+                this.addCustomTooltip(`goa_reserve_${player.id}_explo_symbol_tiny_6`, this.getCardSymbolName(6));
             } 
             else {
                 document.getElementById(`goa_counter_${player.id}_money`).innerHTML = '???';
@@ -290,16 +290,16 @@ export class Game {
                 this.createCounter(player.id,'spices_'+spice ,player.spices[spice]);
             });
 
-            this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_exploration_hand_size`, _('Exploration cards'));
-            this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_money`, _('Number of Gold Pardau coins on money cards'));
-            this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_ships`, _('Number of Ships on ship cards'));
-            this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_contracts`, _('Number of Contracts on contract cards'));
-            this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_compasses`, _('Compass cards'));
-            this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_nbActions`, _('Round Actions'));
+            this.addCustomTooltip(`goa_reserve_${player.id}_exploration_hand_size`, _('Exploration cards'));
+            this.addCustomTooltip(`goa_reserve_${player.id}_money`, _('Number of Gold Pardau coins on money cards'));
+            this.addCustomTooltip(`goa_reserve_${player.id}_ships`, _('Number of Ships on ship cards'));
+            this.addCustomTooltip(`goa_reserve_${player.id}_contracts`, _('Number of Contracts on contract cards'));
+            this.addCustomTooltip(`goa_reserve_${player.id}_compasses`, _('Compass cards'));
+            this.addCustomTooltip(`goa_reserve_${player.id}_nbActions`, _('Round Actions'));
 
             
             this.const.SPICES_ALL.forEach((spice) => {
-                this.bga.gameui.addTooltipHtml(`goa_reserve_${player.id}_spices_${spice}`, this.getGoodsName(spice));
+                this.addCustomTooltip(`goa_reserve_${player.id}_spices_${spice}`, this.getGoodsName(spice));
             });
 
             let playerColoredName = this.bga.gameui.format_string(('${player_name}'), { player_name:this.coloredPlayerName(player.name)}) ;
@@ -446,7 +446,7 @@ export class Game {
             if('card' in args && 'card_icon' in args) {
                 args.card_icon = this.tplCard(args.card, '_log');
                 //tooltip won't work because element is not added yet
-                //this.bga.gameui.addTooltipHtmlToClass(`goa_card_log_${args.card.type}`, this.getCardTooltip(args.card));
+                //this.addCustomTooltipToClass(`goa_card_log_${args.card.type}`, this.getCardTooltip(args.card));
             }
             if('token' in args && 'token_icon' in args) {
                 args.token_icon = this.tplToken(args.token, '_log');
@@ -610,6 +610,32 @@ export class Game {
             this.destroy(node);
         });
         
+    }
+    addCustomTooltip(divId, html, delay) {
+        this.customDebug("addCustomTooltip", divId, delay);
+        if( document.getElementById("ebd-body").classList.contains("touch-device") ){
+            //AVOID touch screen problems with big tile/cards tooltips when we want to do actions 
+            // => disable tooltips on touch screen
+            return;
+        }
+
+        this.bga.gameui.addTooltipHtml(divId, html, delay);
+    }
+    addCustomTooltipToClass(className, html, delay) {
+        this.customDebug("addCustomTooltipToClass", className, delay);
+        if( document.getElementById("ebd-body").classList.contains("touch-device") ){
+            //AVOID touch screen problems with big tile/cards tooltips when we want to do actions 
+            // => disable tooltips on touch screen
+            return;
+        }
+
+        this.bga.gameui.addTooltipHtmlToClass(className, html, delay);
+    }
+
+    async autoScrollTo(divId){
+        this.customDebug("autoScrollTo", divId);
+        await this.bga.gameui.wait(100);
+        document.getElementById(divId).scrollIntoView({'behavior': 'smooth', 'block':'center'});
     }
 
     onClick(node, callback) {
@@ -1918,7 +1944,7 @@ export class Game {
                     div.dataset.id = card.id; 
                     div.dataset.type = card.type; 
                     div.dataset.colony = card.colony; 
-                    this.bga.gameui.addTooltipHtml(div.id, this.getTileTooltip(card), 0);
+                    this.addCustomTooltip(div.id, this.getTileTooltip(card), 0);
                 },
                 cardWidth: 108,
                 cardHeight: 108,
@@ -2005,7 +2031,7 @@ export class Game {
             else {//manual add
                 document.getElementById(container).insertAdjacentHTML('beforeend', this.tplTile(tile));
             }
-            this.bga.gameui.addTooltipHtml(`goa_tile-${tile.id}`, this.getTileTooltip(tile),0);
+            this.addCustomTooltip(`goa_tile-${tile.id}`, this.getTileTooltip(tile),0);
 
             tileDiv = document.getElementById(`goa_tile-${tile.id}`) ;
                 
@@ -2396,19 +2422,19 @@ export class Game {
                 for(let row=1;row<=5;row++){
                     if(!$(`goa_progress_row_header_${row}_${player.id}`)){
                         document.getElementById(`goa_player_progress_row_headers-${player.id}`).insertAdjacentHTML('beforeend', this.tplProgressRowHeader({'row':row, 'pId':player.id}));
-                        this.bga.gameui.addTooltipHtmlToClass(`goa_progress_row_header_${row}`, this.getBoardRowHeaderTooltip(row));
+                        this.addCustomTooltipToClass(`goa_progress_row_header_${row}`, this.getBoardRowHeaderTooltip(row));
                     }
                     if(!$(`goa_progress_row_end_${row}_${player.id}`)){
                         document.getElementById(`goa_player_progress_row_ends-${player.id}`).insertAdjacentHTML('beforeend', this.tplProgressRowEnd({'row':row, 'pId':player.id}));
                         let tooltipText = this.getBoardRowEndTooltip(row);
-                        if(tooltipText != '') this.bga.gameui.addTooltipHtmlToClass(`goa_progress_row_end_${row}`, tooltipText );
+                        if(tooltipText != '') this.addCustomTooltipToClass(`goa_progress_row_end_${row}`, tooltipText );
                         else $(`goa_progress_row_end_${row}_${player.id}`).classList.add('disabled');
                     }
                 }
 
                 for(let track=1;track<=5;track++){
                     if(!$(`goa_progress_header_${track}_${player.id}`)) document.getElementById(`goa_player_progress_headers-${player.id}`).insertAdjacentHTML('beforeend', this.tplProgressHeader({'track':track, 'pId':player.id}));
-                    this.bga.gameui.addTooltipHtmlToClass(`goa_progress_header_${track}`, this.getActionBoardTooltip(track));
+                    this.addCustomTooltipToClass(`goa_progress_header_${track}`, this.getActionBoardTooltip(track));
 
                     let progress_track = `goa_progress_track_${track}_${player.id}`;
                     if(!$(progress_track)) document.getElementById(`goa_player_progress_tracks-${player.id}`).insertAdjacentHTML('beforeend', this.tplProgressTrack({'track':track, 'pId':player.id}));
@@ -2710,7 +2736,7 @@ export class Game {
                         div.dataset.action = cardMaterial.action; 
                         div.dataset.contracts = cardMaterial.contracts; 
                     }
-                    this.bga.gameui.addTooltipHtml(div.id, this.getCardTooltip(card));
+                    this.addCustomTooltip(div.id, this.getCardTooltip(card));
                 },
                 cardWidth: 131,
                 cardHeight: 200,
