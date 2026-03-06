@@ -1703,6 +1703,20 @@ export class Game {
         this._counters[notif.player_id]['spices_'+spice_type ].incValue(1);
         
     }
+    
+    async notif_newSpices(notif) {
+        this.customDebug("notif_newSpices",notif);
+        let tokens = notif.tokens;
+        let voidDiv = document.getElementById('goa_top_zone');
+        let animations = Object.values(tokens).map(token => (async() => {
+            let tokenDiv = this.addToken(token);
+            await this.animationManager.slideIn(tokenDiv, voidDiv, {duration: 800});
+            let spice_type = token.spice;
+            this._counters[notif.player_id]['spices_'+spice_type ].incValue(1);
+        }));
+        await this.animationManager.playInterval(animations);
+        
+    }
     async notif_removeTileSpices(notif) {
         this.customDebug("notif_removeTileSpices",notif);
         let tile_id = notif.tile_id;

@@ -645,6 +645,31 @@ class Notifications
    * @param Player $player
    * @param Collection $tokens
    */
+  public static function newSpices(Player $player,Collection $tokens)
+  {
+    $nTokens = $tokens->count();
+    if($nTokens == 0) return;
+    $sortedTokens = $tokens->ui();
+    usort($sortedTokens, function ($a,$b)  {
+      return $a["spice"] <=>  $b["spice"];
+    });
+    $sortedTokensNames = $tokens->map(function($token) {return $token->getGoodsName();})->toArray();
+    $msg = clienttranslate('${player_name} places ${n} Goods tokens ${token_icons} on their tiles');
+    self::notifyAll('newSpices', $msg, [
+      'player' => $player,
+      'n' => $nTokens,
+      'tokens' => $sortedTokens,
+      'token_icons' => $sortedTokensNames,
+      'preserve'=>['tokens',],
+
+      'i18n' => ['token_icons'],
+      'separator' => ['token_icons' => ' '],
+    ]);
+  }
+    /**
+   * @param Player $player
+   * @param Collection $tokens
+   */
   public static function removeSpices(Player $player,Collection $tokens)
   {
     $nTokens = $tokens->count();

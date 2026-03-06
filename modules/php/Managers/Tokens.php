@@ -112,7 +112,7 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
     return self::DB()->delete($tokenId);
   }
   
-  public static function addSpiceOnTile(Tile $tile,Player $player,int $tokenType,int $position): TokenSpice
+  public static function addSpiceOnTile(Tile $tile,Player $player,int $tokenType,int $position, bool $sendNotif = true): TokenSpice
   {
     $token = [
       'type' => $tokenType,
@@ -123,7 +123,7 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
       'token_row' => $position,
     ];
     $elt = self::singleCreate($token);
-    Notifications::newSpiceOnTile($player,$elt,$tile);
+    if($sendNotif) Notifications::newSpiceOnTile($player,$elt,$tile);
     Stats::inc("receivedSpices", $player);
     Game::get()->trace("addSpiceOnTile($tokenType,$position) result = ".json_encode($elt));
     return $elt;

@@ -15,6 +15,7 @@ use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Exceptions\PrematureStateChangeException;
 use Bga\Games\Goa\Exceptions\UnexpectedException;
 use Bga\Games\Goa\Game;
+use Bga\Games\Goa\Helpers\Collection;
 use Bga\Games\Goa\Helpers\GridUtils;
 use Bga\Games\Goa\Helpers\Log;
 use Bga\Games\Goa\Helpers\Utils;
@@ -644,6 +645,7 @@ class PlayerTurn extends GameState
             Players::registerNewAction($player,'actHarvest');
         }
 
+        $tokenSpices = [];
         //LOOP TO FILL SPOTS with specified resources
         foreach($uniqueSpots as $k => $spotId){
             $slotPosition = $harvestSpots[$spotId]['index'];
@@ -651,8 +653,9 @@ class PlayerTurn extends GameState
             $tile = Tiles::get($spot_tile_id);
             $resource = $resources[$k];
             $spiceTokenType = Tokens::getTokenSpiceTypeFromSpice($resource);
-            Tokens::addSpiceOnTile($tile, $player, $spiceTokenType, $slotPosition);
+            $tokenSpices[] = Tokens::addSpiceOnTile($tile, $player, $spiceTokenType, $slotPosition,false);
         }
+        Notifications::newSpices($player, new Collection($tokenSpices));
         if(in_array(ACTION_SHIP,$others)){
             Players::giveShips($player, $ships);
         }

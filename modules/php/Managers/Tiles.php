@@ -236,6 +236,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
     //FILL tile spices_slots
     $slots = $tile->getSpice_slots();
     $slotPosition = 0;
+    $tokenSpices = [];
     foreach($slots as $spice){
       $slotPosition++;
       
@@ -247,9 +248,10 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
       }
       else {
         $spiceTokenType = Tokens::getTokenSpiceTypeFromSpice($spice);
-        Tokens::addSpiceOnTile($tile, $player, $spiceTokenType, $slotPosition);
+        $tokenSpices[] = Tokens::addSpiceOnTile($tile, $player, $spiceTokenType, $slotPosition,false);
       }
     }
+    Notifications::newSpices($player, new Collection($tokenSpices));
     
     if(isset($stateExc)) {
       throw $stateExc;
