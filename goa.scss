@@ -168,7 +168,7 @@ html {
             font-size: 20px;
             .goa_player_table_title_content{
                 background-color: white;
-                outline: 3px solid black;
+                box-shadow: 0px 0px 0px 3px black;
                 border-radius: 20px;
                 padding: 5px 15px;
             }
@@ -213,7 +213,7 @@ html {
     overflow: hidden;
     vertical-align: middle;
     margin-right: 10px;
-    outline: 3px solid black;
+    box-shadow: 0px 0px 0px 3px black;
 }
 
 .goa_action_desc{
