@@ -144,6 +144,7 @@ class EndSession extends \Bga\GameFramework\States\GameState
                 $mostCoinsPlayers[] = $pId;//add
             }
             $player->setTieBreakerPoints($coins);
+            Notifications::revealMoney($player, $coins);
         }
         foreach($players as $pId => &$player){
             if(!in_array($pId, $mostCoinsPlayers)) continue;

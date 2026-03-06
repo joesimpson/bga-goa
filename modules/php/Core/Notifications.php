@@ -459,6 +459,16 @@ class Notifications
       ]);
     }
   }
+  
+  public static function revealMoney(Player $player, int $amount, )
+  {
+    self::notifyAll("revealMoney", clienttranslate('${player_name} has ${n} ${icon_money}'), [
+        "player" => $player,
+        "n" => $amount,
+        "icon_money" => clienttranslate('Pardaos'),
+        "i18n" => ['icon_money'],
+    ]);
+  }
 
   public static function espionage(Player $player, Player $opponent, int $track)
   {
