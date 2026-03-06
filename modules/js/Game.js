@@ -40,7 +40,7 @@ var isDebug = window.location.host == 'studio.boardgamearena.com' || window.loca
     
 export class Game {
     
-    customDebug = isDebug ? console.log.bind(window.console) : function () {};
+    customDebug = isDebug ? console.info.bind(window.console) : function () {};
 
     constructor(bga) {
         this.customDebug('goa constructor');

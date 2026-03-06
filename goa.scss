@@ -14,16 +14,16 @@
  */ 
 
 @use "sass:math";
-@use "modules/css/variables.scss";
-@use "modules/css/scoring.scss";
-@use "modules/css/board.scss";
-@use "modules/css/icons.scss";
-@use "modules/css/tokens.scss";
-@use "modules/css/cards.scss";
-@use "modules/css/tiles.scss";
-@use "modules/css/playerpanel.scss";
-@use "modules/css/ext/bga-help.css";
-@use "modules/css/ext/bga-zoom.css";
+@use "src/css/variables.scss";
+@use "src/css/scoring.scss";
+@use "src/css/board.scss";
+@use "src/css/icons.scss";
+@use "src/css/tokens.scss";
+@use "src/css/cards.scss";
+@use "src/css/tiles.scss";
+@use "src/css/playerpanel.scss";
+@use "src/css/ext/bga-help.css";
+@use "src/css/ext/bga-zoom.css";
 
 #goa_overall_background{
     background-position: 0%;
