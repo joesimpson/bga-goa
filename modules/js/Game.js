@@ -2488,7 +2488,9 @@ export class Game {
         if(token.subtype == this.const.TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER) 
             return `<div id="goa_token${prefix}-${token.id}" class="goa_token goa_token${prefix} goa_first_auction_marker" data-id="${token.id}" ></div>`;
         if(token.subtype == this.const.TOKEN_SUBTTYPE_SPICE) 
-            return `<div id="goa_token${prefix}-${token.id}" class="goa_token goa_token${prefix} goa_spice" data-id="${token.id}" data-type="${token.type}" data-pid="${token.pId}" data-state="${token.state}" data-spice="${token.spice}" title="${this.getGoodsName(token.spice)}"></div>`;
+            return `<div id="goa_token${prefix}-${token.id}" class="goa_token goa_token${prefix} goa_spice" data-id="${token.id}" data-type="${token.type}" data-pid="${token.pId}" data-state="${token.state}" data-spice="${token.spice}" title="${this.getGoodsName(token.spice)}">
+                    ${this.formatIcon('spice_shadow')}
+                </div>`;
         return '';
     }
     tplProgressTrack(datas) {

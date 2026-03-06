@@ -1277,6 +1277,18 @@ body.notouch-device .goa_tile:hover .goa_token:not(.selectable) {
   background-size: 458.0152671756% 129.4117647059%;
 }
 
+.goa_icon_spice_shadow {
+  position: absolute;
+  left: -5px;
+  top: -5px;
+  width: 48px;
+  height: 49px;
+  background-image: url("img/icons.png");
+  background-position-x: -747.5294117647px;
+  background-position-y: 0px;
+  background-size: 1764.7058823529% 458.3333333333%;
+}
+
 .goa_spice[data-spice="1"], .goa_spice[data-type="31"] {
   width: 38px;
   height: 39px;

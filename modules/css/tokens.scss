@@ -81,10 +81,20 @@
     @include goa_icons_sprite(202px,0px,30px,30px,262px,255px);
 }
 
+
+//to fit on tile spot
+$spice_width: 38px;
+$spice_height: 39px;
+
+    .goa_icon_spice_shadow{
+        //drop shadow  made on gimp
+        position: absolute;
+        left: -5px;
+        top: -5px;
+        @include goa_icons_sprite(1059px,0px,calc($spice_width + 10px),calc($spice_height + 10px),68px,72px);
+    }
+
 .goa_spice {
-    //to fit on tile spot
-    $spice_width: 38px;
-    $spice_height: 39px;
     &[data-spice="1"],//SPICE_WHITE
     &[data-type="31"]{//TOKEN_TYPE_SPICE_WHITE
         @include goa_icons_sprite(473px,0px, $spice_width,$spice_height,113px,119px);
