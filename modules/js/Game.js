@@ -186,8 +186,8 @@ export class Game {
                     <div id="goa_box_tiles">
                     </div>
                 </div>
-                <div id="goa_floating_hand_holder">
-                </div>
+            </div>
+            <div id="goa_floating_hand_holder">
             </div>
         `);
 
