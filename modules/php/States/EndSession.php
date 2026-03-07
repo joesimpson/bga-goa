@@ -77,7 +77,7 @@ class EndSession extends \Bga\GameFramework\States\GameState
      *   Victory points for a Mission tile.
      * 
      */
-    public static function computeScoring(int $session){
+    public static function computeScoring(int $session) : array{
        
         Notifications::computeScoring($session);
         $players = Players::getAll();
@@ -189,5 +189,7 @@ class EndSession extends \Bga\GameFramework\States\GameState
         $endScoringDatas = Globals::getEndScoring();
         $endScoringDatas[$session] = $sessionScoringDatas;
         Globals::setEndScoring($endScoringDatas);
+
+        return $endScoringDatas;
     }
 }

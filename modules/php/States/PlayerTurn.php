@@ -756,7 +756,7 @@ class PlayerTurn extends GameState
     
     public static function actFoundOutpost_content(
         int $tile_id, 
-        int|null $card_id = null,
+        int|null $card_id,
         Player $player, 
         int $progressRefPlayerId,
         array $args,
@@ -803,7 +803,6 @@ class PlayerTurn extends GameState
             $playerChoices[] = ACTION_FOUND_FORWARD;
         }
         $playerChoices[] = ACTION_FOUND_ABANDON;//always possible
-
         
         Effects::addEffectOnTile($player,$tile_id, EFFECT_TYPE_FOUND_TILE, $missingContracts, $playerChoices, ACTION_TYPE_FOUND);
     }

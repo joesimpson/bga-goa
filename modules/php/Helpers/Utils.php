@@ -21,7 +21,7 @@ use Bga\Games\Goa\States\NextPlayer;
 use Bga\Games\Goa\States\PlayerChoice;
 use Bga\Games\Goa\States\PlayerTurn;
 
-abstract class Utils {
+class Utils {
 
     /**
      * @return int state id to use with specified State class
@@ -188,9 +188,6 @@ abstract class Utils {
         return $result;
     }
 
-
-
-    
     public static function getNbContractsForColony(int $colony){
         switch(($colony)){
             case COLONY_KOLLAM:
@@ -201,6 +198,7 @@ abstract class Utils {
             default: return 0;
         }
     }
+
     public static function getColonyName(int $colony){
         switch(($colony)){
             case COLONY_KOLLAM: return clienttranslate('Kollam');

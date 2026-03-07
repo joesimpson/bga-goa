@@ -178,3 +178,20 @@ Many options could be added in the future :
 }
 ```
 
+
+# Unit tests
+
+Some unit tests are defined in [tests](/tests) as advised in [BGA Tutorial](https://en.doc.boardgamearena.com/Tutorial_reversi#Optional:_add_unit_tests).
+
+Phpunit no longer supports static methods testing, so tests are very limited until project Classes are rewritten (for example calls to `Game::get()`).
+
+Requires : [local php client](https://www.php.net/downloads.php?usage=cli&os=windows&osvariant=windows-downloads&version=8.4) and  [Composer](https://getcomposer.org/download/)
+
+Command : 
+```
+vendor/bin/phpunit --colors --display-errors --display-deprecation --bootstrap tests/bootstrap.php '.\tests'
+```
+For now : 
+```
+vendor/bin/phpunit --colors --display-errors --display-deprecation --bootstrap tests/bootstrap.php '.\tests\Helpers\'
+```
