@@ -8,4 +8,9 @@ namespace {
     {
         return $text; 
     }
+    
+    function mysql_escape_string(string $a): string
+    {
+        return $a;
+    }
 }
