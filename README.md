@@ -1,3 +1,6 @@
+
+[![PHP Composer](https://github.com/joesimpson/bga-goa/actions/workflows/php.yml/badge.svg?branch=master&event=push)](https://github.com/joesimpson/bga-goa/actions/workflows/php.yml)
+
 # bga-goa
 Board game adaptation of "Goa" (2026 version) for Board Game Arena website
 This code has been produced on the BGA studio platform for use on http://boardgamearena.com.
