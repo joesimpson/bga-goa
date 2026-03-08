@@ -299,7 +299,7 @@ class Pieces extends DB_Manager
   /**
    * Get max or min state of the specific location where each player has its own
    */
-  public static function getExtremePositionOnPlayerLocation($getMax, string $location, int $playerId, int $id = null)
+  public static function getExtremePositionOnPlayerLocation(bool $getMax, string $location, int $playerId, int|null $id = null)
   {
     $whereOp = self::checkLocation($location, true);
     $query = self::DB();
