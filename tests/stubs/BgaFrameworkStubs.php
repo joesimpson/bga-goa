@@ -33,20 +33,24 @@ abstract class Table
 
     public function error(string $message): void
     {
-        echo "ERROR : $message\n";
+        //echo "ERROR : $message\n";
+        fwrite(STDOUT, print_r("ERROR : $message\n", TRUE));
     }
     
     public function dump(string $message): void
     {
-        echo "DUMP : $message\n";
+        //echo "DUMP : $message\n";
+        fwrite(STDOUT, print_r("DUMP : $message\n", TRUE));
     }
     final public function debug(string $message): void
     {
-        echo "DEBUG : $message\n";
+        //echo "DEBUG : $message\n";
+        fwrite(STDOUT, print_r("DEBUG : $message\n", TRUE));
     }
     final public function trace(string $message): void
     {
-        echo "TRACE : $message\n";
+        //echo "TRACE : $message\n";
+        fwrite(STDOUT, print_r("TRACE : $message\n", TRUE));
     }
     protected function initGameStateLabels(array $stateLabels): void
     {
@@ -72,22 +76,25 @@ abstract class Table
 
     public static function getUniqueValueFromDb(string $sql): mixed
     {
+        fwrite(STDOUT, print_r("getUniqueValueFromDb($sql)\n", TRUE));
         return null;
     }
 
     public function getCollectionFromDb(string $sql, bool $singleColumn = false): array
     {
+        fwrite(STDOUT, print_r("getCollectionFromDb($sql)\n", TRUE));
         return [];
     }
     public static function getObjectListFromDB(string $sql, bool $bUniqueValue = false): array
     {
-        echo "getObjectListFromDB($sql)\n";
+        //echo "getObjectListFromDB($sql)\n";
+        fwrite(STDOUT, print_r("getObjectListFromDB($sql)\n", TRUE));
         switch($sql){
             case 'SELECT name AS `result_associative_index` , `value` , `name` FROM `bga_globals`':
                 return [
                     ['name' => 'session', 'value' => 1, 'result_associative_index' => 'session'],
                     ['name' => 'round', 'value' => 1, 'result_associative_index' => 'round'],
-                    ['name' => 'roundStep', 'value' => ROUND_STEP_PLAYER_ACTIONS, 'result_associative_index' => 'roundStep'],
+                    ['name' => 'roundStep', 'value' => 1, 'result_associative_index' => 'roundStep'],
                 ];
         }
         if( str_starts_with( $sql, 'SELECT *, player_id AS `result_associative_index` FROM `player`' ))
@@ -104,6 +111,7 @@ abstract class Table
     }
     public function getDoubleKeyCollectionFromDB(string $sql, bool $nullIfEmpty = false): array
     {
+        fwrite(STDOUT, print_r("getDoubleKeyCollectionFromDB($sql)\n", TRUE));
         return [];
     }
     public static function DbAffectedRow(): int

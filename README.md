@@ -198,3 +198,5 @@ For now :
 ```
 vendor/bin/phpunit --colors --display-errors --display-deprecation --bootstrap tests/bootstrap.php '.\tests\Helpers\'
 ```
+
+Some code coverage may be found in [dashboard.html](/testsresults/coverage/dashboard.html) after running `composer test:coverage`.
