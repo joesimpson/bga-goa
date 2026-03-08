@@ -19,6 +19,9 @@ jobs:
 
     #- name: Validate composer.json and composer.lock
     #  run: composer validate --strict
+    
+    - name: Update composer.lock
+      run: composer update
 
     - name: Cache Composer packages
       id: composer-cache
