@@ -29,6 +29,144 @@ class GameMock extends Game {
     {
         parent::__construct();
     }
+
+    public function getStatTypes(){
+        $stats = json_decode('{
+                "table": {
+
+                },
+                "player": {
+                "score": {
+                    "id": 11,
+                    "name": "Score",
+                    "type": "int"
+                },
+                "turnOrder": {
+                    "id": 13,
+                    "name": "Turn order",
+                    "type": "int"
+                }
+                
+                ,"totalMoney": {
+                    "id": 15,
+                    "name": "Total Pardaos coins",
+                    "type": "int"
+                }
+                ,"totalShips": {
+                    "id": 16,
+                    "name": "Total Ships",
+                    "type": "int"
+                }
+                ,"totalContracts": {
+                    "id": 17,
+                    "name": "Total Contracts",
+                    "type": "int"
+                }
+                ,"totalCompasses": {
+                    "id": 18,
+                    "name": "Total Compasses",
+                    "type": "int"
+                }
+                
+                ,"progressShips": {
+                    "id": 21,
+                    "name": "Progress row : Build Ships",
+                    "type": "int"
+                }
+                ,"progressHarvest": {
+                    "id": 22,
+                    "name": "Progress row : Produce",
+                    "type": "int"
+                }
+                ,"progressTaxes": {
+                    "id": 23,
+                    "name": "Progress row : Collect Taxes",
+                    "type": "int"
+                }
+                ,"progressExploration": {
+                    "id": 24,
+                    "name": "Progress row : Explore",
+                    "type": "int"
+                }
+                ,"progressFound": {
+                    "id": 25,
+                    "name": "Progress row : Establish an Outpost",
+                    "type": "int"
+                }
+                
+                ,"auctionsWon": {
+                    "id": 30,
+                    "name": "Auctions won",
+                    "type": "int"
+                }
+                
+                ,"playedPlantations": {
+                    "id": 31,
+                    "name": "Played depots",
+                    "type": "int"
+                }
+                ,"playedOutposts": {
+                    "id": 32,
+                    "name": "Played outposts",
+                    "type": "int"
+                }
+                
+                ,"receivedSpices": {
+                    "id": 33,
+                    "name": "Received goods on depots/outposts fields",
+                    "type": "int"
+                }
+                
+                ,"playedTiles": {
+                    "id": 34,
+                    "name": "Played other tiles",
+                    "type": "int"
+                }
+                
+                ,"playedExplorations": {
+                    "id": 35,
+                    "name": "Played Exploration cards",
+                    "type": "int"
+                }
+
+                ,"actionA": {
+                    "id": 40,
+                    "name": "Progress",
+                    "type": "int"
+                }
+                ,"actionB": {
+                    "id": 41,
+                    "name": "Build Ships",
+                    "type": "int"
+                }
+                ,"actionC": {
+                    "id": 42,
+                    "name": "Produce",
+                    "type": "int"
+                }
+                ,"actionD": {
+                    "id": 43,
+                    "name": "Collect Taxes",
+                    "type": "int"
+                }
+                ,"actionE": {
+                    "id": 44,
+                    "name": "Explore",
+                    "type": "int"
+                }
+                ,"actionF": {
+                    "id": 45,
+                    "name": "Establish an Outpost",
+                    "type": "int"
+                }
+                
+                },
+                "value_labels": { 
+                }
+            }', true);
+        //$this->dump("StatsTypes : ", $stats);
+        return $stats;
+    }
 }
 
 class GamestateMachineMock extends \Bga\GameFramework\GamestateMachine
@@ -48,10 +186,11 @@ abstract class Table
         fwrite(STDOUT, print_r("ERROR : $message\n", TRUE));
     }
     
-    public function dump(string $message): void
+    public function dump(string $message, mixed $object): void
     {
         //echo "DUMP : $message\n";
         fwrite(STDOUT, print_r("DUMP : $message\n", TRUE));
+        fwrite(STDOUT, print_r($object, TRUE));
     }
     final public function debug(string $message): void
     {
@@ -107,6 +246,7 @@ abstract class Table
                     ['name' => 'session', 'value' => 1, 'result_associative_index' => 'session'],
                     ['name' => 'round', 'value' => 1, 'result_associative_index' => 'round'],
                     ['name' => 'roundStep', 'value' => 1, 'result_associative_index' => 'roundStep'],
+                    ['name' => 'endScoring', 'value' => '[]', 'result_associative_index' => 'endScoring'],
                 ];
             case "SELECT *, token_id AS `result_associative_index` FROM `tokens` WHERE `type` = ".TOKEN_TYPE_FIRSTAUCTION_MARKER." AND `subType` = ".TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER:
                 fwrite(STDOUT, print_r("MOCK select first  token\n", TRUE));
@@ -124,13 +264,17 @@ abstract class Table
                 fwrite(STDOUT, print_r("MOCK select player 2 progress tokens \n", TRUE));
                 return [
                      ['token_id' => 16, 'token_state' => 0, 'token_location'=>TOKEN_LOCATION_PLAYER_BOARD,'type' => TOKEN_TYPE_PROGRESS_MARKER_SHIPS, 'subtype' => TOKEN_SUBTTYPE_PROGRESS_MARKER,'token_row' => 1, 'token_col' => 1,  'player_id' => 2,  'result_associative_index' => 16,  ],
-                    ['token_id' => 20, 'token_state' => 0, 'token_location'=>TOKEN_LOCATION_PLAYER_BOARD,'type' => TOKEN_TYPE_PROGRESS_MARKER_OUTPOST, 'subtype' => TOKEN_SUBTTYPE_PROGRESS_MARKER,'token_row' => 1, 'token_col' => 5,  'player_id' => 2,  'result_associative_index' => 20,  ],
+                     ['token_id' => 17, 'token_state' => 0, 'token_location'=>TOKEN_LOCATION_PLAYER_BOARD,'type' => TOKEN_TYPE_PROGRESS_MARKER_HARVEST, 'subtype' => TOKEN_SUBTTYPE_PROGRESS_MARKER,'token_row' => 1, 'token_col' => 2,  'player_id' => 2,  'result_associative_index' => 17,  ],
+                     ['token_id' => 17, 'token_state' => 0, 'token_location'=>TOKEN_LOCATION_PLAYER_BOARD,'type' => TOKEN_TYPE_PROGRESS_MARKER_TAXES, 'subtype' => TOKEN_SUBTTYPE_PROGRESS_MARKER,'token_row' => 1, 'token_col' => 3,  'player_id' => 2,  'result_associative_index' => 17,  ],
+                     ['token_id' => 18, 'token_state' => 0, 'token_location'=>TOKEN_LOCATION_PLAYER_BOARD,'type' => TOKEN_TYPE_PROGRESS_MARKER_EXP, 'subtype' => TOKEN_SUBTTYPE_PROGRESS_MARKER,'token_row' => 2, 'token_col' => 4,  'player_id' => 2,  'result_associative_index' => 18,  ],
+                    ['token_id' => 19, 'token_state' => 0, 'token_location'=>TOKEN_LOCATION_PLAYER_BOARD,'type' => TOKEN_TYPE_PROGRESS_MARKER_OUTPOST, 'subtype' => TOKEN_SUBTTYPE_PROGRESS_MARKER,'token_row' => 1, 'token_col' => 5,  'player_id' => 2,  'result_associative_index' => 20,  ],
                 ];
             case "SELECT *, token_id AS `result_associative_index` FROM `tokens` WHERE `subtype` = 4 AND `player_id` = 2":
                 fwrite(STDOUT, print_r("MOCK select spice tokens \n", TRUE));
                 return [
                     ['token_id' => 21, 'token_state' => 1, 'token_location'=> TOKEN_LOCATION_TILE.'1' ,'type' => TOKEN_TYPE_SPICE_GREEN, 'subtype' => TOKEN_SUBTTYPE_SPICE,'token_row' => 1, 'token_col' => 1,  'player_id' => 2,  'result_associative_index' => 21,  ],
                     ['token_id' => 22, 'token_state' => 2, 'token_location'=> TOKEN_LOCATION_TILE.'2' ,'type' => TOKEN_TYPE_SPICE_GREEN, 'subtype' => TOKEN_SUBTTYPE_SPICE,'token_row' => 1, 'token_col' => 2,  'player_id' => 2,  'result_associative_index' => 22,  ],
+                    ['token_id' => 23, 'token_state' => 1, 'token_location'=> TOKEN_LOCATION_TILE.'3' ,'type' => TOKEN_TYPE_SPICE_PINK, 'subtype' => TOKEN_SUBTTYPE_SPICE,'token_row' => 1, 'token_col' => 1,  'player_id' => 2,  'result_associative_index' => 23,  ],
                 ];
             case 'SELECT *, player_id AS `result_associative_index` FROM `player` WHERE  `player_id` = 1 LIMIT 1': 
                 fwrite(STDOUT, print_r("MOCK select  player one \n", TRUE));
@@ -142,12 +286,20 @@ abstract class Table
                 return [
                     ['player_id' => 2, 'ships' => 15 ,'player_name' => 'Player_2', 'result_associative_index' => 2],
                     ];
+            case 'SELECT player_score,player_id FROM `player` WHERE `player_id` = 2':
+                return [
+                    ['player_id' => 2, 'player_score' => 27 ],
+                ];
+            case 'SELECT stats_value,stats_id FROM `stats` WHERE `stats_type` = 11 AND `stats_player_id` = 2':
+                return [
+                    ['stats_id' => 1, 'stats_value' => 27 ],
+                ];
         }
         if( str_starts_with( $sql, 'SELECT *, player_id AS `result_associative_index` FROM `player`' )){
             fwrite(STDOUT, print_r("MOCK select players\n", TRUE));
             return [
-                ['player_id' => 1, 'ships' => 12 ,'player_name' => 'Player_1', 'result_associative_index' => 1],
-                ['player_id' => 2, 'ships' => 15 ,'player_name' => 'Player_2', 'result_associative_index' => 2],
+                ['player_id' => 1, 'money' => 87 ,'ships' => 12 ,'player_name' => 'Player_1', 'result_associative_index' => 1],
+                ['player_id' => 2, 'money' => 88 ,'ships' => 15 ,'player_name' => 'Player_2', 'result_associative_index' => 2],
                 ];
         }
         if( str_starts_with( $sql,'SELECT *, token_id AS `result_associative_index` FROM `tokens` WHERE `subType` = '.TOKEN_SUBTTYPE_AUCTION_MARKER)){
@@ -158,7 +310,7 @@ abstract class Table
                 ];
         }
 
-        fwrite(STDOUT, print_r("don't know what to return for this request\n", TRUE));
+        fwrite(STDOUT, print_r(" /!\ __ don't know what to return for this request __ /!\ \n", TRUE));
         return [];
     }
 

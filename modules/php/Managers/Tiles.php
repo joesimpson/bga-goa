@@ -613,7 +613,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
   public static function playTile(
     Player &$player,
     int $tileId, 
-    array|null $coords = null, 
+    array|null $coords, 
     bool &$doCheckpoint, 
     PrematureStateChangeException| null &$stateChange = null,
   ): Tile

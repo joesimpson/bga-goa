@@ -15,7 +15,7 @@
   }
 
   ,"scripts": {
-    "test": "@php vendor/bin/phpunit --colors --display-errors --bootstrap tests/bootstrap.php tests",
-    "test:coverage": "@php -dxdebug.mode=coverage vendor/bin/phpunit --colors --display-errors --bootstrap tests/bootstrap.php tests --coverage-html testsresults\\coverage/"
+    "test": "@php vendor/bin/phpunit --colors --display-errors --display-deprecation --bootstrap tests/bootstrap.php tests --testdox-html testsresults/results.html",
+    "test:coverage": "@php -dxdebug.mode=coverage vendor/bin/phpunit --colors --display-errors --display-deprecation --bootstrap tests/bootstrap.php tests --testdox-html testsresults/results.html --coverage-html testsresults\\coverage/"
   }
 }
