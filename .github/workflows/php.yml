@@ -40,5 +40,5 @@ jobs:
 
     - name: Run test suite
     #  run: vendor/bin/phpunit --colors --display-errors --display-deprecation --bootstrap tests/bootstrap.php 'tests'
-      run: composer test:coverage
+      run: composer test:github
 
