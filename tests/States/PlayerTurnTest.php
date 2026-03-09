@@ -1,0 +1,384 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Tests\States;
+
+use Bga\GameFramework\Bga;
+use Bga\GameFramework\GameMock;
+use Bga\GameFramework\GamestateMachineMock;
+use Bga\GameFramework\Notify;
+use Bga\GameFramework\Table;
+use Bga\GameFramework\UserException;
+use Bga\Games\Goa\Core\Globals;
+use Bga\Games\Goa\Exceptions\UnexpectedException;
+use Bga\Games\Goa\States\PlayerTurn;
+use PHPUnit\Framework\TestCase;
+
+final class PlayerTurnTest extends TestCase
+{
+    /**
+     * @before
+     */
+    public function setupTest(): void
+    {
+        Table::$test_activePlayerId = 1;
+    }
+    
+    private function createGameMock()
+    {
+        $mock = new GameMock();
+        $mock->gamestate = new GamestateMachineMock();
+        $mock->bga = new Bga($mock);
+        $mock->notify = new Notify($mock);
+        $roundStep = ROUND_STEP_PLAYER_ACTIONS;
+        Globals::setRoundStep($roundStep);
+        return $mock;
+    }
+    
+    public function testActionProgress_Exception_With_Wrong_Version(): void
+    {
+        logForTests(__FUNCTION__);
+        $game = $this->createGameMock();
+        $state = new PlayerTurn($game);
+        $activePlayerId = 1;
+        $gameVersion = 999;
+
+        $this->expectException(UserException::class);
+        $this->expectExceptionMessage('!!!checkVersion');
+        $state->actProgress(1,  [], null, null, $activePlayerId, [],
+            $gameVersion
+        );
+    }
+    
+    public function testActionProgress_Exception_Wrong_Track(): void
+    {
+        logForTests(__FUNCTION__);
+        $game = $this->createGameMock();
+        $state = new PlayerTurn($game);
+        $activePlayerId = 1;
+        $gameVersion = 999999;
+        $args = $state->getArgs();
+        $tokens_ids = [23];
+        $track = 12;
+
+        $this->expectException(UnexpectedException::class);
+        $this->expectExceptionMessage('Invalid track to progress on (12)');
+        $state->actProgress($track, 
+            $tokens_ids, 
+            null, 
+            null, 
+            $activePlayerId, 
+            $args,
+            $gameVersion
+        );
+    }
+    
+    public function testActionProgress_Track1_Pass(): void
+    {
+        logForTests(__FUNCTION__);
+        $game = $this->createGameMock();
+        $state = new PlayerTurn($game);
+        $activePlayerId = 1;
+        Table::$test_activePlayerId = $activePlayerId;
+        $gameVersion = 999999;
+        $args = $state->getArgs();
+        $track = 1;
+
+        $tokens_ids = [27,28,29,30];
+        $newState = $state->actProgress($track, 
+            $tokens_ids, 
+            null, 
+            null, 
+            $activePlayerId, 
+            $args,
+            $gameVersion
+        );
+        self::assertSame(PlayerTurn::class, $newState );
+        
+        $tokens_ids = [27,29,30,32];
+        $newState = $state->actProgress($track, 
+            $tokens_ids, 
+            null, 
+            null, 
+            $activePlayerId, 
+            $args,
+            $gameVersion
+        );
+        self::assertSame(PlayerTurn::class, $newState );
+        
+        $tokens_ids = [28,29,30,32];
+        $newState = $state->actProgress($track, 
+            $tokens_ids, 
+            null, 
+            null, 
+            $activePlayerId, 
+            $args,
+            $gameVersion
+        );
+        self::assertSame(PlayerTurn::class, $newState );
+
+        $tokens_ids = [27,28,29,31];
+        $newState = $state->actProgress($track, 
+            $tokens_ids, 
+            null, 
+            null, 
+            $activePlayerId, 
+            $args,
+            $gameVersion
+        );
+        self::assertSame(PlayerTurn::class, $newState );
+        
+        $tokens_ids = [27,29,31,32];
+        $newState = $state->actProgress($track, 
+            $tokens_ids, 
+            null, 
+            null, 
+            $activePlayerId, 
+            $args,
+            $gameVersion
+        );
+        self::assertSame(PlayerTurn::class, $newState );
+        
+        $tokens_ids = [28,29,31,32];
+        $newState = $state->actProgress($track, 
+            $tokens_ids, 
+            null, 
+            null, 
+            $activePlayerId, 
+            $args,
+            $gameVersion
+        );
+        self::assertSame(PlayerTurn::class, $newState );
+    }
+
+    public function testActionProgress_Track2_Pass(): void
+    {
+        logForTests(__FUNCTION__);
+        $game = $this->createGameMock();
+        $state = new PlayerTurn($game);
+        $activePlayerId = 1;
+        Table::$test_activePlayerId = $activePlayerId;
+        $gameVersion = 999999;
+        $args = $state->getArgs();
+        $track = 2;
+
+        $tokens_ids = [29,30];
+        $newState = $state->actProgress($track, 
+            $tokens_ids, 
+            null, 
+            null, 
+            $activePlayerId, 
+            $args,
+            $gameVersion
+        );
+        self::assertSame(PlayerTurn::class, $newState );
+        
+        $tokens_ids = [29,31];
+        $newState = $state->actProgress($track, 
+            $tokens_ids, 
+            null, 
+            null, 
+            $activePlayerId, 
+            $args,
+            $gameVersion
+        );
+        self::assertSame(PlayerTurn::class, $newState );
+    }
+
+    public function testActionProgress_Track3_Pass(): void
+    {
+        logForTests(__FUNCTION__);
+        $game = $this->createGameMock();
+        $state = new PlayerTurn($game);
+        $activePlayerId = 1;
+        Table::$test_activePlayerId = $activePlayerId;
+        $gameVersion = 999999;
+        $args = $state->getArgs();
+        $track = 3;
+
+        $tokens_ids = [30];
+        $newState = $state->actProgress($track, 
+            $tokens_ids, 
+            null, 
+            null, 
+            $activePlayerId, 
+            $args,
+            $gameVersion
+        );
+        self::assertSame(PlayerTurn::class, $newState );
+        
+        $tokens_ids = [31];
+        $newState = $state->actProgress($track, 
+            $tokens_ids, 
+            null, 
+            null, 
+            $activePlayerId, 
+            $args,
+            $gameVersion
+        );
+        self::assertSame(PlayerTurn::class, $newState );
+    }
+    
+    public function testActionProgress_Track4_Exception_With_Wrong_Spices(): void
+    {
+        logForTests(__FUNCTION__);
+        $game = $this->createGameMock();
+        $state = new PlayerTurn($game);
+        $activePlayerId = 2;
+        Table::$test_activePlayerId = $activePlayerId;
+        $gameVersion = 999999;
+        $args = $state->getArgs();
+        $tokens_ids = [21,22];
+        $track = 4;
+
+        $this->expectException(UnexpectedException::class);
+        $this->expectExceptionMessage('These tokens are not a valid set');
+        $newState = $state->actProgress($track, 
+            $tokens_ids, 
+            null, 
+            null, 
+            $activePlayerId, 
+            $args,
+            $gameVersion
+        );
+    }
+
+    public function testActionProgress_Track4_Pass(): void
+    {
+        logForTests(__FUNCTION__);
+        $game = $this->createGameMock();
+        $state = new PlayerTurn($game);
+        $activePlayerId = 2;
+        Table::$test_activePlayerId = $activePlayerId;
+        $gameVersion = 999999;
+        $args = $state->getArgs();
+        $track = 4;
+
+        $tokens_ids = [21, 23];
+        $newState = $state->actProgress($track, 
+            $tokens_ids, 
+            null, 
+            null, 
+            $activePlayerId, 
+            $args,
+            $gameVersion
+        );
+        self::assertSame(PlayerTurn::class, $newState );
+        
+        $tokens_ids = [22, 23];
+        $newState = $state->actProgress($track, 
+            $tokens_ids, 
+            null, 
+            null, 
+            $activePlayerId, 
+            $args,
+            $gameVersion
+        );
+        self::assertSame(PlayerTurn::class, $newState );
+    }
+
+    public function testActionProgress_Track5_Exception_With_Wrong_Spices(): void
+    {
+        logForTests(__FUNCTION__);
+        $game = $this->createGameMock();
+        $state = new PlayerTurn($game);
+        $activePlayerId = 1;
+        $gameVersion = 999999;
+        $args = $state->getArgs();
+        $tokens_ids = [23];
+        $track = 5;
+
+        $this->expectException(UnexpectedException::class);
+        $this->expectExceptionMessage('These tokens are not a valid set');
+        $newState = $state->actProgress($track, 
+            $tokens_ids, 
+            null, 
+            null, 
+            $activePlayerId, 
+            $args,
+            $gameVersion
+        );
+    }
+    
+    public function testActionProgress_Track5_Exception_TooManySpices(): void
+    {
+        logForTests(__FUNCTION__);
+        $game = $this->createGameMock();
+        $state = new PlayerTurn($game);
+        $activePlayerId = 1;
+        $gameVersion = 999999;
+        $args = $state->getArgs();
+        $track = 5;
+        $tokens_ids = [21,22,23];
+        
+        $this->expectException(UnexpectedException::class);
+        $this->expectExceptionMessage("You must select 1 tokens");
+        $state->actProgress($track, 
+            $tokens_ids, 
+            null, 
+            null, 
+            $activePlayerId, 
+            $args,
+            $gameVersion
+        );
+    }
+    
+    public function testActionProgress_Track5_Exception_NotEnoughSpices(): void
+    {
+        logForTests(__FUNCTION__);
+        $game = $this->createGameMock();
+        $state = new PlayerTurn($game);
+        $activePlayerId = 1;
+        $gameVersion = 999999;
+        $args = $state->getArgs();
+        $track = 5;
+        $tokens_ids = [];
+        
+        $this->expectException(UnexpectedException::class);
+        $this->expectExceptionMessage("You must select 1 tokens");
+        $state->actProgress($track, 
+            $tokens_ids, 
+            null, 
+            null, 
+            $activePlayerId, 
+            $args,
+            $gameVersion
+        );
+    }
+
+    public function testActionProgress_Track5_Pass(): void
+    {
+        logForTests(__FUNCTION__);
+        $game = $this->createGameMock();
+        $state = new PlayerTurn($game);
+        $activePlayerId = 2;
+        Table::$test_activePlayerId = $activePlayerId;
+        $gameVersion = 999999;
+        $args = $state->getArgs();
+        $track = 5;
+
+        $tokens_ids = [21];
+        $newState = $state->actProgress($track, 
+            $tokens_ids, 
+            null, 
+            null, 
+            $activePlayerId, 
+            $args,
+            $gameVersion
+        );
+        self::assertSame(PlayerTurn::class, $newState );
+        
+        $tokens_ids = [22];
+        $newState = $state->actProgress($track, 
+            $tokens_ids, 
+            null, 
+            null, 
+            $activePlayerId, 
+            $args,
+            $gameVersion
+        );
+        self::assertSame(PlayerTurn::class, $newState );
+    }
+    
+}

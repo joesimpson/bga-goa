@@ -127,6 +127,7 @@ class Utils {
             sort($set);
         }
         $allSets = Utils::array_of_uniquearrays($allSets);
+        //Game::get()->trace(__FUNCTION__.'() : RESULT = '.json_encode($allSets));
         return $allSets;
     }
 

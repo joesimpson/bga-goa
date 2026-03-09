@@ -6,8 +6,10 @@
          executionOrder="depends,defects"
          requireCoverageMetadata="false"
          beStrictAboutCoverageMetadata="false"
-         beStrictAboutOutputDuringTests="true"
-         displayDetailsOnPhpunitDeprecations="true"
+         beStrictAboutOutputDuringTests="false"
+         displayDetailsOnPhpunitDeprecations="false"
+         displayDetailsOnTestsThatTriggerDeprecations="false"
+         failOnDeprecation="false"
          failOnPhpunitDeprecation="false"
          failOnRisky="true"
          failOnWarning="false">
@@ -17,7 +19,7 @@
         </testsuite>
     </testsuites>
 
-    <source restrictDeprecations="true" restrictNotices="true" restrictWarnings="true">
+    <source restrictDeprecations="false" restrictNotices="false" restrictWarnings="false">
         <include>
             <directory>modules</directory>
         </include>

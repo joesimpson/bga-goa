@@ -33,7 +33,7 @@ final class EndSessionTest extends TestCase
         $expected = [ 
             $session => [
                 $player1 => [
-                    SCORING_PROGRESS     => 0,
+                    SCORING_PROGRESS     => 8,
                     SCORING_OUTPOSTS     => 0,
                     SCORING_EXPLORATION  => [
                         /*

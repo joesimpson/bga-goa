@@ -192,12 +192,9 @@ Requires : [local php client](https://www.php.net/downloads.php?usage=cli&os=win
 
 Command : 
 ```
-vendor/bin/phpunit --colors --display-errors --display-deprecation --bootstrap tests/bootstrap.php '.\tests' --testdox-html testsresults/results.html
-```
-For now : 
-```
-vendor/bin/phpunit --colors --display-errors --display-deprecation --bootstrap tests/bootstrap.php '.\tests\Helpers\'
+vendor/bin/phpunit --colors --display-errors --display-deprecation --bootstrap tests/bootstrap.php '.\tests' --testdox-html testsresults/results.html > testsresults/test.log
 ```
 
-Test results may be found in [testsresults](/testsresults/results.html) after running `composer test`.
-Some code coverage may be found in [dashboard.html](/testsresults/coverage/dashboard.html) after running `composer test:coverage`.
+
+Test results may be found in local workspace [testsresults](/testsresults/results.html) after running `composer test`.
+Some code coverage may be found in local workspace [dashboard.html](/testsresults/coverage/dashboard.html) after running `composer test:coverage`.

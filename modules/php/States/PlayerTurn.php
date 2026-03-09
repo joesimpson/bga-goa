@@ -320,9 +320,9 @@ class PlayerTurn extends GameState
     #[PossibleAction]
     public function actProgress(
         int $track, 
-        #[IntArrayParam] array|null $t_ids = null, 
-        int|null $card_id = null, 
-        int|null $tile_id = null, 
+        #[IntArrayParam] array|null $t_ids, 
+        int|null $card_id, 
+        int|null $tile_id, 
         int $activePlayerId, array $args,
         int $v,
     )
@@ -352,9 +352,9 @@ class PlayerTurn extends GameState
     
     public static function actProgress_Content(
         int $track, 
-        array|null $t_ids = null, 
-        int|null $card_id = null, 
-        int|null $tile_id = null, 
+        array|null $t_ids, 
+        int|null $card_id, 
+        int|null $tile_id, 
         int $activePlayerId, array $args,
         bool &$doCheckpoint, 
     )
@@ -507,8 +507,8 @@ class PlayerTurn extends GameState
     public function actHarvest(
         #[IntArrayParam] array $spots, 
         #[IntArrayParam(name:'res')] array $resources, 
-        int|null $card_id = null, 
-        int|null $tile_id = null, 
+        int|null $card_id, 
+        int|null $tile_id, 
         int $ships, 
         int $contracts, 
         int $activePlayerId, array $args,
@@ -556,8 +556,8 @@ class PlayerTurn extends GameState
     public static function actHarvest_content(
         #[IntArrayParam] array $spots, 
         #[IntArrayParam(name:'res')] array $resources, 
-        int|null $card_id = null, 
-        int|null $tile_id = null, 
+        int|null $card_id, 
+        int|null $tile_id, 
         int $ships, 
         int $contracts, 
         int $progressRefPlayerId,
@@ -731,7 +731,7 @@ class PlayerTurn extends GameState
     #[PossibleAction]
     public function actFoundOutpost(
         int $tile_id, 
-        int|null $card_id = null,
+        int|null $card_id,
         int $activePlayerId, array $args,
         int $v,
         )
@@ -879,8 +879,8 @@ class PlayerTurn extends GameState
     #[PossibleAction]
     public function actPlayTile(
         int $tile_id,
-        int|null $row = null,
-        int|null $col = null,
+        int|null $row,
+        int|null $col,
         int $v, int $activePlayerId, array $args,
         )
     { 
@@ -898,8 +898,8 @@ class PlayerTurn extends GameState
     /**Reusable action content */
     static function actPlayTile_content(
         int $tile_id, 
-        int|null $row = null, //row to play the tile
-        int|null $col = null, //column to play the tile
+        int|null $row, //row to play the tile
+        int|null $col, //column to play the tile
         int $activePlayerId, 
         array $args, 
         bool &$doCheckpoint,
@@ -939,8 +939,8 @@ class PlayerTurn extends GameState
     #[PossibleAction]
     public function actSpendSpices(
         #[IntArrayParam] array $t_ids, 
-        int|null $card_id = null, 
-        int|null $tile_id = null,
+        int|null $card_id, 
+        int|null $tile_id,
         int $activePlayerId, array $args,
         int $v,)
     { 
@@ -967,8 +967,8 @@ class PlayerTurn extends GameState
     
     public static function actSpendSpices_content(
         array $t_ids, 
-        int|null $card_id = null, 
-        int|null $tile_id = null,
+        int|null $card_id, 
+        int|null $tile_id,
         int $activePlayerId, array $args,
         bool &$doCheckpoint, 
         PrematureStateChangeException| null &$stateChange = null,
