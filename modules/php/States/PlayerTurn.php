@@ -411,12 +411,12 @@ class PlayerTurn extends GameState
             $costSpices = $selectedTrack['costSpices'];
             $totalSpicesExpected = 0;
             foreach($costSpices as $datas){
-                $costSpices = $datas['n'];
-                $totalSpicesExpected+= $costSpices;
+                $totalSpicesExpected+= $datas['n'];
             }
             if (!isset($t_ids) || $totalSpicesExpected != count($t_ids)) {
                 throw new UnexpectedException(120,"You must select $totalSpicesExpected tokens");
             }
+            /* spicesSets is not computed anymore -> use next loop on costSpices instead
             $foundMatch = false;
             $possibleTokensIdsArrays = $selectedTrack['spicesSets'];
             foreach($possibleTokensIdsArrays as $possibleTokensIdsArray){
@@ -429,6 +429,16 @@ class PlayerTurn extends GameState
             if (!$foundMatch) {
                 throw new UnexpectedException(121,("These tokens are not a valid set"));
             }
+            */
+            foreach($costSpices as $spice => $datas){
+                $expectedOfThisType = $datas['n'];
+                $foundSpicesOfThisType = array_intersect($t_ids, $datas['from']);
+                $foundSpicesOfThisTypeV2 = array_intersect( $datas['from'], $t_ids,);
+                if (count($foundSpicesOfThisType) != $expectedOfThisType || count($foundSpicesOfThisTypeV2) != $expectedOfThisType){
+                    throw new UnexpectedException(121,("These tokens are not a valid set: you must select $expectedOfThisType of $spice"));
+                }
+            }
+            Game::get()->trace("PlayerTurn.actProgress_content($track,$card_id,$tile_id,$activePlayerId) valid set : ".json_encode($t_ids). " according to costSpices ".json_encode($costSpices));
 
             $playerSpices = Tokens::getPlayerSpices($player->getId());
             $tokens = $playerSpices->filter(function($t) use ($t_ids){
@@ -1122,12 +1132,22 @@ class PlayerTurn extends GameState
                             case 'actProgress': 
                                 $progressTracks = $args['progressTracks'];
                                 if(count($progressTracks) > 0){
-                                    //$trackData = $progressTracks [$this->getRandomZombieChoice(array_keys($progressTracks))];
                                     $trackData = $progressTracks[array_rand($progressTracks)];
                                     $track = $trackData['track'];
-                                    //$spicesSets = $trackData['spicesSets'] [ $this->getRandomZombieChoice($trackData['spicesSets']) ];
-                                    $spicesSets = $trackData['spicesSets'][array_rand($trackData['spicesSets'])];
-                                    return $this->actProgress($track,$spicesSets,null,null, $playerId, $args,$gameVersion, );
+                                    $costSpices = $trackData['costSpices'];
+                                    //$spices = $trackData['spicesSets'][array_rand($trackData['spicesSets'])];
+                                    $spices = [];
+                                    foreach($costSpices as $spice => $costDatas ){
+                                        $nbOfThisType = 0;
+                                        foreach($costDatas['from'] as $tokenId ){
+                                            if($nbOfThisType >= $costDatas['n']) break;
+                                            $spices[] = $tokenId;
+                                            $nbOfThisType++;
+                                        }
+
+                                    }
+
+                                    return $this->actProgress($track,$spices,null,null, $playerId, $args,$gameVersion, );
                                 }
                                 $badChoice = true;
                                 break;

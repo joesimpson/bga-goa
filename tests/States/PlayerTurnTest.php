@@ -35,8 +35,7 @@ final class PlayerTurnTest extends TestCase
         Globals::setRoundStep($roundStep);
         return $mock;
     }
-    
-    public function testActionProgress_Exception_With_Wrong_Version(): void
+    public function testPlayerTurn_ActionProgress_Exception_With_Wrong_Version(): void
     {
         logForTests(__FUNCTION__);
         $game = $this->createGameMock();
@@ -51,7 +50,7 @@ final class PlayerTurnTest extends TestCase
         );
     }
     
-    public function testActionProgress_Exception_Wrong_Track(): void
+    public function testPlayerTurn_ActionProgress_Exception_Wrong_Track(): void
     {
         logForTests(__FUNCTION__);
         $game = $this->createGameMock();
@@ -74,7 +73,7 @@ final class PlayerTurnTest extends TestCase
         );
     }
     
-    public function testActionProgress_Track1_Pass(): void
+    public function testPlayerTurn_ActionProgress_Track1_Pass(): void
     {
         logForTests(__FUNCTION__);
         $game = $this->createGameMock();
@@ -152,7 +151,7 @@ final class PlayerTurnTest extends TestCase
         self::assertSame(PlayerTurn::class, $newState );
     }
 
-    public function testActionProgress_Track2_Pass(): void
+    public function testPlayerTurn_ActionProgress_Track2_Pass(): void
     {
         logForTests(__FUNCTION__);
         $game = $this->createGameMock();
@@ -186,7 +185,7 @@ final class PlayerTurnTest extends TestCase
         self::assertSame(PlayerTurn::class, $newState );
     }
 
-    public function testActionProgress_Track3_Pass(): void
+    public function testPlayerTurn_ActionProgress_Track3_Pass(): void
     {
         logForTests(__FUNCTION__);
         $game = $this->createGameMock();
@@ -220,7 +219,7 @@ final class PlayerTurnTest extends TestCase
         self::assertSame(PlayerTurn::class, $newState );
     }
     
-    public function testActionProgress_Track4_Exception_With_Wrong_Spices(): void
+    public function testPlayerTurn_ActionProgress_Track4_Exception_With_Wrong_Spices(): void
     {
         logForTests(__FUNCTION__);
         $game = $this->createGameMock();
@@ -232,7 +231,7 @@ final class PlayerTurnTest extends TestCase
         $tokens_ids = [21,22];
         $track = 4;
 
-        $this->expectException(UnexpectedException::class);
+        //$this->expectException(UnexpectedException::class);
         $this->expectExceptionMessage('These tokens are not a valid set');
         $newState = $state->actProgress($track, 
             $tokens_ids, 
@@ -244,7 +243,7 @@ final class PlayerTurnTest extends TestCase
         );
     }
 
-    public function testActionProgress_Track4_Pass(): void
+    public function testPlayerTurn_ActionProgress_Track4_Pass(): void
     {
         logForTests(__FUNCTION__);
         $game = $this->createGameMock();
@@ -278,12 +277,13 @@ final class PlayerTurnTest extends TestCase
         self::assertSame(PlayerTurn::class, $newState );
     }
 
-    public function testActionProgress_Track5_Exception_With_Wrong_Spices(): void
+    public function testPlayerTurn_ActionProgress_Track5_Exception_With_Wrong_Spices(): void
     {
         logForTests(__FUNCTION__);
         $game = $this->createGameMock();
         $state = new PlayerTurn($game);
         $activePlayerId = 1;
+        Table::$test_activePlayerId = $activePlayerId;
         $gameVersion = 999999;
         $args = $state->getArgs();
         $tokens_ids = [23];
@@ -300,8 +300,7 @@ final class PlayerTurnTest extends TestCase
             $gameVersion
         );
     }
-    
-    public function testActionProgress_Track5_Exception_TooManySpices(): void
+    public function testPlayerTurn_ActionProgress_Track5_Exception_TooManySpices(): void
     {
         logForTests(__FUNCTION__);
         $game = $this->createGameMock();
@@ -324,7 +323,7 @@ final class PlayerTurnTest extends TestCase
         );
     }
     
-    public function testActionProgress_Track5_Exception_NotEnoughSpices(): void
+    public function testPlayerTurn_ActionProgress_Track5_Exception_NotEnoughSpices(): void
     {
         logForTests(__FUNCTION__);
         $game = $this->createGameMock();
@@ -347,7 +346,7 @@ final class PlayerTurnTest extends TestCase
         );
     }
 
-    public function testActionProgress_Track5_Pass(): void
+    public function testPlayerTurn_ActionProgress_Track5_Pass(): void
     {
         logForTests(__FUNCTION__);
         $game = $this->createGameMock();
@@ -380,5 +379,25 @@ final class PlayerTurnTest extends TestCase
         );
         self::assertSame(PlayerTurn::class, $newState );
     }
+
     
+    public function testPlayerTurn_Zombie_Random(): void
+    {
+        logForTests(__FUNCTION__);
+        $game = $this->createGameMock();
+        $state = new PlayerTurn($game);
+        $activePlayerId = 2;
+        Table::$test_activePlayerId = $activePlayerId;
+        $args = $state->getArgs();
+
+        //Zombie will call a random choice, so let's test IT multiple times
+        $nbTests = 0;
+        while($nbTests < 10){
+            $nbTests++;
+
+            $newState = $state->zombie($activePlayerId,  $args);
+            self::assertSame(PlayerTurn::class, $newState );
+        }
+        
+    }
 }

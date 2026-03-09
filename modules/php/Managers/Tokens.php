@@ -339,6 +339,8 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
                 return true;
             })
             ->map(function ($map) use ( $withSpices){
+              //FIX StackOverflow: Don't precompute all combinations because it won't work with many spices of same type (>8)
+              return $map;
 
               $possibleSets = [];
               //Save each possible set of spices to pay this progress
@@ -361,7 +363,6 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
 
               return $map;
             })
-          //->map(function ($token) { return $token->getTrackIndex();})
           ->toArray();
   }
 

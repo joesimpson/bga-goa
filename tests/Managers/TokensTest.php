@@ -43,13 +43,16 @@ final class TokensTest extends TestCase
                     SPICE_BLACK => ['n' => 1, 'from' => [30,31, ]],
                 ],
                 'spicesSets' => [ 
+                    /*
                     // keys modified by Utils::array_cartesian()
                     0 => [27,28,29,30], 
                     1 => [27,29,30,32], 
                     3 => [28,29,30,32], 
                     6 => [27,28,29,31], 
                     7 => [27,29,31,32],  
-                    9 => [28,29,31,32], ],
+                    9 => [28,29,31,32],
+                    */
+                ],
             ],
             [
                 'track' => 2,
@@ -62,7 +65,8 @@ final class TokensTest extends TestCase
                     SPICE_YELLOW => ['n' => 1, 'from' => [ 29,]],
                     SPICE_BLACK => ['n' => 1, 'from' => [30,31, ]],
                 ],
-                'spicesSets' => [ [29,30], [29,31], ],
+                //'spicesSets' => [ [29,30], [29,31], ],
+                'spicesSets' => [],
             ],
             [
                 'track' => 3,
@@ -74,7 +78,8 @@ final class TokensTest extends TestCase
                 'costSpices' => [
                     SPICE_BLACK => ['n' => 1, 'from' => [30,31, ]],
                 ],
-                'spicesSets' => [ [30,], [31], ],
+                //'spicesSets' => [ [30,], [31], ],
+                'spicesSets' => [],
             ],
             [
                 'track' => 4,
@@ -87,7 +92,8 @@ final class TokensTest extends TestCase
                     SPICE_PINK => ['n' => 1, 'from' => [26,]],
                     SPICE_GREEN => ['n' => 1, 'from' => [24, 25,]]
                 ],
-                'spicesSets' => [ [24,26], [25,26], ],
+                //'spicesSets' => [ [24,26], [25,26], ],
+                'spicesSets' => [],
             ],
             [
                 'track' => 5,
@@ -99,7 +105,8 @@ final class TokensTest extends TestCase
                 'costSpices' => [
                     SPICE_GREEN => ['n' => 1, 'from' => [24, 25,]]
                 ],
-                'spicesSets' => [ [24], [25], ],
+                //'spicesSets' => [ [24], [25], ],
+                'spicesSets' => [],
             ]
         ];
 
@@ -123,7 +130,8 @@ final class TokensTest extends TestCase
                     SPICE_PINK => ['n' => 1, 'from' => [23,]],
                     SPICE_GREEN => ['n' => 1, 'from' => [21, 22,]]
                 ],
-                'spicesSets' => [ [21,23], [22,23], ],
+                //'spicesSets' => [ [21,23], [22,23], ],
+                'spicesSets' => [],
             ],
             [
                 'track' => 5,
@@ -135,7 +143,8 @@ final class TokensTest extends TestCase
                 'costSpices' => [
                     SPICE_GREEN => ['n' => 1, 'from' => [21, 22,]]
                 ],
-                'spicesSets' => [ [21], [22], ],
+                //'spicesSets' => [ [21], [22], ],
+                'spicesSets' => [],
             ]
         ];
 

@@ -480,6 +480,12 @@ class Notify {
     ) {
     }
 }
+class NotificationMessage {
+    public function __construct(
+        public string $message = '',
+        public array $args = [],
+    ) {}
+}
 
 namespace Bga\GameFramework\States;
 
