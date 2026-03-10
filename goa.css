@@ -2060,6 +2060,7 @@ body.notouch-device .goa_exploration_card-front.bga-cards_selectable-card:hover,
 .goa_tile .goa_tile_spot.selectable {
   cursor: pointer;
   outline: 5px dashed var(--goa_selectable_color);
+  outline-offset: 4px;
 }
 .goa_tile .goa_tile_spot.selected {
   outline: 8px solid var(--goa_selected_color);

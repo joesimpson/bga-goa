@@ -104,6 +104,7 @@ $tile_height: 108px;
         &.selectable{
             cursor: pointer;
             outline: 5px dashed var(--goa_selectable_color);
+            outline-offset: 4px;//offset to see tokens with black shadow
         }
         &.selected{
             outline: 8px solid var(--goa_selected_color);
