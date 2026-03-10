@@ -16,6 +16,7 @@ export class CleanHand {
     onEnteringState(args, isCurrentPlayerActive) {
         
         let possibleActions = args.possibleActions;
+        let possibleActionPlay = possibleActions && possibleActions.includes('actPlayCard');
         let maxCards = args.maxCards;
         let icon_explo = this.game.formatIcon('exploration_card',_('Exploration card'));
 
@@ -23,7 +24,12 @@ export class CleanHand {
             _('${you} must play or discard cards until your hand size is below ${n} ${icon_cards}').replace('${n}', maxCards).replace('${icon_cards}',icon_explo) :
             _('${actplayer} must play or discard cards until his hand size is below ${n} ${icon_cards}').replace('${n}', maxCards).replace('${icon_cards}',icon_explo)
         );
-
+        if(!possibleActionPlay) {
+            this.bga.statusBar.setTitle(isCurrentPlayerActive ? 
+                _('${you} must discard cards until your hand size is below ${n} ${icon_cards}').replace('${n}', maxCards).replace('${icon_cards}',icon_explo) :
+                _('${actplayer} must discard cards until his hand size is below ${n} ${icon_cards}').replace('${n}', maxCards).replace('${icon_cards}',icon_explo)
+            );
+        }
         if(isCurrentPlayerActive) this.game.updateHandSelectable(args);
 
         if(isCurrentPlayerActive ) this.game.confirmTurn.displayUndoButtons(args);

@@ -333,6 +333,7 @@ class PlayerChoice extends GameState
         )
     { 
         Utils::checkVersion($v);
+        Log::addStep();
         foreach( $card_ids as $card_id){
             PlayerTurn::actDiscard_content($card_id, $activePlayerId, $args);
         }

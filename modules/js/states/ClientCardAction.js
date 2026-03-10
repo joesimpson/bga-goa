@@ -10,6 +10,25 @@ export class ClientCardAction {
 
     onEnteringState(args, isCurrentPlayerActive) {
         
+        if(args.mode =='multiple'){
+            
+            this.bga.statusBar.setTitle(
+                _("Select an action for these cards")
+            );
+            this.game.updateHandSelectableList(args);
+
+            //keep first card selected
+            this.game.explorationHand.selectCard(args.card);
+            this.refreshConfirmMultipleMode();
+
+            this.bga.statusBar.addActionButton( _('Return'), () => {
+                //this.game.explorationHand.setSelectionMode('none');
+                this.game.explorationHand.unselectAll();
+                this.game.restorePreviousState(args,'ClientCardAction');
+            }, { 'id':`goa_btn_playcard_return`, 'color':'secondary','title':_('Return'), destination: document.getElementById('customSecondary') }); 
+            return;
+        }
+
         this.bga.statusBar.setTitle(
                     _("Select an action for this card")
                 );
@@ -113,6 +132,21 @@ export class ClientCardAction {
 
     restorePreviousState(){
         this.game.restorePreviousState(this.args,'ClientCardAction');
+    }
+    
+    refreshConfirmMultipleMode(){
+        if ($('btnConfirmMultiple')) $('btnConfirmMultiple').remove();
+        let sortedCards = this.game.explorationHand.getSelection().map((a) => a.id).sort((a,b) =>  a.id - b.id );
+        let buttonText = this.bga.gameui.format_string( 
+                    _('Discard ${n} cards'),
+                    { 'n': sortedCards.length }
+                );
+        this.bga.statusBar.addActionButton(buttonText , () => {
+            this.game.customPerformAction("actDiscard", {'card_ids':sortedCards.join(',')})
+        }, { 'id':'btnConfirmMultiple', 
+            'title':buttonText,
+            'destination': document.getElementById('customPrimary'),
+        });
     }
  
 }

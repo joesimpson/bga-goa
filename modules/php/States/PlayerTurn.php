@@ -825,6 +825,7 @@ class PlayerTurn extends GameState
     public function actDiscard(#[IntArrayParam] array $card_ids, int $v, int $activePlayerId, array $args)
     { 
         Utils::checkVersion($v);
+        Log::addStep();
         foreach( $card_ids as $card_id){
             PlayerTurn::actDiscard_content($card_id, $activePlayerId, $args);
         }
@@ -843,7 +844,6 @@ class PlayerTurn extends GameState
         if(!in_array($card_id,$possibleDiscards)){
             throw new UnexpectedException(130,"Invalid card $card_id, see ".json_encode($possibleDiscards));
         }
-        Log::addStep();
         $player = Players::get($activePlayerId);
 
         Cards::discardExploration($player, $card_id, );

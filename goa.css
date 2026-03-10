@@ -1359,6 +1359,10 @@ body.notouch-device .goa_spice.selectable:hover {
   cursor: pointer;
   outline: 5px dashed var(--goa_selectable_color);
 }
+.goa_exploration_card.selectable.selected {
+  outline-color: var(--goa_selected_color);
+  outline-style: solid;
+}
 
 .exploration_hand {
   /*

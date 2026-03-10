@@ -23,6 +23,10 @@ $card_height: var(--goa_explo_card_height);
     &.selectable{
         cursor: pointer;
         outline: 5px dashed var(--goa_selectable_color);
+        &.selected{
+            outline-color: var(--goa_selected_color);
+            outline-style: solid;
+        }
     }
 }
 

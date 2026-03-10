@@ -949,7 +949,12 @@ export class Game {
          || possiblePlayCards && Object.keys(possiblePlayCards).includes(""+card.id) && possibleActionPlay
         );
         if(selectableCards.length>0 || handCards.length==0 && possibleActionRightNow){
-            this.explorationHand.setSelectionMode('single');
+            if(possiblePlayCards && Object.keys(possiblePlayCards).length > 0) {
+                this.explorationHand.setSelectionMode('single');
+            }
+            else {
+                this.explorationHand.setSelectionMode('multiple');
+            }
             this.explorationHand.setSelectableCards(selectableCards);
         } else {
             //!\\ manage reload page = > cards are added in hand after this
@@ -978,6 +983,43 @@ export class Game {
             let discardAnyTime = this.displayDiscardAnytime && possibleActions.includes('actAnytimeDiscard');
             let isDiscardableCard = ((discardAnyTime || possibleActions.includes('actDiscard') ) && possibleDiscards.includes(card_id)) ? true : false;
             let isPlayableCard = (possibleActions.includes('actPlayCard') && Object.keys(possiblePlayCards).includes(""+card_id)) ? true : false;
+
+            if(this.explorationHand.getSelectionMode() == 'multiple' ) {
+                let sortedCards = this.explorationHand.getSelection().map((a) => a.id).sort((a,b) =>  a.id - b.id );
+                if(sortedCards.length > 0){
+                    let clientState = this.getCurrentClientStateDatas();
+                    if(clientState && clientState.name == 'ClientCardAction'){
+                        this.clientCardAction.refreshConfirmMultipleMode();
+                        clientState = clientState.args.previousClientState;
+                    }
+                    else {
+                        this.bga.states.setClientState("ClientCardAction", {
+                            descriptionmyturn: '',
+                            args: { 
+                                'mode' : 'multiple',
+                                'card': cardDatas,
+                                'isPlayableCard': isPlayableCard,
+                                'isDiscardableCard': isDiscardableCard,
+                                'possibleDiscards': possibleDiscards,
+                                'possiblePlayCards': possiblePlayCards,
+                                'possibleActions': possibleActions,
+                                //keep previous state datas in order to go back when cancel 
+                                'previousClientState' : clientState,
+                            },
+                        });
+                    }
+                }
+                else {
+                    let clientState = this.getCurrentClientStateDatas();
+                    if(clientState && clientState.name=='ClientCardAction') {
+                        this.clientCardAction.restorePreviousState();
+                    }
+                    else {
+                        this.restorePreviousState(args);
+                    }
+                }
+            } else {
+
             let callbackCardSelection = (evt) => {
                 let clientState = this.getCurrentClientStateDatas();
                 //ignore ClientCardAction because it doesnot represent an action state, only card selection with multiple changes
@@ -1015,6 +1057,7 @@ export class Game {
                 else {
                     this.restorePreviousState(args);
                 }
+            }
             }
         };  
 
