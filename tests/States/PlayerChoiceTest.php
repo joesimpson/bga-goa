@@ -45,7 +45,7 @@ final class PlayerChoiceTest extends TestCase
 
         $this->expectException(UserException::class);
         $this->expectExceptionMessage('!!!checkVersion');
-        $state->actDiscard(1, $activePlayerId, [], $gameVersion, );
+        $state->actDiscard([1], $activePlayerId, [], $gameVersion, );
     }
 
     public function testPlayerChoice_ActionDiscard_NotPossible(): void
@@ -64,7 +64,7 @@ final class PlayerChoiceTest extends TestCase
 
         $this->expectException(UnexpectedException::class);
         $this->expectExceptionMessage("Invalid action actDiscard");
-        $state->actDiscard($cardId, $activePlayerId, $args, $gameVersion, );
+        $state->actDiscard([$cardId], $activePlayerId, $args, $gameVersion, );
     }
     
     public function testPlayerChoice_ActionDiscard_WrongArgs(): void
@@ -83,7 +83,7 @@ final class PlayerChoiceTest extends TestCase
 
         $this->expectException(UnexpectedException::class);
         $this->expectExceptionMessage("Invalid card $cardId");
-        $state->actDiscard($cardId, $activePlayerId, $args, $gameVersion, );
+        $state->actDiscard([$cardId], $activePlayerId, $args, $gameVersion, );
     }
     
     public function testPlayerChoice_ActionDiscard_Pass(): void
@@ -100,14 +100,22 @@ final class PlayerChoiceTest extends TestCase
             'possibleActions' => ['actDiscard'],
             'possibleDiscards' => $cardIds,
         ];
-        $newState = $state->actDiscard($cardIds[0], $activePlayerId, $args, $gameVersion, );
+        $newState = $state->actDiscard($cardIds, $activePlayerId, $args, $gameVersion, );
         self::assertSame(PlayerChoice::class, $newState );
 
         $args = [
             'possibleActions' => ['actAnytimeDiscard'],
             'possibleDiscards' => $cardIds,
         ];
-        $newState = $state->actDiscard($cardIds[0], $activePlayerId, $args, $gameVersion, );
+        $newState = $state->actDiscard($cardIds, $activePlayerId, $args, $gameVersion, );
+        self::assertSame(PlayerChoice::class, $newState );
+        
+        $cardIds = [2,3];
+        $args = [
+            'possibleActions' => ['actAnytimeDiscard'],
+            'possibleDiscards' => $cardIds,
+        ];
+        $newState = $state->actDiscard($cardIds, $activePlayerId, $args, $gameVersion, );
         self::assertSame(PlayerChoice::class, $newState );
     }
 }

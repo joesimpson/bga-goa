@@ -292,6 +292,7 @@ abstract class Table
         $cards = [
            1 => ['result_associative_index' => 1,'card_id' => 1, 'card_location' => CARD_LOCATION_HAND, 'card_state' => 0, 'player_id' => 1, 'type' => 10, 'subtype' => CARD_SUBTTYPE_EXPLORATION,],
            2 => ['result_associative_index' => 2,'card_id' => 2, 'card_location' => CARD_LOCATION_HAND, 'card_state' => 0, 'player_id' => 2, 'type' => 11, 'subtype' => CARD_SUBTTYPE_EXPLORATION,],
+           3 => ['result_associative_index' => 3,'card_id' => 3, 'card_location' => CARD_LOCATION_HAND, 'card_state' => 0, 'player_id' => 2, 'type' => 11, 'subtype' => CARD_SUBTTYPE_EXPLORATION,],
         ];
 
         switch($sql){
@@ -392,6 +393,10 @@ abstract class Table
             case "SELECT card_id AS `result_associative_index` , `card_id` , `card_location` , `card_state` , `player_id` , `type` , `subtype` FROM `cards` WHERE (`card_id` IN ('2'))":
                 return [
                     $cards[2],
+                ];
+            case "SELECT card_id AS `result_associative_index` , `card_id` , `card_location` , `card_state` , `player_id` , `type` , `subtype` FROM `cards` WHERE (`card_id` IN ('3'))":
+                return [
+                    $cards[3],
                 ];
         }
         if( str_starts_with( $sql, 'SELECT *, player_id AS `result_associative_index` FROM `player`' )){

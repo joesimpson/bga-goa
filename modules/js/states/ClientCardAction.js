@@ -89,7 +89,7 @@ export class ClientCardAction {
         //}
         
         //if(args.isDiscardableCard){
-            this.bga.statusBar.addActionButton(_('Discard'), () => this.game.customPerformAction("actDiscard", {'card_id':card_id}), { 'id':`goa_btn_discardcard_${card_id}`, 'disabled': !args.isDiscardableCard,'title':_('Discard this card'),destination: document.getElementById('customPrimary') }); 
+            this.bga.statusBar.addActionButton(_('Discard'), () => this.game.customPerformAction("actDiscard", {'card_ids':card_id}), { 'id':`goa_btn_discardcard_${card_id}`, 'disabled': !args.isDiscardableCard,'title':_('Discard this card'),destination: document.getElementById('customPrimary') }); 
         //}
 
         this.bga.statusBar.addActionButton( _('Return'), () => {

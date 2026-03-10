@@ -327,13 +327,15 @@ class PlayerChoice extends GameState
      */
     #[PossibleAction]
     public function actDiscard(
-        int $card_id, 
+        #[IntArrayParam] array $card_ids, 
         int $activePlayerId, array $args,
         int $v,
         )
     { 
         Utils::checkVersion($v);
-        PlayerTurn::actDiscard_content($card_id, $activePlayerId, $args);
+        foreach( $card_ids as $card_id){
+            PlayerTurn::actDiscard_content($card_id, $activePlayerId, $args);
+        }
         return self::class;
     }
     

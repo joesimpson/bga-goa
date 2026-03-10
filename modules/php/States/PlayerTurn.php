@@ -822,10 +822,12 @@ class PlayerTurn extends GameState
      * Player action : discard some card in hand
      */
     #[PossibleAction]
-    public function actDiscard(int $card_id, int $v, int $activePlayerId, array $args)
+    public function actDiscard(#[IntArrayParam] array $card_ids, int $v, int $activePlayerId, array $args)
     { 
         Utils::checkVersion($v);
-        PlayerTurn::actDiscard_content($card_id, $activePlayerId, $args);
+        foreach( $card_ids as $card_id){
+            PlayerTurn::actDiscard_content($card_id, $activePlayerId, $args);
+        }
         return PlayerTurn::class;
     }
 
