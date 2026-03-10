@@ -87,7 +87,7 @@
                 "cssPref": "goa_pref_hand_discard_anytime_on"
             }
         },
-        "default": 1
+        "default": 0
     }
 
 }
