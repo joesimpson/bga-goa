@@ -450,7 +450,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
   public static function getPlayerAvailableSpotsForSpices(Player $player) : array {
     $allSpots = self::getPlayerOutposts($player);
     $allSpots = $allSpots->merge(self::getPlantations($player));
-    $emptySpots = $allSpots->map(function($tile) {
+    $emptySpots = $allSpots->map(function($tile) use ($player) {
       $map = [
       ];
       $slots = $tile->getSpice_slots();
@@ -458,7 +458,8 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
         //look at spot index (from 1 to N)
         $spiceIndex = 1 + $index;
         $tokensOnTileSpot = Tokens::countSpicesOnTile($tile->getId(), $spiceIndex);
-        if($tokensOnTileSpot->count() == 0){
+        $pendingSpices = Tokens::countPendingSpiceOnTileSpot($player->getId(), $tile->getId(),$spiceIndex);
+        if($tokensOnTileSpot->count() == 0 && $pendingSpices == 0){
           $id = $tile->getId() * 10 + $spiceIndex;
           $map[$id] = [
             'id' => $id, 

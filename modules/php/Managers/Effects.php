@@ -114,6 +114,15 @@ class Effects extends \Bga\Games\Goa\Helpers\Pieces
       ->count();
   }
    
+  public static function countPlayerEffectsToResolveByTypeAndQ(int $playerId, int $type, int $quantity, int $tile_id): int {
+    return self::DB()
+      ->where('effect_type', $type)
+      ->where('effect_source_tile', $tile_id)
+      ->where('effect_qty', $quantity)
+      ->where(static::$prefix .'state', EFFECT_STATE_TO_SOLVE)
+      ->wherePlayer($playerId)
+      ->count();
+  }
   /**
    * @return Collection (should be 0 or 1 elements)
    */

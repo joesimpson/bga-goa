@@ -10,6 +10,7 @@ use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Collection;
 use Bga\Games\Goa\Helpers\Utils;
 use Bga\Games\Goa\Models\AuctionMarker;
+use Bga\Games\Goa\Models\Effect;
 use Bga\Games\Goa\Models\FirstAuctionMarker;
 use Bga\Games\Goa\Models\Player;
 use Bga\Games\Goa\Models\ProgressMarker;
@@ -273,6 +274,11 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
       ->where( static::$prefix . 'location', TOKEN_LOCATION_TILE.$tile_id);
     if($spotIndex) $query = $query->where( static::$prefix . 'state', $spotIndex);
     return $query->get();
+  }
+
+  public static function countPendingSpiceOnTileSpot(int $playerId,int $tile_id, int $spotIndex) : int
+  {
+    return Effects::countPlayerEffectsToResolveByTypeAndQ($playerId, EFFECT_TYPE_PICK_SPICE,$spotIndex, $tile_id,);
   }
   
   
