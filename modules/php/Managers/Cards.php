@@ -203,6 +203,10 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
           }*/
           {
             $effectsToFound = Effects::getEffectToResolveByType(EFFECT_TYPE_FOUND_TILE,$player->getId());
+            $effectsToFound = $effectsToFound->filter(function($effect){
+              //FILTER parent is not set (we don't want ESPIONAGE ...)
+              return null == ($effect->getParentId());
+            });
             $possiblePlay = ($effectsToFound->count()>0);
           }
           break;
@@ -369,7 +373,7 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
         }
         Notifications::resultFoundOutpost($player, $sum);
         $doCheckpoint = true;
-        Utils::refreshFoundTileEffectWithContracts($player->getId(), $sum);
+        Utils::refreshFoundTileEffectWithContracts($player->getId(), $sum, null);
         break;
       case CARD_ACTION_RESSOURCES_TO_COINS: //done in actSpendSpices
         break;

@@ -254,11 +254,15 @@ class Utils {
     /**
      * @return true if an effect has been updated
      */
-    public static function refreshFoundTileEffectWithContracts(int $playerId, int $nContracts) : bool {
+    public static function refreshFoundTileEffectWithContracts(int $playerId, int $nContracts, int|null $filterParentId ) : bool {
         if($nContracts < 1 ) return false;
         $updated = false;
         $player = Players::get($playerId);
         $effectsToFound = Effects::getEffectToResolveByType(EFFECT_TYPE_FOUND_TILE,$playerId);
+        $effectsToFound = $effectsToFound->filter(function($effect) use ($filterParentId){
+            //FILTER parent null if we don't want ESPIONAGE ...
+            return $filterParentId == ($effect->getParentId());
+        });
         //REFRESH Effect data according to param adding contracts
         foreach($effectsToFound as &$effect){
                 $missingContracts = $effect->getQuantity();
