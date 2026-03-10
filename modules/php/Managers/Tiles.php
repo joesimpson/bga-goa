@@ -622,6 +622,10 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
     $tile = Tiles::get($tileId);
     $discard = false;
     
+    if( !isset($tile) || !($tile instanceof MarketTile) ){
+      throw new UnexpectedException(504,"This tile has no play type");
+    }
+
     switch($tile->getPlay_type()){
       case MARKET_TYPE_PLANTATION:
       case MARKET_TYPE_ACTION_DIRECT:
