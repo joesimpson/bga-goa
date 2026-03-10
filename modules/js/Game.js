@@ -89,6 +89,7 @@ export class Game {
         this._notif_uid_to_log_id = {};
         this._notif_uid_to_mobile_log_id = {};
         
+        this.displayDiscardAnytime = false;
         this._displayNotifsOnTop = true;
 
         //Max percentage of screen to use with top bar :
@@ -935,7 +936,8 @@ export class Game {
         //Manage various actions on hand cards with a unique handler
         let possibleDiscards = args.possibleDiscards; 
         let possiblePlayCards = args.possiblePlayCards; 
-        let possibleActionDiscard = possibleActions && possibleActions.includes('actDiscard');
+        let possibleActionDiscard = possibleActions && possibleActions.includes('actDiscard')
+                                || this.displayDiscardAnytime && possibleActions && possibleActions.includes('actAnytimeDiscard');
         let possibleActionPlay = possibleActions && possibleActions.includes('actPlayCard');
         let possibleActionRightNow = (
                 possibleActionDiscard && possibleDiscards 
@@ -973,7 +975,8 @@ export class Game {
             if(!card) return;
             let card_id = card.id;
             let cardDatas = card;
-            let isDiscardableCard = (possibleActions.includes('actDiscard') && possibleDiscards.includes(card_id)) ? true : false;
+            let discardAnyTime = this.displayDiscardAnytime && possibleActions.includes('actAnytimeDiscard');
+            let isDiscardableCard = ((discardAnyTime || possibleActions.includes('actDiscard') ) && possibleDiscards.includes(card_id)) ? true : false;
             let isPlayableCard = (possibleActions.includes('actPlayCard') && Object.keys(possiblePlayCards).includes(""+card_id)) ? true : false;
             let callbackCardSelection = (evt) => {
                 let clientState = this.getCurrentClientStateDatas();
@@ -1242,6 +1245,10 @@ export class Game {
                 //goa_pref_hand_float
                 let isFloat = (pref_value == this.const.PREF_HAND_POSITION_FLOAT);
                 this.onChangeHandLocationPref(isFloat);
+                break;
+            case this.const.PREF_HAND_DISCARD_ANYTIME: 
+                this.displayDiscardAnytime = (pref_value == this.const.PREF_HAND_DISCARD_ANYTIME_ON);
+                this.updateHandSelectable(this.gamedatas.gamestate.args, false);
                 break;
         }
     }

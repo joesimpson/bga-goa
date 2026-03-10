@@ -1,0 +1,113 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Tests\States;
+
+use Bga\GameFramework\Bga;
+use Bga\GameFramework\GameMock;
+use Bga\GameFramework\GamestateMachineMock;
+use Bga\GameFramework\Notify;
+use Bga\GameFramework\Table;
+use Bga\GameFramework\UserException;
+use Bga\Games\Goa\Core\Globals;
+use Bga\Games\Goa\Exceptions\UnexpectedException;
+use Bga\Games\Goa\States\PlayerChoice;
+use PHPUnit\Framework\TestCase;
+
+final class PlayerChoiceTest extends TestCase
+{
+    /**
+     * @before
+     */
+    public function setupTest(): void
+    {
+        Table::$test_activePlayerId = 1;
+    }
+    
+    private function createGameMock()
+    {
+        $mock = new GameMock();
+        $mock->gamestate = new GamestateMachineMock();
+        $mock->bga = new Bga($mock);
+        $mock->notify = new Notify($mock);
+        $roundStep = ROUND_STEP_PLAYER_ACTIONS;
+        Globals::setRoundStep($roundStep);
+        return $mock;
+    }
+    public function testPlayerChoice_ActionDiscard_Exception_With_Wrong_Version(): void
+    {
+        logForTests(__FUNCTION__);
+        $game = $this->createGameMock();
+        $state = new PlayerChoice($game);
+        $activePlayerId = 1;
+        $gameVersion = 999;
+
+        $this->expectException(UserException::class);
+        $this->expectExceptionMessage('!!!checkVersion');
+        $state->actDiscard(1, $activePlayerId, [], $gameVersion, );
+    }
+
+    public function testPlayerChoice_ActionDiscard_NotPossible(): void
+    {
+        logForTests(__FUNCTION__);
+        $game = $this->createGameMock();
+        $state = new PlayerChoice($game);
+        $activePlayerId = 2;
+        Table::$test_activePlayerId = $activePlayerId;
+        $gameVersion = 999999;
+        $cardId = 2;
+        $args = [
+            'possibleActions' => ['actPlayCard'],
+            'possibleDiscards' => [$cardId],
+        ];
+
+        $this->expectException(UnexpectedException::class);
+        $this->expectExceptionMessage("Invalid action actDiscard");
+        $state->actDiscard($cardId, $activePlayerId, $args, $gameVersion, );
+    }
+    
+    public function testPlayerChoice_ActionDiscard_WrongArgs(): void
+    {
+        logForTests(__FUNCTION__);
+        $game = $this->createGameMock();
+        $state = new PlayerChoice($game);
+        $activePlayerId = 2;
+        Table::$test_activePlayerId = $activePlayerId;
+        $gameVersion = 999999;
+        $cardId = 999;
+        $args = [
+            'possibleActions' => ['actDiscard'],
+            'possibleDiscards' => [1,2,3],
+        ];
+
+        $this->expectException(UnexpectedException::class);
+        $this->expectExceptionMessage("Invalid card $cardId");
+        $state->actDiscard($cardId, $activePlayerId, $args, $gameVersion, );
+    }
+    
+    public function testPlayerChoice_ActionDiscard_Pass(): void
+    {
+        logForTests(__FUNCTION__);
+        $game = $this->createGameMock();
+        $state = new PlayerChoice($game);
+        $activePlayerId = 2;
+        Table::$test_activePlayerId = $activePlayerId;
+        $gameVersion = 999999;
+        $cardIds = [2];
+
+        $args = [
+            'possibleActions' => ['actDiscard'],
+            'possibleDiscards' => $cardIds,
+        ];
+        $newState = $state->actDiscard($cardIds[0], $activePlayerId, $args, $gameVersion, );
+        self::assertSame(PlayerChoice::class, $newState );
+
+        $args = [
+            'possibleActions' => ['actAnytimeDiscard'],
+            'possibleDiscards' => $cardIds,
+        ];
+        $newState = $state->actDiscard($cardIds[0], $activePlayerId, $args, $gameVersion, );
+        self::assertSame(PlayerChoice::class, $newState );
+    }
+}

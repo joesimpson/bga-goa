@@ -358,8 +358,8 @@ class PlayerChoice extends GameState
     #[PossibleAction]
     public function actPlayTile(
         int $tile_id, 
-        int|null $row = null,
-        int|null $col = null,
+        int|null $row,
+        int|null $col,
         int $activePlayerId, array $args,
         int $v,
         )
@@ -384,8 +384,8 @@ class PlayerChoice extends GameState
     #[PossibleAction]
     public function actSpendSpices(
         #[IntArrayParam] array $t_ids, 
-        int|null $card_id = null, 
-        int|null $tile_id = null,
+        int|null $card_id, 
+        int|null $tile_id,
         int $activePlayerId, array $args,
         int $v,)
     { 
@@ -416,8 +416,8 @@ class PlayerChoice extends GameState
     public function actHarvest(
         #[IntArrayParam] array $spots, 
         #[IntArrayParam(name:'res')] array $resources, 
-        int|null $card_id = null, 
-        int|null $tile_id = null, 
+        int|null $card_id, 
+        int|null $tile_id, 
         int $ships, 
         int $contracts, 
         int $activePlayerId, array $args,
@@ -466,9 +466,9 @@ class PlayerChoice extends GameState
     #[PossibleAction]
     public function actProgress(
         int $track, 
-        #[IntArrayParam] array|null $t_ids = null, 
-        int|null $card_id = null, 
-        int|null $tile_id = null, 
+        #[IntArrayParam] array|null $t_ids, 
+        int|null $card_id, 
+        int|null $tile_id, 
         int $activePlayerId, array $args,
         int $v,
     )

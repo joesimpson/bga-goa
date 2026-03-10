@@ -834,7 +834,7 @@ class PlayerTurn extends GameState
     { 
         Game::get()->trace("actDiscard_content($card_id,$activePlayerId)");
         $possibleActions = $args['possibleActions'];
-        if(!in_array('actDiscard',$possibleActions)){
+        if(!in_array('actDiscard',$possibleActions) && !in_array('actAnytimeDiscard',$possibleActions)){
             throw new UnexpectedException(110,"Invalid action actDiscard, see ".json_encode($possibleActions));
         }
         $possibleDiscards = $args['possibleDiscards'];
@@ -1210,8 +1210,14 @@ class PlayerTurn extends GameState
                 $args['possibleDiscards'] = $discardableCards->getIds();
                 $playableCards = Cards::getPossibleToPlay($player, $args,$actionsWhiteList);
                 $args['possiblePlayCards'] = $playableCards;
-                if( $discardableCards->count()>0 && $withDiscard){
-                    Utils::addPossibleActionInArgs('actDiscard', $args);
+                if( $discardableCards->count()>0){
+                    if($withDiscard){
+                        Utils::addPossibleActionInArgs('actDiscard', $args);
+                    }
+                    else {
+                        //Allow to discard at anytime based on player preference (on client side)
+                        Utils::addPossibleActionInArgs('actAnytimeDiscard', $args);
+                    }
                 }
                 if( $playableCards->count()>0){
                     Utils::addPossibleActionInArgs('actPlayCard', $args);

@@ -289,6 +289,10 @@ abstract class Table
             32 =>   ['token_id' => 32, 'token_state' => 1, 'token_location'=> TOKEN_LOCATION_TILE.'6' ,'type' => TOKEN_TYPE_SPICE_WHITE, 'subtype' => TOKEN_SUBTTYPE_SPICE,'token_row' => 1, 'token_col' => 1,  'player_id' => 1,  'result_associative_index' =>  32,  ],
                 
         ];
+        $cards = [
+           1 => ['result_associative_index' => 1,'card_id' => 1, 'card_location' => CARD_LOCATION_HAND, 'card_state' => 0, 'player_id' => 1, 'type' => 10, 'subtype' => CARD_SUBTTYPE_EXPLORATION,],
+           2 => ['result_associative_index' => 2,'card_id' => 2, 'card_location' => CARD_LOCATION_HAND, 'card_state' => 0, 'player_id' => 2, 'type' => 11, 'subtype' => CARD_SUBTTYPE_EXPLORATION,],
+        ];
 
         switch($sql){
             case 'SELECT name AS `result_associative_index` , `value` , `name` FROM `bga_globals`':
@@ -380,6 +384,14 @@ abstract class Table
             case 'SELECT stats_value,stats_id FROM `stats` WHERE `stats_type` = 11 AND `stats_player_id` = 2':
                 return [
                     ['stats_id' => 1, 'stats_value' => 27 ],
+                ];
+            case "SELECT card_id AS `result_associative_index` , `card_id` , `card_location` , `card_state` , `player_id` , `type` , `subtype` FROM `cards` WHERE (`card_id` IN ('1'))":
+                return [
+                    $cards[1],
+                ];
+            case "SELECT card_id AS `result_associative_index` , `card_id` , `card_location` , `card_state` , `player_id` , `type` , `subtype` FROM `cards` WHERE (`card_id` IN ('2'))":
+                return [
+                    $cards[2],
                 ];
         }
         if( str_starts_with( $sql, 'SELECT *, player_id AS `result_associative_index` FROM `player`' )){

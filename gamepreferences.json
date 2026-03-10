@@ -74,5 +74,20 @@
         },
         "default": 1
     }
+    ,"114": {
+        "name": "Display Discard in Hand at anytime",
+        "needReload": false,
+        "values": {
+            "0": {
+                "name": "Disabled",
+                "cssPref": "goa_pref_hand_discard_anytime_off"
+            },
+            "1": {
+                "name": "Enabled",
+                "cssPref": "goa_pref_hand_discard_anytime_on"
+            }
+        },
+        "default": 1
+    }
 
 }

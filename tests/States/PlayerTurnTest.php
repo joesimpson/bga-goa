@@ -380,6 +380,67 @@ final class PlayerTurnTest extends TestCase
         self::assertSame(PlayerTurn::class, $newState );
     }
 
+    public function testPlayerTurn_ActionDiscard_NotPossible(): void
+    {
+        logForTests(__FUNCTION__);
+        $game = $this->createGameMock();
+        $state = new PlayerTurn($game);
+        $activePlayerId = 2;
+        Table::$test_activePlayerId = $activePlayerId;
+        $gameVersion = 999999;
+        $cardId = 2;
+        $args = [
+            'possibleActions' => ['actPlayCard'],
+            'possibleDiscards' => [$cardId],
+        ];
+
+        $this->expectException(UnexpectedException::class);
+        $this->expectExceptionMessage("Invalid action actDiscard");
+        $state->actDiscard($cardId, $gameVersion, $activePlayerId, $args, );
+    }
+    
+    public function testPlayerTurn_ActionDiscard_WrongArgs(): void
+    {
+        logForTests(__FUNCTION__);
+        $game = $this->createGameMock();
+        $state = new PlayerTurn($game);
+        $activePlayerId = 2;
+        Table::$test_activePlayerId = $activePlayerId;
+        $gameVersion = 999999;
+        $cardId = 999;
+        $args = [
+            'possibleActions' => ['actDiscard'],
+            'possibleDiscards' => [1,2,3],
+        ];
+
+        $this->expectException(UnexpectedException::class);
+        $this->expectExceptionMessage("Invalid card $cardId");
+        $state->actDiscard($cardId, $gameVersion, $activePlayerId, $args, );
+    }
+    
+    public function testPlayerTurn_ActionDiscard_Pass(): void
+    {
+        logForTests(__FUNCTION__);
+        $game = $this->createGameMock();
+        $state = new PlayerTurn($game);
+        $activePlayerId = 2;
+        Table::$test_activePlayerId = $activePlayerId;
+        $gameVersion = 999999;
+        $cardId = 2;
+        $args = [
+            'possibleActions' => ['actDiscard'],
+            'possibleDiscards' => [$cardId],
+        ];
+
+        $newState = $state->actDiscard($cardId, $gameVersion, $activePlayerId, $args, );
+        self::assertSame(PlayerTurn::class, $newState );
+        $args = [
+            'possibleActions' => ['actAnytimeDiscard'],
+            'possibleDiscards' => [$cardId],
+        ];
+        $newState = $state->actDiscard($cardId, $gameVersion, $activePlayerId, $args, );
+        self::assertSame(PlayerTurn::class, $newState );
+    }
     
     public function testPlayerTurn_Zombie_Random(): void
     {
