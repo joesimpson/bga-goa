@@ -2,6 +2,7 @@
 
 namespace Bga\Games\Goa\Models;
 
+use Bga\Games\Goa\Managers\Effects;
 
 /*
  * Effect: all utility functions concerning an Effect to be resolved
@@ -13,6 +14,7 @@ class Effect extends \Bga\Games\Goa\Helpers\DB_Model
   protected $primary = 'effect_id';
   protected $attributes = [
     'id' => ['effect_id', 'int'],
+    'parentId' => ['effect_parent_id', 'int'],
     'state' => ['effect_state', 'int'],
     'pId' => ['player_id', 'int'],
     'type' => ['effect_type', 'int'],
@@ -36,6 +38,13 @@ class Effect extends \Bga\Games\Goa\Helpers\DB_Model
   public function getUiData()
   {
     $data = parent::getUiData();
+    $parent = $this->getParentId();
+    if(isset($parent) ){
+      $otherEffect = Effects::get($parent);
+      if(isset($otherEffect)){
+        $data['parent'] = $otherEffect->getUiData();
+      }
+    }
     return $data;
   }
 

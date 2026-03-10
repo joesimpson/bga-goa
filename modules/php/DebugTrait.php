@@ -139,9 +139,7 @@ trait DebugTrait
         //Effect after Found
         $tile = Tiles::getByType(1,TILE_SUBTTYPE_OUTPOST)->first();
         //effect from action
-        Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_FOUND_TILE, 2, [ACTION_FOUND_ABANDON, ACTION_FOUND_FORWARD], ACTION_TYPE_FOUND);
-        //effect from Espionage found
-        Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_FOUND_TILE, 6, [ACTION_FOUND_ABANDON, ], ACTION_TYPE_FOUND);
+        $effect = Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_FOUND_TILE, 2, [ACTION_FOUND_ABANDON, ACTION_FOUND_FORWARD], ACTION_TYPE_FOUND);
         
         $tile = Tiles::getByType(26,TILE_SUBTTYPE_MARKET)->first();
         $effects = [];
@@ -184,7 +182,10 @@ trait DebugTrait
 
         //ACTION_ESPIONAGE
         $tile = Tiles::getByType(34,TILE_SUBTTYPE_MARKET)->first();
-        Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_ESPIONAGE, 1, [ACTION_SHIP, ACTION_HARVEST, ACTION_MONEY, ACTION_FOUND_ABANDON]);
+        $effect = Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_ESPIONAGE, 1, [ACTION_SHIP, ACTION_HARVEST, ACTION_MONEY, ACTION_FOUND_ABANDON]);
+        //effect from Espionage found
+        $tile = Tiles::getByType(1,TILE_SUBTTYPE_OUTPOST)->first();
+        Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_FOUND_TILE, 6, [ACTION_FOUND_ABANDON, ], ACTION_TYPE_FOUND,$effect->getId());
 
         //$this->debug_refreshUI();
         Game::get()->gamestate->jumpToState(ST_PLAYER_CHOICE);

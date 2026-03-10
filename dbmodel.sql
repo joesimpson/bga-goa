@@ -67,6 +67,7 @@ CREATE TABLE IF NOT EXISTS `tokens` (
 
 CREATE TABLE IF NOT EXISTS `effects` (
   `effect_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `effect_parent_id` int unsigned NULL COMMENT 'Link to parent effect if any',
   `effect_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
   `effect_state` int DEFAULT 0,
   `effect_location` varchar(32),

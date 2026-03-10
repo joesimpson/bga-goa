@@ -17,6 +17,7 @@ class Effects extends \Bga\Games\Goa\Helpers\Pieces
   protected static $autoremovePrefix = false;
   protected static $customFields = [
     'player_id', 
+    'effect_parent_id',
     'effect_type', 
     'effect_qty',  
     'effect_source_tile',
@@ -53,10 +54,12 @@ class Effects extends \Bga\Games\Goa\Helpers\Pieces
     int|null $quantity,
     array $result,
     int|null $source_action = null,
+    int|null $fromEffectId = null,
   ): Effect
   {
     $effect = [
       'player_id' => $player->getId(),
+      'effect_parent_id' => $fromEffectId,
       'effect_type' => $type,
       'location' => EFFECT_LOCATION_TO_RESOLVE, //for the class Pieces
       static::$prefix .'state' => EFFECT_STATE_TO_SOLVE,
@@ -79,6 +82,7 @@ class Effects extends \Bga\Games\Goa\Helpers\Pieces
   {
     $effect = [
       'player_id' => $player->getId(),
+      'effect_parent_id' => null,
       'effect_type' => $type,
       'location' => EFFECT_LOCATION_TO_RESOLVE, //for the class Pieces
       static::$prefix .'state' => EFFECT_STATE_TO_SOLVE,

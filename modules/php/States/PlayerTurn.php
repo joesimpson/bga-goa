@@ -770,6 +770,7 @@ class PlayerTurn extends GameState
         Player $player, 
         int $progressRefPlayerId,
         array $args,
+        int|null $fromEffectId = null,
         )
     { 
         $nbCardsToDraw = 2;
@@ -814,7 +815,7 @@ class PlayerTurn extends GameState
         }
         $playerChoices[] = ACTION_FOUND_ABANDON;//always possible
         
-        Effects::addEffectOnTile($player,$tile_id, EFFECT_TYPE_FOUND_TILE, $missingContracts, $playerChoices, ACTION_TYPE_FOUND);
+        Effects::addEffectOnTile($player,$tile_id, EFFECT_TYPE_FOUND_TILE, $missingContracts, $playerChoices, ACTION_TYPE_FOUND, $fromEffectId);
     }
     
     /**

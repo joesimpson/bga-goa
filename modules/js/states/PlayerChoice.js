@@ -57,7 +57,13 @@ export class PlayerChoice {
                             });
                         };
                         let actionName = this.game.formatActionName(effect.sourceAction);
-                        let actionHint = this.bga.gameui.format_string(_('Player action : ${name}'),{'name': actionName});
+                        let effectName =  _('Player action');
+                        if(effect.parent){
+                            switch(effect.parent.type){
+                                case this.game.const.EFFECT_TYPE_ESPIONAGE: effectName = _('Espionage'); break;
+                            }
+                        }
+                        let actionHint = this.bga.gameui.format_string(_('${effect} : ${name}'),{'effect': effectName , 'name': actionName});
                         this.bga.statusBar.addActionButton(actionHint, () => {
                             nextState(this.bga);
                         }, {  

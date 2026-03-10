@@ -255,7 +255,7 @@ class PlayerChoice extends GameState
                                 $selectedTileId = $choice_array1[0];
                             }
                             Notifications::espionage($player, $opponent, 5);
-                            PlayerTurn::actFoundOutpost_content($selectedTileId,null, $player, $progressRefPlayerId, $args,);
+                            PlayerTurn::actFoundOutpost_content($selectedTileId,null, $player, $progressRefPlayerId, $args, $choice_index);
                             $doCheckpoint = true;
                             break;
                         default:
