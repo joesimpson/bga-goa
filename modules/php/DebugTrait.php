@@ -25,6 +25,7 @@ trait DebugTrait
      * RESET ALL GAME DATAS in order to restart the game without recreating a new table spoiling server space etc...
     */
     function debug_ReSetup(
+        int $automaDiff = 0,
         bool $quickStarter = true,
         bool $bonanza = true,
         bool $story = true,
@@ -38,6 +39,7 @@ trait DebugTrait
         
         $options = [
             "DEBUG_SETUP"=> true,
+            OPTION_AUTOMA_DIFFICULTY => $automaDiff,
             //OPTION_QUICK_STARTER => ($quickStarter ? OPTION_QUICK_STARTER_ON : OPTION_QUICK_STARTER_OFF) ,
             //OPTION_BONANZA => ($bonanza ? OPTION_BONANZA_ON : OPTION_BONANZA_OFF) ,
             //OPTION_STORIES => ($story ? OPTION_STORIES_RANDOM : OPTION_STORIES_OFF) ,

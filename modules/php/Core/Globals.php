@@ -5,7 +5,6 @@ namespace Bga\Games\Goa\Core;
 use Bga\GameFramework\SystemException;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Utils;
-use Bga\Games\Goa\Models\Tile;
 
 /** 
  * Globals to reuse the same Globals as BGA framework but with Tisaac boilerplate Logger and cache
@@ -41,6 +40,7 @@ class Globals extends \Bga\Games\Goa\Helpers\DB_Manager
     'optionStories' => 'int',
     'optionCaptains' => 'int',
     'optionGambit' => 'int',
+    'optionAutomaDifficulty' => 'int',
     'optionCampaign' => 'int',
   ];
  
@@ -85,6 +85,17 @@ class Globals extends \Bga\Games\Goa\Helpers\DB_Manager
     Utils::updateDataFromArray($options,OPTION_GAMBIT,$optionValue);
     self::setOptionGambit($optionValue);
     
+    $optionValue = OPTION_AUTOMA_DIFFICULTY_OFF;
+    //displaycondition for solo only :
+    if(count($players) == 1){
+      Utils::updateDataFromArray($options,OPTION_AUTOMA_DIFFICULTY,$optionValue);
+      if($optionValue == OPTION_AUTOMA_DIFFICULTY_OFF){
+        //AUTOMA is mandatory with only 1 player -> see startCondition
+        $optionValue = OPTION_AUTOMA_DIFFICULTY_RANDOM;
+      }
+    }
+    self::setOptionAutomaDifficulty($optionValue);
+
     $optionValue = OPTION_CAMPAIGN_OFF;
     //displaycondition for solo only :
     if(count($players) == 1){
