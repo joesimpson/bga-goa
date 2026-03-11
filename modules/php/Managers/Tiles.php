@@ -366,10 +366,14 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
       
       $deck = TILE_LOCATION_DECK_B;
     }
+    
+    //Sould be MARKET_GRID_SIZE*MARKET_GRID_SIZE + 4 without variants
+    $deckSize = Tiles::countInLocation($deck);
 
-    $nbRemovedPlantations = 0;
+    $nbTilesToRemove = $deckSize - (MARKET_GRID_SIZE*MARKET_GRID_SIZE);
+    $nbRemovedPlantations = null;
     $boxTiles = null;
-    while($nbRemovedPlantations == 0 || $nbRemovedPlantations > 2){
+    while($nbTilesToRemove>0 && (!isset($nbRemovedPlantations) || $nbRemovedPlantations > 2)){
       if(isset($boxTiles)){
         // if more than 2 plantations, pick and replace ...
         foreach($boxTiles as $tile_id => &$tile){
@@ -378,7 +382,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
       }
       //SHUFFLE deck of current phase
       Tiles::shuffle($deck);
-      $boxTiles = Tiles::pickForLocation(4,$deck,TILE_LOCATION_BOX);
+      $boxTiles = Tiles::pickForLocation($nbTilesToRemove,$deck,TILE_LOCATION_BOX);
       $nbRemovedPlantations = $boxTiles->filter((function ($tile){ return MARKET_TYPE_PLANTATION == $tile->getPlay_type();}))->count();
 
       //Game::get()->trace("setupMarket($phase), nbRemovedPlantations = $nbRemovedPlantations ...");
@@ -782,6 +786,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
   public static function setupNewGame($players, $options)
   {
     $tiles = [];
+    $nbPlayers = count($players);
 
     $outposts = self::getOutpostTilesTypes();
     
@@ -798,6 +803,10 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
 
     $markets = self::getMarketTilesTypes();
     foreach ($markets as $type => $market) {
+      if($nbPlayers == 1 && $type == MARKET_TYPE_ESPIONAGE){
+        //SOLO RULE : no espionage to play with
+        continue;
+      }
         if($market['nbr_A']>0){
           $location = TILE_LOCATION_DECK_A;
           $tiles[] = [
@@ -918,7 +927,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
       31 => $f([ 0, 1, MARKET_TYPE_ACTION_ONCE, [], [ACTION_SWAP => 1 ], 0,       clienttranslate('Exchange'),  ]),
       32 => $f([ 0, 1, MARKET_TYPE_ACTION_ONCE, [], [ACTION_RESUPPLY => 1 ], 0,   clienttranslate('Resupply'),  ]),
       33 => $f([ 0, 1, MARKET_TYPE_ACTION_ONCE, [], [ACTION_HARVEST => 1 ], 0,    clienttranslate('Great Harvest'),  ]),
-      34 => $f([ 0, 1, MARKET_TYPE_ACTION_ONCE, [], [ACTION_ESPIONAGE => 1 ], 0,  clienttranslate('Espionage'),  ]),
+      MARKET_TYPE_ESPIONAGE => $f([ 0, 1, MARKET_TYPE_ACTION_ONCE, [], [ACTION_ESPIONAGE => 1 ], 0,  clienttranslate('Espionage'),  ]),
       35 => $f([ 0, 1, MARKET_TYPE_ACTION_ONCE, [], [ACTION_VICEKING => 1 ], 0,   clienttranslate('Viceroy'),  ]),
       
       36 => $f([ 0, 1, MARKET_TYPE_ACTION_REUSEABLE, [], [ACTION_EXPLORATION => 1, ], 0,  clienttranslate('Pathfinder'),  ]),
