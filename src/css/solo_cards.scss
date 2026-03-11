@@ -1,0 +1,29 @@
+@use "sass:math";
+
+$card_with: var(--goa_automa_card_with);
+$card_height: var(--goa_automa_card_height);
+
+.goa_automa_auction_card{
+    position: relative;
+
+    width: $card_with;
+    height: $card_height;
+    border-radius: 5px;
+
+    box-shadow: 0px 0px 0px 2px black;
+
+    //sprite positions
+    background-size: 1000% 600%;
+    background-image: url("img/expansions/solo_cards.jpg");
+    
+    //back by default
+    background-position-x: 0%;
+    background-position-y: 0%;
+
+    @for $i from 1 through 36 {
+        &[data-type="#{$i + 1}"] {
+            background-position-x: math.div(($i % 10) * 100%, 9);//10 columns
+            background-position-y: math.div(math.div($i - ($i % 10), 10) * 100%, 5);//10 columns , 6 rows
+        }
+    }
+}
