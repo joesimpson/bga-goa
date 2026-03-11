@@ -28,6 +28,7 @@ class Globals extends \Bga\Games\Goa\Helpers\DB_Manager
     'currentBid' => 'int',
     'bidTurns' => 'int',
     'highBidPlayer' => 'int',
+    'automaColor' => 'str',
     
     'endScoring' => 'obj',
 
@@ -93,6 +94,7 @@ class Globals extends \Bga\Games\Goa\Helpers\DB_Manager
         //AUTOMA is mandatory with only 1 player -> see startCondition
         $optionValue = OPTION_AUTOMA_DIFFICULTY_RANDOM;
       }
+      //TODO JSA Random 
     }
     self::setOptionAutomaDifficulty($optionValue);
 

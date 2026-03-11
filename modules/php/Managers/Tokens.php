@@ -62,6 +62,7 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
     return 
       self::getInLocation(TOKEN_LOCATION_BOARD)
       ->merge(self::getInLocation(TOKEN_LOCATION_PLAYER_BOARD))
+      ->merge(self::getInLocation(TOKEN_LOCATION_AUTOMA_BOARD))
       ->merge(self::getInLocationOrdered(TOKEN_LOCATION_TILE.'%'))
       ->map(function ($token) {
         return $token->getUiData();
@@ -496,6 +497,21 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
           'token_col' => $k+1,
         ];
       }
+    }
+
+    $automaColor = Globals::getAutomaColor();
+    if(isset($automaColor)){
+      //INIT AUTOMA Auction tokens
+      
+      for($k = 0; $k < count($players) +1; $k++){
+        $tokens[] = [
+          'location' => TOKEN_LOCATION_AUTOMA_BOARD,
+          'type' => TOKEN_TYPE_AUCTION_MARKERS[$k],
+          'subtype' => TOKEN_SUBTTYPE_AUCTION_MARKER,
+          'nbr' => 1,
+        ];
+      } 
+
     }
 
     self::create($tokens);

@@ -172,6 +172,7 @@ class Game extends \Bga\GameFramework\Table
         ];
         $result["tokens"] = Tokens::getUiData($current_player_id);
         
+        $result["automaColor"] = Globals::getAutomaColor();
         $result["endScoring"] = Globals::getEndScoring();
 
         $result["constants"] = ALL_MY_UI_CONSTANTS;

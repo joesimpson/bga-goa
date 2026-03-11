@@ -20,6 +20,15 @@ use Bga\Games\Goa\Models\TokenSpice;
 class Notifications
 { 
   
+  public static function automaColor(string $color)
+  {
+    self::notifyAll('automaColor',  clienttranslate('${automa_name} will play with the next available color'), [
+      'automa_name' => clienttranslate("Lakshmi"),
+      'automa_color' => $color,
+      'i18n' => ['automa_name'],
+      'preserve' => ['automa_color'],
+    ]);
+  }
   public static function newSession(int $session)
   {
     $msg = '';

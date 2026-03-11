@@ -174,6 +174,7 @@ const MARKET_TYPE_DUTY = 38;
 const TOKEN_LOCATION_DECK = 'deck';
 const TOKEN_LOCATION_BOARD = 'board';
 const TOKEN_LOCATION_PLAYER_BOARD = 'p_board';
+const TOKEN_LOCATION_AUTOMA_BOARD = 'a_board';
 /** To be followed by tile id */
 const TOKEN_LOCATION_TILE = 'tile-';
 

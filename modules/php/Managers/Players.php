@@ -67,6 +67,22 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
     }
     Game::get()->reloadPlayersBasicInfos();
 
+    $assignedColors = $playersObjects->map( function ($player) { return $player->getColor();})->toArray();
+    
+    if(Globals::getOptionAutomaDifficulty() != OPTION_AUTOMA_DIFFICULTY_OFF){
+      //$automa_color = array_shift($colors);
+      //!\ beware of reassignment based on player prefs -> make sure we don't reuse a player color if possible
+      foreach($colors as $color){
+        if(in_array($color,$assignedColors)){
+          continue;
+        }
+        $automa_color = $color;
+        break;
+      }
+      Globals::setAutomaColor($automa_color);
+      Notifications::automaColor($automa_color);
+    }
+
     //Init first player
     if(!array_key_exists("DEBUG_SETUP",$options)){
       $player = Players::get(Globals::getFirstPlayer());

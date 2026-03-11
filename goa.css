@@ -2935,6 +2935,19 @@ body.lockedInterface #restartActions {
   text-shadow: 2px 0px 2px black, 0px 2px 2px black, -2px 0px 2px black, 0px -2px 2px black;
 }
 
+.automa_name[data-color="84cba2"] {
+  color: #84cba2;
+}
+.automa_name[data-color="0090ba"] {
+  color: #0090ba;
+}
+.automa_name[data-color=feb713] {
+  color: #feb713;
+}
+.automa_name[data-color=e14a9b] {
+  color: #e14a9b;
+}
+
 .goa_tile_log,
 .goa_card_log,
 .goa_token_log {
