@@ -99,6 +99,7 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
     }
     //refreshed datas
     $players = Players::getAll();
+    $nbPlayers = $players->count();
 
     /**
      * Game rule : starting player is determined by randomness of cards : 
@@ -106,7 +107,7 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
      * The first player draws the top Exploration Card. The  other players then do the same in clockwise order until a player reveals a card with the Elephant symbol.
      */
     $elephantFound = false;
-    while(!$elephantFound){
+    while(!$elephantFound && $nbPlayers > 1){
       if(!isset($player)) $player = $players[$firstPlayerId];
       else $player = Players::getNextPlayer($player->getId());
       $cards = Cards::drawAndDiscardExploration($player, 1);
