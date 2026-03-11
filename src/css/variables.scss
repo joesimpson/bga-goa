@@ -40,3 +40,16 @@ Icon extract in sprite with differents layers size (so % is not useful).
         math.percentage(math.div($goa_icons_sprite_width, $layer_width )) 
         math.percentage(math.div($goa_icons_sprite_height,$layer_height ));
 }
+
+@mixin goa_extract_in_solo_cards($iconPosX,$iconPosY,$width,$height,$layer_width,$layer_height){
+$goa_icons_sprite_width: 3800px;
+$goa_icons_sprite_height: 3468px;
+    width: $width;
+    height: $height;
+    background-image: url("img/expansions/solo_cards.jpg");
+    background-position-x: calc(math.div($width, $layer_width) * -1 * $iconPosX);
+    background-position-y: calc(math.div($height, $layer_height ) * -1 * $iconPosY);
+    background-size: 
+        math.percentage(math.div($goa_icons_sprite_width, $layer_width )) 
+        math.percentage(math.div($goa_icons_sprite_height,$layer_height ));
+}

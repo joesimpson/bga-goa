@@ -23,7 +23,7 @@ class Notifications
   public static function automaColor(string $color)
   {
     self::notifyAll('automaColor',  clienttranslate('${automa_name} will play with the next available color'), [
-      'automa_name' => clienttranslate("Lakshmi"),
+      'automa_name' => Utils::getAutomaName(),
       'automa_color' => $color,
       'i18n' => ['automa_name'],
       'preserve' => ['automa_color'],
