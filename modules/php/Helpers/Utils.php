@@ -310,4 +310,9 @@ class Utils {
         if(array_key_exists($key,$array)) $value = $array[$key];
     }
 
+    
+    public static function getAutomaName() : string {
+        return clienttranslate("Lakshmi");
+    }
+
 }

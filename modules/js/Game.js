@@ -357,6 +357,13 @@ export class Game {
             }
             $(`goa_player_table-${player.id}`).style.order = order;
         });
+
+        if(this.gamedatas.automa_color){
+            this.bga.playerPanels.addAutomataPlayerPanel(0, this.gamedatas.automa_name, {
+                'color' : this.gamedatas.automa_color,
+                'iconClass': 'goa_avatar_automa',
+            });
+        }
        
         Promise.all (
             [   this.setupTiles(), 
@@ -1429,7 +1436,12 @@ export class Game {
 
     notif_automaColor(notif) {
         this.customDebug('notif_automaColor:', notif);
-        this.gamedatas.automaColor = notif.automa_color;
+        this.gamedatas.automa_color = notif.automa_color;
+        this.gamedatas.automa_name = _(notif.automa_name);
+        this.bga.playerPanels.addAutomataPlayerPanel(0, this.gamedatas.automa_name, {
+            'color' : this.gamedatas.automaColor,
+            'iconClass': 'goa_avatar_automa',
+        });
     }
     
     notif_clearTurn(n) {

@@ -1741,6 +1741,32 @@ body.notouch-device .goa_exploration_card-front.bga-cards_selectable-card:hover,
   display: none;
 }
 
+/**
+ *------
+ * BGA framework: Gregory Isabelli & Emmanuel Colin & BoardGameArena
+ * Goa implementation : © joesimpson <1324811+joesimpson@users.noreply.github.com>
+ *
+ * This code has been produced on the BGA studio platform for use on http://boardgamearena.com.
+ * See http://en.boardgamearena.com/#!doc/Studio for more information.
+ * -----
+ *
+ * goa.scss
+ *
+ * Goa stylesheet
+ *
+ */
+.goa_avatar_automa {
+  width: 32px;
+  height: 32px;
+  background-image: url("img/expansions/solo_cards.jpg");
+  background-position-x: -29.5384615385px;
+  background-position-y: -727.1384615385px;
+  background-size: 2923.0769230769% 2667.6923076923%;
+  border: 1px solid #6a6a6a;
+  border-radius: 25px;
+  box-shadow: 0 1px 3px #000, inset 0 2px 3px rgba(0, 0, 0, 0.4);
+}
+
 .goa_automa_auction_card {
   position: relative;
   width: var(--goa_automa_card_with);
@@ -2463,16 +2489,19 @@ button .goa_tile {
   height: 54px;
 }
 
-.player_board_inner > .player-name {
+.player_board_inner #player_name_0,
+.player_board_inner > .player-name > a {
   /** Add a BLACK shadow behind player name in case of bright colors like yellow*/
   /** Add a WHITE shadow*/
 }
+.player_board_inner #player_name_0[style*="color: #84cba2"], .player_board_inner #player_name_0[style*="color: #0090ba"], .player_board_inner #player_name_0[style*="color: #feb713"], .player_board_inner #player_name_0[style*="color: #e14a9b"],
 .player_board_inner > .player-name > a[style*="color: #84cba2"],
 .player_board_inner > .player-name > a[style*="color: #0090ba"],
 .player_board_inner > .player-name > a[style*="color: #feb713"],
 .player_board_inner > .player-name > a[style*="color: #e14a9b"] {
   text-shadow: 2px 0px 2px black, 0px 2px 2px black, -2px 0px 2px black, 0px -2px 2px black;
 }
+.player_board_inner #player_name_0[style*="color: #84cba2"],
 .player_board_inner > .player-name > a[style*="color: #84cba2"] {
   text-shadow: 2px 0px 2px white, 0px 2px 2px white, -2px 0px 2px white, 0px -2px 2px white;
 }
