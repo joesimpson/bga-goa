@@ -327,6 +327,20 @@ body.lockedInterface{
                     0px -2px 2px black; 
     }
 }
+.automa_name{
+    &[data-color="84cba2"]{
+        color:#84cba2;
+    }
+    &[data-color="0090ba"]{
+        color:#0090ba;
+    }
+    &[data-color="feb713"]{
+        color:#feb713;
+    }
+    &[data-color="e14a9b"]{
+        color:#e14a9b;
+    }
+}
 
 .goa_tile_log ,
 .goa_card_log,

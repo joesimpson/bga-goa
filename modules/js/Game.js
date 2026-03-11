@@ -432,6 +432,10 @@ export class Game {
       return `<!--PNS--><span class="playername playername_wrapper_${color}" style="color:#${color};${color_bg}">${name}</span><!--PNE-->`;
     }
     
+    coloredAutomaName(name, specifiedColor = null) {
+        return `<span class="automa_name playername playername_wrapper_${specifiedColor}" data-color="${specifiedColor}">${name}</span>`;
+    }
+    
     bgaFormatText(log, args) {
       try {
         if (log && args) {
@@ -442,6 +446,10 @@ export class Game {
                 let key = playernames_keys[k];
                 let colorKey = color_keys[k];
                 args[key] = this.coloredPlayerName(args[key],args[colorKey]);
+            }
+
+            if('automa_name' in args && 'automa_color' in args) {
+                args.automa_name = this.coloredAutomaName(args.automa_name,args.automa_color);
             }
 
             if('card' in args && 'card_icon' in args) {
@@ -1417,6 +1425,11 @@ export class Game {
     //For debugging :
     notif_reloadPage(notif) {
         window.location.reload(true);
+    }
+
+    notif_automaColor(notif) {
+        this.customDebug('notif_automaColor:', notif);
+        this.gamedatas.automaColor = notif.automa_color;
     }
     
     notif_clearTurn(n) {
@@ -2582,8 +2595,12 @@ export class Game {
     tplToken(token, prefix ='') {
         if(token.subtype == this.const.TOKEN_SUBTTYPE_PROGRESS_MARKER) 
             return `<div id="goa_token${prefix}-${token.id}" class="goa_token goa_token${prefix} goa_progress_marker" data-id="${token.id}" data-track='${token.track}' data-row='${token.row}' data-color='${this.gamedatas.players[token.pId].color}' data-pid='${token.pId}'></div>`;
-        if(token.subtype == this.const.TOKEN_SUBTTYPE_AUCTION_MARKER) 
-            return `<div id="goa_token${prefix}-${token.id}" class="goa_token goa_token${prefix} goa_auction_marker" data-id="${token.id}" data-value='${token.auctionOrder}' data-color='${this.gamedatas.players[token.pId].color}' data-pid='${token.pId}'></div>`;
+        if(token.subtype == this.const.TOKEN_SUBTTYPE_AUCTION_MARKER) {
+            let tokenColor = this.gamedatas.automaColor;
+            if(token.pId) tokenColor = this.gamedatas.players[token.pId].color;
+
+            return `<div id="goa_token${prefix}-${token.id}" class="goa_token goa_token${prefix} goa_auction_marker" data-id="${token.id}" data-value='${token.auctionOrder}' data-color='${tokenColor}' data-pid='${token.pId}'></div>`;
+        }
         if(token.subtype == this.const.TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER) 
             return `<div id="goa_token${prefix}-${token.id}" class="goa_token goa_token${prefix} goa_first_auction_marker" data-id="${token.id}" ></div>`;
         if(token.subtype == this.const.TOKEN_SUBTTYPE_SPICE) 
