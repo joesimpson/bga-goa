@@ -16,7 +16,12 @@ class AutomaAuctionCard extends Card
     {
         $data = parent::getUiData();
         $data['subtype'] = CARD_SUBTTYPE_AUTOMA_AUCTION;
-        //TODO JSA keep json as short as possible by removing static datas (we can get it with material sent at page load)
+        // keep json as short as possible by removing static datas (we can get it with material sent at page load)
+        unset($data['token_type']);
+        unset($data['tile_priority']);
+        unset($data['start']);
+        unset($data['direction']);
+        unset($data['auction_money']);
         return $data;
     }
  

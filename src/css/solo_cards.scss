@@ -10,17 +10,44 @@ $card_height: var(--goa_automa_card_height);
     height: $card_height;
     border-radius: 5px;
 
-    box-shadow: 0px 0px 0px 2px black;
+    //box-shadow: 0px 0px 0px 2px black;
+    box-shadow: 1px 1px 2px 1px black;
 
     //sprite positions
     background-size: 1000% 600%;
     background-image: url("img/expansions/solo_cards.jpg");
     
     //back by default
-    background-position-x: 0%;
-    background-position-y: 0%;
+    background-position-x: 66.6666666667%;
+    background-position-y: 20%;
 
-    @for $i from 1 through 36 {
+    @for $i from 0 through 36 {
+        &[data-type="#{$i + 1}"] {
+            background-position-x: math.div(($i % 10) * 100%, 9);//10 columns
+            background-position-y: math.div(math.div($i - ($i % 10), 10) * 100%, 5);//10 columns , 6 rows
+        }
+    }
+}
+
+.goa_automa_action_card{
+    position: relative;
+
+    width: $card_with;
+    height: $card_height;
+    border-radius: 5px;
+
+    //box-shadow: 0px 0px 0px 2px black;
+    box-shadow: 1px 1px 2px 1px black;
+
+    //sprite positions
+    background-size: 1000% 600%;
+    background-image: url("img/expansions/solo_cards.jpg");
+    
+    //back by default
+    background-position-x: 100%;
+    background-position-y: 20%;
+
+    @for $i from 40 through 50 {
         &[data-type="#{$i + 1}"] {
             background-position-x: math.div(($i % 10) * 100%, 9);//10 columns
             background-position-y: math.div(math.div($i - ($i % 10), 10) * 100%, 5);//10 columns , 6 rows

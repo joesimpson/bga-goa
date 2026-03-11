@@ -2944,7 +2944,9 @@ export class Game {
             return `<div id="goa_card${prefix}-${card.id}" class="goa_card goa_exploration_card goa_card${prefix} goa_card${prefix}_${card.type}" data-type='${card.type}' data-pid='${card.pId}'></div>`;
         
         if(card.subtype == this.const.CARD_SUBTTYPE_AUTOMA_AUCTION) 
-            return `<div id="goa_card${prefix}-${card.id}" class="goa_card goa_automa_auction_card goa_automa_auction_card${prefix} goa_automa_auction_card${prefix}_${card.type}" data-type='${card.type}' ></div>`;
+            return `<div id="goa_card${prefix}-${card.id}" class="goa_card goa_automa_auction_card${prefix} goa_automa_auction_card${prefix}_${card.type}" data-type='${card.type}' ></div>`;
+        if(card.subtype == this.const.CARD_SUBTTYPE_AUTOMA_ACTION) 
+            return `<div id="goa_card${prefix}-${card.id}" class="goa_card goa_automa_action_card${prefix} goa_automa_action_card${prefix}_${card.type}" data-type='${card.type}' ></div>`;
         return '';
     }
     // draw + discard from deck

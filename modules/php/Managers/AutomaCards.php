@@ -4,6 +4,7 @@ namespace Bga\Games\Goa\Managers;
 
 use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Helpers\Collection;
+use Bga\Games\Goa\Models\AutomaActionType;
 use Bga\Games\Goa\Models\AutomaAuctionDirectionType;
 use Bga\Games\Goa\Models\AutomaAuctionStartType;
 use Bga\Games\Goa\Models\CardLocation;
@@ -20,18 +21,20 @@ class AutomaCards extends Cards
      */
     public static function getUiData($currentPlayerId): array
     {
-        //TODO JSA check phase
+        //TODO JSA check phase 1 -> DAY/ 2-> NIGHT
         //TODO JSA !! getTopOf cannot be merged if null
         return self::getInLocation(CardLocation::AUTOMA_AUCTION_DAY_1_BOARD->value)
             ->merge(self::getInLocation(CardLocation::AUTOMA_AUCTION_DAY_2_BOARD->value))
             ->merge(self::getInLocation(CardLocation::AUTOMA_AUCTION_DAY_3_BOARD->value))
-        //TODO JSA REMOVE DECK CONTENT AFTER TEST
+        //TODO JSA REMOVE DECK CONTENT AFTER TEST -> replace by decksize
             ->merge(self::getInLocation(CardLocation::AUTOMA_AUCTION_DAY_1_DECK->value))
             ->merge(self::getInLocation(CardLocation::AUTOMA_AUCTION_DAY_2_DECK->value))
             ->merge(self::getInLocation(CardLocation::AUTOMA_AUCTION_DAY_3_DECK->value))
             ->merge(self::getInLocation(CardLocation::AUTOMA_AUCTION_NIGHT_1_DECK->value))
             ->merge(self::getInLocation(CardLocation::AUTOMA_AUCTION_NIGHT_2_DECK->value))
             ->merge(self::getInLocation(CardLocation::AUTOMA_AUCTION_NIGHT_3_DECK->value))
+            ->merge(self::getInLocation(CardLocation::AUTOMA_ACTION_DECK_A->value))
+            ->merge(self::getInLocation(CardLocation::AUTOMA_ACTION_DECK_B->value))
             ->map(function ($card) {
                 return $card->getUiData();
             })
@@ -104,6 +107,26 @@ class AutomaCards extends Cards
             }
         }
     }
+    
+    $actions = self::getAutomaActionCardsTypes();
+    foreach ($actions as $type => $card) {
+        if($card['nbr_A']>0){//DAY
+            $cards[] = [
+                'type' => $type,
+                'subtype' => CARD_SUBTTYPE_AUTOMA_ACTION,
+                'location' => CardLocation::AUTOMA_ACTION_DECK_A->value,
+                'nbr' => $card['nbr_A'],
+            ];
+        }
+        if($card['nbr_B']>0){//NIGHT
+            $cards[] = [
+                'type' => $type,
+                'subtype' => CARD_SUBTTYPE_AUTOMA_ACTION,
+                'location' => CardLocation::AUTOMA_ACTION_DECK_B->value,
+                'nbr' => $card['nbr_B'],
+            ];
+        }
+    }
 
     self::create($cards);
     self::shuffle(CardLocation::AUTOMA_AUCTION_DAY_1_DECK->value);
@@ -112,7 +135,8 @@ class AutomaCards extends Cards
     self::shuffle(CardLocation::AUTOMA_AUCTION_NIGHT_1_DECK->value);
     self::shuffle(CardLocation::AUTOMA_AUCTION_NIGHT_2_DECK->value);
     self::shuffle(CardLocation::AUTOMA_AUCTION_NIGHT_3_DECK->value);
-    self::shuffle(CardLocation::AUTOMA_ACTION_DECK->value);
+    self::shuffle(CardLocation::AUTOMA_ACTION_DECK_A->value);
+    self::shuffle(CardLocation::AUTOMA_ACTION_DECK_B->value);
 
   }
   
@@ -444,7 +468,30 @@ class AutomaCards extends Cards
    */
   public static function getAutomaActionCardsTypes(): array
   { 
+    $f = function ($t) {
+      return [
+        //Number of same in deck A
+        'nbr_A'         => $t[0],
+        //Number of same in deck B
+        'nbr_B'         => $t[1],
+        'not_first'     => $t[2],
+        'when_first'    => $t[3],
+      ];
+    };
     return [
+      //definition in the same order as in the sprite 'solo_cards.jpg' :
+      //1 - 3- 2 -1 1 
+      41 =>  $f([ 1, 0, AutomaActionType::GAIN_MONEY_1,   AutomaActionType::GAIN_MONEY_2, ]), 
+      42 =>  $f([ 3, 0, AutomaActionType::GAIN_MONEY_2,   AutomaActionType::GAIN_MONEY_5, ]), 
+      43 =>  $f([ 2, 0, AutomaActionType::NOGAIN_MONEY_5, AutomaActionType::GAIN_MONEY_5, ]), 
+      44 =>  $f([ 1, 0, AutomaActionType::GAIN_MONEY_1,   AutomaActionType::DISCARD_2_KOLLAM, ]), 
+      45 =>  $f([ 1, 0, AutomaActionType::GAIN_MONEY_5,   AutomaActionType::DISCARD_2_MADRAS, ]), 
+
+      46 =>  $f([ 0, 3, AutomaActionType::GAIN_MONEY_2,   AutomaActionType::GAIN_MONEY_5, ]), 
+      47 =>  $f([ 0, 1, AutomaActionType::GAIN_MONEY_5,   AutomaActionType::GAIN_MONEY_10, ]), 
+      48 =>  $f([ 0, 2, AutomaActionType::NOGAIN_MONEY_5, AutomaActionType::GAIN_MONEY_5, ]), 
+      49 =>  $f([ 0, 1, AutomaActionType::NOGAIN_MONEY_10,AutomaActionType::GAIN_MONEY_10, ]), 
+      50 =>  $f([ 0, 1, AutomaActionType::NOGAIN_MONEY_2, AutomaActionType::GAIN_MONEY_2, ]), 
 
     ];
   }

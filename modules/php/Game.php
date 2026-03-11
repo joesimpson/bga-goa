@@ -165,6 +165,7 @@ class Game extends \Bga\GameFramework\Table
             'cards' => [
                 CARD_SUBTTYPE_EXPLORATION => Cards::getExplorationCardsTypes(),
                 CARD_SUBTTYPE_AUTOMA_AUCTION => AutomaCards::getAutomaAuctionCardsTypes(),
+                CARD_SUBTTYPE_AUTOMA_ACTION => AutomaCards::getAutomaActionCardsTypes(),
             ],
         ];
         $result["tokens"] = Tokens::getUiData($current_player_id);
