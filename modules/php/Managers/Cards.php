@@ -7,6 +7,7 @@ use Bga\Games\Goa\Core\Stats;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Collection;
 use Bga\Games\Goa\Helpers\Utils;
+use Bga\Games\Goa\Models\AutomaActionCard;
 use Bga\Games\Goa\Models\AutomaAuctionCard;
 use Bga\Games\Goa\Models\ExplorationCard;
 use Bga\Games\Goa\Models\Player;
@@ -35,6 +36,9 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
       case CARD_SUBTTYPE_AUTOMA_AUCTION:
         $data = AutomaCards::getAutomaAuctionCardsTypes()[$type];
         return new AutomaAuctionCard($row, $data);
+      case CARD_SUBTTYPE_AUTOMA_ACTION:
+        $data = AutomaCards::getAutomaActionCardsTypes()[$type];
+        return new AutomaActionCard($row, $data);
     }
     throw new InvalidArgumentException("Card $type, $subtype");
   }
