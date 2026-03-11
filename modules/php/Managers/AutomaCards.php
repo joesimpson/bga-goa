@@ -9,6 +9,7 @@ use Bga\Games\Goa\Models\AutomaAuctionDirectionType;
 use Bga\Games\Goa\Models\AutomaAuctionStartType;
 use Bga\Games\Goa\Models\CardLocation;
 use Bga\Games\Goa\Models\MarketPlayType;
+use Bga\Games\Goa\Models\MoneyCardType;
 
 /* Class to manage all the Automa cards */
 
@@ -35,10 +36,8 @@ class AutomaCards extends Cards
             ->merge(self::getInLocation(CardLocation::AUTOMA_AUCTION_NIGHT_3_DECK->value))
             ->merge(self::getInLocation(CardLocation::AUTOMA_ACTION_DECK_A->value))
             ->merge(self::getInLocation(CardLocation::AUTOMA_ACTION_DECK_B->value))
-            ->map(function ($card) {
-                return $card->getUiData();
-            })
-            ->toArray();
+            ->merge(self::getInLocation(CardLocation::AUTOMA_MONEY_DECK->value))
+            ->ui();
     } 
 
     public static function getAuctionDeckForTokenType(int $token_type, int $phase) : CardLocation
@@ -143,6 +142,36 @@ class AutomaCards extends Cards
   public static function setupSession(int $session)
   {
     //TODO JSA CAMPAIGN SOLO
+
+    $difficulty = Globals::getOptionAutomaDifficulty();
+    switch($difficulty){
+        case OPTION_AUTOMA_DIFFICULTY_OFF: return;
+        case OPTION_AUTOMA_DIFFICULTY_1:
+            MoneyCards::initAutoma([
+                MoneyCardType::MONEY_1->value => 5,
+                MoneyCardType::MONEY_2->value => 3,
+                MoneyCardType::MONEY_5->value => 1,
+                MoneyCardType::MONEY_10->value => 0,
+            ]);
+            break;
+        case OPTION_AUTOMA_DIFFICULTY_2:
+            MoneyCards::initAutoma([
+                MoneyCardType::MONEY_1->value => 4,
+                MoneyCardType::MONEY_2->value => 3,
+                MoneyCardType::MONEY_5->value => 2,
+                MoneyCardType::MONEY_10->value => 0,
+            ]);
+            break;
+        case OPTION_AUTOMA_DIFFICULTY_3:
+            MoneyCards::initAutoma([
+                MoneyCardType::MONEY_1->value => 2,
+                MoneyCardType::MONEY_2->value => 3,
+                MoneyCardType::MONEY_5->value => 2,
+                MoneyCardType::MONEY_10->value => 1,
+            ]);
+            break;
+        default: return;
+    }
     
   }
   /**
@@ -480,7 +509,6 @@ class AutomaCards extends Cards
     };
     return [
       //definition in the same order as in the sprite 'solo_cards.jpg' :
-      //1 - 3- 2 -1 1 
       41 =>  $f([ 1, 0, AutomaActionType::GAIN_MONEY_1,   AutomaActionType::GAIN_MONEY_2, ]), 
       42 =>  $f([ 3, 0, AutomaActionType::GAIN_MONEY_2,   AutomaActionType::GAIN_MONEY_5, ]), 
       43 =>  $f([ 2, 0, AutomaActionType::NOGAIN_MONEY_5, AutomaActionType::GAIN_MONEY_5, ]), 
