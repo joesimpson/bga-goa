@@ -971,6 +971,7 @@ export class Game {
         let possibleDiscards = args.possibleDiscards; 
         let possiblePlayCards = args.possiblePlayCards; 
 
+        if(!this.explorationHand) return;
         this.updateHandSelectableList(args);
 
         this.explorationHand.onSelectionChange = (x, card) => {
