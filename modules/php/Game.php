@@ -26,6 +26,7 @@ use Bga\Games\Goa\Core\Stats;
 use Bga\Games\Goa\Helpers\Utils;
 use Bga\Games\Goa\Managers\AutomaCards;
 use Bga\Games\Goa\Managers\Cards;
+use Bga\Games\Goa\Managers\MoneyCards;
 use Bga\Games\Goa\Managers\Players;
 use Bga\Games\Goa\Managers\Tiles;
 use Bga\Games\Goa\Managers\Tokens;
@@ -166,6 +167,7 @@ class Game extends \Bga\GameFramework\Table
                 CARD_SUBTTYPE_EXPLORATION => Cards::getExplorationCardsTypes(),
                 CARD_SUBTTYPE_AUTOMA_AUCTION => AutomaCards::getAutomaAuctionCardsTypes(),
                 CARD_SUBTTYPE_AUTOMA_ACTION => AutomaCards::getAutomaActionCardsTypes(),
+                CARD_SUBTTYPE_MONEY => MoneyCards::getMoneyCardsTypes(),
             ],
         ];
         $result["tokens"] = Tokens::getUiData($current_player_id);

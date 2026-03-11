@@ -26,6 +26,9 @@ enum CardLocation: string
   case AUTOMA_ACTION_DECK_A  = 'deck_act_a';
   case AUTOMA_ACTION_DECK_B  = 'deck_act_b';
   case AUTOMA_ACTION_BOARD = 'board_act';
+
+  case AUTOMA_MONEY_DECK = '7_deck_a';
+  
 }
 
 enum MarketPlayType: int
@@ -65,4 +68,12 @@ enum AutomaActionType: int
     case DISCARD_2_KOLLAM      = 9;
     case DISCARD_2_MADRAS      = 10;
 
+}
+
+enum MoneyCardType: int
+{
+    case MONEY_1          = 1;
+    case MONEY_2          = 2;
+    case MONEY_5          = 3;
+    case MONEY_10         = 4;
 }
