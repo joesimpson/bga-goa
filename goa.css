@@ -19,6 +19,8 @@
   --goa_explo_card_with: 131px;
   --goa_explo_card_height: 200px;
   --goa_hand_card_scale: 0.80;
+  --goa_automa_card_with: 131px;
+  --goa_automa_card_height: 200px;
   --goa_board_height_offset: -230px;
   --goa_selectable_color: blue;
   --goa_selectable_color_back: rgba(20, 0, 255, 0.2);
@@ -1737,6 +1739,162 @@ body.notouch-device .goa_exploration_card-front.bga-cards_selectable-card:hover,
 }
 .goa_ExplorationCardsHelp .goa_card_symbols .goa_card_symbols_score {
   display: none;
+}
+
+.goa_automa_auction_card {
+  position: relative;
+  width: var(--goa_automa_card_with);
+  height: var(--goa_automa_card_height);
+  border-radius: 5px;
+  box-shadow: 0px 0px 0px 2px black;
+  background-size: 1000% 600%;
+  background-image: url("img/expansions/solo_cards.jpg");
+  background-position-x: 0%;
+  background-position-y: 0%;
+}
+.goa_automa_auction_card[data-type="2"] {
+  background-position-x: 11.1111111111%;
+  background-position-y: 0%;
+}
+.goa_automa_auction_card[data-type="3"] {
+  background-position-x: 22.2222222222%;
+  background-position-y: 0%;
+}
+.goa_automa_auction_card[data-type="4"] {
+  background-position-x: 33.3333333333%;
+  background-position-y: 0%;
+}
+.goa_automa_auction_card[data-type="5"] {
+  background-position-x: 44.4444444444%;
+  background-position-y: 0%;
+}
+.goa_automa_auction_card[data-type="6"] {
+  background-position-x: 55.5555555556%;
+  background-position-y: 0%;
+}
+.goa_automa_auction_card[data-type="7"] {
+  background-position-x: 66.6666666667%;
+  background-position-y: 0%;
+}
+.goa_automa_auction_card[data-type="8"] {
+  background-position-x: 77.7777777778%;
+  background-position-y: 0%;
+}
+.goa_automa_auction_card[data-type="9"] {
+  background-position-x: 88.8888888889%;
+  background-position-y: 0%;
+}
+.goa_automa_auction_card[data-type="10"] {
+  background-position-x: 100%;
+  background-position-y: 0%;
+}
+.goa_automa_auction_card[data-type="11"] {
+  background-position-x: 0%;
+  background-position-y: 20%;
+}
+.goa_automa_auction_card[data-type="12"] {
+  background-position-x: 11.1111111111%;
+  background-position-y: 20%;
+}
+.goa_automa_auction_card[data-type="13"] {
+  background-position-x: 22.2222222222%;
+  background-position-y: 20%;
+}
+.goa_automa_auction_card[data-type="14"] {
+  background-position-x: 33.3333333333%;
+  background-position-y: 20%;
+}
+.goa_automa_auction_card[data-type="15"] {
+  background-position-x: 44.4444444444%;
+  background-position-y: 20%;
+}
+.goa_automa_auction_card[data-type="16"] {
+  background-position-x: 55.5555555556%;
+  background-position-y: 20%;
+}
+.goa_automa_auction_card[data-type="17"] {
+  background-position-x: 66.6666666667%;
+  background-position-y: 20%;
+}
+.goa_automa_auction_card[data-type="18"] {
+  background-position-x: 77.7777777778%;
+  background-position-y: 20%;
+}
+.goa_automa_auction_card[data-type="19"] {
+  background-position-x: 88.8888888889%;
+  background-position-y: 20%;
+}
+.goa_automa_auction_card[data-type="20"] {
+  background-position-x: 100%;
+  background-position-y: 20%;
+}
+.goa_automa_auction_card[data-type="21"] {
+  background-position-x: 0%;
+  background-position-y: 40%;
+}
+.goa_automa_auction_card[data-type="22"] {
+  background-position-x: 11.1111111111%;
+  background-position-y: 40%;
+}
+.goa_automa_auction_card[data-type="23"] {
+  background-position-x: 22.2222222222%;
+  background-position-y: 40%;
+}
+.goa_automa_auction_card[data-type="24"] {
+  background-position-x: 33.3333333333%;
+  background-position-y: 40%;
+}
+.goa_automa_auction_card[data-type="25"] {
+  background-position-x: 44.4444444444%;
+  background-position-y: 40%;
+}
+.goa_automa_auction_card[data-type="26"] {
+  background-position-x: 55.5555555556%;
+  background-position-y: 40%;
+}
+.goa_automa_auction_card[data-type="27"] {
+  background-position-x: 66.6666666667%;
+  background-position-y: 40%;
+}
+.goa_automa_auction_card[data-type="28"] {
+  background-position-x: 77.7777777778%;
+  background-position-y: 40%;
+}
+.goa_automa_auction_card[data-type="29"] {
+  background-position-x: 88.8888888889%;
+  background-position-y: 40%;
+}
+.goa_automa_auction_card[data-type="30"] {
+  background-position-x: 100%;
+  background-position-y: 40%;
+}
+.goa_automa_auction_card[data-type="31"] {
+  background-position-x: 0%;
+  background-position-y: 60%;
+}
+.goa_automa_auction_card[data-type="32"] {
+  background-position-x: 11.1111111111%;
+  background-position-y: 60%;
+}
+.goa_automa_auction_card[data-type="33"] {
+  background-position-x: 22.2222222222%;
+  background-position-y: 60%;
+}
+.goa_automa_auction_card[data-type="34"] {
+  background-position-x: 33.3333333333%;
+  background-position-y: 60%;
+}
+.goa_automa_auction_card[data-type="35"] {
+  background-position-x: 44.4444444444%;
+  background-position-y: 60%;
+}
+.goa_automa_auction_card[data-type="36"] {
+  background-position-x: 55.5555555556%;
+  background-position-y: 60%;
+}
+.goa_automa_auction_card[data-type="37"] {
+  background-position-x: 66.6666666667%;
+  background-position-y: 60%;
 }
 
 .goa_tile {

@@ -2,8 +2,6 @@
 
 namespace Bga\Games\Goa\Models;
 
-use Bga\Games\Goa\Managers\Tiles;
-
 class MarketTile extends Tile
 {  
 

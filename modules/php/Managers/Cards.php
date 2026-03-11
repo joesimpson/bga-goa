@@ -6,8 +6,8 @@ use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Core\Stats;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Collection;
-use Bga\Games\Goa\Helpers\Log;
 use Bga\Games\Goa\Helpers\Utils;
+use Bga\Games\Goa\Models\AutomaAuctionCard;
 use Bga\Games\Goa\Models\ExplorationCard;
 use Bga\Games\Goa\Models\Player;
 use InvalidArgumentException;
@@ -32,6 +32,9 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
       case CARD_SUBTTYPE_EXPLORATION:
         $data = self::getExplorationCardsTypes()[$type];
         return new ExplorationCard($row, $data);
+      case CARD_SUBTTYPE_AUTOMA_AUCTION:
+        $data = AutomaCards::getAutomaAuctionCardsTypes()[$type];
+        return new AutomaAuctionCard($row, $data);
     }
     throw new InvalidArgumentException("Card $type, $subtype");
   }
@@ -417,6 +420,8 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
     self::create($cards);
     self::shuffle(CARD_LOCATION_EXP_DECK);
 
+    AutomaCards::setupNewGame($players, $options);
+
   }
   
   public static function setupSession(int $session)
@@ -432,6 +437,8 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
     self::shuffle(CARD_LOCATION_EXP_DECK);
     $nbDeck = Cards::countInExplorationDeck();
     Notifications::reshuffleExplorationDeck(null, $nbDeck );
+
+    AutomaCards::setupSession($session);
   }
   
   /**

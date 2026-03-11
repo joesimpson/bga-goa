@@ -19,10 +19,12 @@ declare(strict_types=1);
 namespace Bga\Games\Goa;
 
 require_once 'constants.inc.php';
+require_once 'Models/Enums.php';
 
 use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Core\Stats;
 use Bga\Games\Goa\Helpers\Utils;
+use Bga\Games\Goa\Managers\AutomaCards;
 use Bga\Games\Goa\Managers\Cards;
 use Bga\Games\Goa\Managers\Players;
 use Bga\Games\Goa\Managers\Tiles;
@@ -152,6 +154,7 @@ class Game extends \Bga\GameFramework\Table
             'all' => Cards::getUiData($current_player_id),
             'private' => Cards::getPrivateDatas($current_player_id),
             'deck_size' => Cards::getAllDeckSizes(),
+            'automa' => AutomaCards::getUiData($current_player_id),
         ];
         $result["tiles"] = Tiles::getUiData($current_player_id);
         $result["material"] = [
@@ -161,6 +164,7 @@ class Game extends \Bga\GameFramework\Table
             ],
             'cards' => [
                 CARD_SUBTTYPE_EXPLORATION => Cards::getExplorationCardsTypes(),
+                CARD_SUBTTYPE_AUTOMA_AUCTION => AutomaCards::getAutomaAuctionCardsTypes(),
             ],
         ];
         $result["tokens"] = Tokens::getUiData($current_player_id);

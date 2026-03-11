@@ -2884,6 +2884,11 @@ export class Game {
                 await this.addCard(card);
             }),
         );
+        await Promise.all (
+            this.gamedatas.cards.automa.map( async (card) => {
+                await this.addCard(card);
+            }),
+        );
     }
 
     getCardContainer(card) {
@@ -2937,6 +2942,9 @@ export class Game {
     tplCard(card, prefix ='') {
         if(card.subtype == this.const.CARD_SUBTTYPE_EXPLORATION) 
             return `<div id="goa_card${prefix}-${card.id}" class="goa_card goa_exploration_card goa_card${prefix} goa_card${prefix}_${card.type}" data-type='${card.type}' data-pid='${card.pId}'></div>`;
+        
+        if(card.subtype == this.const.CARD_SUBTTYPE_AUTOMA_AUCTION) 
+            return `<div id="goa_card${prefix}-${card.id}" class="goa_card goa_automa_auction_card goa_automa_auction_card${prefix} goa_automa_auction_card${prefix}_${card.type}" data-type='${card.type}' ></div>`;
         return '';
     }
     // draw + discard from deck
