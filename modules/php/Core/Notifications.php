@@ -29,6 +29,24 @@ class Notifications
       'preserve' => ['automa_color'],
     ]);
   }
+  public static function initAutomaMoney(Collection $cards)
+  {
+    $cardsNames = $cards->map(function($card) {return $card->getValue();})->toArray();
+
+    $level = Globals::getOptionAutomaDifficulty();
+    self::notifyAll('initAutomaMoney',  clienttranslate('Level ${n} : ${automa_name} will play with ${x} Pardau cards (${money_cards})'), [
+      'automa_name' => Utils::getAutomaName(),
+      'automa_color' => Globals::getAutomaColor(),
+      'i18n' => ['automa_name'],
+      'preserve' => ['automa_color','cards'],
+      'n' => $level,
+      'x' => $cards->count(),
+      'cards' => $cards->ui(),
+      'preserve' => ['cards'],
+      'money_cards' => $cardsNames,
+      'separator' => ['money_cards' => ','],
+    ]);
+  }
   public static function newSession(int $session)
   {
     $msg = '';
