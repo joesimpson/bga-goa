@@ -1436,7 +1436,7 @@ export class Game {
         window.location.reload(true);
     }
 
-    notif_automaColor(notif) {
+    async notif_automaColor(notif) {
         this.customDebug('notif_automaColor:', notif);
         this.gamedatas.automa_color = notif.automa_color;
         this.gamedatas.automa_name = _(notif.automa_name);
@@ -1455,8 +1455,41 @@ export class Game {
         }
         this.setupAutomaBoard(); 
     }
+
+    async notif_initAutomaMoney(notif) {
+        this.customDebug('notif_initAutomaMoney:', notif);
+        let levelCard = this.formatAutomaLevelCard(notif.n);
+        document.getElementById(`goa_board_components`).insertAdjacentHTML('beforeend', levelCard);
+
+        await this.bga.gameui.wait(1000);
+
+        let cards = notif.cards;
+        let fromElement = document.getElementById(`goa_money_stacks`);
+        let toElement = document.getElementById('goa_automa_deck_money');
+        let animations = Object.values(cards).map(card => (() => {
+            //add a back card
+            toElement.insertAdjacentHTML('beforeend', this.tplCard({'id':card.id, 'subtype': this.const.CARD_SUBTTYPE_MONEY}));
+
+            this.animationManager.slideFloatingElement(
+                this.createTempElement(this.tplCard(card)), 
+                fromElement, 
+                toElement, 
+                {
+                    duration: 2000,
+                    ignoreScale: false,
+                    ignoreRotation: true,
+                }
+            )
+        }));
+        await this.animationManager.playInterval(animations);
+        
+        await this.bga.gameui.wait(1000);
+        
+        //Clean card after :
+        this.destroy(document.getElementById('goa_board_mask'));
+    }
     
-    notif_clearTurn(n) {
+    async notif_clearTurn(n) {
         this.customDebug('notif_clearTurn: restarting turn/step', n);
         this.cancelLogs(n.notifIds);
     }
@@ -3340,5 +3373,14 @@ export class Game {
                 </div>
             </div>
             `);
+    }
+
+    formatAutomaLevelCard(level){
+        this.gamedatas.automa_level = level;
+        return `
+            <div id='goa_board_mask' class='goa_board_mask'>
+                <div id='goa_automa_level_card' class='goa_automa_level_card' data-level='${level}'>
+                </div>
+            </div>`; 
     }
 }

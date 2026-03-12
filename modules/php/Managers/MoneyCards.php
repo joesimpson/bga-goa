@@ -2,6 +2,7 @@
 
 namespace Bga\Games\Goa\Managers;
 
+use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Helpers\Collection;
 use Bga\Games\Goa\Models\CardLocation;
 use Bga\Games\Goa\Models\MoneyCardType;
@@ -24,7 +25,7 @@ class MoneyCards extends Cards
         }
         $ids = self::create($cards);
         $elements = self::get($ids);
-        //TODO JSA NOTIF
+        Notifications::initAutomaMoney($elements);
         self::shuffle(CardLocation::AUTOMA_MONEY_DECK->value);
         return $elements;
     }
