@@ -475,8 +475,15 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
       'nbr' => 1,
     ];
     
+    $nbBidders = count($players);
+
+    $automaColor = Globals::getAutomaColor();
+    if(isset($automaColor)){
+      $nbBidders++;
+    }
+    
     foreach ($players as $pId => $player) {
-      for($k = 0; $k < count($players) +1; $k++){
+      for($k = 0; $k < $nbBidders +1; $k++){
         $tokens[] = [
           'location' => TOKEN_LOCATION_PLAYER_BOARD,
           'type' => TOKEN_TYPE_AUCTION_MARKERS[$k],
@@ -499,11 +506,10 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
       }
     }
 
-    $automaColor = Globals::getAutomaColor();
     if(isset($automaColor)){
       //INIT AUTOMA Auction tokens
       
-      for($k = 0; $k < count($players) +1; $k++){
+      for($k = 0; $k < $nbBidders +1; $k++){
         $tokens[] = [
           'location' => TOKEN_LOCATION_AUTOMA_BOARD,
           'type' => TOKEN_TYPE_AUCTION_MARKERS[$k],
