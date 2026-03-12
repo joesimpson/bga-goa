@@ -3,10 +3,10 @@
     #player_name_0, // automa panel
     >.player-name>a{
         /** Add a BLACK shadow behind player name in case of bright colors like yellow*/
-        &[style*='color: #84cba2'],
-        &[style*='color: #0090ba'],
-        &[style*='color: #feb713'],
-        &[style*='color: #e14a9b']
+        &[style*='color: #84cba2'], &[data-color='84cba2'],
+        &[style*='color: #0090ba'], &[data-color='0090ba'],
+        &[style*='color: #feb713'], &[data-color='feb713'],
+        &[style*='color: #e14a9b'], &[data-color='e14a9b']
         {
             text-shadow: 2px 0px 2px black, 
                          0px 2px 2px black,
@@ -23,6 +23,10 @@
         }
     }
 
+}
+#overall_player_board_0{
+    //AUTOMA
+    background-color: #9d9d9d;
 }
 
  .goa_panel{
