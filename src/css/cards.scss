@@ -172,8 +172,8 @@ body.notouch-device{
     }
 }
 .goa_money_card{
-    width: 120px;
-    height: 182px;
+    width: var(--goa_automa_card_with);
+    height: var(--goa_automa_card_height);
     border-radius: 5%;
 
     box-shadow: 0px 0px 0px 2px black;
