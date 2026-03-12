@@ -3,12 +3,13 @@
 :root {
     --goa_board_display_scale: 0.60; 
     --goa_playerboard_display_scale: 0.60; 
+    --goa_automaboard_display_scale: 0.5;
     --goa_explo_card_with: 131px;
     --goa_explo_card_height: 200px;
     --goa_hand_card_scale: 0.80; 
     
-    --goa_automa_card_with: 131px;
-    --goa_automa_card_height: 200px;
+    --goa_automa_card_with: 148px;
+    --goa_automa_card_height: 225px;
 
     //--goa_board_height_offset: 0px;
     //Publisher agrees to cut the top of board because it is useless for digital adaptation

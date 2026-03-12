@@ -24,9 +24,14 @@ class AutomaCards extends Cards
     {
         //TODO JSA check phase 1 -> DAY/ 2-> NIGHT
         //TODO JSA !! getTopOf cannot be merged if null
-        return self::getInLocation(CardLocation::AUTOMA_AUCTION_DAY_1_BOARD->value)
-            ->merge(self::getInLocation(CardLocation::AUTOMA_AUCTION_DAY_2_BOARD->value))
-            ->merge(self::getInLocation(CardLocation::AUTOMA_AUCTION_DAY_3_BOARD->value))
+        return self::getInLocationOrdered(CardLocation::AUTOMA_AUCTION_DAY_1_BOARD->value)
+            ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_AUCTION_DAY_2_BOARD->value))
+            ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_AUCTION_DAY_3_BOARD->value))
+            ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_AUCTION_NIGHT_1_BOARD->value))
+            ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_AUCTION_NIGHT_2_BOARD->value))
+            ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_AUCTION_NIGHT_3_BOARD->value))
+            ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_ACTION_BOARD->value))
+            ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_MONEY_DISCARD->value))
         //TODO JSA REMOVE DECK CONTENT AFTER TEST -> replace by decksize
             ->merge(self::getInLocation(CardLocation::AUTOMA_AUCTION_DAY_1_DECK->value))
             ->merge(self::getInLocation(CardLocation::AUTOMA_AUCTION_DAY_2_DECK->value))

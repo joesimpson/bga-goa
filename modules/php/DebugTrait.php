@@ -7,11 +7,13 @@ use Bga\Games\Goa\Core\Stats;
 use Bga\Games\Goa\Helpers\Log;
 use Bga\Games\Goa\Helpers\QueryBuilder;
 use Bga\Games\Goa\Helpers\Utils;
+use Bga\Games\Goa\Managers\AutomaCards;
 use Bga\Games\Goa\Managers\Cards;
 use Bga\Games\Goa\Managers\Effects;
 use Bga\Games\Goa\Managers\Players;
 use Bga\Games\Goa\Managers\Tiles;
 use Bga\Games\Goa\Managers\Tokens;
+use Bga\Games\Goa\Models\CardLocation;
 use Bga\Games\Goa\States\EndSession;
 
 /**
@@ -307,6 +309,31 @@ trait DebugTrait
         //
         if($keepOne) Cards::getTopOf(CARD_LOCATION_EXP_DISCARD)->setLocation(CARD_LOCATION_EXP_DECK);
         Cards::shuffle(CARD_LOCATION_EXP_DISCARD);
+
+        $difficulty = Globals::getOptionAutomaDifficulty();
+        if(OPTION_AUTOMA_DIFFICULTY_OFF != $difficulty){
+            //teST DISCARD  zones
+            AutomaCards::moveAllInLocation(CardLocation::AUTOMA_AUCTION_DAY_1_DECK->value, CardLocation::AUTOMA_AUCTION_DAY_1_BOARD->value);
+            AutomaCards::moveAllInLocation(CardLocation::AUTOMA_AUCTION_DAY_2_DECK->value, CardLocation::AUTOMA_AUCTION_DAY_2_BOARD->value);
+            AutomaCards::moveAllInLocation(CardLocation::AUTOMA_AUCTION_DAY_3_DECK->value, CardLocation::AUTOMA_AUCTION_DAY_3_BOARD->value);
+            AutomaCards::moveAllInLocation(CardLocation::AUTOMA_AUCTION_NIGHT_1_DECK->value, CardLocation::AUTOMA_AUCTION_NIGHT_1_BOARD->value);
+            AutomaCards::moveAllInLocation(CardLocation::AUTOMA_AUCTION_NIGHT_2_DECK->value, CardLocation::AUTOMA_AUCTION_NIGHT_2_BOARD->value);
+            AutomaCards::moveAllInLocation(CardLocation::AUTOMA_AUCTION_NIGHT_3_DECK->value, CardLocation::AUTOMA_AUCTION_NIGHT_3_BOARD->value);
+            AutomaCards::moveAllInLocation(CardLocation::AUTOMA_ACTION_DECK_A->value,   CardLocation::AUTOMA_ACTION_BOARD->value);
+            AutomaCards::moveAllInLocation(CardLocation::AUTOMA_ACTION_DECK_B->value,   CardLocation::AUTOMA_ACTION_BOARD->value);
+            AutomaCards::moveAllInLocation(CardLocation::AUTOMA_MONEY_DECK->value,   CardLocation::AUTOMA_MONEY_DISCARD->value);
+                    
+            AutomaCards::shuffle(CardLocation::AUTOMA_AUCTION_DAY_1_BOARD->value);
+            AutomaCards::shuffle(CardLocation::AUTOMA_AUCTION_DAY_2_BOARD->value);
+            AutomaCards::shuffle(CardLocation::AUTOMA_AUCTION_DAY_3_BOARD->value);
+            AutomaCards::shuffle(CardLocation::AUTOMA_AUCTION_NIGHT_1_BOARD->value);
+            AutomaCards::shuffle(CardLocation::AUTOMA_AUCTION_NIGHT_2_BOARD->value);
+            AutomaCards::shuffle(CardLocation::AUTOMA_AUCTION_NIGHT_3_BOARD->value);
+            AutomaCards::shuffle(CardLocation::AUTOMA_ACTION_BOARD->value);
+            AutomaCards::shuffle(CardLocation::AUTOMA_ACTION_BOARD->value);
+            AutomaCards::shuffle(CardLocation::AUTOMA_MONEY_DISCARD->value);
+        }
+        
         $this->debug_refreshUI();
         $this->refresh_state();
     }

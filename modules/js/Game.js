@@ -311,6 +311,7 @@ export class Game {
                     <div class='goa_player_table_title_name'>
                         <div><span class='goa_player_table_title_content'>
                         <img id="goa_player_avatar_${player.id}" class="emblem goa_player_avatar" src="${playerAvatarURL}" alt="avatar">
+                        </img>
                         ${playerColoredName}
                         </span></div>
                     </div>
@@ -363,6 +364,7 @@ export class Game {
                 'color' : this.gamedatas.automa_color,
                 'iconClass': 'goa_avatar_automa',
             });
+            this.setupAutomaBoard(); 
         }
        
         Promise.all (
@@ -1441,7 +1443,7 @@ export class Game {
         let existingAutomaPanel = this.bga.playerPanels.getElement(0);
         if(!existingAutomaPanel){
             this.bga.playerPanels.addAutomataPlayerPanel(0, this.gamedatas.automa_name, {
-                'color' : this.gamedatas.automaColor,
+                'color' : this.gamedatas.automa_color,
                 'iconClass': 'goa_avatar_automa',
             });
         }
@@ -1451,6 +1453,7 @@ export class Game {
             automaName.dataset.color = this.gamedatas.automa_color;
             automaName.style.color = `#${this.gamedatas.automa_color}`; 
         }
+        this.setupAutomaBoard(); 
     }
     
     notif_clearTurn(n) {
@@ -2572,6 +2575,11 @@ export class Game {
                 return `goa_first_player_container_${token.pId}`;
             }
         } 
+        if( this.const.TOKEN_LOCATION_AUTOMA_BOARD == token.location){
+            if(token.subtype == this.const.TOKEN_SUBTTYPE_AUCTION_MARKER){
+                return `goa_automa_tokens`;
+            }
+        }
         if( this.const.TOKEN_LOCATION_BOARD == token.location) {
             if(token.subtype == this.const.TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER){
                 if(token.row>=0 && token.col>=0 && token.row<=1+this.const.MARKET_GRID_SIZE && token.col<=1+this.const.MARKET_GRID_SIZE ){
@@ -2617,7 +2625,7 @@ export class Game {
         if(token.subtype == this.const.TOKEN_SUBTTYPE_PROGRESS_MARKER) 
             return `<div id="goa_token${prefix}-${token.id}" class="goa_token goa_token${prefix} goa_progress_marker" data-id="${token.id}" data-track='${token.track}' data-row='${token.row}' data-color='${this.gamedatas.players[token.pId].color}' data-pid='${token.pId}'></div>`;
         if(token.subtype == this.const.TOKEN_SUBTTYPE_AUCTION_MARKER) {
-            let tokenColor = this.gamedatas.automaColor;
+            let tokenColor = this.gamedatas.automa_color;
             if(token.pId) tokenColor = this.gamedatas.players[token.pId].color;
 
             return `<div id="goa_token${prefix}-${token.id}" class="goa_token goa_token${prefix} goa_auction_marker" data-id="${token.id}" data-value='${token.auctionOrder}' data-color='${tokenColor}' data-pid='${token.pId}'></div>`;
@@ -2939,6 +2947,60 @@ export class Game {
             }
         }
         
+        if(card.subtype == this.const.CARD_SUBTTYPE_AUTOMA_AUCTION){
+            if (card.location == (this.const.CARD_LOCATION_AUTOMA_AUCTION_DAY_1_DECK) 
+                || card.location == (this.const.CARD_LOCATION_AUTOMA_AUCTION_NIGHT_1_DECK)
+            ) {
+                return `goa_automa_deck_auction_1`;
+            }
+            if (card.location == (this.const.CARD_LOCATION_AUTOMA_AUCTION_DAY_2_DECK) 
+                || card.location == (this.const.CARD_LOCATION_AUTOMA_AUCTION_NIGHT_2_DECK)
+            ) {
+                return `goa_automa_deck_auction_2`;
+            }
+            if (card.location == (this.const.CARD_LOCATION_AUTOMA_AUCTION_DAY_3_DECK) 
+                || card.location == (this.const.CARD_LOCATION_AUTOMA_AUCTION_NIGHT_3_DECK)
+            ) {
+                return `goa_automa_deck_auction_3`;
+            }
+            
+            if (card.location == (this.const.CARD_LOCATION_AUTOMA_AUCTION_DAY_1_BOARD) 
+                || card.location == (this.const.CARD_LOCATION_AUTOMA_AUCTION_NIGHT_1_BOARD)
+            ) {
+                return `goa_automa_discard_auction_1`;
+            }
+            if (card.location == (this.const.CARD_LOCATION_AUTOMA_AUCTION_DAY_2_BOARD) 
+                || card.location == (this.const.CARD_LOCATION_AUTOMA_AUCTION_NIGHT_2_BOARD)
+            ) {
+                return `goa_automa_discard_auction_2`;
+            }
+            if (card.location == (this.const.CARD_LOCATION_AUTOMA_AUCTION_DAY_3_BOARD) 
+                || card.location == (this.const.CARD_LOCATION_AUTOMA_AUCTION_NIGHT_3_BOARD)
+            ) {
+                return `goa_automa_discard_auction_3`;
+            }
+        }
+        if(card.subtype == this.const.CARD_SUBTTYPE_AUTOMA_ACTION){
+            if (card.location == (this.const.CARD_LOCATION_AUTOMA_ACTION_DECK_A) 
+                || card.location == (this.const.CARD_LOCATION_AUTOMA_ACTION_DECK_B)
+            ) {
+                return `goa_automa_deck_action`;
+            }
+            if (card.location == (this.const.CARD_LOCATION_AUTOMA_ACTION_BOARD) 
+            ) {
+                return `goa_automa_discard_action`;
+            }
+        }
+        if(card.subtype == this.const.CARD_SUBTTYPE_MONEY){
+            if (card.location == (this.const.CARD_LOCATION_AUTOMA_MONEY_DECK) ) {
+                return `goa_automa_deck_money`;
+            }
+            if (card.location == (this.const.CARD_LOCATION_AUTOMA_MONEY_BOARD) ) {
+                return `goa_automa_discard_money`;
+            }
+        }
+
+        
         console.error('Trying to get container of a card', card);
         return 'goa_game_container';
     }
@@ -3223,5 +3285,60 @@ export class Game {
         div.innerHTML = html;
         div.style.pointerEvents = 'all';
         return div;
+    }
+
+    
+    ////////////////////////////////////////////////////////
+    //    _____  ____  _      ____  
+    //   / ____|/ __ \| |    / __ \ 
+    //  | (___ | |  | | |   | |  | |
+    //   \___ \| |  | | |   | |  | |
+    //   ____) | |__| | |___| |__| |
+    //  |_____/ \____/|______\____/ 
+    //  
+    //////////////////////////////////////////////////////////
+
+    setupAutomaBoard(){
+
+        let automa_zone = document.getElementById('goa_player_table-0');
+        if(automa_zone) automa_zone.remove();
+        let face = 'day';
+        let round = this.gamedatas.round;
+        if(round > this.const.NB_ROUNDS_DAY){
+            face = 'night';
+        }
+        let automaColor = this.gamedatas.automa_color;
+        document.getElementById('goa_main_zone').insertAdjacentHTML('beforeend', ` 
+            <div id="goa_player_table-${0}" class="goa_automa_table goa_player_table whiteblock" data-pid=${0} data-color='${automaColor}'>
+                <div class='goa_player_table_title_name'>
+                    <div><span class='goa_player_table_title_content'>
+                    <div id="goa_player_avatar_${0}" class="emblem goa_player_avatar goa_avatar_automa" alt="avatar"></div>
+                    ${this.coloredAutomaName(_(this.gamedatas.automa_name), automaColor)}
+                    </span></div>
+                </div>
+                <div id='goa_resizable_automaboard'>
+                    <div id='goa_automaboard_container'>
+                        <div id='goa_automa_board' data-color='${automaColor}'>
+                            <img id='goa_automa_board_background' data-face='${face}'></img>
+                            <div id='goa_automa_decks'>
+                                <div id='goa_automa_deck_auction_1'></div>
+                                <div id='goa_automa_deck_auction_2'></div>
+                                <div id='goa_automa_deck_auction_3'></div>
+                                <div id='goa_automa_deck_action'></div>
+                                <div id='goa_automa_deck_money'></div>
+                            </div>
+                            <div id='goa_automa_discards'>
+                                <div id='goa_automa_discard_auction_1'></div>
+                                <div id='goa_automa_discard_auction_2'></div>
+                                <div id='goa_automa_discard_auction_3'></div>
+                                <div id='goa_automa_discard_action'></div>
+                                <div id='goa_automa_discard_money'></div>
+                            </div>
+                            <div id='goa_automa_tokens'></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            `);
     }
 }

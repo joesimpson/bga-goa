@@ -1,0 +1,155 @@
+
+.goa_automa_table{
+    .goa_avatar_automa{
+        display: inline-block;
+    }
+    align-self: baseline;
+    order: 10;
+}
+
+$automaboard_img_width: calc(1000px);
+$automaboard_img_height: calc(713px);
+#goa_resizable_automaboard{
+    width: calc(var(--goa_automaboard_display_scale) * $automaboard_img_width);
+    height: calc(var(--goa_automaboard_display_scale) * $automaboard_img_height);
+
+    #goa_automaboard_container{
+        /* prevents vertical invisible overflow on BGA bottom elements*/
+        height: inherit;
+        
+        #goa_automa_board{
+            width: $automaboard_img_width;
+            height: $automaboard_img_height;
+            transform: scale(var(--goa_automaboard_display_scale));
+            transform-origin: top left;
+            position: relative;
+
+            #goa_automa_board_background 
+            {
+                position: absolute;
+                width: $automaboard_img_width;
+                height: $automaboard_img_height;
+                background-size: 100% auto;
+                background-repeat: no-repeat;
+                border-radius: 15px;
+                background-image: url('img/expansions/solo_board_day.jpg');
+                &[data-face="day"] {
+                    background-image: url('img/expansions/solo_board_day.jpg');
+
+                }
+                &[data-face="night"]{
+                    background-image: url('img/expansions/solo_board_night.jpg');
+                }
+            }
+
+            #goa_automa_decks{
+                position: absolute;   
+                left: 51px;
+                top: 90px;
+                width: 897px;
+                height: 228px;
+
+                >div{
+                    width: var(--goa_automa_card_with);
+                    height: var(--goa_automa_card_height);
+                }
+
+                #goa_automa_deck_auction_1{
+                    position: absolute;   
+
+                }
+                #goa_automa_deck_auction_2{
+                    position: absolute;   
+                    left: 170px;
+                }
+                #goa_automa_deck_auction_3{
+                    position: absolute;   
+                    left: 338px;
+                }
+                #goa_automa_deck_action{
+                    position: absolute;   
+                    left: 543px;
+                }
+                #goa_automa_deck_money{
+                    position: absolute;   
+                    left: 743px;
+                }
+                .goa_card{
+                    position: absolute;
+                        
+                    @for $i from 0 through 16 {
+                        &:nth-child(#{$i}){
+                            left: calc(1px * $i);
+                            top: calc(2px * $i);
+                        }
+                    }
+                }
+            }
+
+            #goa_automa_discards{
+                position: absolute;   
+                left: 52px;
+                top: 357px;
+                width: 893px;
+                height: 225px;
+
+                >div{
+                    width: var(--goa_automa_card_with);
+                    height: var(--goa_automa_card_height);
+                }
+                #goa_automa_discard_auction_1{
+                    position: absolute;   
+                }
+                #goa_automa_discard_auction_2{
+                    position: absolute;   
+                    left: 170px;
+                }
+                #goa_automa_discard_auction_3{
+                    position: absolute;   
+                    left: 338px;
+                }
+                #goa_automa_discard_action{
+                    position: absolute;   
+                    left: 543px;
+                }
+                #goa_automa_discard_money{
+                    position: absolute;   
+                    left: 743px;
+                }
+                .goa_card{
+                    position: absolute;
+                    @for $i from 0 through 16 {
+                        &:nth-child(#{$i}){
+                            left: calc(1px * $i);
+                            top: calc(2px * $i);
+                        }
+                    }
+                }
+                
+            }
+            #goa_automa_tokens{
+                position: absolute;   
+                left: 0px;
+                top: 314px;
+                width: 486px;
+                height: 66px;
+                display: flex;
+
+                .goa_token{
+                    width: 62px;
+                    height: 62px;
+                    position: absolute;  
+                    &[data-value="1"]{
+                        left: 95px;
+                    }
+                    &[data-value="2"]{
+                        left: 265px;
+                    }
+                    &[data-value="3"]{
+                        left: 438px;
+                    }
+                }
+            }
+        }
+    }
+}
