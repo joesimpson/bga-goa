@@ -1438,10 +1438,19 @@ export class Game {
         this.customDebug('notif_automaColor:', notif);
         this.gamedatas.automa_color = notif.automa_color;
         this.gamedatas.automa_name = _(notif.automa_name);
-        this.bga.playerPanels.addAutomataPlayerPanel(0, this.gamedatas.automa_name, {
-            'color' : this.gamedatas.automaColor,
-            'iconClass': 'goa_avatar_automa',
-        });
+        let existingAutomaPanel = this.bga.playerPanels.getElement(0);
+        if(!existingAutomaPanel){
+            this.bga.playerPanels.addAutomataPlayerPanel(0, this.gamedatas.automa_name, {
+                'color' : this.gamedatas.automaColor,
+                'iconClass': 'goa_avatar_automa',
+            });
+        }
+        else {
+            let panelContainer = existingAutomaPanel.parentNode.parentNode;
+            let automaName = panelContainer.querySelector("#player_name_0");
+            automaName.dataset.color = this.gamedatas.automa_color;
+            automaName.style.color = `#${this.gamedatas.automa_color}`; 
+        }
     }
     
     notif_clearTurn(n) {
