@@ -3,6 +3,7 @@
 namespace Bga\Games\Goa\Managers;
 
 use Bga\Games\Goa\Core\Globals;
+use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Helpers\Collection;
 use Bga\Games\Goa\Models\AutomaActionType;
 use Bga\Games\Goa\Models\AutomaAuctionDirectionType;
@@ -30,7 +31,8 @@ class AutomaCards extends Cards
             ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_AUCTION_NIGHT_1_BOARD->value))
             ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_AUCTION_NIGHT_2_BOARD->value))
             ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_AUCTION_NIGHT_3_BOARD->value))
-            ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_ACTION_BOARD->value))
+            ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_ACTION_BOARD_A->value))
+            ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_ACTION_BOARD_B->value))
             ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_MONEY_DISCARD->value))
         //TODO JSA REMOVE DECK CONTENT AFTER TEST -> replace by decksize
             ->merge(self::getInLocation(CardLocation::AUTOMA_AUCTION_DAY_1_DECK->value))
@@ -133,14 +135,6 @@ class AutomaCards extends Cards
     }
 
     self::create($cards);
-    self::shuffle(CardLocation::AUTOMA_AUCTION_DAY_1_DECK->value);
-    self::shuffle(CardLocation::AUTOMA_AUCTION_DAY_2_DECK->value);
-    self::shuffle(CardLocation::AUTOMA_AUCTION_DAY_3_DECK->value);
-    self::shuffle(CardLocation::AUTOMA_AUCTION_NIGHT_1_DECK->value);
-    self::shuffle(CardLocation::AUTOMA_AUCTION_NIGHT_2_DECK->value);
-    self::shuffle(CardLocation::AUTOMA_AUCTION_NIGHT_3_DECK->value);
-    self::shuffle(CardLocation::AUTOMA_ACTION_DECK_A->value);
-    self::shuffle(CardLocation::AUTOMA_ACTION_DECK_B->value);
 
   }
   
@@ -177,6 +171,29 @@ class AutomaCards extends Cards
             break;
         default: return;
     }
+
+    // MOVE ALL TO DECK
+    AutomaCards::moveAllInLocation(CardLocation::AUTOMA_AUCTION_DAY_1_BOARD->value,   CardLocation::AUTOMA_AUCTION_DAY_1_DECK->value,  );
+    AutomaCards::moveAllInLocation(CardLocation::AUTOMA_AUCTION_DAY_2_BOARD->value,   CardLocation::AUTOMA_AUCTION_DAY_2_DECK->value,  );
+    AutomaCards::moveAllInLocation(CardLocation::AUTOMA_AUCTION_DAY_3_BOARD->value,   CardLocation::AUTOMA_AUCTION_DAY_3_DECK->value,  );
+    AutomaCards::moveAllInLocation(CardLocation::AUTOMA_AUCTION_NIGHT_1_BOARD->value, CardLocation::AUTOMA_AUCTION_NIGHT_1_DECK->value,);
+    AutomaCards::moveAllInLocation(CardLocation::AUTOMA_AUCTION_NIGHT_2_BOARD->value, CardLocation::AUTOMA_AUCTION_NIGHT_2_DECK->value,);
+    AutomaCards::moveAllInLocation(CardLocation::AUTOMA_AUCTION_NIGHT_3_BOARD->value, CardLocation::AUTOMA_AUCTION_NIGHT_3_DECK->value,);
+    AutomaCards::moveAllInLocation(CardLocation::AUTOMA_ACTION_BOARD_A ->value,     CardLocation::AUTOMA_ACTION_DECK_A->value,        );
+    AutomaCards::moveAllInLocation(CardLocation::AUTOMA_ACTION_BOARD_B ->value,   CardLocation::AUTOMA_ACTION_DECK_B->value,        );
+    AutomaCards::moveAllInLocation(CardLocation::AUTOMA_MONEY_DISCARD->value,         CardLocation::AUTOMA_MONEY_DECK->value,           );
+
+    AutomaCards::shuffle(CardLocation::AUTOMA_AUCTION_DAY_1_DECK->value);
+    AutomaCards::shuffle(CardLocation::AUTOMA_AUCTION_DAY_2_DECK->value);
+    AutomaCards::shuffle(CardLocation::AUTOMA_AUCTION_DAY_3_DECK->value);
+    AutomaCards::shuffle(CardLocation::AUTOMA_AUCTION_NIGHT_1_DECK->value);
+    AutomaCards::shuffle(CardLocation::AUTOMA_AUCTION_NIGHT_2_DECK->value);
+    AutomaCards::shuffle(CardLocation::AUTOMA_AUCTION_NIGHT_3_DECK->value);
+    AutomaCards::shuffle(CardLocation::AUTOMA_ACTION_DECK_A->value);
+    AutomaCards::shuffle(CardLocation::AUTOMA_ACTION_DECK_B->value);
+    
+    //Notifications::discardAllAuctions();
+    $nbDeck = Cards::countInLocation(CardLocation::AUTOMA_AUCTION_DAY_1_DECK->value);
     
   }
   /**

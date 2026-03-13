@@ -313,15 +313,15 @@ trait DebugTrait
         $difficulty = Globals::getOptionAutomaDifficulty();
         if(OPTION_AUTOMA_DIFFICULTY_OFF != $difficulty){
             //teST DISCARD  zones
-            AutomaCards::moveAllInLocation(CardLocation::AUTOMA_AUCTION_DAY_1_DECK->value, CardLocation::AUTOMA_AUCTION_DAY_1_BOARD->value);
-            AutomaCards::moveAllInLocation(CardLocation::AUTOMA_AUCTION_DAY_2_DECK->value, CardLocation::AUTOMA_AUCTION_DAY_2_BOARD->value);
-            AutomaCards::moveAllInLocation(CardLocation::AUTOMA_AUCTION_DAY_3_DECK->value, CardLocation::AUTOMA_AUCTION_DAY_3_BOARD->value);
+            AutomaCards::moveAllInLocation(CardLocation::AUTOMA_AUCTION_DAY_1_DECK->value,   CardLocation::AUTOMA_AUCTION_DAY_1_BOARD->value);
+            AutomaCards::moveAllInLocation(CardLocation::AUTOMA_AUCTION_DAY_2_DECK->value,   CardLocation::AUTOMA_AUCTION_DAY_2_BOARD->value);
+            AutomaCards::moveAllInLocation(CardLocation::AUTOMA_AUCTION_DAY_3_DECK->value,   CardLocation::AUTOMA_AUCTION_DAY_3_BOARD->value);
             AutomaCards::moveAllInLocation(CardLocation::AUTOMA_AUCTION_NIGHT_1_DECK->value, CardLocation::AUTOMA_AUCTION_NIGHT_1_BOARD->value);
             AutomaCards::moveAllInLocation(CardLocation::AUTOMA_AUCTION_NIGHT_2_DECK->value, CardLocation::AUTOMA_AUCTION_NIGHT_2_BOARD->value);
             AutomaCards::moveAllInLocation(CardLocation::AUTOMA_AUCTION_NIGHT_3_DECK->value, CardLocation::AUTOMA_AUCTION_NIGHT_3_BOARD->value);
-            AutomaCards::moveAllInLocation(CardLocation::AUTOMA_ACTION_DECK_A->value,   CardLocation::AUTOMA_ACTION_BOARD->value);
-            AutomaCards::moveAllInLocation(CardLocation::AUTOMA_ACTION_DECK_B->value,   CardLocation::AUTOMA_ACTION_BOARD->value);
-            AutomaCards::moveAllInLocation(CardLocation::AUTOMA_MONEY_DECK->value,   CardLocation::AUTOMA_MONEY_DISCARD->value);
+            AutomaCards::moveAllInLocation(CardLocation::AUTOMA_ACTION_DECK_A->value,        CardLocation::AUTOMA_ACTION_BOARD_A->value);
+            AutomaCards::moveAllInLocation(CardLocation::AUTOMA_ACTION_DECK_B->value,        CardLocation::AUTOMA_ACTION_BOARD_B->value);
+            AutomaCards::moveAllInLocation(CardLocation::AUTOMA_MONEY_DECK->value,           CardLocation::AUTOMA_MONEY_DISCARD->value);
                     
             AutomaCards::shuffle(CardLocation::AUTOMA_AUCTION_DAY_1_BOARD->value);
             AutomaCards::shuffle(CardLocation::AUTOMA_AUCTION_DAY_2_BOARD->value);
@@ -329,8 +329,8 @@ trait DebugTrait
             AutomaCards::shuffle(CardLocation::AUTOMA_AUCTION_NIGHT_1_BOARD->value);
             AutomaCards::shuffle(CardLocation::AUTOMA_AUCTION_NIGHT_2_BOARD->value);
             AutomaCards::shuffle(CardLocation::AUTOMA_AUCTION_NIGHT_3_BOARD->value);
-            AutomaCards::shuffle(CardLocation::AUTOMA_ACTION_BOARD->value);
-            AutomaCards::shuffle(CardLocation::AUTOMA_ACTION_BOARD->value);
+            AutomaCards::shuffle(CardLocation::AUTOMA_ACTION_BOARD_A->value);
+            AutomaCards::shuffle(CardLocation::AUTOMA_ACTION_BOARD_B->value);
             AutomaCards::shuffle(CardLocation::AUTOMA_MONEY_DISCARD->value);
         }
         
