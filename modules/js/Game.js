@@ -361,7 +361,7 @@ export class Game {
         });
 
         if(this.gamedatas.automa_color){
-            this.bga.playerPanels.addAutomataPlayerPanel(0, this.gamedatas.automa_name, {
+            this.bga.playerPanels.addAutomataPlayerPanel(this.gamedatas.automa_id, this.gamedatas.automa_name, {
                 'color' : this.gamedatas.automa_color,
                 'iconClass': 'goa_avatar_automa',
             });
@@ -556,12 +556,14 @@ export class Game {
         //debug(`destroy ${elem.id}`,elem);
         this.destroyTooltip(elem);
         this.empty(elem);
-        if(!delayRemove) elem.remove();
+        if(!delayRemove && elem) elem.remove();
     }
     
     empty(container) {
         //debug("empty",container);
         container = $(container);
+        if(!container) return;
+        if(container.childNodes){
         container.childNodes.forEach((node) => {
             //!! destroy node makes gap in LOOP because of removing them
             this.destroy(node,true);
@@ -569,6 +571,7 @@ export class Game {
         container.childNodes.forEach((node) => {
             node.remove();
         });
+        }
         container.innerHTML = '';
     }
     
@@ -1443,14 +1446,14 @@ export class Game {
         this.gamedatas.automa_name = _(notif.automa_name);
         let existingAutomaPanel = this.bga.playerPanels.getElement(0);
         if(!existingAutomaPanel){
-            this.bga.playerPanels.addAutomataPlayerPanel(0, this.gamedatas.automa_name, {
+            this.bga.playerPanels.addAutomataPlayerPanel(this.gamedatas.automa_id, this.gamedatas.automa_name, {
                 'color' : this.gamedatas.automa_color,
                 'iconClass': 'goa_avatar_automa',
             });
         }
         else {
             let panelContainer = existingAutomaPanel.parentNode.parentNode;
-            let automaName = panelContainer.querySelector("#player_name_0");
+            let automaName = panelContainer.querySelector("#player_name_"+this.gamedatas.automa_id);
             automaName.dataset.color = this.gamedatas.automa_color;
             automaName.style.color = `#${this.gamedatas.automa_color}`; 
         }
@@ -1548,6 +1551,27 @@ export class Game {
             )
         }));
         await this.animationManager.playInterval(animations);
+    }
+    
+    async notif_giveAuctionCardToAutoma(notif) {
+        this.customDebug('notif_giveAuctionCardToAutoma:', notif);
+
+        let card = notif.card;
+        let fromElement = document.getElementById(`goa_top_zone`);
+        let cardContainer = this.getCardContainer(card);
+        let toElement = document.getElementById(cardContainer);
+        let counterName = null;
+        switch(cardContainer){
+            case 'goa_automa_discard_auction_1': fromElement=document.getElementById('goa_automa_deck_auction_1'); counterName = 'goa_deck_size_automa_auction_1'; break;
+            case 'goa_automa_discard_auction_2': fromElement=document.getElementById('goa_automa_deck_auction_2'); counterName = 'goa_deck_size_automa_auction_2'; break;
+            case 'goa_automa_discard_auction_3': fromElement=document.getElementById('goa_automa_deck_auction_3'); counterName = 'goa_deck_size_automa_auction_3'; break;
+        }
+        if(counterName){
+            this._counters[0][counterName].incValue(-1);
+        }
+        this.destroy($(`goa_card-${card.id}`));
+        let cardDiv = await this.addCard(card);
+        await this.animationManager.slideIn(cardDiv, fromElement, {duration: 1000});
     }
     
     async notif_clearTurn(n) {
@@ -3154,7 +3178,7 @@ export class Game {
 
         }
         else {
-            cardDiv.dataset.state = tile.state;//refresh state if already exists
+            cardDiv.dataset.state = card.state;//refresh state if already exists
         }
         return $(`goa_card-${card.id}`);
     }
@@ -3420,7 +3444,7 @@ export class Game {
 
     setupAutomaBoard(){
 
-        let automa_zone = document.getElementById('goa_player_table-0');
+        let automa_zone = document.getElementById('goa_player_table-'+this.gamedatas.automa_id);
         if(automa_zone) this.destroy(automa_zone);
         let face = 'day';
         let round = this.gamedatas.round;
@@ -3429,10 +3453,10 @@ export class Game {
         }
         let automaColor = this.gamedatas.automa_color;
         document.getElementById('goa_main_zone').insertAdjacentHTML('beforeend', ` 
-            <div id="goa_player_table-${0}" class="goa_automa_table goa_player_table whiteblock" data-pid=${0} data-color='${automaColor}'>
+            <div id="goa_player_table-${this.gamedatas.automa_id}" class="goa_automa_table goa_player_table whiteblock" data-pid=${this.gamedatas.automa_id} data-color='${automaColor}'>
                 <div class='goa_player_table_title_name'>
                     <div><span class='goa_player_table_title_content'>
-                    <div id="goa_player_avatar_${0}" class="emblem goa_player_avatar goa_avatar_automa" alt="avatar"></div>
+                    <div id="goa_player_avatar_${this.gamedatas.automa_id}" class="emblem goa_player_avatar goa_avatar_automa" alt="avatar"></div>
                     ${this.coloredAutomaName(_(this.gamedatas.automa_name), automaColor)}
                     </span></div>
                 </div>

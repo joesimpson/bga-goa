@@ -28,7 +28,9 @@ class Globals extends \Bga\Games\Goa\Helpers\DB_Manager
     'currentBid' => 'int',
     'bidTurns' => 'int',
     'highBidPlayer' => 'int',
+
     'automaColor' => 'str',
+    'automaActive' => 'bool',
     
     'endScoring' => 'obj',
 
@@ -57,6 +59,7 @@ class Globals extends \Bga\Games\Goa\Helpers\DB_Manager
     self::setBidTurns(0);
     self::setHighBidPlayer(null);
     self::setEndScoring([]);
+    self::setAutomaActive(true);
 
     //Randomize first player selection
     $randomPId = array_rand($players);

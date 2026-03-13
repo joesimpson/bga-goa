@@ -71,11 +71,20 @@ class NextPlayer extends \Bga\GameFramework\States\GameState
                     $nextPlayer->setCardsPlayed([]);
                     $nextPlayer->setActionPlayed(false);
                 }
+                break;
             default : 
                 break;
         }
 
         if(!isset($nextPlayer)) $nextPlayer = Players::getNextPlayer($activePlayerId);
+        if(AUTOMA_PLAYER_ID == $nextPlayer->getId()){
+            Globals::setAutomaActive(true);
+            $this->game->automaEngine->playTurn($roundStep);
+            return PlayerTurn::class;
+        }
+        else {
+            Globals::setAutomaActive(false);
+        }
 
         Players::changeActive($nextPlayer->getId());
         $nextPlayer->giveExtraTime();

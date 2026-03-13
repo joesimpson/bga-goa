@@ -315,4 +315,15 @@ class Utils {
         return clienttranslate("Lakshmi");
     }
 
+    /**
+     * @return int fake automa player id OR null if no automa in current game
+     */
+    public static function getAutomaPId() : int |null {
+        $automaColor = Globals::getAutomaColor();
+        if(isset( $automaColor) && !empty($automaColor)){
+            return AUTOMA_PLAYER_ID;
+        }
+        return null;
+    }
+
 }
