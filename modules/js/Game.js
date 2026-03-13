@@ -260,6 +260,7 @@ export class Game {
             `);
             this.addCustomTooltipToClass(`goa_first_player_container`, _('Nazar Stone (Starting player)'));
 
+            this._counters[0] = {};//Automa...
             this._counters[player.id] = {};
             this.createCounter(player.id,'exploration_hand_size',player.exploration_hand_size);
             this.createCounter(player.id,'ships',player.ships);
@@ -1468,7 +1469,8 @@ export class Game {
         let toElement = document.getElementById('goa_automa_deck_money');
         let animations = Object.values(cards).map(card => (() => {
             //add a back card
-            toElement.insertAdjacentHTML('beforeend', this.tplCard({'id':card.id, 'subtype': this.const.CARD_SUBTTYPE_MONEY}));
+            toElement.insertAdjacentHTML('afterbegin', this.tplCard({'id':card.id, 'subtype': this.const.CARD_SUBTTYPE_MONEY}));
+            this._counters[0][`goa_deck_size_automa_money`].incValue(1);
 
             this.animationManager.slideFloatingElement(
                 this.createTempElement(this.tplCard(card)), 
@@ -1487,6 +1489,65 @@ export class Game {
         
         //Clean card after :
         this.destroy(document.getElementById('goa_board_mask'));
+    }
+    
+    async notif_initAutomaAuctionCards(notif) {
+        this.customDebug('notif_initAutomaAuctionCards:', notif);
+
+        let cards = notif.cards;
+        let fromElement = document.getElementById(`goa_top_zone`);
+        let animations = Object.values(cards).map(card => (() => {
+            let cardContainer = this.getCardContainer(card);
+            let toElement = document.getElementById(cardContainer);
+            //add a back card
+            toElement.insertAdjacentHTML('afterbegin', this.tplCard({'id':card.id, 'subtype': this.const.CARD_SUBTTYPE_AUTOMA_AUCTION}));
+            let counterName = null;
+            switch(cardContainer){
+                case 'goa_automa_deck_auction_1': counterName = 'goa_deck_size_automa_auction_1'; break;
+                case 'goa_automa_deck_auction_2': counterName = 'goa_deck_size_automa_auction_2'; break;
+                case 'goa_automa_deck_auction_3': counterName = 'goa_deck_size_automa_auction_3'; break;
+            }
+            if(counterName){
+                this._counters[0][counterName].incValue(1);
+            }
+
+            this.animationManager.slideFloatingElement(
+                this.createTempElement(this.tplCard(card)), 
+                fromElement, 
+                toElement, 
+                {
+                    duration: 2000,
+                    ignoreScale: false,
+                    ignoreRotation: true,
+                }
+            )
+        }));
+        await this.animationManager.playInterval(animations);
+    }
+
+    async notif_initAutomaActionCards(notif) {
+        this.customDebug('notif_initAutomaActionCards:', notif);
+
+        let cards = notif.cards;
+        let fromElement = document.getElementById(`goa_top_zone`);
+        let toElement = document.getElementById('goa_automa_deck_action');
+        let animations = Object.values(cards).map(card => (() => {
+            //add a back card
+            toElement.insertAdjacentHTML('afterbegin', this.tplCard({'id':card.id, 'subtype': this.const.CARD_SUBTTYPE_AUTOMA_ACTION}));
+            this._counters[0][`goa_deck_size_automa_action`].incValue(1);
+
+            this.animationManager.slideFloatingElement(
+                this.createTempElement(this.tplCard(card)), 
+                fromElement, 
+                toElement, 
+                {
+                    duration: 2000,
+                    ignoreScale: false,
+                    ignoreRotation: true,
+                }
+            )
+        }));
+        await this.animationManager.playInterval(animations);
     }
     
     async notif_clearTurn(n) {
@@ -1552,6 +1613,10 @@ export class Game {
                 await this.animationManager.slideAndAttach(tokenDiv, destinationDiv);
             });
         });
+
+        //RESET AUTOMA board
+        this._counters[0][`goa_deck_size_automa_action`].toValue(0);
+        this._counters[0][`goa_deck_size_automa_money`].toValue(0);
 
     }
     
@@ -2934,6 +2999,7 @@ export class Game {
                     extraClasses: 'text-shadow',
                 },
             });
+
         }
         
         await this.explorationDeck.setCardNumber(this.gamedatas.cards.deck_size[this.const.CARD_SUBTTYPE_EXPLORATION]);
@@ -2963,6 +3029,26 @@ export class Game {
                 await this.addCard(card);
             }),
         );
+
+        Object.values([1,2,3]).forEach(i => {
+            let nb = this.gamedatas.cards.deck_size[this.const.CARD_SUBTTYPE_AUTOMA_AUCTION][i];
+            this._counters[0][`goa_deck_size_automa_auction_${i}`].toValue(nb);
+            for(let k=0; k<= nb;k++){
+                document.getElementById(`goa_automa_deck_auction_${i}`).insertAdjacentHTML('afterbegin', this.tplCard({'id':k, 'subtype': this.const.CARD_SUBTTYPE_AUTOMA_AUCTION}));
+            }    
+        });
+        let nb = this.gamedatas.cards.deck_size[this.const.CARD_SUBTTYPE_AUTOMA_ACTION];
+        this._counters[0][`goa_deck_size_automa_action`].toValue(nb);
+        for(let k=0; k<= nb;k++){
+            document.getElementById('goa_automa_deck_action').insertAdjacentHTML('afterbegin', this.tplCard({'id':k, 'subtype': this.const.CARD_SUBTTYPE_AUTOMA_ACTION}));
+        }    
+
+        nb = this.gamedatas.cards.deck_size[this.const.CARD_SUBTTYPE_MONEY];
+        this._counters[0][`goa_deck_size_automa_money`].toValue(nb);
+        for(let k=0; k<= nb;k++){
+            document.getElementById('goa_automa_deck_money').insertAdjacentHTML('afterbegin', this.tplCard({'id':k, 'subtype': this.const.CARD_SUBTTYPE_MONEY}));
+        }
+
         await Promise.all (
             this.gamedatas.cards.automa.map( async (card) => {
                 await this.addCard(card);
@@ -3335,7 +3421,7 @@ export class Game {
     setupAutomaBoard(){
 
         let automa_zone = document.getElementById('goa_player_table-0');
-        if(automa_zone) automa_zone.remove();
+        if(automa_zone) this.destroy(automa_zone);
         let face = 'day';
         let round = this.gamedatas.round;
         if(round > this.const.NB_ROUNDS_DAY){
@@ -3355,11 +3441,11 @@ export class Game {
                         <div id='goa_automa_board' data-color='${automaColor}'>
                             <img id='goa_automa_board_background' data-face='${face}'></img>
                             <div id='goa_automa_decks'>
-                                <div id='goa_automa_deck_auction_1'></div>
-                                <div id='goa_automa_deck_auction_2'></div>
-                                <div id='goa_automa_deck_auction_3'></div>
-                                <div id='goa_automa_deck_action'></div>
-                                <div id='goa_automa_deck_money'></div>
+                                <div id='goa_automa_deck_auction_1'><div class="goa_deck_size" id="goa_deck_size_automa_auction_1">0</div></div>
+                                <div id='goa_automa_deck_auction_2'><div class="goa_deck_size" id="goa_deck_size_automa_auction_2">0</div></div>
+                                <div id='goa_automa_deck_auction_3'><div class="goa_deck_size" id="goa_deck_size_automa_auction_3">0</div></div>
+                                <div id='goa_automa_deck_action'><div class="goa_deck_size" id="goa_deck_size_automa_action">0</div></div>
+                                <div id='goa_automa_deck_money'><div class="goa_deck_size" id="goa_deck_size_automa_money">0</div></div>
                             </div>
                             <div id='goa_automa_discards'>
                                 <div id='goa_automa_discard_auction_1'></div>
@@ -3374,6 +3460,21 @@ export class Game {
                 </div>
             </div>
             `);
+        this.setupAutomaBoardCounters();
+    }
+
+    setupAutomaBoardCounters(){
+        Object.values([1,2,3]).forEach(i => {
+            let counter = new ebg.counter();
+            counter.create(`goa_deck_size_automa_auction_${i}`, { value: 0, });
+            this._counters[0][`goa_deck_size_automa_auction_${i}`] = counter;
+        });
+        this._counters[0][`goa_deck_size_automa_action`] = new ebg.counter();
+        this._counters[0][`goa_deck_size_automa_action`].create(`goa_deck_size_automa_action`, { value: 0, });
+        this._counters[0][`goa_deck_size_automa_money`] = new ebg.counter();
+        this._counters[0][`goa_deck_size_automa_money`].create(`goa_deck_size_automa_money`, { value: 0, });
+
+        this.addCustomTooltipToClass(`goa_deck_size`, _('Number of cards in deck'));
     }
 
     formatAutomaLevelCard(level){

@@ -29,6 +29,14 @@ class MoneyCards extends Cards
         self::shuffle(CardLocation::AUTOMA_MONEY_DECK->value);
         return $elements;
     }
+    
+    public static function countAutomaDeckSize() : int
+    {
+        return self::DB()
+        ->where( 'subType', CARD_SUBTTYPE_MONEY)
+        ->where(static::$prefix . 'location', CardLocation::AUTOMA_MONEY_DECK->value)
+        ->count();
+    }
 
     ///////////////////////////////////////////////////////////////////////////////////////
     

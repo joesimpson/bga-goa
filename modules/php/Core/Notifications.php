@@ -42,11 +42,35 @@ class Notifications
       'n' => $level,
       'x' => $cards->count(),
       'cards' => $cards->ui(),
-      'preserve' => ['cards'],
       'money_cards' => $cardsNames,
       'separator' => ['money_cards' => ','],
     ]);
   }
+  
+  public static function initAutomaAuctionCards(Collection $cards)
+  {
+    self::notifyAll('initAutomaAuctionCards',  clienttranslate('${automa_name} will play with ${n} Auction cards'), [
+      'automa_name' => Utils::getAutomaName(),
+      'automa_color' => Globals::getAutomaColor(),
+      'i18n' => ['automa_name'],
+      'preserve' => ['automa_color','cards'],
+      'n' => $cards->count(),
+      'cards' => $cards->ui(),
+    ]);
+  }
+  
+  public static function initAutomaActionCards(Collection $cards)
+  {
+    self::notifyAll('initAutomaActionCards',  clienttranslate('${automa_name} will play with ${n} Action cards'), [
+      'automa_name' => Utils::getAutomaName(),
+      'automa_color' => Globals::getAutomaColor(),
+      'i18n' => ['automa_name'],
+      'preserve' => ['automa_color','cards'],
+      'n' => $cards->count(),
+      'cards' => $cards->ui(),
+    ]);
+  }
+
   public static function newSession(int $session)
   {
     $msg = '';

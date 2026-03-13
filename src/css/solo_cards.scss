@@ -91,3 +91,25 @@ $card_height: var(--goa_automa_card_height);
         background-position-x: 33.3333333333%;
     }
 }
+
+.goa_deck_size{
+    user-select: none;
+    position: absolute;
+    top: -5%;
+    text-align: center;
+    width: 100%;
+    color: white;
+    text-shadow: -2px 0 #000, 0 2px #000, 2px 0 #000, 0 -2px #000;
+    font-size: 2.0em;
+    z-index: 2;
+    background: #00000070;
+    border-radius: 18%;
+}
+
+body.notouch-device{
+    .goa_deck_size:hover{
+        //tooltipable
+        outline: 7px solid green;
+        cursor: help;
+    }
+}
