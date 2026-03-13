@@ -2981,54 +2981,55 @@ export class Game {
         }
         
         if(card.subtype == this.const.CARD_SUBTTYPE_AUTOMA_AUCTION){
-            if (card.location == (this.const.CARD_LOCATION_AUTOMA_AUCTION_DAY_1_DECK) 
-                || card.location == (this.const.CARD_LOCATION_AUTOMA_AUCTION_NIGHT_1_DECK)
+            if (card.location == this.const.CARD_LOCATION_AUTOMA_AUCTION_DAY_1_DECK
+                || card.location == this.const.CARD_LOCATION_AUTOMA_AUCTION_NIGHT_1_DECK
             ) {
                 return `goa_automa_deck_auction_1`;
             }
-            if (card.location == (this.const.CARD_LOCATION_AUTOMA_AUCTION_DAY_2_DECK) 
-                || card.location == (this.const.CARD_LOCATION_AUTOMA_AUCTION_NIGHT_2_DECK)
+            if (card.location == this.const.CARD_LOCATION_AUTOMA_AUCTION_DAY_2_DECK
+                || card.location == this.const.CARD_LOCATION_AUTOMA_AUCTION_NIGHT_2_DECK
             ) {
                 return `goa_automa_deck_auction_2`;
             }
-            if (card.location == (this.const.CARD_LOCATION_AUTOMA_AUCTION_DAY_3_DECK) 
-                || card.location == (this.const.CARD_LOCATION_AUTOMA_AUCTION_NIGHT_3_DECK)
+            if (card.location == this.const.CARD_LOCATION_AUTOMA_AUCTION_DAY_3_DECK
+                || card.location == this.const.CARD_LOCATION_AUTOMA_AUCTION_NIGHT_3_DECK
             ) {
                 return `goa_automa_deck_auction_3`;
             }
             
-            if (card.location == (this.const.CARD_LOCATION_AUTOMA_AUCTION_DAY_1_BOARD) 
-                || card.location == (this.const.CARD_LOCATION_AUTOMA_AUCTION_NIGHT_1_BOARD)
+            if (card.location == this.const.CARD_LOCATION_AUTOMA_AUCTION_DAY_1_BOARD
+                || card.location == this.const.CARD_LOCATION_AUTOMA_AUCTION_NIGHT_1_BOARD
             ) {
                 return `goa_automa_discard_auction_1`;
             }
-            if (card.location == (this.const.CARD_LOCATION_AUTOMA_AUCTION_DAY_2_BOARD) 
-                || card.location == (this.const.CARD_LOCATION_AUTOMA_AUCTION_NIGHT_2_BOARD)
+            if (card.location == this.const.CARD_LOCATION_AUTOMA_AUCTION_DAY_2_BOARD
+                || card.location == this.const.CARD_LOCATION_AUTOMA_AUCTION_NIGHT_2_BOARD
             ) {
                 return `goa_automa_discard_auction_2`;
             }
-            if (card.location == (this.const.CARD_LOCATION_AUTOMA_AUCTION_DAY_3_BOARD) 
-                || card.location == (this.const.CARD_LOCATION_AUTOMA_AUCTION_NIGHT_3_BOARD)
+            if (card.location == this.const.CARD_LOCATION_AUTOMA_AUCTION_DAY_3_BOARD
+                || card.location == this.const.CARD_LOCATION_AUTOMA_AUCTION_NIGHT_3_BOARD
             ) {
                 return `goa_automa_discard_auction_3`;
             }
         }
         if(card.subtype == this.const.CARD_SUBTTYPE_AUTOMA_ACTION){
-            if (card.location == (this.const.CARD_LOCATION_AUTOMA_ACTION_DECK_A) 
-                || card.location == (this.const.CARD_LOCATION_AUTOMA_ACTION_DECK_B)
+            if (card.location == this.const.CARD_LOCATION_AUTOMA_ACTION_DECK_A
+                || card.location == this.const.CARD_LOCATION_AUTOMA_ACTION_DECK_B
             ) {
                 return `goa_automa_deck_action`;
             }
-            if (card.location == (this.const.CARD_LOCATION_AUTOMA_ACTION_BOARD) 
+            if (card.location == this.const.CARD_LOCATION_AUTOMA_ACTION_BOARD_A 
+                ||this.const.CARD_LOCATION_AUTOMA_ACTION_BOARD_B
             ) {
                 return `goa_automa_discard_action`;
             }
         }
         if(card.subtype == this.const.CARD_SUBTTYPE_MONEY){
-            if (card.location == (this.const.CARD_LOCATION_AUTOMA_MONEY_DECK) ) {
+            if (card.location == this.const.CARD_LOCATION_AUTOMA_MONEY_DECK ) {
                 return `goa_automa_deck_money`;
             }
-            if (card.location == (this.const.CARD_LOCATION_AUTOMA_MONEY_BOARD) ) {
+            if (card.location == this.const.CARD_LOCATION_AUTOMA_MONEY_BOARD ) {
                 return `goa_automa_discard_money`;
             }
         }
