@@ -68,7 +68,7 @@ class Notifications
   {
     self::notifyAll("setupMarket", clienttranslate('The market board is filled with tiles'), [
         "phase" => $phase,
-        "tiles" => $tiles->uiAssoc(),
+        "tiles" => $tiles->ui(),
         "boxTiles" => $boxTiles->uiAssoc(),
         "preserve" => ['tiles', 'boxTiles'],
     ]);
