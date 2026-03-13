@@ -154,7 +154,7 @@ class Game extends \Bga\GameFramework\Table
         $result["cards"] = [
             'all' => Cards::getUiData($current_player_id),
             'private' => Cards::getPrivateDatas($current_player_id),
-            'deck_size' => Cards::getAllDeckSizes(),
+            'deck_size' => Cards::getAllDeckSizes($result["round"]),
             'automa' => AutomaCards::getUiData($current_player_id),
         ];
         $result["tiles"] = Tiles::getUiData($current_player_id);

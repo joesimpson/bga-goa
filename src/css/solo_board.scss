@@ -56,15 +56,30 @@ $automaboard_img_height: calc(713px);
 
                 #goa_automa_deck_auction_1{
                     position: absolute;   
-
+                    .goa_automa_auction_card{
+                        //card back
+                        background-position-x: 66.6666666667%;
+                        background-position-y: 20%;
+                    }
                 }
                 #goa_automa_deck_auction_2{
                     position: absolute;   
                     left: 170px;
+                    
+                    .goa_automa_auction_card{
+                        //card back
+                        background-position-x: 77.7777777778%;
+                        background-position-y: 20%;
+                    }
                 }
                 #goa_automa_deck_auction_3{
                     position: absolute;   
                     left: 338px;
+                    .goa_automa_auction_card{
+                        //card back
+                        background-position-x: 88.8888888889%;
+                        background-position-y: 20%;
+                    }
                 }
                 #goa_automa_deck_action{
                     position: absolute;   
@@ -74,10 +89,11 @@ $automaboard_img_height: calc(713px);
                     position: absolute;   
                     left: 743px;
                 }
+                .goa_deck_size,
                 .goa_card{
                     position: absolute;
                         
-                    @for $i from 0 through 16 {
+                    @for $i from 0 through 30 {//16 + deckSize
                         &:nth-child(#{$i}){
                             left: calc(1px * $i);
                             top: calc(2px * $i);
@@ -118,7 +134,7 @@ $automaboard_img_height: calc(713px);
                 }
                 .goa_card{
                     position: absolute;
-                    @for $i from 0 through 16 {
+                    @for $i from 0 through 30 {//16 + deckSize
                         &:nth-child(#{$i}){
                             left: calc(1px * $i);
                             top: calc(2px * $i);

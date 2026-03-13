@@ -79,10 +79,13 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
       ->get();
   }
 
-  public static function getAllDeckSizes(): array
+  public static function getAllDeckSizes(int $round): array
   {
     return [
           CARD_SUBTTYPE_EXPLORATION => Cards::countInExplorationDeck(),
+          CARD_SUBTTYPE_AUTOMA_AUCTION => AutomaCards::countAutomaAuctionDeckSizes($round),
+          CARD_SUBTTYPE_AUTOMA_ACTION => AutomaCards::countAutomaActionDeckSize($round),
+          CARD_SUBTTYPE_MONEY => MoneyCards::countAutomaDeckSize(),
         ];
   }
   public static function countInExplorationDeck() : int

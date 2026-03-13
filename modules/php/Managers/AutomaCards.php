@@ -34,16 +34,16 @@ class AutomaCards extends Cards
             ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_ACTION_BOARD_A->value))
             ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_ACTION_BOARD_B->value))
             ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_MONEY_DISCARD->value))
-        //TODO JSA REMOVE DECK CONTENT AFTER TEST -> replace by decksize
-            ->merge(self::getInLocation(CardLocation::AUTOMA_AUCTION_DAY_1_DECK->value))
-            ->merge(self::getInLocation(CardLocation::AUTOMA_AUCTION_DAY_2_DECK->value))
-            ->merge(self::getInLocation(CardLocation::AUTOMA_AUCTION_DAY_3_DECK->value))
-            ->merge(self::getInLocation(CardLocation::AUTOMA_AUCTION_NIGHT_1_DECK->value))
-            ->merge(self::getInLocation(CardLocation::AUTOMA_AUCTION_NIGHT_2_DECK->value))
-            ->merge(self::getInLocation(CardLocation::AUTOMA_AUCTION_NIGHT_3_DECK->value))
-            ->merge(self::getInLocation(CardLocation::AUTOMA_ACTION_DECK_A->value))
-            ->merge(self::getInLocation(CardLocation::AUTOMA_ACTION_DECK_B->value))
-            ->merge(self::getInLocation(CardLocation::AUTOMA_MONEY_DECK->value))
+        //REMOVE DECK CONTENT AFTER TEST -> replace by decksize
+            //->merge(self::getInLocation(CardLocation::AUTOMA_AUCTION_DAY_1_DECK->value))
+            //->merge(self::getInLocation(CardLocation::AUTOMA_AUCTION_DAY_2_DECK->value))
+            //->merge(self::getInLocation(CardLocation::AUTOMA_AUCTION_DAY_3_DECK->value))
+            //->merge(self::getInLocation(CardLocation::AUTOMA_AUCTION_NIGHT_1_DECK->value))
+            //->merge(self::getInLocation(CardLocation::AUTOMA_AUCTION_NIGHT_2_DECK->value))
+            //->merge(self::getInLocation(CardLocation::AUTOMA_AUCTION_NIGHT_3_DECK->value))
+            //->merge(self::getInLocation(CardLocation::AUTOMA_ACTION_DECK_A->value))
+            //->merge(self::getInLocation(CardLocation::AUTOMA_ACTION_DECK_B->value))
+            //->merge(self::getInLocation(CardLocation::AUTOMA_MONEY_DECK->value))
             ->ui();
     } 
 
@@ -72,6 +72,56 @@ class AutomaCards extends Cards
         }
     }
 
+    public static function countAutomaAuctionDeckSizes(int $round) : array
+    {
+        if($round > NB_ROUNDS_DAY){
+            //NIGHT
+            return [
+            1 => self::DB()
+                    ->where('subType', CARD_SUBTTYPE_AUTOMA_AUCTION)
+                    ->where(static::$prefix . 'location', CardLocation::AUTOMA_AUCTION_NIGHT_1_DECK->value)
+                    ->count(),
+            2 => self::DB()
+                    ->where('subType', CARD_SUBTTYPE_AUTOMA_AUCTION)
+                    ->where(static::$prefix . 'location', CardLocation::AUTOMA_AUCTION_NIGHT_2_DECK->value)
+                    ->count(),
+            3 => self::DB()
+                    ->where('subType', CARD_SUBTTYPE_AUTOMA_AUCTION)
+                    ->where(static::$prefix . 'location', CardLocation::AUTOMA_AUCTION_NIGHT_3_DECK->value)
+                    ->count(),
+            ];
+        }
+        return [
+            1 => self::DB()
+                ->where('subType', CARD_SUBTTYPE_AUTOMA_AUCTION)
+                ->where(static::$prefix . 'location', CardLocation::AUTOMA_AUCTION_DAY_1_DECK->value)
+                ->count(),
+            2 => self::DB()
+                ->where('subType', CARD_SUBTTYPE_AUTOMA_AUCTION)
+                ->where(static::$prefix . 'location', CardLocation::AUTOMA_AUCTION_DAY_2_DECK->value)
+                ->count(),
+            3 => self::DB()
+                ->where('subType', CARD_SUBTTYPE_AUTOMA_AUCTION)
+                ->where(static::$prefix . 'location', CardLocation::AUTOMA_AUCTION_DAY_3_DECK->value)
+                ->count(),
+
+        ];
+    }
+    
+    public static function countAutomaActionDeckSize(int $round) : int
+    {
+        if($round > NB_ROUNDS_DAY){
+            //NIGHT
+            return self::DB()
+                    ->where('subType', CARD_SUBTTYPE_AUTOMA_ACTION)
+                    ->where(static::$prefix . 'location', CardLocation::AUTOMA_ACTION_DECK_B->value)
+                    ->count();
+        }
+        return self::DB()
+                ->where('subType', CARD_SUBTTYPE_AUTOMA_ACTION)
+                ->where(static::$prefix . 'location', CardLocation::AUTOMA_ACTION_DECK_A->value)
+                ->count();
+    }
 
   ///////////////////////////////////////////////////////////////////////////////////////
    
@@ -80,6 +130,12 @@ class AutomaCards extends Cards
    */
   public static function setupNewGame($players, $options)
   {
+    //Create cards on first session...
+    //self::createCards();
+  }
+  
+  public static function createCards()
+  {
     $difficulty = Globals::getOptionAutomaDifficulty();
     if(OPTION_AUTOMA_DIFFICULTY_OFF == $difficulty){
         //NO AUTOMA
@@ -87,7 +143,6 @@ class AutomaCards extends Cards
     }
 
     $cards = [];
-
     $auctions = self::getAutomaAuctionCardsTypes();
     foreach ($auctions as $type => $card) {
         if($card['nbr_A']>0){//DAY
@@ -135,9 +190,8 @@ class AutomaCards extends Cards
     }
 
     self::create($cards);
-
   }
-  
+
   public static function setupSession(int $session)
   {
     //TODO JSA CAMPAIGN SOLO
@@ -172,16 +226,26 @@ class AutomaCards extends Cards
         default: return;
     }
 
-    // MOVE ALL TO DECK
-    AutomaCards::moveAllInLocation(CardLocation::AUTOMA_AUCTION_DAY_1_BOARD->value,   CardLocation::AUTOMA_AUCTION_DAY_1_DECK->value,  );
-    AutomaCards::moveAllInLocation(CardLocation::AUTOMA_AUCTION_DAY_2_BOARD->value,   CardLocation::AUTOMA_AUCTION_DAY_2_DECK->value,  );
-    AutomaCards::moveAllInLocation(CardLocation::AUTOMA_AUCTION_DAY_3_BOARD->value,   CardLocation::AUTOMA_AUCTION_DAY_3_DECK->value,  );
-    AutomaCards::moveAllInLocation(CardLocation::AUTOMA_AUCTION_NIGHT_1_BOARD->value, CardLocation::AUTOMA_AUCTION_NIGHT_1_DECK->value,);
-    AutomaCards::moveAllInLocation(CardLocation::AUTOMA_AUCTION_NIGHT_2_BOARD->value, CardLocation::AUTOMA_AUCTION_NIGHT_2_DECK->value,);
-    AutomaCards::moveAllInLocation(CardLocation::AUTOMA_AUCTION_NIGHT_3_BOARD->value, CardLocation::AUTOMA_AUCTION_NIGHT_3_DECK->value,);
-    AutomaCards::moveAllInLocation(CardLocation::AUTOMA_ACTION_BOARD_A ->value,     CardLocation::AUTOMA_ACTION_DECK_A->value,        );
-    AutomaCards::moveAllInLocation(CardLocation::AUTOMA_ACTION_BOARD_B ->value,   CardLocation::AUTOMA_ACTION_DECK_B->value,        );
-    AutomaCards::moveAllInLocation(CardLocation::AUTOMA_MONEY_DISCARD->value,         CardLocation::AUTOMA_MONEY_DECK->value,           );
+    if($session == 1){
+        //Create cards
+        self::createCards();
+    }
+    else {
+        //Reuse cards
+        
+        //Notifications::discardAllAuctions();
+
+        // MOVE ALL TO DECK
+        AutomaCards::moveAllInLocation(CardLocation::AUTOMA_AUCTION_DAY_1_BOARD->value,   CardLocation::AUTOMA_AUCTION_DAY_1_DECK->value,  );
+        AutomaCards::moveAllInLocation(CardLocation::AUTOMA_AUCTION_DAY_2_BOARD->value,   CardLocation::AUTOMA_AUCTION_DAY_2_DECK->value,  );
+        AutomaCards::moveAllInLocation(CardLocation::AUTOMA_AUCTION_DAY_3_BOARD->value,   CardLocation::AUTOMA_AUCTION_DAY_3_DECK->value,  );
+        AutomaCards::moveAllInLocation(CardLocation::AUTOMA_AUCTION_NIGHT_1_BOARD->value, CardLocation::AUTOMA_AUCTION_NIGHT_1_DECK->value,);
+        AutomaCards::moveAllInLocation(CardLocation::AUTOMA_AUCTION_NIGHT_2_BOARD->value, CardLocation::AUTOMA_AUCTION_NIGHT_2_DECK->value,);
+        AutomaCards::moveAllInLocation(CardLocation::AUTOMA_AUCTION_NIGHT_3_BOARD->value, CardLocation::AUTOMA_AUCTION_NIGHT_3_DECK->value,);
+        AutomaCards::moveAllInLocation(CardLocation::AUTOMA_ACTION_BOARD_A ->value,     CardLocation::AUTOMA_ACTION_DECK_A->value,        );
+        AutomaCards::moveAllInLocation(CardLocation::AUTOMA_ACTION_BOARD_B ->value,   CardLocation::AUTOMA_ACTION_DECK_B->value,        );
+        AutomaCards::moveAllInLocation(CardLocation::AUTOMA_MONEY_DISCARD->value,         CardLocation::AUTOMA_MONEY_DECK->value,           );
+    }
 
     AutomaCards::shuffle(CardLocation::AUTOMA_AUCTION_DAY_1_DECK->value);
     AutomaCards::shuffle(CardLocation::AUTOMA_AUCTION_DAY_2_DECK->value);
@@ -192,8 +256,14 @@ class AutomaCards extends Cards
     AutomaCards::shuffle(CardLocation::AUTOMA_ACTION_DECK_A->value);
     AutomaCards::shuffle(CardLocation::AUTOMA_ACTION_DECK_B->value);
     
-    //Notifications::discardAllAuctions();
-    $nbDeck = Cards::countInLocation(CardLocation::AUTOMA_AUCTION_DAY_1_DECK->value);
+    $auctionCards = self::getInLocation(CardLocation::AUTOMA_AUCTION_DAY_1_DECK->value)
+            ->merge(self::getInLocation(CardLocation::AUTOMA_AUCTION_DAY_2_DECK->value))
+            ->merge(self::getInLocation(CardLocation::AUTOMA_AUCTION_DAY_3_DECK->value));
+    Notifications::initAutomaAuctionCards($auctionCards);
+    $actionCards = self::getInLocation(CardLocation::AUTOMA_ACTION_DECK_A->value);
+    Notifications::initAutomaActionCards($actionCards);
+
+    //TODO JSA night phase in newRound
     
   }
   /**
