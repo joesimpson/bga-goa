@@ -94,7 +94,9 @@ class Globals extends \Bga\Games\Goa\Helpers\DB_Manager
         //AUTOMA is mandatory with only 1 player -> see startCondition
         $optionValue = OPTION_AUTOMA_DIFFICULTY_RANDOM;
       }
-      //TODO JSA Random 
+    }
+    if($optionValue == OPTION_AUTOMA_DIFFICULTY_RANDOM){
+      $optionValue = OPTION_AUTOMA_DIFFICULTIES[array_rand(OPTION_AUTOMA_DIFFICULTIES, 1)];
     }
     self::setOptionAutomaDifficulty($optionValue);
 
