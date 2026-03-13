@@ -6,6 +6,7 @@ use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Helpers\Collection;
 use Bga\Games\Goa\Models\AutomaActionType;
+use Bga\Games\Goa\Models\AutomaAuctionCard;
 use Bga\Games\Goa\Models\AutomaAuctionDirectionType;
 use Bga\Games\Goa\Models\AutomaAuctionStartType;
 use Bga\Games\Goa\Models\CardLocation;
@@ -121,6 +122,22 @@ class AutomaCards extends Cards
                 ->where('subType', CARD_SUBTTYPE_AUTOMA_ACTION)
                 ->where(static::$prefix . 'location', CardLocation::AUTOMA_ACTION_DECK_A->value)
                 ->count();
+    }
+    
+    public static function giveAuctionCardToAutoma() : AutomaAuctionCard
+    {
+        $round = Globals::getRound();
+        if($round > NB_ROUNDS_DAY){
+            //TODO JSA Token 2,3
+            $auctionCard = AutomaCards::getTopOf(CardLocation::AUTOMA_AUCTION_NIGHT_1_DECK->value);
+            $auctionCard->setLocation(CardLocation::AUTOMA_AUCTION_NIGHT_1_BOARD->value);
+        }
+        else {
+            $auctionCard = AutomaCards::getTopOf(CardLocation::AUTOMA_AUCTION_DAY_1_DECK->value);
+            $auctionCard->setLocation(CardLocation::AUTOMA_AUCTION_DAY_1_BOARD->value);
+        }
+        Notifications::giveAuctionCardToAutoma($auctionCard);
+        return $auctionCard;
     }
 
   ///////////////////////////////////////////////////////////////////////////////////////

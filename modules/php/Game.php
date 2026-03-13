@@ -23,6 +23,7 @@ require_once 'Models/Enums.php';
 
 use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Core\Stats;
+use Bga\Games\Goa\Helpers\AutomaEngine;
 use Bga\Games\Goa\Helpers\Utils;
 use Bga\Games\Goa\Managers\AutomaCards;
 use Bga\Games\Goa\Managers\Cards;
@@ -37,6 +38,7 @@ class Game extends \Bga\GameFramework\Table
     use DebugTrait;
     
     public static $instance = null;
+    public AutomaEngine $automaEngine;
 
     /**
      * Your global variables labels:
@@ -54,6 +56,7 @@ class Game extends \Bga\GameFramework\Table
         $this->initGameStateLabels([
             'logging' => 10,
         ]);
+        $this->automaEngine = new AutomaEngine($this);
     }
 
     public static function get() : Game{
@@ -175,6 +178,7 @@ class Game extends \Bga\GameFramework\Table
         $automaColor = Globals::getAutomaColor();
         if(isset( $automaColor) && !empty($automaColor)){
             $result["automa_name"] = Utils::getAutomaName();
+            $result["automa_id"] = Utils::getAutomaPId();
             $result["automa_color"] = $automaColor;
         }
         $result["endScoring"] = Globals::getEndScoring();

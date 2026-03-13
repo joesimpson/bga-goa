@@ -79,6 +79,8 @@ const COLONIES_CONTRACTS = [
 const MARKET_GRID_SIZE = 5;
 
 const PLAYER_PLANTATIONS_MAX = 4;
+
+const AUTOMA_PLAYER_ID = 0;
  
 /////////////////////////////////////////////////////////
 //          CARDS

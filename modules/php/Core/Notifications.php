@@ -8,6 +8,7 @@ use Bga\Games\Goa\Helpers\Collection;
 use Bga\Games\Goa\Helpers\Utils;
 use Bga\Games\Goa\Managers\Cards;
 use Bga\Games\Goa\Models\AuctionMarker;
+use Bga\Games\Goa\Models\AutomaAuctionCard;
 use Bga\Games\Goa\Models\ExplorationCard;
 use Bga\Games\Goa\Models\MarketTile;
 use Bga\Games\Goa\Models\OutpostTile;
@@ -488,6 +489,20 @@ class Notifications
     self::notifyAll("cleanHandEnd", clienttranslate('${player_name} now reaches his hand limit (${n})'), [
         "player" => $player,
         "n" => $handSize,
+    ]);
+  }
+  
+  public static function giveAuctionCardToAutoma( AutomaAuctionCard $card)
+  {
+    $message = clienttranslate('${automa_name} draws the next auction card ${auction_card_icon}');
+        
+    self::notifyAll("giveAuctionCardToAutoma", $message, [
+        'automa_name' => Utils::getAutomaName(),
+        'automa_color' => Globals::getAutomaColor(),
+        'card' => $card->getUiData(),
+        'i18n' => ['automa_name'],
+        'preserve'=>['card', ],
+        "auction_card_icon" => '',//TODO JSA icon on client side
     ]);
   }
   
