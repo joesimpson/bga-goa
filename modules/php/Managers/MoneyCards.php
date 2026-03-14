@@ -5,6 +5,7 @@ namespace Bga\Games\Goa\Managers;
 use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Helpers\Collection;
 use Bga\Games\Goa\Models\CardLocation;
+use Bga\Games\Goa\Models\MoneyCard;
 use Bga\Games\Goa\Models\MoneyCardType;
 
 /* Class to manage all the Money cards */
@@ -36,6 +37,25 @@ class MoneyCards extends Cards
         ->where( 'subType', CARD_SUBTTYPE_MONEY)
         ->where(static::$prefix . 'location', CardLocation::AUTOMA_MONEY_DECK->value)
         ->count();
+    }
+    
+    public static function drawAutoma(int $token_type) : MoneyCard
+    {
+        $decksize = self::countAutomaDeckSize();
+        if($decksize == 0){
+            //TODO JSA Notif RESHUFFLE
+        }
+        $card = self::DB()
+            ->where( 'subType', CARD_SUBTTYPE_MONEY)
+            ->where(static::$prefix . 'location', CardLocation::AUTOMA_MONEY_DECK->value)
+            ->get()->first();
+
+        $toLocation = CardLocation::AUTOMA_MONEY_AUCTION_1->value;
+        //TODO JSA 2, 3
+
+        $card->setLocation($toLocation);
+        Notifications::automaDrawMoney($card);
+        return $card;
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////

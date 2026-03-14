@@ -1781,6 +1781,7 @@ body.notouch-device .goa_exploration_card-front.bga-cards_selectable-card:hover,
   transform: scale(var(--goa_automaboard_display_scale));
   transform-origin: top left;
   position: relative;
+  overflow-y: hidden;
 }
 #goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_board_background {
   position: absolute;
@@ -2154,6 +2155,22 @@ body.notouch-device .goa_exploration_card-front.bga-cards_selectable-card:hover,
 #goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(30) {
   left: 30px;
   top: 60px;
+}
+#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_money_auctions {
+  position: absolute;
+  left: 52px;
+  top: 617px;
+  width: 491px;
+  height: 97px;
+}
+#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_money_auctions #goa_automa_money_auction_1, #goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_money_auctions #goa_automa_money_auction_2, #goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_money_auctions #goa_automa_money_auction_3 {
+  position: absolute;
+}
+#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_money_auctions #goa_automa_money_auction_2 {
+  left: 170px;
+}
+#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_money_auctions #goa_automa_money_auction_3 {
+  left: 338px;
 }
 #goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_tokens {
   position: absolute;
