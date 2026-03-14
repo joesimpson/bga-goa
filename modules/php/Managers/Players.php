@@ -384,6 +384,7 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
   }
   public static function giveContracts(Player &$player, int $nb = 1)
   {
+    if($player->getId() == AUTOMA_PLAYER_ID) return;
     if($nb ==0) return;
     $player->incContracts($nb);
     if($nb > 0) Stats::inc( "totalContracts", $player->getId(), $nb);
@@ -391,6 +392,7 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
   }
   public static function giveShips(Player &$player, int $nb = 1)
   {
+    if($player->getId() == AUTOMA_PLAYER_ID) return;
     if($nb ==0) return;
     $player->incShips($nb);
     if($nb > 0) Stats::inc( "totalShips", $player->getId(), $nb);
@@ -398,6 +400,7 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
   }
   public static function giveMoney(Player &$player, int $nb = 1, bool $sendNotif = true)
   {
+    if($player->getId() == AUTOMA_PLAYER_ID) return;
     if($nb == 0) return;
     $player->incMoney($nb);
     if($nb > 0) Stats::inc( "totalMoney", $player->getId(), $nb);
@@ -405,6 +408,7 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
   }
   public static function giveExtraActionCards(Player &$player, int $nb = 1)
   {
+    if($player->getId() == AUTOMA_PLAYER_ID) return;
     if($nb == 0) return;
     $player->incCompasses($nb);
     if($nb > 0) Stats::inc( "totalCompasses", $player->getId(), $nb);

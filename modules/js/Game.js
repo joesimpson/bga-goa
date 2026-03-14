@@ -229,7 +229,7 @@ export class Game {
             }
             
             this.bga.playerPanels.getElement(player.id).insertAdjacentHTML('beforeend', `
-                <div class='goa_panel'>
+                <div class='goa_panel' id ='goa_panel-${player.id}'>
                     <div class='goa_player_counters_line goa_player_counters_line_cards'>
                         ${this.tplResourceCounter(player,'exploration_hand_size',_('Exploration card'))}
                         ${this.tplResourceCounter(player,'money',_('Pardaos'))}
@@ -1777,9 +1777,15 @@ export class Game {
         this.customDebug("notif_winsAuction",notif);
         let amount = notif.n;
         let fromPlayer = notif.player_id;
+        let card = notif.card;
+        let cardDiv = null;
         let fromElement = document.getElementById(`goa_reserve_${fromPlayer}_money`);
+        if(card) cardDiv = document.getElementById(`goa_card-${card.id}`);
+        if(cardDiv) fromElement = cardDiv;
+        if(!fromElement) fromElement = document.getElementById(`goa_panel-${fromPlayer}`);//should not happen
         let toPlayer = notif.player_id2;
         let toElement = document.getElementById(`goa_reserve_${toPlayer}_money`);
+        if(!toElement) toElement = document.getElementById(`goa_panel-${toPlayer}`);//should not happen
 
         const floatingPieceAnimationSettings = {
             duration: 2000,
@@ -1789,6 +1795,11 @@ export class Game {
         let animations = new Array(amount).fill(0).map(index => (() => {
             this.animationManager.slideFloatingElement(this.createCoin(), fromElement, toElement, floatingPieceAnimationSettings)
         }));
+        if(cardDiv) {
+            animations.push((() => {
+                this.animationManager.slideOutAndDestroy(cardDiv, toElement, {duration: 1000})
+            }));
+        }
         await this.animationManager.playInterval(animations);
 
         let currentPlayer = this.bga.players.getCurrentPlayer();
@@ -3478,7 +3489,7 @@ export class Game {
         let automa_nbActions = this.gamedatas.automa_nbActions;
         if(!automa_panel.querySelector('.goa_panel')){
             this.bga.playerPanels.getElement(automa_id).insertAdjacentHTML('beforeend', `
-                <div class='goa_panel'>
+                <div class='goa_panel' id ='goa_panel-${automa_id}'>
                     <div class='goa_player_counters_line goa_player_counters_lastline'>
                         ${this.tplResourceCounter({'id':automa_id},'nbActions',_('Round Actions'))}
                         <div id="goa_first_player_container_${automa_id}" class="goa_first_player_container" alt="${_('Nazar Stone (Starting player)')}" title="${_('Nazar Stone (Starting player)')}"></div>

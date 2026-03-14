@@ -242,6 +242,19 @@ class Notifications
     }
   }
   
+  public static function winsAuctionWithCard(Player $playerWins, int $bid, Player $player2Auctioneer, MoneyCard $card )
+  {
+    self::notifyAll("winsAuction", clienttranslate('${player_name} wins the auction and gives ${n} ${icon_money} to ${player_name2}'), [
+        "player" => $playerWins,
+        "player2" => $player2Auctioneer,
+        "n" => $bid,
+        "card" => $card,
+        "icon_money" => clienttranslate('Pardaos'),
+        "i18n" => ['icon_money'],
+        "preserve" => ['card'],
+    ]);
+  }
+
   public static function auctionMarkerBack(Player $player, Token $token)
   {
     self::notifyAll("auctionMarkerBack", clienttranslate('${player_name} takes back the auction marker ${token_icon}'), [
@@ -885,6 +898,7 @@ class Notifications
         $data['preserve'] = [];
       }
       $data['preserve'][] = 'player_color2';
+      $data['preserve'][] = 'player_id2';
       unset($data['player2']);
     }
     else {
