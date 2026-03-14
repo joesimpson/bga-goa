@@ -12,9 +12,11 @@ use Bga\Games\Goa\Exceptions\PrematureStateChangeException;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Log;
 use Bga\Games\Goa\Helpers\Utils;
+use Bga\Games\Goa\Managers\MoneyCards;
 use Bga\Games\Goa\Managers\Players;
 use Bga\Games\Goa\Managers\Tiles;
 use Bga\Games\Goa\Managers\Tokens;
+use Bga\Games\Goa\Models\MoneyCard;
 
 class EndPlayerTurn extends \Bga\GameFramework\States\GameState
 {
@@ -79,10 +81,17 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
                     else {
                         //auction winner PAYS the auctioneer
                         $highBidPlayer = Players::get($highBidPlayerId);
-                        Players::giveMoney($highBidPlayer, - $highBid , false);
-                        Players::giveMoney($currentAuctioneer, + $highBid , false );
-                        Notifications::winsAuction($highBidPlayer, $highBid,$currentAuctioneer);
-                        Stats::inc( "auctionsWon", $highBidPlayerId);
+                        if($highBidPlayerId == AUTOMA_PLAYER_ID){
+                            //AUTOMATA PAYS the player with a card
+                            $highBidPlayer = Players::automaPlayer();
+                            MoneyCards::automaGiveToPlayer($auctionToken->getType(), $highBidPlayer, $currentAuctioneer);
+                        }
+                        else {
+                            Players::giveMoney($highBidPlayer, - $highBid , false);
+                            Players::giveMoney($currentAuctioneer, + $highBid , false );
+                            Notifications::winsAuction($highBidPlayer, $highBid,$currentAuctioneer);
+                            Stats::inc( "auctionsWon", $highBidPlayerId);
+                        }
                     }
 
                     if( TOKEN_TYPE_AUCTION_MARKER_1 == $auctionToken->getType()){
