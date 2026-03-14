@@ -536,6 +536,21 @@ class Notifications
     ]);
   }
   
+  public static function automaDiscardMoney( MoneyCard $card)
+  {
+    $message = clienttranslate('${automa_name} discards the auctioned money card : ${n} ${icon_money}');
+        
+    self::notifyAll("automaDiscardMoney", $message, [
+        'automa_name' => Utils::getAutomaName(),
+        'automa_color' => Globals::getAutomaColor(),
+        'card' => $card->getUiData(),
+        'i18n' => ['automa_name', 'icon_money' ],
+        'preserve'=>['card', 'automa_color', ],
+        "n" => $card->getValue(),
+        "icon_money" => clienttranslate('Pardaos'),
+    ]);
+  }
+  
   public static function getMoney(Player $player, int $amount, )
   {
     if($amount >= 0){

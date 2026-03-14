@@ -1591,6 +1591,13 @@ export class Game {
         let cardDiv = await this.addCard(card);
         await this.animationManager.slideIn(cardDiv, fromElement, {duration: 1000});
     }
+    async notif_automaDiscardMoney(notif) {
+        this.customDebug('notif_automaDiscardMoney:', notif);
+        let card = notif.card;
+        let cardDiv = await this.addCard(card);
+        let destinationDiv = document.getElementById(this.getCardContainer(card));
+        await this.animationManager.slideAndAttach(cardDiv, destinationDiv);
+    }
     
     async notif_clearTurn(n) {
         this.customDebug('notif_clearTurn: restarting turn/step', n);

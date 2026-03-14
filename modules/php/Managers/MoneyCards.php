@@ -78,6 +78,24 @@ class MoneyCards extends Cards
         return $card;
     }
 
+    /**
+     * DISCARD AUTOMA Money card if any
+     */
+    public static function discardAutomaAuction(int $token_type, ) : MoneyCard|null
+    { 
+        $fromLocation = CardLocation::AUTOMA_MONEY_AUCTION_1->value;
+        switch($token_type){
+            //TODO JSA 2, 3
+        }
+        $card = self::DB()
+            ->where( 'subType', CARD_SUBTTYPE_MONEY)
+            ->where(static::$prefix . 'location', $fromLocation)
+            ->get()->first();
+        if(!isset($card)) return null;
+        $card->setLocation(CardLocation::AUTOMA_MONEY_DISCARD->value);
+        Notifications::automaDiscardMoney($card);
+        return $card;
+    }
     ///////////////////////////////////////////////////////////////////////////////////////
     
     /** Creation of the cards
