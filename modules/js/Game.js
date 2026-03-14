@@ -443,7 +443,7 @@ export class Game {
     }
     
     coloredAutomaName(name, specifiedColor = null) {
-        return `<span class="automa_name playername playername_wrapper_${specifiedColor}" data-color="${specifiedColor}">${name}</span>`;
+        return `<span class="automa_name playername playername_wrapper_${specifiedColor}" data-color="${specifiedColor}">${_(name)}</span>`;
     }
     
     bgaFormatText(log, args) {
@@ -452,10 +452,16 @@ export class Game {
 
             let playernames_keys = Object.keys(args).filter((key) => key.startsWith( 'player_name'));
             let color_keys = Object.keys(args).filter((key) => key.startsWith('player_color'));
+            let player_id_keys = Object.keys(args).filter((key) => key.startsWith('player_id'));
             for(let k=0; k<playernames_keys.length; k++){
                 let key = playernames_keys[k];
                 let colorKey = color_keys[k];
-                args[key] = this.coloredPlayerName(args[key],args[colorKey]);
+                if(player_id_keys[k] && args[player_id_keys[k]] == this.gamedatas.automa_id ){
+                    args[key] = this.coloredAutomaName(this.gamedatas.automa_name,this.gamedatas.automa_color);
+                }
+                else {
+                    args[key] = this.coloredPlayerName(args[key],args[colorKey]);
+                }
             }
 
             if('automa_name' in args && 'automa_color' in args) {
