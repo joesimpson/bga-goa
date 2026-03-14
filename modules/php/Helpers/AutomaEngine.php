@@ -38,6 +38,7 @@ class AutomaEngine {
                 break;
             case ROUND_STEP_TILE_AUCTIONS:
                 $auctionToken = Tokens::getCurrentAuctionToken();
+                //TODO JSA don't draw if automa is auctioneer
                 $auctionCard = AutomaCards::giveAuctionCardToAutoma($auctionToken);
                 //TODO JSA CHECKPOINT
                 $auctionCard->bid($auctionToken);

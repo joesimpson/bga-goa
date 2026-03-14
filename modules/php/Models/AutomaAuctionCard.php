@@ -118,7 +118,6 @@ class AutomaAuctionCard extends Card
         $currentBid = Globals::getCurrentBid();
 
         $bid = $this->getAuction_money();
-        //TODO JSA don't draw if automa is auctioneer
         //RULE : Auction money + draw 1 MONEY CARD
         $moneyCard = MoneyCards::drawAutoma($token->getType());
         $bid += $moneyCard->getValue();

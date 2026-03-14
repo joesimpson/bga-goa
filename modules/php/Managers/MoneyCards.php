@@ -7,6 +7,7 @@ use Bga\Games\Goa\Helpers\Collection;
 use Bga\Games\Goa\Models\CardLocation;
 use Bga\Games\Goa\Models\MoneyCard;
 use Bga\Games\Goa\Models\MoneyCardType;
+use Bga\Games\Goa\Models\Player;
 
 /* Class to manage all the Money cards */
 
@@ -55,6 +56,25 @@ class MoneyCards extends Cards
 
         $card->setLocation($toLocation);
         Notifications::automaDrawMoney($card);
+        return $card;
+    }
+    
+    public static function automaGiveToPlayer(int $token_type, Player $automata,Player $player,) : MoneyCard
+    {
+
+        $fromLocation = CardLocation::AUTOMA_MONEY_AUCTION_1->value;
+        switch($token_type){
+            //TODO JSA 2, 3
+        }
+        $card = self::DB()
+            ->where( 'subType', CARD_SUBTTYPE_MONEY)
+            ->where(static::$prefix . 'location', $fromLocation)
+            ->get()->first();
+        //For now, we don't use money cards model for players money,     
+        $cardMoney = $card->getValue();
+        Players::giveMoney($player, $cardMoney , false );
+        Notifications::winsAuction($automata, $cardMoney,$player);
+        self::DB()->delete($card->getId());
         return $card;
     }
 
