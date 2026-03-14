@@ -228,6 +228,7 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
   public static function get(int|null $pId = null)
   {
     $pId = $pId ?: self::getActiveId();
+    if($pId == AUTOMA_PLAYER_ID) return self::automaPlayer();
     return self::DB()
       ->where($pId)
       ->getSingle();

@@ -242,9 +242,10 @@ class Notifications
     }
   }
   
-  public static function winsAuctionWithCard(Player $playerWins, int $bid, Player $player2Auctioneer, MoneyCard $card )
+  public static function winsAuctionWithCard(Player $playerWins, int $bid, MoneyCard $card, Player|null $player2Auctioneer = null )
   {
-    self::notifyAll("winsAuction", clienttranslate('${player_name} wins the auction and gives ${n} ${icon_money} to ${player_name2}'), [
+    if(isset($player2Auctioneer)){
+      self::notifyAll("winsAuction", clienttranslate('${player_name} wins the auction and gives ${n} ${icon_money} to ${player_name2}'), [
         "player" => $playerWins,
         "player2" => $player2Auctioneer,
         "n" => $bid,
@@ -252,7 +253,18 @@ class Notifications
         "icon_money" => clienttranslate('Pardaos'),
         "i18n" => ['icon_money'],
         "preserve" => ['card'],
-    ]);
+        ]);
+    }
+    else {
+      self::notifyAll("winsAuctionBank", clienttranslate('${player_name} wins the auction and gives ${n} ${icon_money} to the bank'), [
+        "player" => $playerWins,
+        "n" => $bid,
+        "card" => $card,
+        "icon_money" => clienttranslate('Pardaos'),
+        "i18n" => ['icon_money'],
+        "preserve" => ['card'],
+        ]);
+    }
   }
 
   public static function auctionMarkerBack(Player $player, Token $token)
@@ -541,6 +553,21 @@ class Notifications
     $message = clienttranslate('${automa_name} discards the auctioned money card : ${n} ${icon_money}');
         
     self::notifyAll("automaDiscardMoney", $message, [
+        'automa_name' => Utils::getAutomaName(),
+        'automa_color' => Globals::getAutomaColor(),
+        'card' => $card->getUiData(),
+        'i18n' => ['automa_name', 'icon_money' ],
+        'preserve'=>['card', 'automa_color', ],
+        "n" => $card->getValue(),
+        "icon_money" => clienttranslate('Pardaos'),
+    ]);
+  }
+  
+  public static function automaBankMoney( MoneyCard $card)
+  {
+    $message = clienttranslate('${automa_name} pays the auctioned money card : ${n} ${icon_money}');
+        
+    self::notifyAll("automaBankMoney", $message, [
         'automa_name' => Utils::getAutomaName(),
         'automa_color' => Globals::getAutomaColor(),
         'card' => $card->getUiData(),

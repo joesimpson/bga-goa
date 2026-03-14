@@ -127,7 +127,13 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
 
     $tile = $tilesOnMarketSpace->first();
     if(isset($tile)){
-      Tiles::giveMarketTileToPlayer($player, $tile, $doCheckpoint);
+      if($player->getId() == AUTOMA_PLAYER_ID){
+        //AUTOMA DISCARD every tiles
+        Tiles::discardTileFromPlayer($player, $tile);
+      }
+      else {
+        Tiles::giveMarketTileToPlayer($player, $tile, $doCheckpoint);
+      }
     }
   }
   

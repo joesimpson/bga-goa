@@ -28,19 +28,21 @@ class AutomaEngine {
         switch($roundStep){
             case ROUND_STEP_PLACE_AUCTIONS:
                 $nextAuctionToken = Tokens::getNextAuctionToken(Players::automaPlayer());
-
                 $auctionCard = AutomaCards::giveAuctionCardToAutoma($nextAuctionToken);
-                //TODO JSA CHECKPOINT
-
                 Game::get()->trace(__CLASS__.'.'.__FUNCTION__."() : play auction card ".json_encode($auctionCard)." with token ".json_encode($nextAuctionToken));
                 $auctionCard->play($nextAuctionToken);
-
                 break;
             case ROUND_STEP_TILE_AUCTIONS:
                 $auctionToken = Tokens::getCurrentAuctionToken();
-                //TODO JSA don't draw if automa is auctioneer
-                $auctionCard = AutomaCards::giveAuctionCardToAutoma($auctionToken);
-                //TODO JSA CHECKPOINT
+                $currentAuctioneer = $auctionToken->getPId();
+                if($currentAuctioneer == AUTOMA_PLAYER_ID){
+                    // don't draw if automa is auctioneer
+                    $automaAuctionCardLocation = AutomaCards::getAuctionBoardForTokenType($auctionToken->getType());
+                    $auctionCard = AutomaCards::getTopOf($automaAuctionCardLocation->value);
+                }
+                else {
+                    $auctionCard = AutomaCards::giveAuctionCardToAutoma($auctionToken);
+                }
                 $auctionCard->bid($auctionToken);
                 //TODO JSA resolve bid turn if automa was the auctioneer
                 break;

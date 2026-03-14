@@ -67,19 +67,23 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
                     $currentAuctioneerId = $auctionToken->getPId();
                     $currentAuctioneer = Players::get($currentAuctioneerId);
                 }
+
+                $currentAuctioneerActive = isset($currentAuctioneerId) &&(($activePlayerId == $currentAuctioneerId) || AUTOMA_PLAYER_ID == $currentAuctioneerId && Globals::isAutomaActive());
                 
-                if($bidTurns > 0 && isset($highBidPlayerId) && isset($currentAuctioneerId) && $activePlayerId == $currentAuctioneerId) { // END the auction when auctioneer played
+                if($bidTurns > 0 && isset($highBidPlayerId) && $currentAuctioneerActive) { // END the auction when auctioneer played
                     if($highBidPlayerId == $currentAuctioneerId) {
                         $highBidPlayer = $currentAuctioneer;
                         //AUCTIONEER PAYS THE BANK
-                        if($highBid>0){
-                            $currentAuctioneer->setMoney( $currentAuctioneer->getMoney() - $highBid );
-                        }
-                        Notifications::winsAuction($currentAuctioneer, $highBid);
-                        Stats::inc( "auctionsWon", $currentAuctioneerId);
                         if($highBidPlayerId == AUTOMA_PLAYER_ID){
-                            //TODO JSA
+                            $moneyCard = MoneyCards::bankAutomaAuction($auctionToken->getType());
+                            
+                            Notifications::winsAuctionWithCard($currentAuctioneer, $highBid, $moneyCard);
                         } else {
+                            if($highBid>0){
+                                Players::giveMoney($currentAuctioneer, - $highBid, false);
+                            }
+                            Notifications::winsAuction($currentAuctioneer, $highBid);
+                            Stats::inc( "auctionsWon", $currentAuctioneerId);
                             MoneyCards::discardAutomaAuction($auctionToken->getType());
                         }
                     }
@@ -107,7 +111,6 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
                     else {
                         //ELSE highBidPlayer receives a tile
                         try{
-
                             Tiles::giveMarketTileToPlayerAt($highBidPlayer, $auctionToken->getRow(), $auctionToken->getCol(), $doCheckpoint );
                         }
                         catch(PrematureStateChangeException $exc){

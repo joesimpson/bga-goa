@@ -121,12 +121,16 @@ class AutomaAuctionCard extends Card
         //RULE : Auction money + draw 1 MONEY CARD
         $moneyCard = MoneyCards::drawAutoma($token->getType());
         $bid += $moneyCard->getValue();
-
-        $nextBid = $currentBid + $bid;
-
-        Globals::setCurrentBid($nextBid);
-        Globals::setHighBidPlayer(AUTOMA_PLAYER_ID);
-        Notifications::newBid(Players::automaPlayer(), $currentBid, $nextBid);
+        if($bid >= $currentBid - 1 ){
+            $nextBid = $bid;
+            Globals::setCurrentBid($nextBid);
+            Globals::setHighBidPlayer(AUTOMA_PLAYER_ID);
+            Notifications::newBid(Players::automaPlayer(), $currentBid, $nextBid);
+        }
+        else {
+            //IF automa bid < current BID - 1, the automa passes
+            Notifications::passBid(Players::automaPlayer(), $token);
+        }
 
     }
  
