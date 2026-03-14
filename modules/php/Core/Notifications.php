@@ -11,6 +11,7 @@ use Bga\Games\Goa\Models\AuctionMarker;
 use Bga\Games\Goa\Models\AutomaAuctionCard;
 use Bga\Games\Goa\Models\ExplorationCard;
 use Bga\Games\Goa\Models\MarketTile;
+use Bga\Games\Goa\Models\MoneyCard;
 use Bga\Games\Goa\Models\OutpostTile;
 use Bga\Games\Goa\Models\Player;
 use Bga\Games\Goa\Models\ProgressMarker;
@@ -504,6 +505,21 @@ class Notifications
         'i18n' => ['automa_name'],
         'preserve'=>['card', 'automa_color', ],
         "auction_card_icon" => '',//TODO JSA icon on client side
+    ]);
+  }
+  
+  public static function automaDrawMoney( MoneyCard $card)
+  {
+    $message = clienttranslate('${automa_name} draws the next money card : ${n} ${icon_money}');
+        
+    self::notifyAll("automaDrawMoney", $message, [
+        'automa_name' => Utils::getAutomaName(),
+        'automa_color' => Globals::getAutomaColor(),
+        'card' => $card->getUiData(),
+        'i18n' => ['automa_name', 'icon_money' ],
+        'preserve'=>['card', 'automa_color', ],
+        "n" => $card->getValue(),
+        "icon_money" => clienttranslate('Pardaos'),
     ]);
   }
   

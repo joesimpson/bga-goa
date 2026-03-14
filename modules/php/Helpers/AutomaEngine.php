@@ -37,13 +37,16 @@ class AutomaEngine {
 
                 break;
             case ROUND_STEP_TILE_AUCTIONS:
-                Notifications::message("TODO AUTOMA ENGINE STEP 2");
+                $auctionToken = Tokens::getCurrentAuctionToken();
+                $auctionCard = AutomaCards::giveAuctionCardToAutoma($auctionToken);
+                //TODO JSA CHECKPOINT
+                $auctionCard->bid($auctionToken);
+                //TODO JSA resolve bid turn if automa was the auctioneer
                 break;
             case ROUND_STEP_PLAYER_ACTIONS: 
                 Notifications::message("TODO AUTOMA ENGINE STEP 3");
                 break;
             default : 
-                Notifications::message("TODO AUTOMA ENGINE RULES");
                 break;
         }
 

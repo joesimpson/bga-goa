@@ -1580,6 +1580,17 @@ export class Game {
         let cardDiv = await this.addCard(card);
         await this.animationManager.slideIn(cardDiv, fromElement, {duration: 1000});
     }
+    async notif_automaDrawMoney(notif) {
+        this.customDebug('notif_automaDrawMoney:', notif);
+
+        let card = notif.card;
+        let fromElement = document.getElementById(`goa_automa_deck_money`);
+        this._counters[0]['goa_deck_size_automa_money'].incValue(-1);
+
+        this.destroy($(`goa_card-${card.id}`));
+        let cardDiv = await this.addCard(card);
+        await this.animationManager.slideIn(cardDiv, fromElement, {duration: 1000});
+    }
     
     async notif_clearTurn(n) {
         this.customDebug('notif_clearTurn: restarting turn/step', n);
@@ -3149,6 +3160,15 @@ export class Game {
             if (card.location == this.const.CARD_LOCATION_AUTOMA_MONEY_BOARD ) {
                 return `goa_automa_discard_money`;
             }
+            if (card.location == this.const.CARD_LOCATION_AUTOMA_MONEY_AUCTION_1 ) {
+                return `goa_automa_money_auction_1`;
+            }
+            if (card.location == this.const.CARD_LOCATION_AUTOMA_MONEY_AUCTION_2 ) {
+                return `goa_automa_money_auction_2`;
+            }
+            if (card.location == this.const.CARD_LOCATION_AUTOMA_MONEY_AUCTION_3 ) {
+                return `goa_automa_money_auction_3`;
+            }
         }
 
         
@@ -3484,6 +3504,11 @@ export class Game {
                                 <div id='goa_automa_discard_auction_3'></div>
                                 <div id='goa_automa_discard_action'></div>
                                 <div id='goa_automa_discard_money'></div>
+                            </div>
+                            <div id='goa_automa_money_auctions'>
+                                <div id='goa_automa_money_auction_1'></div>
+                                <div id='goa_automa_money_auction_2'></div>
+                                <div id='goa_automa_money_auction_3'></div>
                             </div>
                             <div id='goa_automa_tokens'></div>
                         </div>

@@ -23,6 +23,7 @@ $automaboard_img_height: calc(713px);
             transform: scale(var(--goa_automaboard_display_scale));
             transform-origin: top left;
             position: relative;
+            overflow-y: hidden;//Hide auctioned money cards bottom half
 
             #goa_automa_board_background 
             {
@@ -143,6 +144,25 @@ $automaboard_img_height: calc(713px);
                 }
                 
             }
+        
+            #goa_automa_money_auctions{
+                position: absolute;   
+                left: 52px;
+                top: 617px;
+                width: 491px;
+                height: 97px;
+
+                #goa_automa_money_auction_1, #goa_automa_money_auction_2, #goa_automa_money_auction_3{
+                    position: absolute;   
+                }
+                #goa_automa_money_auction_2{
+                    left: 170px;
+                }
+                #goa_automa_money_auction_3{
+                    left: 338px;
+                }
+            }
+
             #goa_automa_tokens{
                 position: absolute;   
                 left: 0px;

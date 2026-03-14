@@ -2,8 +2,11 @@
 
 namespace Bga\Games\Goa\Models;
 
+use Bga\Games\Goa\Core\Globals;
+use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\GridUtils;
+use Bga\Games\Goa\Managers\MoneyCards;
 use Bga\Games\Goa\Managers\Players;
 use Bga\Games\Goa\Managers\Tiles;
 
@@ -30,6 +33,9 @@ class AutomaAuctionCard extends Card
         return $data;
     }
 
+    /**
+     * The Automata plays this card to place this auction token
+     */
     public function play(AuctionMarker $token)
     {
         if(isset($token)) {
@@ -103,5 +109,26 @@ class AutomaAuctionCard extends Card
         return $pAuctionableSpots[0];
     }
 
+    
+    /**
+     * The Automata plays this card to BID on this auction token
+     */
+    public function bid(AuctionMarker $token)
+    {
+        $currentBid = Globals::getCurrentBid();
+
+        $bid = $this->getAuction_money();
+        //TODO JSA don't draw if automa is auctioneer
+        //RULE : Auction money + draw 1 MONEY CARD
+        $moneyCard = MoneyCards::drawAutoma($token->getType());
+        $bid += $moneyCard->getValue();
+
+        $nextBid = $currentBid + $bid;
+
+        Globals::setCurrentBid($nextBid);
+        Globals::setHighBidPlayer(AUTOMA_PLAYER_ID);
+        Notifications::newBid(Players::automaPlayer(), $currentBid, $nextBid);
+
+    }
  
 }

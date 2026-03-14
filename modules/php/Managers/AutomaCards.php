@@ -36,6 +36,9 @@ class AutomaCards extends Cards
             ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_ACTION_BOARD_A->value))
             ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_ACTION_BOARD_B->value))
             ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_MONEY_DISCARD->value))
+            ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_MONEY_AUCTION_1->value))
+            ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_MONEY_AUCTION_2->value))
+            ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_MONEY_AUCTION_3->value))
         //REMOVE DECK CONTENT AFTER TEST -> replace by decksize
             //->merge(self::getInLocation(CardLocation::AUTOMA_AUCTION_DAY_1_DECK->value))
             //->merge(self::getInLocation(CardLocation::AUTOMA_AUCTION_DAY_2_DECK->value))
