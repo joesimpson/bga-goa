@@ -15,7 +15,9 @@ Visual Diagram (hand made), in order to keep a trace of each possible transition
                     |                                        |  |
                     v                                        |  |
                     nextPlayer  <---------------------\      |  |
-                    |                                 ^      |  |
+                    |  |   ^                          ^      |  |
+                    |  |   |                          |      |  |
+                    |  \-->/                          |      |  |
                     v                                 |      |  |
                playerTurn   -------\                  |      |  |
                       |   <--\     |                  |      |  |

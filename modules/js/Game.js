@@ -2748,7 +2748,7 @@ export class Game {
             return `<div id="goa_token${prefix}-${token.id}" class="goa_token goa_token${prefix} goa_progress_marker" data-id="${token.id}" data-track='${token.track}' data-row='${token.row}' data-color='${this.gamedatas.players[token.pId].color}' data-pid='${token.pId}'></div>`;
         if(token.subtype == this.const.TOKEN_SUBTTYPE_AUCTION_MARKER) {
             let tokenColor = this.gamedatas.automa_color;
-            if(token.pId) tokenColor = this.gamedatas.players[token.pId].color;
+            if(token.pId && token.pId!=this.gamedatas.automa_id) tokenColor = this.gamedatas.players[token.pId].color;
 
             return `<div id="goa_token${prefix}-${token.id}" class="goa_token goa_token${prefix} goa_auction_marker" data-id="${token.id}" data-value='${token.auctionOrder}' data-color='${tokenColor}' data-pid='${token.pId}'></div>`;
         }

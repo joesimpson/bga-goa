@@ -254,9 +254,12 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
     $player = $player ?? Players::getCurrent();
     $pId = is_int($player) ? $player : $player->getId();
     $table = Game::get()->getNextPlayerTable();
+    $firstPlayerIdInTable = array_key_first($table);
+    if(AUTOMA_PLAYER_ID == $pId) {
+      return $firstPlayerIdInTable;
+    }
     $nextPid = $table[$pId];
 
-    $firstPlayerIdInTable = array_key_first($table);
 
     $automa_id = Utils::getAutomaPId();
     $automaIsActive = Globals::isAutomaActive();
@@ -293,8 +296,12 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
   public static function getNextPlayer(int $player_id) : Player
   {
     $nextPlayer_id = Players::getNextId($player_id);
-    if(AUTOMA_PLAYER_ID == $nextPlayer_id) return new Player(['player_id' => AUTOMA_PLAYER_ID, ]);
+    if(AUTOMA_PLAYER_ID == $nextPlayer_id) return Players::automaPlayer();
     return Players::get($nextPlayer_id);
+  }
+
+  public static function automaPlayer() : Player {
+    return new Player(['player_id' => AUTOMA_PLAYER_ID, 'player_name' => Utils::getAutomaName(), 'player_color' => Globals::getAutomaColor()]);
   }
 
   /*

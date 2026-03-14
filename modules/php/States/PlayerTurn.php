@@ -197,13 +197,7 @@ class PlayerTurn extends GameState
 
         // game logic 
         $auctionType =  $args['token']['type'];
-        if($auctionType == TOKEN_TYPE_AUCTION_MARKER_1){
-            //add first auction token when needed
-            $token1 = Tokens::placeFirstAuctionMarker($player,$row,$col);
-            Notifications::auctionPlaced( $player, $row, $col, $token1 );
-        }
-        $token = Tokens::placeAuction($player,$row,$col, $auctionType);
-        Notifications::auctionPlaced( $player, $row, $col, $token );
+        GridUtils::placeAuction($player,  $row, $col, $auctionType);
 
         // at the end of the action, move to the next state
         return ConfirmTurn::class;

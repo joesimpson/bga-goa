@@ -1,6 +1,6 @@
 
 .player_board_inner{
-    #player_name_0, // automa panel
+    #player_name_-123, // automata panel
     >.player-name>a{
         /** Add a BLACK shadow behind player name in case of bright colors like yellow*/
         &[style*='color: #84cba2'], &[data-color='84cba2'],
@@ -24,8 +24,7 @@
     }
 
 }
-#overall_player_board_0{
-    //AUTOMA
+#overall_player_board_-123{ // automata panel
     background-color: #9d9d9d;
 }
 

@@ -5,6 +5,7 @@ namespace Bga\Games\Goa\Managers;
 use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Helpers\Collection;
+use Bga\Games\Goa\Models\AuctionMarker;
 use Bga\Games\Goa\Models\AutomaActionType;
 use Bga\Games\Goa\Models\AutomaAuctionCard;
 use Bga\Games\Goa\Models\AutomaAuctionDirectionType;
@@ -124,18 +125,47 @@ class AutomaCards extends Cards
                 ->count();
     }
     
-    public static function giveAuctionCardToAutoma() : AutomaAuctionCard
+    public static function giveAuctionCardToAutoma(AuctionMarker $token) : AutomaAuctionCard
     {
         $round = Globals::getRound();
+        $fromDeck = CardLocation::AUTOMA_AUCTION_DAY_1_DECK->value;
+        $toDeck = CardLocation::AUTOMA_AUCTION_DAY_1_BOARD->value;
         if($round > NB_ROUNDS_DAY){
-            //TODO JSA Token 2,3
-            $auctionCard = AutomaCards::getTopOf(CardLocation::AUTOMA_AUCTION_NIGHT_1_DECK->value);
-            $auctionCard->setLocation(CardLocation::AUTOMA_AUCTION_NIGHT_1_BOARD->value);
+            switch($token->getType()){
+                case TOKEN_TYPE_AUCTION_MARKER_1:
+                    $fromDeck = CardLocation::AUTOMA_AUCTION_NIGHT_1_DECK->value;
+                    $toDeck = CardLocation::AUTOMA_AUCTION_NIGHT_1_BOARD->value;
+                    break;
+                case TOKEN_TYPE_AUCTION_MARKER_2:
+                    $fromDeck = CardLocation::AUTOMA_AUCTION_NIGHT_2_DECK->value;
+                    $toDeck = CardLocation::AUTOMA_AUCTION_NIGHT_2_BOARD->value;
+                    break;
+                case TOKEN_TYPE_AUCTION_MARKER_3: 
+                    $fromDeck = CardLocation::AUTOMA_AUCTION_NIGHT_3_DECK->value;
+                    $toDeck = CardLocation::AUTOMA_AUCTION_NIGHT_3_BOARD->value;
+                    break;
+            }
         }
         else {
-            $auctionCard = AutomaCards::getTopOf(CardLocation::AUTOMA_AUCTION_DAY_1_DECK->value);
-            $auctionCard->setLocation(CardLocation::AUTOMA_AUCTION_DAY_1_BOARD->value);
+            //DAY
+            switch($token->getType()){
+                case TOKEN_TYPE_AUCTION_MARKER_1:
+                    $fromDeck = CardLocation::AUTOMA_AUCTION_DAY_1_DECK->value;
+                    $toDeck = CardLocation::AUTOMA_AUCTION_DAY_1_BOARD->value;
+                    break;
+                case TOKEN_TYPE_AUCTION_MARKER_2:
+                    $fromDeck = CardLocation::AUTOMA_AUCTION_DAY_2_DECK->value;
+                    $toDeck = CardLocation::AUTOMA_AUCTION_DAY_2_BOARD->value;
+                    break;
+                case TOKEN_TYPE_AUCTION_MARKER_3: 
+                    $fromDeck = CardLocation::AUTOMA_AUCTION_DAY_3_DECK->value;
+                    $toDeck = CardLocation::AUTOMA_AUCTION_DAY_3_BOARD->value;
+                    break;
+            }
         }
+        $auctionCard = AutomaCards::getTopOf($fromDeck);
+        AutomaCards::insertOnTop($auctionCard->getId(), $toDeck);
+        $auctionCard->setLocation($toDeck);
         Notifications::giveAuctionCardToAutoma($auctionCard);
         return $auctionCard;
     }

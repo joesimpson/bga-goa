@@ -229,6 +229,7 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
       ->get()
       ->first()
       ;
+    Game::get()->trace(__FUNCTION__.'() : player = '.json_encode($player).', token ='.json_encode($token));
     return $token;
   }
 
@@ -515,6 +516,7 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
           'type' => TOKEN_TYPE_AUCTION_MARKERS[$k],
           'subtype' => TOKEN_SUBTTYPE_AUCTION_MARKER,
           'nbr' => 1,
+          'player_id' => AUTOMA_PLAYER_ID,
         ];
       } 
 
