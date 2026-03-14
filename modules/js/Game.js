@@ -1444,7 +1444,8 @@ export class Game {
         this.customDebug('notif_automaColor:', notif);
         this.gamedatas.automa_color = notif.automa_color;
         this.gamedatas.automa_name = _(notif.automa_name);
-        let existingAutomaPanel = this.bga.playerPanels.getElement(0);
+        this.gamedatas.automa_id = notif.automa_id;
+        let existingAutomaPanel = this.bga.playerPanels.getElement(this.gamedatas.automa_id);
         if(!existingAutomaPanel){
             this.bga.playerPanels.addAutomataPlayerPanel(this.gamedatas.automa_id, this.gamedatas.automa_name, {
                 'color' : this.gamedatas.automa_color,

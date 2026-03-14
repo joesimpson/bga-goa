@@ -21,11 +21,12 @@ use Bga\Games\Goa\Models\TokenSpice;
 class Notifications
 { 
   
-  public static function automaColor(string $color)
+  public static function automaColor(string $color, int $automa_id)
   {
     self::notifyAll('automaColor',  clienttranslate('${automa_name} will play with the next available color'), [
       'automa_name' => Utils::getAutomaName(),
       'automa_color' => $color,
+      'automa_id' => $automa_id,
       'i18n' => ['automa_name'],
       'preserve' => ['automa_color'],
     ]);

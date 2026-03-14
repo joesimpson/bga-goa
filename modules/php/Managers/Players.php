@@ -80,7 +80,7 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
         break;
       }
       Globals::setAutomaColor($automa_color);
-      Notifications::automaColor($automa_color);
+      Notifications::automaColor($automa_color, Utils::getAutomaPId());
     }
 
     //Init first player
