@@ -1759,6 +1759,20 @@ body.notouch-device .goa_exploration_card-front.bga-cards_selectable-card:hover,
   display: none;
 }
 
+/**
+ *------
+ * BGA framework: Gregory Isabelli & Emmanuel Colin & BoardGameArena
+ * Goa implementation : © joesimpson <1324811+joesimpson@users.noreply.github.com>
+ *
+ * This code has been produced on the BGA studio platform for use on http://boardgamearena.com.
+ * See http://en.boardgamearena.com/#!doc/Studio for more information.
+ * -----
+ *
+ * goa.scss
+ *
+ * Goa stylesheet
+ *
+ */
 .goa_automa_table {
   align-self: baseline;
   order: 10;
@@ -2193,6 +2207,23 @@ body.notouch-device .goa_exploration_card-front.bga-cards_selectable-card:hover,
 }
 #goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_tokens .goa_token[data-value="3"] {
   left: 438px;
+}
+#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_first_player_token {
+  position: absolute;
+  left: 619px;
+  top: 584px;
+  width: 102px;
+  height: 102px;
+  background-image: url("img/icons.png");
+  background-position-x: -78.641221374px;
+  background-position-y: 0px;
+  background-size: 458.0152671756% 129.4117647059%;
+}
+
+body.notouch-device #goa_automa_first_player_token:hover {
+  outline: 7px solid green;
+  z-index: 3;
+  cursor: help;
 }
 
 /**

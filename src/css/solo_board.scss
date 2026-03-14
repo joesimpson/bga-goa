@@ -1,3 +1,4 @@
+@use "variables" as *;
 
 .goa_automa_table{
     .goa_avatar_automa{
@@ -186,6 +187,19 @@ $automaboard_img_height: calc(713px);
                     }
                 }
             }
+            #goa_automa_first_player_token{
+                position: absolute;
+                left: 619px;
+                top: 584px;
+                @include goa_icons_sprite(202px,0px,102px,102px,262px,255px);
+            }
         }
     }
+}
+body.notouch-device{
+    #goa_automa_first_player_token:hover{//tooltipable
+        outline: 7px solid green;
+        z-index: 3;
+        cursor: help;
+    } 
 }

@@ -1771,6 +1771,11 @@ export class Game {
         let tokenDiv = this.addToken(token);
         let destinationDiv = document.getElementById(this.getTokenContainer(token));
         await this.animationManager.slideAndAttach(tokenDiv, destinationDiv);
+
+        if(notif.player_id == this.gamedatas.automa_id){
+            let automaBoardToken = document.getElementById('goa_automa_first_player_token');
+            automaBoardToken.classList.remove('goa_no_display');
+        }
     }
     
     async notif_winsAuction(notif) {
@@ -2766,6 +2771,16 @@ export class Game {
             document.getElementById(container).insertAdjacentHTML('beforeend', this.tplToken(token,prefix));
             tokenDiv = document.getElementById(`goa_token${prefix}-${token.id}`) ;
             tokenDiv.dataset.id = token.id;
+
+            if(token.subtype == this.const.TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER){
+                let automaFPToken = document.getElementById('goa_automa_first_player_token');
+                if(container == `goa_first_player_container_${this.gamedatas.automa_id}`){
+                    automaFPToken.classList.remove('goa_no_display');
+                }
+                else if(automaFPToken){
+                    automaFPToken.classList.add('goa_no_display');
+                }
+            }
         }
         else {
             //refresh dataset if already exists
@@ -3539,11 +3554,14 @@ export class Game {
                                 <div id='goa_automa_money_auction_3'></div>
                             </div>
                             <div id='goa_automa_tokens'></div>
+                            <div id='goa_automa_first_player_token' class='goa_no_display'></div>
                         </div>
                     </div>
                 </div>
             </div>
             `);
+        this.addCustomTooltip(`goa_automa_first_player_token`, _('Nazar Stone (Starting player)'));
+        this.addCustomTooltipToClass(`goa_first_player_container`, _('Nazar Stone (Starting player)'));
         this.setupAutomaBoardCounters();
     }
 
@@ -3558,6 +3576,7 @@ export class Game {
         this._counters[this.gamedatas.automa_id][`goa_deck_size_automa_money`] = new ebg.counter();
         this._counters[this.gamedatas.automa_id][`goa_deck_size_automa_money`].create(`goa_deck_size_automa_money`, { value: 0, });
 
+        this.addCustomTooltip(`goa_reserve_${this.gamedatas.automa_id}_nbActions`, _('Round Actions'));
         this.addCustomTooltipToClass(`goa_deck_size`, _('Number of cards in deck'));
     }
 
