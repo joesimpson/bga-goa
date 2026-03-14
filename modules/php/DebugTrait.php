@@ -118,6 +118,9 @@ trait DebugTrait
     function refresh_state(){
         $this->debug_goToState(Game::get()->gamestate->getCurrentMainStateId());
     }
+    function debug_refreshState(){
+        $this->refresh_state();
+    }
     function debug_refreshUI(){
         $player_id = Players::getCurrent()->getId();
         //Game::get()->notify->player($player_id,'reloadPage', "/!\ : Refresh page to see game has restarted...", []);

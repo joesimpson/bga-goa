@@ -5,6 +5,8 @@ use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Managers\AutomaCards;
+use Bga\Games\Goa\Managers\Players;
+use Bga\Games\Goa\Managers\Tokens;
 use Bga\Games\Goa\Models\CardLocation;
 
 /**
@@ -19,14 +21,20 @@ class AutomaEngine {
     }
 
     public function playTurn(int $roundStep) {
+        Game::get()->trace(__CLASS__.'.'.__FUNCTION__."() : roundStep $roundStep");
+
         //TODO JSA AUTOMA ENGINE RULES
         
         switch($roundStep){
             case ROUND_STEP_PLACE_AUCTIONS:
-                //TODO JSA Token 2,3
-                AutomaCards::giveAuctionCardToAutoma();
+                $nextAuctionToken = Tokens::getNextAuctionToken(Players::automaPlayer());
 
-                Notifications::message("TODO AUTOMA ENGINE STEP 1");
+                $auctionCard = AutomaCards::giveAuctionCardToAutoma($nextAuctionToken);
+                //TODO JSA CHECKPOINT
+
+                Game::get()->trace(__CLASS__.'.'.__FUNCTION__."() : play auction card ".json_encode($auctionCard)." with token ".json_encode($nextAuctionToken));
+                $auctionCard->play($nextAuctionToken);
+
                 break;
             case ROUND_STEP_TILE_AUCTIONS:
                 Notifications::message("TODO AUTOMA ENGINE STEP 2");

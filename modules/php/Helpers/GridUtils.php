@@ -1,9 +1,11 @@
 <?php
 namespace Bga\Games\Goa\Helpers;
 
+use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Managers\Tiles;
 use Bga\Games\Goa\Managers\Tokens;
 use Bga\Games\Goa\Models\AuctionMarker;
+use Bga\Games\Goa\Models\Player;
 use Bga\Games\Goa\Models\Token;
 
 abstract class GridUtils 
@@ -155,5 +157,17 @@ abstract class GridUtils
         }
 
         return $spots;
+    }
+
+    
+    public static function placeAuction(Player $player, int  $row, int $col, int $auctionType)
+    {
+        if($auctionType == TOKEN_TYPE_AUCTION_MARKER_1){
+            //add first auction token when needed
+            $token1 = Tokens::placeFirstAuctionMarker($player,$row,$col);
+            Notifications::auctionPlaced( $player, $row, $col, $token1 );
+        }
+        $token = Tokens::placeAuction($player,$row,$col, $auctionType);
+        Notifications::auctionPlaced( $player, $row, $col, $token );
     }
 }

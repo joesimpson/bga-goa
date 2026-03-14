@@ -180,6 +180,8 @@ class Game extends \Bga\GameFramework\Table
             $result["automa_name"] = Utils::getAutomaName();
             $result["automa_id"] = Utils::getAutomaPId();
             $result["automa_color"] = $automaColor;
+            //$automaPlayer = Players::automaPlayer();
+            //$result["players"][$automaPlayer->getId()] = $automaPlayer;
         }
         $result["endScoring"] = Globals::getEndScoring();
 

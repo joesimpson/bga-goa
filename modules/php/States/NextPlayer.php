@@ -80,7 +80,7 @@ class NextPlayer extends \Bga\GameFramework\States\GameState
         if(AUTOMA_PLAYER_ID == $nextPlayer->getId()){
             Globals::setAutomaActive(true);
             $this->game->automaEngine->playTurn($roundStep);
-            return PlayerTurn::class;
+            return NextPlayer::class;
         }
         else {
             Globals::setAutomaActive(false);
