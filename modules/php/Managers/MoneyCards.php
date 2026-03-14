@@ -73,7 +73,7 @@ class MoneyCards extends Cards
         //For now, we don't use money cards model for players money,     
         $cardMoney = $card->getValue();
         Players::giveMoney($player, $cardMoney , false );
-        Notifications::winsAuction($automata, $cardMoney,$player);
+        Notifications::winsAuctionWithCard($automata, $cardMoney,$player,$card);
         self::DB()->delete($card->getId());
         return $card;
     }
