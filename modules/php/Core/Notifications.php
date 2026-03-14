@@ -502,7 +502,7 @@ class Notifications
         'automa_color' => Globals::getAutomaColor(),
         'card' => $card->getUiData(),
         'i18n' => ['automa_name'],
-        'preserve'=>['card', ],
+        'preserve'=>['card', 'automa_color', ],
         "auction_card_icon" => '',//TODO JSA icon on client side
     ]);
   }
