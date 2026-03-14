@@ -128,43 +128,44 @@ class AutomaCards extends Cards
                 ->count();
     }
     
-    public static function giveAuctionCardToAutoma(AuctionMarker $token) : AutomaAuctionCard
+    public static function getAuctionBoardForTokenType(int $token_type) : CardLocation |null
     {
         $round = Globals::getRound();
-        $fromDeck = CardLocation::AUTOMA_AUCTION_DAY_1_DECK->value;
-        $toDeck = CardLocation::AUTOMA_AUCTION_DAY_1_BOARD->value;
         if($round > NB_ROUNDS_DAY){
-            switch($token->getType()){
+            switch($token_type){
                 case TOKEN_TYPE_AUCTION_MARKER_1:
-                    $fromDeck = CardLocation::AUTOMA_AUCTION_NIGHT_1_DECK->value;
-                    $toDeck = CardLocation::AUTOMA_AUCTION_NIGHT_1_BOARD->value;
-                    break;
+                    return CardLocation::AUTOMA_AUCTION_NIGHT_1_BOARD;
                 case TOKEN_TYPE_AUCTION_MARKER_2:
-                    $fromDeck = CardLocation::AUTOMA_AUCTION_NIGHT_2_DECK->value;
-                    $toDeck = CardLocation::AUTOMA_AUCTION_NIGHT_2_BOARD->value;
-                    break;
+                    return  CardLocation::AUTOMA_AUCTION_NIGHT_2_BOARD;
                 case TOKEN_TYPE_AUCTION_MARKER_3: 
-                    $fromDeck = CardLocation::AUTOMA_AUCTION_NIGHT_3_DECK->value;
-                    $toDeck = CardLocation::AUTOMA_AUCTION_NIGHT_3_BOARD->value;
-                    break;
+                    return  CardLocation::AUTOMA_AUCTION_NIGHT_3_BOARD;
             }
         }
         else {
             //DAY
-            switch($token->getType()){
+            switch($token_type){
                 case TOKEN_TYPE_AUCTION_MARKER_1:
-                    $fromDeck = CardLocation::AUTOMA_AUCTION_DAY_1_DECK->value;
-                    $toDeck = CardLocation::AUTOMA_AUCTION_DAY_1_BOARD->value;
-                    break;
+                    return  CardLocation::AUTOMA_AUCTION_DAY_1_BOARD;
                 case TOKEN_TYPE_AUCTION_MARKER_2:
-                    $fromDeck = CardLocation::AUTOMA_AUCTION_DAY_2_DECK->value;
-                    $toDeck = CardLocation::AUTOMA_AUCTION_DAY_2_BOARD->value;
-                    break;
+                    return  CardLocation::AUTOMA_AUCTION_DAY_2_BOARD;
                 case TOKEN_TYPE_AUCTION_MARKER_3: 
-                    $fromDeck = CardLocation::AUTOMA_AUCTION_DAY_3_DECK->value;
-                    $toDeck = CardLocation::AUTOMA_AUCTION_DAY_3_BOARD->value;
-                    break;
+                    return CardLocation::AUTOMA_AUCTION_DAY_3_BOARD;
             }
+        }
+        return null;
+    }
+    
+    public static function giveAuctionCardToAutoma(AuctionMarker $token) : AutomaAuctionCard
+    {
+        $round = Globals::getRound();
+        $toDeck = AutomaCards::getAuctionBoardForTokenType($token->getType())->value;
+        if($round > NB_ROUNDS_DAY){
+            //NIGHT
+            $fromDeck = AutomaCards::getAuctionDeckForTokenType($token->getType(), 2)->value;
+        }
+        else {
+            $fromDeck = AutomaCards::getAuctionDeckForTokenType($token->getType(), 1)->value;
+            //DAY
         }
         $auctionCard = AutomaCards::getTopOf($fromDeck);
         AutomaCards::insertOnTop($auctionCard->getId(), $toDeck);

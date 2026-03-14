@@ -248,6 +248,7 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
 
   public static function returnAuctionMarkerToPlayer(Player $player, AuctionMarker $token) {
     $token->setLocation(TOKEN_LOCATION_PLAYER_BOARD);
+    if($player->getId() == AUTOMA_PLAYER_ID) $token->setLocation(TOKEN_LOCATION_AUTOMA_BOARD); 
     Notifications::auctionMarkerBack($player,$token);
   }
 

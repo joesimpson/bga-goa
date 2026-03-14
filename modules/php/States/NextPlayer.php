@@ -80,7 +80,9 @@ class NextPlayer extends \Bga\GameFramework\States\GameState
         if(AUTOMA_PLAYER_ID == $nextPlayer->getId()){
             Globals::setAutomaActive(true);
             $this->game->automaEngine->playTurn($roundStep);
-            return NextPlayer::class;
+            //Checkpoint because we revealed money cards and sometimes auction/action cards
+            Log::addStateCheckpoint(EndPlayerTurn::class);
+            return EndPlayerTurn::class;
         }
         else {
             Globals::setAutomaActive(false);
