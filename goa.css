@@ -143,8 +143,6 @@ Icon extract in sprite with differents layers size (so % is not useful).
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components {
   top: var(--goa_board_height_offset);
   position: absolute;
-  width: 100%;
-  height: 100%;
 }
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market {
   position: absolute;
@@ -434,8 +432,8 @@ Icon extract in sprite with differents layers size (so % is not useful).
 }
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components .goa_board_mask {
   position: absolute;
-  width: 100%;
-  height: 100%;
+  width: 1000px;
+  height: calc(1 * (1429px + var(--goa_board_height_offset)));
   background: rgba(0, 0, 0, 0.4196078431);
   top: calc(-1 * var(--goa_board_height_offset));
 }
