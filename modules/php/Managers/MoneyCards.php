@@ -40,6 +40,17 @@ class MoneyCards extends Cards
         ->count();
     }
     
+    public static function getAutomaLocationForToken(int $token_type) : CardLocation
+    {
+        switch($token_type){
+            case TOKEN_TYPE_AUCTION_MARKER_1: 
+            default: return CardLocation::AUTOMA_MONEY_AUCTION_1; 
+            case TOKEN_TYPE_AUCTION_MARKER_2: 
+                return CardLocation::AUTOMA_MONEY_AUCTION_2; 
+            case TOKEN_TYPE_AUCTION_MARKER_3: 
+                return CardLocation::AUTOMA_MONEY_AUCTION_3; 
+        }
+    }
     public static function drawAutoma(int $token_type) : MoneyCard
     {
         $decksize = self::countAutomaDeckSize();
@@ -51,8 +62,7 @@ class MoneyCards extends Cards
             ->where(static::$prefix . 'location', CardLocation::AUTOMA_MONEY_DECK->value)
             ->get()->first();
 
-        $toLocation = CardLocation::AUTOMA_MONEY_AUCTION_1->value;
-        //TODO JSA 2, 3
+        $toLocation = self::getAutomaLocationForToken($token_type)->value;
 
         $card->setLocation($toLocation);
         Notifications::automaDrawMoney($card);
@@ -62,10 +72,7 @@ class MoneyCards extends Cards
     public static function automaGiveToPlayer(int $token_type, Player $automata,Player $player,) : MoneyCard
     {
 
-        $fromLocation = CardLocation::AUTOMA_MONEY_AUCTION_1->value;
-        switch($token_type){
-            //TODO JSA 2, 3
-        }
+        $fromLocation = self::getAutomaLocationForToken($token_type)->value;
         $card = self::DB()
             ->where( 'subType', CARD_SUBTTYPE_MONEY)
             ->where(static::$prefix . 'location', $fromLocation)
@@ -83,10 +90,7 @@ class MoneyCards extends Cards
      */
     public static function discardAutomaAuction(int $token_type, ) : MoneyCard|null
     { 
-        $fromLocation = CardLocation::AUTOMA_MONEY_AUCTION_1->value;
-        switch($token_type){
-            //TODO JSA 2, 3
-        }
+        $fromLocation = self::getAutomaLocationForToken($token_type)->value;
         $card = self::DB()
             ->where( 'subType', CARD_SUBTTYPE_MONEY)
             ->where(static::$prefix . 'location', $fromLocation)
