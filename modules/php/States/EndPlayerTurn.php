@@ -77,6 +77,11 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
                         }
                         Notifications::winsAuction($currentAuctioneer, $highBid);
                         Stats::inc( "auctionsWon", $currentAuctioneerId);
+                        if($highBidPlayerId == AUTOMA_PLAYER_ID){
+                            //TODO JSA
+                        } else {
+                            MoneyCards::discardAutomaAuction($auctionToken->getType());
+                        }
                     }
                     else {
                         //auction winner PAYS the auctioneer
