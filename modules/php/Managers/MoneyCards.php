@@ -52,11 +52,23 @@ class MoneyCards extends Cards
                 return CardLocation::AUTOMA_MONEY_AUCTION_3; 
         }
     }
+    /**
+     * @return int decksize after reshuffle
+     */
+    public static function reshuffleAutomaDeck() : int
+    {
+        self::moveAllInLocation(CardLocation::AUTOMA_MONEY_DISCARD->value,CardLocation::AUTOMA_MONEY_DECK->value);
+        self::shuffle(CardLocation::AUTOMA_MONEY_DECK->value);
+        $decksize = self::countAutomaDeckSize();
+        Notifications::reshuffleAutomaMoneyDeck($decksize );
+        return $decksize;
+    }
     public static function drawAutoma(int $token_type) : MoneyCard
     {
         $decksize = self::countAutomaDeckSize();
         if($decksize == 0){
-            //TODO JSA Notif RESHUFFLE
+            $decksize = self::reshuffleAutomaDeck();
+            //IF still $decksize == 0, we cannot draw, but we should have enough cards at the beginning to avoid this problem
         }
         $card = self::DB()
             ->where( 'subType', CARD_SUBTTYPE_MONEY)

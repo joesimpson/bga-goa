@@ -944,6 +944,19 @@ class Notifications
     ]);
   }
   
+  public static function reshuffleAutomaMoneyDeck(int $deck_size)
+  {
+    $msg = clienttranslate('${automa_name} money deck is reshuffled');
+
+    self::notifyAll('reshuffleAutomaMoneyDeck', $msg, [
+      'deck_size' => $deck_size,
+      'automa_name' => Utils::getAutomaName(),
+      'automa_color' => Globals::getAutomaColor(),
+      'i18n' => ['automa_name'],
+      'preserve'=>[ 'automa_color', ],
+    ]);
+  }
+  
   /**
    */  
   /*************************

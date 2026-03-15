@@ -2061,6 +2061,34 @@ export class Game {
         //this.explorationDeck.removeAll();
         await this.explorationDeck.setCardNumber(notif.deck_size);
     }
+    
+    async notif_reshuffleAutomaMoneyDeck(notif) {
+        this.customDebug("notif_reshuffleAutomaMoneyDeck",notif);
+        
+        let toElement = document.getElementById('goa_automa_deck_money');
+        let automaDiscardDiv = document.getElementById('goa_automa_discard_money');
+        let automaMoneyCardsDiv = [...automaDiscardDiv.querySelectorAll('.goa_card')];
+        let animations = automaMoneyCardsDiv.map(cardDiv => (() => {
+            //add a back card
+            toElement.insertAdjacentHTML('afterbegin', this.tplCard({'id':cardDiv.id, 'subtype': this.const.CARD_SUBTTYPE_MONEY}));
+            this._counters[this.gamedatas.automa_id][`goa_deck_size_automa_money`].incValue(1);
+
+            this.animationManager.slideFloatingElement(
+                cardDiv, 
+                automaDiscardDiv, 
+                toElement, 
+                {
+                    duration: 2000,
+                    ignoreScale: false,
+                    ignoreRotation: true,
+                }
+            )
+        }));
+        await this.bga.gameui.wait(1000);
+        await this.animationManager.playInterval(animations);
+        await this.bga.gameui.wait(2000);
+    }
+
     async notif_discardAllExploration(notif) {
         this.customDebug("notif_discardAllExploration",notif);
         let currentPlayerId = this.bga.players.getCurrentPlayerId();
