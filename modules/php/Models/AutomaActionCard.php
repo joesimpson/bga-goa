@@ -4,6 +4,7 @@ namespace Bga\Games\Goa\Models;
 
 use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Managers\MoneyCards;
+use Bga\Games\Goa\Managers\Tiles;
 use Bga\Games\Goa\Managers\Tokens;
 
 class AutomaActionCard extends Card
@@ -57,10 +58,10 @@ class AutomaActionCard extends Card
                 break;
                 
             case AutomaActionType::DISCARD_2_KOLLAM: 
-                //TODO JSA apply card effect
+                Tiles::discardTilesFromOutpostStack($player,COLONY_KOLLAM,2);
                 break;
             case AutomaActionType::DISCARD_2_MADRAS: 
-                //TODO JSA apply card effect
+                Tiles::discardTilesFromOutpostStack($player,COLONY_MADRAS,2);
                 break;
         }
 
