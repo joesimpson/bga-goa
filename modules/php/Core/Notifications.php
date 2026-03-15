@@ -13,6 +13,7 @@ use Bga\Games\Goa\Models\AutomaAuctionCard;
 use Bga\Games\Goa\Models\ExplorationCard;
 use Bga\Games\Goa\Models\MarketTile;
 use Bga\Games\Goa\Models\MoneyCard;
+use Bga\Games\Goa\Models\MoneyCardType;
 use Bga\Games\Goa\Models\OutpostTile;
 use Bga\Games\Goa\Models\Player;
 use Bga\Games\Goa\Models\ProgressMarker;
@@ -580,6 +581,35 @@ class Notifications
     ]);
   }
   
+  public static function automaGetsBankMoney(Collection $cards, Player $automata,)
+  {
+    $message = clienttranslate('The Bank places ${x} Pardau cards on ${automa_name} discard pile : ${money_cards} ${icon_money}');
+        
+    $cardsNames = $cards->map(function($card) {return $card->getValue();})->toArray();
+    self::notifyAll("automaGetsBankMoney", $message, [
+      'cards' => $cards->ui(),
+      'x' => $cards->count(),
+      'automa_name' => $automata->getName(),
+      'automa_color' => $automata->getColor(),
+      "icon_money" => clienttranslate('Pardaos'),
+      'i18n' => ['automa_name', 'icon_money'],
+      'preserve'=>['automa_color', 'cards',  ],
+      'money_cards' => $cardsNames,
+      'separator' => ['money_cards' => ','],
+    ]);
+  }
+  
+  public static function automaDontGetBankMoney( Player $automata, MoneyCardType $cardType,)
+  {
+    $message = clienttranslate('${automa_name} does not receive anything');
+    self::notifyAll("automaDontGetBankMoney", $message, [
+      'automa_name' => $automata->getName(),
+      'automa_color' => $automata->getColor(),
+      'i18n' => ['automa_name'],
+      'preserve'=>['automa_color', ],
+    ]);
+  }
+  
   public static function automaDiscardMoney( MoneyCard $card)
   {
     $message = clienttranslate('${automa_name} discards the auctioned money card : ${n} ${icon_money}');
@@ -706,6 +736,14 @@ class Notifications
         "icon_action" => '',
         'i18n'=>['action_name'],
         'preserve'=>['action_type'],
+    ]);
+  }
+  
+  public static function automaPlayAction(Player $player)
+  {
+    self::notifyAll("playAction", clienttranslate('${player_name} perform an action ${icon_action}'), [
+        "player" => $player,
+        "icon_action" => '',
     ]);
   }
   

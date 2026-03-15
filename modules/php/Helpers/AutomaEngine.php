@@ -50,17 +50,14 @@ class AutomaEngine {
                 $player = Players::automaPlayer();
                 $player->incNbActions();
                 $player->setActionPlayed(true);
-
                 if($player->getNbActions()>NB_MIN_ACTIONS_PER_ROUND) {
                     //AVOID Unexpected INFINITE LOOP of automa actions
                     Game::get()->trace(__CLASS__.'.'.__FUNCTION__."() : Automata is making too many actions on her turn : {$player->getNbActions()}");
                     throw new VisibleSystemException("Automata is making too many actions on her turn : {$player->getNbActions()}");
                 }
-
-                //TODO JSA draw card+ apply effect
+                Notifications::automaPlayAction($player);
                 $actionCard = AutomaCards::giveActionCardToAutoma();
-
-                //TODO JSA NOTIF AUTOMA ACTION 
+                $actionCard->play($player);
                 break;
             default : 
                 break;

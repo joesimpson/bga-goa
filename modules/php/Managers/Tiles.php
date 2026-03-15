@@ -129,7 +129,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
     if(isset($tile)){
       if($player->getId() == AUTOMA_PLAYER_ID){
         //AUTOMA DISCARD every tiles
-        Tiles::discardTileFromPlayer($player, $tile);
+        Tiles::discardTileFromMarket($player, $tile);
       }
       else {
         Tiles::giveMarketTileToPlayer($player, $tile, $doCheckpoint);
@@ -263,6 +263,13 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
       throw $stateExc;
     }
 
+  }
+
+  public static function discardTileFromMarket(Player $player, Tile &$tile)
+  {
+    $tile->setPId(null);
+    $tile->setLocation(TILE_LOCATION_DISCARD);
+    Notifications::discardTile($player,$tile);
   }
 
   public static function discardTileFromPlayer(Player $player, Tile &$tile)

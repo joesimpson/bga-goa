@@ -2051,124 +2051,124 @@ body.notouch-device .goa_exploration_card-front.bga-cards_selectable-card:hover,
   top: 0px;
 }
 #goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(1) {
-  left: 1px;
-  top: 2px;
+  left: 2px;
+  top: 3px;
 }
 #goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(2) {
-  left: 2px;
-  top: 4px;
-}
-#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(3) {
-  left: 3px;
+  left: 4px;
   top: 6px;
 }
-#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(4) {
-  left: 4px;
-  top: 8px;
-}
-#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(5) {
-  left: 5px;
-  top: 10px;
-}
-#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(6) {
+#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(3) {
   left: 6px;
+  top: 9px;
+}
+#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(4) {
+  left: 8px;
   top: 12px;
 }
-#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(7) {
-  left: 7px;
-  top: 14px;
+#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(5) {
+  left: 10px;
+  top: 15px;
 }
-#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(8) {
-  left: 8px;
-  top: 16px;
-}
-#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(9) {
-  left: 9px;
+#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(6) {
+  left: 12px;
   top: 18px;
 }
-#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(10) {
-  left: 10px;
-  top: 20px;
+#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(7) {
+  left: 14px;
+  top: 21px;
 }
-#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(11) {
-  left: 11px;
-  top: 22px;
-}
-#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(12) {
-  left: 12px;
+#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(8) {
+  left: 16px;
   top: 24px;
 }
-#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(13) {
-  left: 13px;
-  top: 26px;
+#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(9) {
+  left: 18px;
+  top: 27px;
 }
-#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(14) {
-  left: 14px;
-  top: 28px;
-}
-#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(15) {
-  left: 15px;
+#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(10) {
+  left: 20px;
   top: 30px;
 }
-#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(16) {
-  left: 16px;
-  top: 32px;
+#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(11) {
+  left: 22px;
+  top: 33px;
 }
-#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(17) {
-  left: 17px;
-  top: 34px;
-}
-#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(18) {
-  left: 18px;
+#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(12) {
+  left: 24px;
   top: 36px;
 }
-#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(19) {
-  left: 19px;
-  top: 38px;
+#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(13) {
+  left: 26px;
+  top: 39px;
 }
-#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(20) {
-  left: 20px;
-  top: 40px;
-}
-#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(21) {
-  left: 21px;
+#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(14) {
+  left: 28px;
   top: 42px;
 }
-#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(22) {
-  left: 22px;
-  top: 44px;
+#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(15) {
+  left: 30px;
+  top: 45px;
 }
-#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(23) {
-  left: 23px;
-  top: 46px;
-}
-#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(24) {
-  left: 24px;
+#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(16) {
+  left: 32px;
   top: 48px;
 }
-#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(25) {
-  left: 25px;
-  top: 50px;
+#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(17) {
+  left: 34px;
+  top: 51px;
 }
-#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(26) {
-  left: 26px;
-  top: 52px;
-}
-#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(27) {
-  left: 27px;
+#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(18) {
+  left: 36px;
   top: 54px;
 }
+#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(19) {
+  left: 38px;
+  top: 57px;
+}
+#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(20) {
+  left: 40px;
+  top: 60px;
+}
+#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(21) {
+  left: 42px;
+  top: 63px;
+}
+#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(22) {
+  left: 44px;
+  top: 66px;
+}
+#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(23) {
+  left: 46px;
+  top: 69px;
+}
+#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(24) {
+  left: 48px;
+  top: 72px;
+}
+#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(25) {
+  left: 50px;
+  top: 75px;
+}
+#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(26) {
+  left: 52px;
+  top: 78px;
+}
+#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(27) {
+  left: 54px;
+  top: 81px;
+}
 #goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(28) {
-  left: 28px;
-  top: 56px;
+  left: 56px;
+  top: 84px;
 }
 #goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(29) {
-  left: 29px;
-  top: 58px;
+  left: 58px;
+  top: 87px;
 }
 #goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_discards .goa_card:nth-child(30) {
-  left: 30px;
-  top: 60px;
+  left: 60px;
+  top: 90px;
 }
 #goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_money_auctions {
   position: absolute;

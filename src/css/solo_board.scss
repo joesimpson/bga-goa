@@ -138,8 +138,8 @@ $automaboard_img_height: calc(713px);
                     position: absolute;
                     @for $i from 0 through 30 {//16 + deckSize
                         &:nth-child(#{$i}){
-                            left: calc(1px * $i);
-                            top: calc(2px * $i);
+                            left: calc(2px * $i);
+                            top: calc(3px * $i);
                         }
                     }
                 }
