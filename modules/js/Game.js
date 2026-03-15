@@ -1580,6 +1580,18 @@ export class Game {
         let cardDiv = await this.addCard(card);
         await this.animationManager.slideIn(cardDiv, fromElement, {duration: 1000});
     }
+    
+    async notif_giveActionCardToAutoma(notif) {
+        this.customDebug('notif_giveActionCardToAutoma:', notif);
+
+        let card = notif.card;
+        let fromElement = document.getElementById(`goa_automa_deck_action`);
+        this._counters[this.gamedatas.automa_id]['goa_deck_size_automa_action'].incValue(-1);
+
+        this.destroy($(`goa_card-${card.id}`));
+        let cardDiv = await this.addCard(card);
+        await this.animationManager.slideIn(cardDiv, fromElement, {duration: 1000});
+    }
     async notif_automaDrawMoney(notif) {
         this.customDebug('notif_automaDrawMoney:', notif);
 

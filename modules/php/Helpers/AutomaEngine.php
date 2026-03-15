@@ -1,6 +1,7 @@
 <?php
 namespace Bga\Games\Goa\Helpers;
 
+use Bga\GameFramework\VisibleSystemException;
 use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Game;
@@ -44,10 +45,22 @@ class AutomaEngine {
                     $auctionCard = AutomaCards::giveAuctionCardToAutoma($auctionToken);
                 }
                 $auctionCard->bid($auctionToken);
-                //TODO JSA resolve bid turn if automa was the auctioneer
                 break;
             case ROUND_STEP_PLAYER_ACTIONS: 
-                Notifications::message("TODO AUTOMA ENGINE STEP 3");
+                $player = Players::automaPlayer();
+                $player->incNbActions();
+                $player->setActionPlayed(true);
+
+                if($player->getNbActions()>NB_MIN_ACTIONS_PER_ROUND) {
+                    //AVOID Unexpected INFINITE LOOP of automa actions
+                    Game::get()->trace(__CLASS__.'.'.__FUNCTION__."() : Automata is making too many actions on her turn : {$player->getNbActions()}");
+                    throw new VisibleSystemException("Automata is making too many actions on her turn : {$player->getNbActions()}");
+                }
+
+                //TODO JSA draw card+ apply effect
+                $actionCard = AutomaCards::giveActionCardToAutoma();
+
+                //TODO JSA NOTIF AUTOMA ACTION 
                 break;
             default : 
                 break;

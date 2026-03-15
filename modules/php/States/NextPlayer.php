@@ -32,7 +32,8 @@ class NextPlayer extends \Bga\GameFramework\States\GameState
      * The onEnteringState method of state `nextPlayer` is called everytime the current game state is set to `nextPlayer`.
      */
     function onEnteringState(int $activePlayerId) {
-        $this->game->trace("NextPlayer.onEnteringState($activePlayerId)");
+        $automaActive = Globals::isAutomaActive();
+        $this->game->trace("NextPlayer.onEnteringState($activePlayerId, $automaActive)");
 
         $roundStep = Globals::getRoundStep();
         switch($roundStep){
@@ -58,6 +59,7 @@ class NextPlayer extends \Bga\GameFramework\States\GameState
                 break;
             case ROUND_STEP_PLAYER_ACTIONS: 
                 $activePlayer = Players::get($activePlayerId);
+                if($automaActive) $activePlayer = Players::automaPlayer();
                 if($activePlayer->getNbActions() == 0) {
                     //FIRST TURN for player with marker
                     $firstPlayerToken = Tokens::getFirstPlayerToken();
