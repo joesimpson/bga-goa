@@ -9,6 +9,7 @@ use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Core\Stats;
 use Bga\Games\Goa\Exceptions\PrematureStateChangeException;
 use Bga\Games\Goa\Helpers\Utils;
+use Bga\Games\Goa\Models\AutomaPlayer;
 use Bga\Games\Goa\Models\Player;
 use Bga\Games\Goa\Models\Tile;
 use Bga\Games\Goa\States\PlayerChoice;
@@ -301,8 +302,12 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
     return Players::get($nextPlayer_id);
   }
 
-  public static function automaPlayer() : Player {
-    return new Player(['player_id' => AUTOMA_PLAYER_ID, 'player_name' => Utils::getAutomaName(), 'player_color' => Globals::getAutomaColor()]);
+  public static function automaPlayer() : AutomaPlayer {
+    return new AutomaPlayer([
+      'player_id' => AUTOMA_PLAYER_ID, 
+      'player_name' => Utils::getAutomaName(), 
+      'player_color' => Globals::getAutomaColor()
+      ]);
   }
 
   /*

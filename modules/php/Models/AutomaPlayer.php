@@ -1,0 +1,45 @@
+<?php
+
+namespace Bga\Games\Goa\Models;
+
+use Bga\Games\Goa\Core\Globals;
+
+/**
+ * Fake player for the automata, not saved in Player Table,
+ * 
+ * override custom methods 
+ */
+class AutomaPlayer extends Player
+{  
+
+
+    function getCardsPlayed(){
+        return [];
+    }
+    function setCardsPlayed($value){
+    }
+    
+    function setNbActions(int $value){
+        Globals::setAutomaNbActions($value);
+    }
+    function incNbActions(){
+        Globals::incAutomaNbActions();
+    }
+    function getNbActions() : int{
+        return Globals::getAutomaNbActions();
+    }
+
+    function setActionPlayed(bool $value){
+        Globals::setAutomaActionPlayed($value);
+    }
+    function isActionPlayed() : bool {
+        return Globals::isAutomaActionPlayed();
+    }
+    
+    function setPassed(bool $value){
+        Globals::setAutomaPassed($value);
+    }
+    function isPassed() : bool {
+        return Globals::isAutomaPassed();
+    }
+}

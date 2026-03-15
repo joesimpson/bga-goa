@@ -8,6 +8,7 @@ use Bga\Games\Goa\Helpers\Collection;
 use Bga\Games\Goa\Helpers\Utils;
 use Bga\Games\Goa\Managers\Cards;
 use Bga\Games\Goa\Models\AuctionMarker;
+use Bga\Games\Goa\Models\AutomaActionCard;
 use Bga\Games\Goa\Models\AutomaAuctionCard;
 use Bga\Games\Goa\Models\ExplorationCard;
 use Bga\Games\Goa\Models\MarketTile;
@@ -530,6 +531,20 @@ class Notifications
         'i18n' => ['automa_name'],
         'preserve'=>['card', 'automa_color', ],
         "auction_card_icon" => '',//TODO JSA icon on client side
+    ]);
+  }
+
+  public static function giveActionCardToAutoma( AutomaActionCard $card)
+  {
+    $message = clienttranslate('${automa_name} draws the next action card ${action_card_icon}');
+        
+    self::notifyAll("giveActionCardToAutoma", $message, [
+        'automa_name' => Utils::getAutomaName(),
+        'automa_color' => Globals::getAutomaColor(),
+        'card' => $card->getUiData(),
+        'i18n' => ['automa_name'],
+        'preserve'=>['card', 'automa_color', ],
+        "action_card_icon" => '',//TODO JSA icon on client side
     ]);
   }
   

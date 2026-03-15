@@ -6,6 +6,7 @@ use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Helpers\Collection;
 use Bga\Games\Goa\Models\AuctionMarker;
+use Bga\Games\Goa\Models\AutomaActionCard;
 use Bga\Games\Goa\Models\AutomaActionType;
 use Bga\Games\Goa\Models\AutomaAuctionCard;
 use Bga\Games\Goa\Models\AutomaAuctionDirectionType;
@@ -172,6 +173,26 @@ class AutomaCards extends Cards
         $auctionCard->setLocation($toDeck);
         Notifications::giveAuctionCardToAutoma($auctionCard);
         return $auctionCard;
+    }
+    
+    public static function giveActionCardToAutoma() : AutomaActionCard
+    {
+        $round = Globals::getRound();
+        if($round > NB_ROUNDS_DAY){
+            //NIGHT
+            $fromDeck = CardLocation::AUTOMA_ACTION_DECK_B->value;
+            $toDeck = CardLocation::AUTOMA_ACTION_BOARD_B->value;
+        }
+        else {
+            //DAY
+            $fromDeck = CardLocation::AUTOMA_ACTION_DECK_A->value;
+            $toDeck = CardLocation::AUTOMA_ACTION_BOARD_A->value;
+        }
+        $actionCard = AutomaCards::getTopOf($fromDeck);
+        AutomaCards::insertOnTop($actionCard->getId(), $toDeck);
+        $actionCard->setLocation($toDeck);
+        Notifications::giveActionCardToAutoma($actionCard);
+        return $actionCard;
     }
 
   ///////////////////////////////////////////////////////////////////////////////////////

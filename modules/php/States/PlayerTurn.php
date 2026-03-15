@@ -75,7 +75,12 @@ class PlayerTurn extends GameState
                 $args['bidRebate'] = 0;
                 $canPass = true;
 
-                if($currentAuctioneer == $player->getId()){
+                $automaActive = Globals::isAutomaActive();
+                $currentAuctioneerActive = isset($currentAuctioneer) 
+                    &&( ($currentAuctioneer == $player->getId() && !$automaActive ) 
+                        // !\ $activePlayerId is set to a real player even during automa turn /!\->  should not happen here...
+                        );
+                if($currentAuctioneerActive){
                     if($currentBid == 0){
                         //auctioneer will bid 0 and win the auction
                         $args['minBid'] = 0;
@@ -142,7 +147,8 @@ class PlayerTurn extends GameState
     }    
     
     public function onEnteringState(int $activePlayerId, array $args) {
-        $this->game->trace("PlayerTurn.onEnteringState($activePlayerId)");
+        $automaActive = Globals::isAutomaActive();
+        $this->game->trace("PlayerTurn.onEnteringState($activePlayerId, $automaActive)");
 
         $player = Players::get($activePlayerId);
         $actionPlayed = $player->isActionPlayed();
@@ -159,6 +165,7 @@ class PlayerTurn extends GameState
             if(in_array('actStopAction',$possibleActions)){
                 //AUTO STOP if no tile/card action (absence of actPlayCard/actPlayTile), but we may fin the action actDiscard anyway
                 if(!in_array('actPlayCard',$possibleActions) && !in_array('actPlayTile',$possibleActions) ) {
+                    $this->game->trace(__CLASS__.'.'.__FUNCTION__."() : AUTOMATIC Stop action");
                     return $this->actStopAction(Utils::gameVersion(), $activePlayerId, $args, true);
                 }
             }
@@ -166,6 +173,7 @@ class PlayerTurn extends GameState
         if(in_array('actBid',$possibleActions) && !in_array('actPassBid',$possibleActions)){
             if($args['minBid'] == $args['maxBid'] && $args['maxBid'] == 0){
                 //AUTO BID MIN BID if we cannot pass (because it is linked to "auto win tile")
+                $this->game->trace(__CLASS__.'.'.__FUNCTION__."() : AUTOMATIC bid 0");
                 return $this->actBid($args['minBid'], $activePlayerId, $args, Utils::gameVersion(),true);
             }
         }
