@@ -260,7 +260,13 @@ export class Game {
             `);
             this.addCustomTooltipToClass(`goa_first_player_container`, _('Nazar Stone (Starting player)'));
 
-            if(this.gamedatas.automa_id) this._counters[this.gamedatas.automa_id] = {};//Automa...
+            if(this.gamedatas.automa_player){
+                this.gamedatas.automa_id = this.gamedatas.automa_player.id;
+                this.gamedatas.automa_name = this.gamedatas.automa_player.name;
+                this.gamedatas.automa_color = this.gamedatas.automa_player.color;
+                this.gamedatas.automa_nbActions = this.gamedatas.automa_player.nbActions;
+                this._counters[this.gamedatas.automa_id] = {};//Automa...
+            }
             this._counters[player.id] = {};
             this.createCounter(player.id,'exploration_hand_size',player.exploration_hand_size);
             this.createCounter(player.id,'ships',player.ships);
@@ -1624,11 +1630,22 @@ export class Game {
     }
     
     async notif_automaBankMoney(notif) {
-        this.customDebug('notif_automaBankMoney:', notif);
+        this.customDebug('notif_automaBankMoney: from automa to bank', notif);
         let card = notif.card;
         let cardDiv = await this.addCard(card);
-        let destinationDiv = document.getElementById(`goa_money_stacks`);;
+        let destinationDiv = document.getElementById(`goa_money_stacks`);
         await this.animationManager.slideOutAndDestroy(cardDiv, destinationDiv, {duration: 1000})
+    }
+    async notif_automaGetsBankMoney(notif) {
+        this.customDebug('notif_automaGetsBankMoney: from bank to automa discard', notif);
+
+        let cards = notif.cards;
+        let fromElement = document.getElementById(`goa_money_stacks`);
+        let animations = Object.values(cards).map(card => (async () => {
+            let cardDiv = await this.addCard(card);
+            this.animationManager.slideIn(cardDiv, fromElement, {duration: 1000})
+        }));
+        await this.animationManager.playInterval(animations);
     }
 
     async notif_clearTurn(n) {
@@ -1766,6 +1783,7 @@ export class Game {
         Object.values(this.gamedatas.players).forEach(player => {
             this._counters[player.id]['nbActions'].toValue(0);
         });
+        if(this.gamedatas.automa_id) this._counters[this.gamedatas.automa_id]['nbActions'].toValue(0);
     }
     async notif_endRound(notif) {
         this.customDebug("notif_endRound",notif);

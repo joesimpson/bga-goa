@@ -163,12 +163,19 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
     self::DB()
       ->update(['passed' => 0])
       ->run();
+      //TODO JSA AUTOMA
   }
   public static function resetActionsPhase()
   {
     self::DB()
       ->update(['nbActions' => 0, 'passed' => 0, 'actionPlayed' => 0, 'cardsPlayed' =>null])
       ->run();
+    $automa = Players::automaPlayer();
+    if(isset($automa)){
+      $automa->setNbActions(0);
+      $automa->setPassed(false);
+      $automa->setActionPlayed(false);
+    }
   }
   /**
    * Save the information that the player played one of their authorized actions
@@ -304,9 +311,12 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
 
   public static function automaPlayer() : AutomaPlayer {
     return new AutomaPlayer([
-      'player_id' => AUTOMA_PLAYER_ID, 
-      'player_name' => Utils::getAutomaName(), 
-      'player_color' => Globals::getAutomaColor()
+      'player_id'     => AUTOMA_PLAYER_ID, 
+      'player_name'   => Utils::getAutomaName(), 
+      'player_color'  => Globals::getAutomaColor(),
+      'nbActions'     => Globals::getAutomaNbActions(),
+      'passed'        => Globals::isAutomaPassed(),
+      'actionPlayed'  => Globals::isAutomaActionPlayed(),
       ]);
   }
 

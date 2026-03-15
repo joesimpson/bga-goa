@@ -119,7 +119,30 @@ class MoneyCards extends Cards
 
         $ids = self::create($cardsTmp);
         $cards = self::get($ids);
+        foreach($cards as $card) {
+            MoneyCards::insertOnTop($card->getId(), CardLocation::AUTOMA_MONEY_DISCARD->value);
+        }
         Notifications::automaGetsPlayerMoney($cards,$automata, $money,$player,);
+        return $cards;
+    }
+    
+    public static function automaReceivesFromBank(MoneyCardType $moneyType, Player $automata,) : Collection
+    {
+        $cardsTmp = [];
+        $cardType = $moneyType->value;
+        $cardsTmp[] = [
+            'type' => $cardType,
+            'subtype' => CARD_SUBTTYPE_MONEY,
+            'location' => CardLocation::AUTOMA_MONEY_DISCARD->value,
+            'nbr' => 1,
+        ];
+        
+        $ids = self::create($cardsTmp);
+        $cards = self::getMany($ids);
+        foreach($cards as $card) {
+            MoneyCards::insertOnTop($card->getId(), CardLocation::AUTOMA_MONEY_DISCARD->value);
+        }
+        Notifications::automaGetsBankMoney($cards,$automata,);
         return $cards;
     }
 
