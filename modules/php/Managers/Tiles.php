@@ -271,6 +271,31 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
     $tile->setLocation(TILE_LOCATION_DISCARD);
     Notifications::discardTile($player,$tile);
   }
+  
+  public static function discardTilesFromOutpostStack(Player $player, int $colony, int $amount)
+  {
+    Game::get()->trace(__CLASS__.":".__FUNCTION__."($colony,$amount), player = ".json_encode($player));
+    $outpostsLocation = TILE_LOCATION_BOARD_OUTPOSTS[$colony];
+    $outposts = Tiles::getInLocation($outpostsLocation);
+    $ids = $outposts->getIds();
+    $idsToRemove = array_rand($ids,$amount);
+    //$outposts = $outposts->filter(function($tile) use($idsToRemove){ return in_array($tile->getId(),$idsToRemove);});
+    
+    Game::get()->trace(__CLASS__.":".__FUNCTION__."($colony,$amount), idsToRemove = ".json_encode($idsToRemove));
+    foreach($idsToRemove as $idToRemove){
+      $outpostId = $ids[$idToRemove];
+      $outpost = $outposts[$outpostId];
+      Tiles::discardTileFromOutpostStack($player, $outpost);
+    }
+  }
+  public static function discardTileFromOutpostStack(Player $player, OutpostTile &$tile)
+  {
+    $tile->setPId(null);
+    $tile->setRow(null);
+    $tile->setCol(null);
+    $tile->setLocation(TILE_LOCATION_DISCARD);
+    Notifications::discardTile($player,$tile);
+  }
 
   public static function discardTileFromPlayer(Player $player, Tile &$tile)
   {
