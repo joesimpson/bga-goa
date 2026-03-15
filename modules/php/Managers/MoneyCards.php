@@ -7,6 +7,7 @@ use Bga\Games\Goa\Helpers\Collection;
 use Bga\Games\Goa\Models\CardLocation;
 use Bga\Games\Goa\Models\MoneyCard;
 use Bga\Games\Goa\Models\MoneyCardType;
+use Bga\Games\Goa\Models\MoneyCardValue;
 use Bga\Games\Goa\Models\Player;
 
 /* Class to manage all the Money cards */
@@ -84,6 +85,43 @@ class MoneyCards extends Cards
         self::DB()->delete($card->getId());
         return $card;
     }
+    
+    public static function automaReceivesFromPlayer(int $money, int $token_type, Player $automata,Player $player,) : Collection
+    {
+        //RULE : Always give Automata the smallest number of Pardau Cards possible.
+        $remaining = $money;
+        $cardsTmp = [];
+        while($remaining > 0){
+            $cardvalue = MoneyCardValue::MONEY_1->value;
+            $cardType = MoneyCardType::MONEY_1->value;
+            if($remaining >= MoneyCardValue::MONEY_10->value ){
+                $cardvalue = MoneyCardValue::MONEY_10->value;
+                $cardType = MoneyCardType::MONEY_10->value;
+            }
+            else if($remaining >= MoneyCardValue::MONEY_5->value ){
+                $cardvalue = MoneyCardValue::MONEY_5->value;
+                $cardType = MoneyCardType::MONEY_5->value;
+            }
+            else if($remaining >= MoneyCardValue::MONEY_2->value ){
+                $cardvalue = MoneyCardValue::MONEY_2->value;
+                $cardType = MoneyCardType::MONEY_2->value;
+            }
+            $cardsTmp[] = [
+                'type' => $cardType,
+                'subtype' => CARD_SUBTTYPE_MONEY,
+                'location' => CardLocation::AUTOMA_MONEY_DISCARD->value,
+                'nbr' => 1,
+            ];
+            $remaining = $remaining - $cardvalue;
+        }
+
+        if(count($cardsTmp) == 0) return new Collection([]);
+
+        $ids = self::create($cardsTmp);
+        $cards = self::get($ids);
+        Notifications::automaGetsPlayerMoney($cards,$automata, $money,$player,);
+        return $cards;
+    }
 
     /**
      * DISCARD AUTOMA Money card if any
@@ -136,10 +174,10 @@ class MoneyCards extends Cards
             ];
         };
         return [
-            MoneyCardType::MONEY_1->value  =>  $f([ 1,  ]), 
-            MoneyCardType::MONEY_2->value  =>  $f([ 2,  ]),
-            MoneyCardType::MONEY_5->value  =>  $f([ 5,  ]),
-            MoneyCardType::MONEY_10->value =>  $f([ 10,  ]),
+            MoneyCardType::MONEY_1->value  =>  $f([ MoneyCardValue::MONEY_1->value,  ]), 
+            MoneyCardType::MONEY_2->value  =>  $f([ MoneyCardValue::MONEY_2->value,  ]),
+            MoneyCardType::MONEY_5->value  =>  $f([ MoneyCardValue::MONEY_5->value,  ]),
+            MoneyCardType::MONEY_10->value =>  $f([ MoneyCardValue::MONEY_10->value,  ]),
         ];
     }
 

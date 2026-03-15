@@ -1591,6 +1591,18 @@ export class Game {
         let cardDiv = await this.addCard(card);
         await this.animationManager.slideIn(cardDiv, fromElement, {duration: 1000});
     }
+    async notif_automaGetsPlayerMoney(notif) {
+        this.customDebug('notif_automaGetsPlayerMoney:', notif);
+
+        let cards = notif.cards;
+        let fromPlayer = notif.player_id;
+        let fromElement = document.getElementById(`goa_reserve_${fromPlayer}_money`);
+        let animations = Object.values(cards).map(card => (async () => {
+            let cardDiv = await this.addCard(card);
+            this.animationManager.slideIn(cardDiv, fromElement, {duration: 1000})
+        }));
+        await this.animationManager.playInterval(animations);
+    }
     async notif_automaDiscardMoney(notif) {
         this.customDebug('notif_automaDiscardMoney:', notif);
         let card = notif.card;
@@ -1599,6 +1611,14 @@ export class Game {
         await this.animationManager.slideAndAttach(cardDiv, destinationDiv);
     }
     
+    async notif_automaBankMoney(notif) {
+        this.customDebug('notif_automaBankMoney:', notif);
+        let card = notif.card;
+        let cardDiv = await this.addCard(card);
+        let destinationDiv = document.getElementById(`goa_money_stacks`);;
+        await this.animationManager.slideOutAndDestroy(cardDiv, destinationDiv, {duration: 1000})
+    }
+
     async notif_clearTurn(n) {
         this.customDebug('notif_clearTurn: restarting turn/step', n);
         this.cancelLogs(n.notifIds);
