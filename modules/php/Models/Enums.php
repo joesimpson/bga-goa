@@ -82,3 +82,10 @@ enum MoneyCardType: int
     case MONEY_5          = 3;
     case MONEY_10         = 4;
 }
+enum MoneyCardValue: int
+{
+    case MONEY_1          = 1;
+    case MONEY_2          = 2;
+    case MONEY_5          = 5;
+    case MONEY_10         = 10;
+}

@@ -8,6 +8,7 @@ use Bga\GameFramework\GameMock;
 use Bga\GameFramework\GamestateMachineMock;
 use Bga\GameFramework\Notify;
 use Bga\Games\Goa\Core\Globals;
+use Bga\Games\Goa\States\EndPlayerTurn;
 use Bga\Games\Goa\States\NextPlayer;
 use PHPUnit\Framework\TestCase;
 
@@ -47,6 +48,19 @@ final class NextPlayerTest extends TestCase
         $state = new NextPlayer($game);
 
         self::assertSame('Bga\\Games\\Goa\\States\\PlayerTurn', $state->onEnteringState($activePlayerId));
+    }
+    
+    public function testEnteringState_step2_Automa(): void
+    {
+        $roundStep = ROUND_STEP_TILE_AUCTIONS;
+        $game = $this->createGameMock();
+        Globals::setRoundStep($roundStep);
+        Globals::setAutomaColor("123");
+
+        $activePlayerId = 2;
+        $state = new NextPlayer($game);
+
+        self::assertSame(EndPlayerTurn::class, $state->onEnteringState($activePlayerId));
     }
 
     private function createGameMock()

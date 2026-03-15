@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Bga\GameFramework;
 
 use Bga\Games\Goa\Game;
+use Bga\Games\Goa\Models\CardLocation;
 use Exception;
 
 class UserException extends \Exception
@@ -261,6 +262,11 @@ abstract class Table
             1 => ['token_id' => 1, 'token_state' => 0, 'token_location'=>TOKEN_LOCATION_BOARD,'type' => TOKEN_TYPE_FIRSTAUCTION_MARKER, 'subtype' => TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER,'token_row' => 3, 'token_col' => 1,  'player_id' => 1,  'result_associative_index' => 1,  ],
             2 => ['token_id' => 2, 'token_state' => 0, 'token_location'=>TOKEN_LOCATION_BOARD,'type' => TOKEN_TYPE_AUCTION_MARKER_1, 'subtype' => TOKEN_SUBTTYPE_AUCTION_MARKER,'token_row' => 2, 'token_col' => 1,  'player_id' => 1,  'result_associative_index' => 2,  ],
             3 => ['token_id' => 3, 'token_state' => 0, 'token_location'=>TOKEN_LOCATION_BOARD,'type' => TOKEN_TYPE_AUCTION_MARKER_2, 'subtype' => TOKEN_SUBTTYPE_AUCTION_MARKER,'token_row' => 2, 'token_col' => 3,  'player_id' => 1,  'result_associative_index' => 3,  ],
+            4 => ['token_id' => 4, 'token_state' => 0, 'token_location'=>TOKEN_LOCATION_BOARD,'type' => TOKEN_TYPE_AUCTION_MARKER_3, 'subtype' => TOKEN_SUBTTYPE_AUCTION_MARKER,'token_row' => 2, 'token_col' => 4,  'player_id' => 1,  'result_associative_index' => 4,  ],
+
+            5 => ['token_id' => 5, 'token_state' => 0, 'token_location'=>TOKEN_LOCATION_AUTOMA_BOARD,'type' => TOKEN_TYPE_AUCTION_MARKER_1, 'subtype' => TOKEN_SUBTTYPE_AUCTION_MARKER,'token_row' => 2, 'token_col' => 4,  'player_id' => AUTOMA_PLAYER_ID,  'result_associative_index' => 5,  ],
+            6 => ['token_id' => 6, 'token_state' => 0, 'token_location'=>TOKEN_LOCATION_BOARD,'type' => TOKEN_TYPE_AUCTION_MARKER_2, 'subtype' => TOKEN_SUBTTYPE_AUCTION_MARKER,'token_row' => 1, 'token_col' => 1,  'player_id' => AUTOMA_PLAYER_ID,  'result_associative_index' => 6,  ],
+            7 => ['token_id' => 7, 'token_state' => 0, 'token_location'=>TOKEN_LOCATION_AUTOMA_BOARD,'type' => TOKEN_TYPE_AUCTION_MARKER_3, 'subtype' => TOKEN_SUBTTYPE_AUCTION_MARKER,'token_row' => 2, 'token_col' => 4,  'player_id' => AUTOMA_PLAYER_ID,  'result_associative_index' => 7,  ],
 
             11 => ['token_id' => 11, 'token_state' => 0, 'token_location'=>TOKEN_LOCATION_PLAYER_BOARD,'type' => TOKEN_TYPE_PROGRESS_MARKER_SHIPS, 'subtype' => TOKEN_SUBTTYPE_PROGRESS_MARKER,'token_row' => 4, 'token_col' => 1,  'player_id' => 1,  'result_associative_index' => 11,  ],
             12 => ['token_id' => 12, 'token_state' => 0, 'token_location'=>TOKEN_LOCATION_PLAYER_BOARD,'type' => TOKEN_TYPE_PROGRESS_MARKER_HARVEST, 'subtype' => TOKEN_SUBTTYPE_PROGRESS_MARKER,'token_row' => 2, 'token_col' => 2,  'player_id' => 1,  'result_associative_index' => 12,  ],
@@ -293,6 +299,10 @@ abstract class Table
            1 => ['result_associative_index' => 1,'card_id' => 1, 'card_location' => CARD_LOCATION_HAND, 'card_state' => 0, 'player_id' => 1, 'type' => 10, 'subtype' => CARD_SUBTTYPE_EXPLORATION,],
            2 => ['result_associative_index' => 2,'card_id' => 2, 'card_location' => CARD_LOCATION_HAND, 'card_state' => 0, 'player_id' => 2, 'type' => 11, 'subtype' => CARD_SUBTTYPE_EXPLORATION,],
            3 => ['result_associative_index' => 3,'card_id' => 3, 'card_location' => CARD_LOCATION_HAND, 'card_state' => 0, 'player_id' => 2, 'type' => 11, 'subtype' => CARD_SUBTTYPE_EXPLORATION,],
+
+           100 => ['result_associative_index' => 100,'card_id' => 100, 'card_location' => CARD_LOCATION_AUTOMA_AUCTION_DAY_1_DECK, 'card_state' => 0, 'player_id' => AUTOMA_PLAYER_ID, 'type' => 1, 'subtype' => CARD_SUBTTYPE_AUTOMA_AUCTION,],
+
+           200 => ['result_associative_index' => 200,'card_id' => 200, 'card_location' => CARD_LOCATION_AUTOMA_MONEY_DECK, 'card_state' => 0, 'player_id' => AUTOMA_PLAYER_ID, 'type' => 1, 'subtype' => CARD_SUBTTYPE_MONEY,],
         ];
 
         switch($sql){
@@ -397,6 +407,14 @@ abstract class Table
             case "SELECT card_id AS `result_associative_index` , `card_id` , `card_location` , `card_state` , `player_id` , `type` , `subtype` FROM `cards` WHERE (`card_id` IN ('3'))":
                 return [
                     $cards[3],
+                ];
+            case "SELECT card_id AS `result_associative_index` , `card_id` , `card_location` , `card_state` , `player_id` , `type` , `subtype` FROM `cards` WHERE (`card_location` = '".CardLocation::AUTOMA_AUCTION_DAY_1_DECK->value."') ORDER BY card_state DESC LIMIT 1":
+                return [
+                    $cards[100],
+                ];
+            case "SELECT *, card_id AS `result_associative_index` FROM `cards` WHERE `subType` = 7 AND `card_location` = '".CardLocation::AUTOMA_MONEY_DECK->value."'":
+                return [
+                    $cards[200],
                 ];
         }
         if( str_starts_with( $sql, 'SELECT *, player_id AS `result_associative_index` FROM `player`' )){

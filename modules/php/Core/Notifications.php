@@ -547,6 +547,23 @@ class Notifications
         "icon_money" => clienttranslate('Pardaos'),
     ]);
   }
+  public static function automaGetsPlayerMoney(Collection $cards, Player $automata,int $money,Player $fromPlayer)
+  {
+    $message = clienttranslate('${player_name} places ${x} Pardau cards on ${automa_name} discard pile (${money_cards})');
+        
+    $cardsNames = $cards->map(function($card) {return $card->getValue();})->toArray();
+    self::notifyAll("automaGetsPlayerMoney", $message, [
+      'cards' => $cards->ui(),
+      'x' => $cards->count(),
+      'player' => $fromPlayer,
+      'automa_name' => $automata->getName(),
+      'automa_color' => $automata->getColor(),
+      'i18n' => ['automa_name'],
+      'preserve'=>['automa_color', 'cards',  ],
+      'money_cards' => $cardsNames,
+      'separator' => ['money_cards' => ','],
+    ]);
+  }
   
   public static function automaDiscardMoney( MoneyCard $card)
   {

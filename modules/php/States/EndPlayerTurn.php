@@ -68,8 +68,14 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
                     $currentAuctioneer = Players::get($currentAuctioneerId);
                 }
 
-                $currentAuctioneerActive = isset($currentAuctioneerId) &&(($activePlayerId == $currentAuctioneerId) || AUTOMA_PLAYER_ID == $currentAuctioneerId && Globals::isAutomaActive());
-                
+                $automaActive = Globals::isAutomaActive();
+
+                $currentAuctioneerActive = isset($currentAuctioneerId) 
+                    &&( ($activePlayerId == $currentAuctioneerId && !$automaActive ) // !\ $activePlayerId is set to a real player even during automa turn /!\
+                        || AUTOMA_PLAYER_ID == $currentAuctioneerId && $automaActive
+                        );
+                $this->game->trace("EndPlayerTurn.onEnteringState($activePlayerId)... currentAuctioneerActive ? $currentAuctioneerActive");
+
                 if($bidTurns > 0 && isset($highBidPlayerId) && $currentAuctioneerActive) { // END the auction when auctioneer played
                     if($highBidPlayerId == $currentAuctioneerId) {
                         $highBidPlayer = $currentAuctioneer;
@@ -94,8 +100,15 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
                             //AUTOMATA PAYS the player with a card
                             $highBidPlayer = Players::automaPlayer();
                             MoneyCards::automaGiveToPlayer($auctionToken->getType(), $highBidPlayer, $currentAuctioneer);
+                        } else if($currentAuctioneerId == AUTOMA_PLAYER_ID){
+                            //AUTOMA REceives Player Money card
+                            Players::giveMoney($highBidPlayer, - $highBid , false);
+                            Notifications::winsAuction($highBidPlayer, $highBid,$currentAuctioneer);
+                            MoneyCards::automaReceivesFromPlayer($highBid, $auctionToken->getType(), $currentAuctioneer, $highBidPlayer,);
+                            Stats::inc( "auctionsWon", $highBidPlayerId);
                         }
                         else {
+                            //Player 1 pays player 2
                             Players::giveMoney($highBidPlayer, - $highBid , false);
                             Players::giveMoney($currentAuctioneer, + $highBid , false );
                             Notifications::winsAuction($highBidPlayer, $highBid,$currentAuctioneer);
