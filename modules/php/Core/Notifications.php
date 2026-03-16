@@ -957,6 +957,18 @@ class Notifications
       'preserve'=>[ 'automa_color', ],
     ]);
   }
+  public static function reshuffleAutomaActionDeck(int $deck_size)
+  {
+    $msg = clienttranslate('${automa_name} action deck is reshuffled');
+
+    self::notifyAll('reshuffleAutomaActionDeck', $msg, [
+      'deck_size' => $deck_size,
+      'automa_name' => Utils::getAutomaName(),
+      'automa_color' => Globals::getAutomaColor(),
+      'i18n' => ['automa_name'],
+      'preserve'=>[ 'automa_color', ],
+    ]);
+  }
   
   /**
    */  
