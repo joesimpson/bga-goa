@@ -524,7 +524,7 @@ class Notifications
   
   public static function giveAuctionCardToAutoma( AutomaAuctionCard $card)
   {
-    $message = clienttranslate('${automa_name} draws the next auction card ${auction_card_icon}');
+    $message = clienttranslate('${automa_name} draws the next auction card ${card_icon}');
         
     self::notifyAll("giveAuctionCardToAutoma", $message, [
         'automa_name' => Utils::getAutomaName(),
@@ -532,13 +532,13 @@ class Notifications
         'card' => $card->getUiData(),
         'i18n' => ['automa_name'],
         'preserve'=>['card', 'automa_color', ],
-        "auction_card_icon" => '',//TODO JSA icon on client side
+        "card_icon" => '',
     ]);
   }
 
   public static function giveActionCardToAutoma( AutomaActionCard $card)
   {
-    $message = clienttranslate('${automa_name} draws the next action card ${action_card_icon}');
+    $message = clienttranslate('${automa_name} draws the next action card ${card_icon}');
         
     self::notifyAll("giveActionCardToAutoma", $message, [
         'automa_name' => Utils::getAutomaName(),
@@ -546,18 +546,19 @@ class Notifications
         'card' => $card->getUiData(),
         'i18n' => ['automa_name'],
         'preserve'=>['card', 'automa_color', ],
-        "action_card_icon" => '',//TODO JSA icon on client side
+        "card_icon" => '',
     ]);
   }
   
   public static function automaDrawMoney( MoneyCard $card)
   {
-    $message = clienttranslate('${automa_name} draws the next money card : ${n} ${icon_money}');
+    $message = clienttranslate('${automa_name} draws the next money card ${card_icon} : ${n} ${icon_money}');
         
     self::notifyAll("automaDrawMoney", $message, [
         'automa_name' => Utils::getAutomaName(),
         'automa_color' => Globals::getAutomaColor(),
         'card' => $card->getUiData(),
+        "card_icon" => '',
         'i18n' => ['automa_name', 'icon_money' ],
         'preserve'=>['card', 'automa_color', ],
         "n" => $card->getValue(),
@@ -613,12 +614,13 @@ class Notifications
   
   public static function automaDiscardMoney( MoneyCard $card)
   {
-    $message = clienttranslate('${automa_name} discards the auctioned money card : ${n} ${icon_money}');
+    $message = clienttranslate('${automa_name} discards the auctioned money card ${card_icon} : ${n} ${icon_money}');
         
     self::notifyAll("automaDiscardMoney", $message, [
         'automa_name' => Utils::getAutomaName(),
         'automa_color' => Globals::getAutomaColor(),
         'card' => $card->getUiData(),
+        "card_icon" => '',
         'i18n' => ['automa_name', 'icon_money' ],
         'preserve'=>['card', 'automa_color', ],
         "n" => $card->getValue(),
@@ -628,12 +630,13 @@ class Notifications
   
   public static function automaBankMoney( MoneyCard $card)
   {
-    $message = clienttranslate('${automa_name} pays the auctioned money card : ${n} ${icon_money}');
+    $message = clienttranslate('${automa_name} pays the auctioned money card ${card_icon} : ${n} ${icon_money}');
         
     self::notifyAll("automaBankMoney", $message, [
         'automa_name' => Utils::getAutomaName(),
         'automa_color' => Globals::getAutomaColor(),
         'card' => $card->getUiData(),
+        "card_icon" => '',
         'i18n' => ['automa_name', 'icon_money' ],
         'preserve'=>['card', 'automa_color', ],
         "n" => $card->getValue(),
