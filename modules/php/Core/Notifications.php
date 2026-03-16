@@ -360,6 +360,7 @@ class Notifications
   {
     $tile_name = '';
     if( $tile instanceof MarketTile ) $tile_name = $tile->getName();
+    if( $tile instanceof OutpostTile ) $tile_name = Utils::getColonyName($tile->getColony());
     self::notifyAll("discardTile", clienttranslate('${player_name} discards the tile ${tile_icon} ${tile_name}'), [
         "player" => $player,
         "tile" => $tile->getUiData(),
