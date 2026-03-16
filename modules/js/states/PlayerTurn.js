@@ -81,7 +81,7 @@ export class PlayerTurn {
             }
             
             if(possibleActions.includes('actBid')){
-                this.game.autoScrollTo('goa_board_market');
+                this.game.autoScrollTo('goa_top_zone');
                 this.currentBid = args.bid ; //- args.bidRebate;
                 this.selectedBid = args.minBid; // - args.bidRebate;
                 
