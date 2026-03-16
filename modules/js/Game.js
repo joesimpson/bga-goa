@@ -1773,14 +1773,14 @@ export class Game {
         await this.animationManager.playInterval(animationsCleanBox);
         //-----------------------
 
-        let animationsRefill = Object.values(tiles).map(tile => (() => {
-            this.animationManager.slideIn(this.addTile(tile), voidDiv, {duration: 1000});
+        let animationsRefill = Object.values(tiles).map(tile =>  (async() => {
+            this.animationManager.slideIn(await this.addTile(tile), voidDiv, {duration: 1000});
         }));
         await this.animationManager.playInterval(animationsRefill);
         //-----------------------
-        let animationsBox = Object.values(boxTiles).map(tile => (() => {
+        let animationsBox = Object.values(boxTiles).map(tile => (async() => {
             if(boxTilesDivsIds.includes(parseInt(tile.id))) return;//keep tile
-            this.animationManager.slideIn(this.addTile(tile), voidDiv, {duration: 800});
+            this.animationManager.slideIn(await this.addTile(tile), voidDiv, {duration: 800});
         }));
         await this.animationManager.playInterval(animationsBox);
 
