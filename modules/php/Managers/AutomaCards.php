@@ -114,19 +114,21 @@ class AutomaCards extends Cards
         ];
     }
     
+    public static function countAutomaActionSize(string $deckLocation) : int
+    {
+        return self::DB()
+                ->where('subType', CARD_SUBTTYPE_AUTOMA_ACTION)
+                ->where(static::$prefix . 'location', $deckLocation)
+                ->count();
+    }
+
     public static function countAutomaActionDeckSize(int $round) : int
     {
         if($round > NB_ROUNDS_DAY){
             //NIGHT
-            return self::DB()
-                    ->where('subType', CARD_SUBTTYPE_AUTOMA_ACTION)
-                    ->where(static::$prefix . 'location', CardLocation::AUTOMA_ACTION_DECK_B->value)
-                    ->count();
+            return AutomaCards::countAutomaActionSize(CardLocation::AUTOMA_ACTION_DECK_B->value);
         }
-        return self::DB()
-                ->where('subType', CARD_SUBTTYPE_AUTOMA_ACTION)
-                ->where(static::$prefix . 'location', CardLocation::AUTOMA_ACTION_DECK_A->value)
-                ->count();
+        return AutomaCards::countAutomaActionSize(CardLocation::AUTOMA_ACTION_DECK_A->value);
     }
     
     public static function getAuctionBoardForTokenType(int $token_type) : CardLocation |null
@@ -188,11 +190,29 @@ class AutomaCards extends Cards
             $fromDeck = CardLocation::AUTOMA_ACTION_DECK_A->value;
             $toDeck = CardLocation::AUTOMA_ACTION_BOARD_A->value;
         }
+        $deckSize = AutomaCards::countAutomaActionDeckSize($round);
+        if($deckSize == 0){
+            //if fromDeck is empty, reshuffle (PDF RULE is not clear)
+            AutomaCards::reshuffleAutomaActionDeck($toDeck, $fromDeck);
+        }
         $actionCard = AutomaCards::getTopOf($fromDeck);
         AutomaCards::insertOnTop($actionCard->getId(), $toDeck);
         $actionCard->setLocation($toDeck);
         Notifications::giveActionCardToAutoma($actionCard);
         return $actionCard;
+    }
+    /**
+     * @param string $fromDeck specifying the deck clear
+     * @param string $toDeck specifying the deck to reshuffle
+     * @return int decksize after reshuffle
+     */
+    public static function reshuffleAutomaActionDeck(string $fromDeck,string $toDeck) : int
+    {
+        self::moveAllInLocation( $fromDeck, $toDeck, );
+        self::shuffle($toDeck);
+        $decksize = AutomaCards::countAutomaActionSize($toDeck);
+        Notifications::reshuffleAutomaActionDeck($decksize );
+        return $decksize;
     }
 
   ///////////////////////////////////////////////////////////////////////////////////////

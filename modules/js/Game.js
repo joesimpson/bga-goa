@@ -2114,6 +2114,33 @@ export class Game {
         await this.animationManager.playInterval(animations);
         await this.bga.gameui.wait(2000);
     }
+    
+    async notif_reshuffleAutomaActionDeck(notif) {
+        this.customDebug("notif_reshuffleAutomaActionDeck",notif);
+        
+        let toElement = document.getElementById('goa_automa_deck_action');
+        let automaDiscardDiv = document.getElementById('goa_automa_discard_action');
+        let automaMoneyCardsDiv = [...automaDiscardDiv.querySelectorAll('.goa_card')];
+        let animations = automaMoneyCardsDiv.map(cardDiv => (() => {
+            //add a back card
+            toElement.insertAdjacentHTML('afterbegin', this.tplCard({'id':cardDiv.id, 'subtype': this.const.CARD_SUBTTYPE_AUTOMA_ACTION}));
+            this._counters[this.gamedatas.automa_id][`goa_deck_size_automa_action`].incValue(1);
+
+            this.animationManager.slideFloatingElement(
+                cardDiv, 
+                automaDiscardDiv, 
+                toElement, 
+                {
+                    duration: 2000,
+                    ignoreScale: false,
+                    ignoreRotation: true,
+                }
+            )
+        }));
+        await this.bga.gameui.wait(1000);
+        await this.animationManager.playInterval(animations);
+        await this.bga.gameui.wait(2000);
+    }
 
     async notif_discardAllExploration(notif) {
         this.customDebug("notif_discardAllExploration",notif);
