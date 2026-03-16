@@ -1971,10 +1971,22 @@ export class Game {
     async notif_discardTile(notif) {
         this.customDebug("notif_discardTile",notif);
         let tile = notif.tile;
+        let isOutpost = tile.subtype == this.const.TILE_SUBTTYPE_OUTPOST;
+        let voidDiv = document.getElementById('goa_top_zone');
         let tileDiv = document.getElementById(`goa_tile-${tile.id}`);
         if(tileDiv){
-            let voidDiv = document.getElementById('goa_top_zone');
             await this.animationManager.slideOutAndDestroy(tileDiv, voidDiv, {duration: 1000});
+        }
+        else if(isOutpost){
+            //LOOK for outpost in top stack
+            tileDiv = document.getElementById(`goa_outpost-${tile.id}`);
+            if(tileDiv){
+                let stock = this.outpostsTilesStocks[tile.colony];
+                //KO with this type of stock ?
+                //await stock.removeCard(tile);
+                await stock.cardRemoved(tile);
+                await this.animationManager.slideOutAndDestroy(tileDiv, voidDiv, {duration: 1000});
+            }
         }
     }
     async notif_playTile(notif) {
