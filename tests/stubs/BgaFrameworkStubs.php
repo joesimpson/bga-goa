@@ -306,7 +306,7 @@ abstract class Table
         ];
 
         switch($sql){
-            case 'SELECT name AS `result_associative_index` , `value` , `name` FROM `bga_globals`':
+            case 'SELECT name AS `result_associative_index` , `value` , `name` FROM `my_global_variables`':
                 logForTests("MOCK select globals");
                 return [
                     ['name' => 'session', 'value' => 1, 'result_associative_index' => 'session'],
@@ -319,7 +319,7 @@ abstract class Table
                     ['name' => 'automaPassed', 'value' => false, 'result_associative_index' => 'automaPassed'],
                     ['name' => 'automaActionPlayed', 'value' => false, 'result_associative_index' => 'automaActionPlayed'],
                 ];
-            case "SELECT value,name FROM `bga_globals` WHERE  `name` = 'automaColor'":
+            case "SELECT value,name FROM `my_global_variables` WHERE  `name` = 'automaColor'":
                 return [
                     ['name' => 'automaColor', 'value' => 'aaa', 'result_associative_index' => 'automaColor'],
                 ];

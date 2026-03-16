@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\States;
 
+use Bga\GameFramework\Bga;
 use Bga\GameFramework\GameMock;
 use Bga\GameFramework\GamestateMachineMock;
 use Bga\GameFramework\Notify;
@@ -72,6 +73,7 @@ final class NextPlayerTest extends TestCase
         $mock = new GameMock();
         $mock->gamestate = new GamestateMachineMock();
         $mock->notify = new Notify($mock);
+        $mock->bga = new Bga($mock);
         return $mock;
     }
 }

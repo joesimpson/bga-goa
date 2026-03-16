@@ -48,7 +48,8 @@ class Utils {
     
     public static function gameVersion() : int
     {
-        $gameVersion = Game::get()->bga->tableOptions->get(BGA_GAMESTATE_GAMEVERSION);
+        $options = Game::get()->bga->tableOptions;
+        $gameVersion = $options->get(BGA_GAMESTATE_GAMEVERSION);
         return intval($gameVersion);
     }
     /**

@@ -81,6 +81,12 @@ CREATE TABLE IF NOT EXISTS `effects` (
 ) ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4 ;
 
 -- CORE TABLES from tisaac boilerplate --
+CREATE TABLE IF NOT EXISTS `my_global_variables` (
+  `name` varchar(50) NOT NULL,
+  `value` JSON,
+  PRIMARY KEY (`name`)
+) ENGINE = InnoDB DEFAULT CHARSET = UTF8MB4;
+
 CREATE TABLE IF NOT EXISTS `log` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
