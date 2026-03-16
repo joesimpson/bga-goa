@@ -1435,7 +1435,7 @@ export class Game {
         this.bga.notifications.setupPromiseNotifications({
             logger: this.customDebug,
             onStart: (notifName, msg, args) => {
-                if (this._displayNotifsOnTop && msg != '') {
+                if (this._displayNotifsOnTop && msg != '' && msg !='<hr>') {
                     $('gameaction_status').innerHTML = msg;
                     $('pagemaintitletext').innerHTML = msg;
                     this.removeAllActionButtons();
