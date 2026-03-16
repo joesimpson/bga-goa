@@ -1953,7 +1953,7 @@ export class Game {
             tileDiv = document.getElementById(`goa_outpost-${tile.id}`);
         }
         if(! tileDiv){
-            tileDiv = this.addTile(tile);
+            tileDiv = await this.addTile(tile);
             let voidDiv = document.getElementById('goa_top_zone');
             await this.animationManager.slideIn(tileDiv, voidDiv, {duration: 1000});
         } else if(isOutpost) {
@@ -1962,11 +1962,11 @@ export class Game {
             //await stock.removeCard(tile);
             await stock.cardRemoved(tile);
             this.destroy(tileDiv);
-            tileDiv = this.addTile(tile);
+            tileDiv = await this.addTile(tile);
             await this.animationManager.slideIn(tileDiv, stock.element, {duration: 800});
             this.refreshAllVisibleDeck(stock);
         } else {
-            tileDiv = this.addTile(tile);//refresh tile dataset
+            tileDiv = await this.addTile(tile);//refresh tile dataset
             let destinationDiv = document.getElementById(this.getTileContainer(tile));
             await this.animationManager.slideAndAttach(tileDiv, destinationDiv);
         }
@@ -1976,7 +1976,7 @@ export class Game {
         this.customDebug("notif_replaceTile",notif);
         let tile = notif.tile;
         
-        let tileDiv = this.addTile(tile);//refresh tile dataset
+        let tileDiv = await this.addTile(tile);//refresh tile dataset
         let destinationDiv = document.getElementById(this.getTileContainer(tile));
         await this.animationManager.slideAndAttach(tileDiv, destinationDiv);
     }
@@ -2015,7 +2015,7 @@ export class Game {
         this.customDebug("notif_placeTile",notif);
         let tile = notif.tile;
         
-        let tileDiv = this.addTile(tile);//refresh tile dataset
+        let tileDiv = await this.addTile(tile);//refresh tile dataset
         let destinationDiv = document.getElementById(this.getTileContainer(tile));
         await this.animationManager.slideAndAttach(tileDiv, destinationDiv);
     }
@@ -2311,6 +2311,7 @@ export class Game {
                 stock.getCards().forEach((card) => {
                     stock.cardRemoved(card);
                 });
+                this.refreshAllVisibleDeck(stock);
                 stock.removeAll();
             });
         }
@@ -2384,8 +2385,8 @@ export class Game {
             this.destroy(oTile);
         });
 
-        let tileIds = this.gamedatas.tiles.map((oTile) => {
-            this.addTile(oTile);
+        let tileIds = this.gamedatas.tiles.map(async (oTile) => {
+            await this.addTile(oTile);
             return oTile.id;
         });
     }
@@ -2424,7 +2425,7 @@ export class Game {
         return 'goa_game_container';
     }
     
-    addTile(tile, location = null) {
+    async addTile(tile, location = null) {
         this.customDebug('addTile',tile,location);
         let tileMaterial = this.gamedatas.material.tiles[tile.subtype][tile.type];
         let tileDiv = document.getElementById(`goa_tile-${tile.id}`) ;
@@ -2433,7 +2434,7 @@ export class Game {
             
             if(container == `goa_board_outposts_${tile.colony}`){
                 //use bga-cards stock
-                this.outpostsTilesStocks[tile.colony].addCard(tile);
+                await this.outpostsTilesStocks[tile.colony].addCard(tile);
             }
             else {//manual add
                 document.getElementById(container).insertAdjacentHTML('beforeend', this.tplTile(tile));

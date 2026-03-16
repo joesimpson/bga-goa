@@ -38,7 +38,6 @@ enum CardLocation: string
 
 enum MarketPlayType: int
 {
-    //TODO JSA reuse this enum when possible
     case DEPOT              = MARKET_TYPE_PLANTATION;
     case ACTION_REUSEABLE   = MARKET_TYPE_ACTION_REUSEABLE;
     case ACTION_DIRECT      = MARKET_TYPE_ACTION_DIRECT;

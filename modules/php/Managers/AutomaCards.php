@@ -27,7 +27,6 @@ class AutomaCards extends Cards
     public static function getUiData($currentPlayerId): array
     {
         //TODO JSA check phase 1 -> DAY/ 2-> NIGHT
-        //TODO JSA !! getTopOf cannot be merged if null
         return self::getInLocationOrdered(CardLocation::AUTOMA_AUCTION_DAY_1_BOARD->value)
             ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_AUCTION_DAY_2_BOARD->value))
             ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_AUCTION_DAY_3_BOARD->value))
