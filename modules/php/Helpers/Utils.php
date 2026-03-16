@@ -7,6 +7,7 @@ use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Managers\Effects;
 use Bga\Games\Goa\Managers\Players;
+use Bga\Games\Goa\Models\GamePhase;
 use Bga\Games\Goa\Models\OutpostTile;
 use Bga\Games\Goa\Models\Player;
 use Bga\Games\Goa\States\ConfirmTurn;
@@ -325,6 +326,12 @@ class Utils {
             return AUTOMA_PLAYER_ID;
         }
         return null;
+    }
+
+    public static function getRoundPhase() : GamePhase {
+        $round = Globals::getRound();
+        if($round > NB_ROUNDS_DAY) return GamePhase::NIGHT;
+        return GamePhase::DAY;
     }
 
 }

@@ -5,6 +5,7 @@ namespace Bga\Games\Goa\Managers;
 use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Helpers\Collection;
+use Bga\Games\Goa\Helpers\Utils;
 use Bga\Games\Goa\Models\AuctionMarker;
 use Bga\Games\Goa\Models\AutomaActionCard;
 use Bga\Games\Goa\Models\AutomaActionType;
@@ -12,6 +13,7 @@ use Bga\Games\Goa\Models\AutomaAuctionCard;
 use Bga\Games\Goa\Models\AutomaAuctionDirectionType;
 use Bga\Games\Goa\Models\AutomaAuctionStartType;
 use Bga\Games\Goa\Models\CardLocation;
+use Bga\Games\Goa\Models\GamePhase;
 use Bga\Games\Goa\Models\MarketPlayType;
 use Bga\Games\Goa\Models\MoneyCardType;
 
@@ -24,17 +26,21 @@ class AutomaCards extends Cards
      * @param int $currentPlayerId Id of current player loading the game
      * @return array all cards visible by this player
      */
-    public static function getUiData($currentPlayerId): array
+    public static function getUiData(int $currentPlayerId): array
     {
-        //TODO JSA check phase 1 -> DAY/ 2-> NIGHT
-        return self::getInLocationOrdered(CardLocation::AUTOMA_AUCTION_DAY_1_BOARD->value)
+        $phase = Utils::getRoundPhase();
+        $phaseCards = self::getInLocationOrdered(CardLocation::AUTOMA_AUCTION_DAY_1_BOARD->value)
             ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_AUCTION_DAY_2_BOARD->value))
             ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_AUCTION_DAY_3_BOARD->value))
-            ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_AUCTION_NIGHT_1_BOARD->value))
-            ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_AUCTION_NIGHT_2_BOARD->value))
-            ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_AUCTION_NIGHT_3_BOARD->value))
-            ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_ACTION_BOARD_A->value))
-            ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_ACTION_BOARD_B->value))
+            ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_ACTION_BOARD_A->value));
+
+        if($phase == GamePhase::NIGHT){
+            $phaseCards = self::getInLocationOrdered(CardLocation::AUTOMA_AUCTION_NIGHT_1_BOARD->value)
+                ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_AUCTION_NIGHT_2_BOARD->value))
+                ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_AUCTION_NIGHT_3_BOARD->value))
+                ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_ACTION_BOARD_B->value));
+        }
+        return $phaseCards
             ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_MONEY_DISCARD->value))
             ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_MONEY_AUCTION_1->value))
             ->merge(self::getInLocationOrdered(CardLocation::AUTOMA_MONEY_AUCTION_2->value))
@@ -55,7 +61,7 @@ class AutomaCards extends Cards
     public static function getAuctionDeckForTokenType(int $token_type, int $phase) : CardLocation
     {
         switch($phase){
-            case 1: //DAY
+            case GamePhase::DAY->value:
             default: 
                 switch($token_type){
                     case TOKEN_TYPE_AUCTION_MARKER_1: 
@@ -65,7 +71,7 @@ class AutomaCards extends Cards
                     case TOKEN_TYPE_AUCTION_MARKER_3: 
                         return CardLocation::AUTOMA_AUCTION_DAY_3_DECK; 
                 }
-            case 2: //NIGHT
+            case GamePhase::NIGHT->value:
                 switch($token_type){
                     case TOKEN_TYPE_AUCTION_MARKER_1: 
                     default: return CardLocation::AUTOMA_AUCTION_NIGHT_1_DECK; 
@@ -77,9 +83,9 @@ class AutomaCards extends Cards
         }
     }
 
-    public static function countAutomaAuctionDeckSizes(int $round) : array
+    public static function countAutomaAuctionDeckSizes(GamePhase $roundPhase) : array
     {
-        if($round > NB_ROUNDS_DAY){
+        if($roundPhase == GamePhase::NIGHT){
             //NIGHT
             return [
             1 => self::DB()
@@ -121,9 +127,9 @@ class AutomaCards extends Cards
                 ->count();
     }
 
-    public static function countAutomaActionDeckSize(int $round) : int
+    public static function countAutomaActionDeckSize(GamePhase $roundPhase) : int
     {
-        if($round > NB_ROUNDS_DAY){
+        if($roundPhase == GamePhase::NIGHT){
             //NIGHT
             return AutomaCards::countAutomaActionSize(CardLocation::AUTOMA_ACTION_DECK_B->value);
         }
@@ -132,8 +138,8 @@ class AutomaCards extends Cards
     
     public static function getAuctionBoardForTokenType(int $token_type) : CardLocation |null
     {
-        $round = Globals::getRound();
-        if($round > NB_ROUNDS_DAY){
+        $roundPhase = Utils::getRoundPhase();
+        if($roundPhase == GamePhase::NIGHT){
             switch($token_type){
                 case TOKEN_TYPE_AUCTION_MARKER_1:
                     return CardLocation::AUTOMA_AUCTION_NIGHT_1_BOARD;
@@ -159,9 +165,9 @@ class AutomaCards extends Cards
     
     public static function giveAuctionCardToAutoma(AuctionMarker $token) : AutomaAuctionCard
     {
-        $round = Globals::getRound();
+        $roundPhase = Utils::getRoundPhase();
         $toDeck = AutomaCards::getAuctionBoardForTokenType($token->getType())->value;
-        if($round > NB_ROUNDS_DAY){
+        if($roundPhase == GamePhase::NIGHT){
             //NIGHT
             $fromDeck = AutomaCards::getAuctionDeckForTokenType($token->getType(), 2)->value;
         }
@@ -178,8 +184,8 @@ class AutomaCards extends Cards
     
     public static function giveActionCardToAutoma() : AutomaActionCard
     {
-        $round = Globals::getRound();
-        if($round > NB_ROUNDS_DAY){
+        $roundPhase = Utils::getRoundPhase();
+        if($roundPhase == GamePhase::NIGHT){
             //NIGHT
             $fromDeck = CardLocation::AUTOMA_ACTION_DECK_B->value;
             $toDeck = CardLocation::AUTOMA_ACTION_BOARD_B->value;
@@ -189,7 +195,7 @@ class AutomaCards extends Cards
             $fromDeck = CardLocation::AUTOMA_ACTION_DECK_A->value;
             $toDeck = CardLocation::AUTOMA_ACTION_BOARD_A->value;
         }
-        $deckSize = AutomaCards::countAutomaActionDeckSize($round);
+        $deckSize = AutomaCards::countAutomaActionDeckSize($roundPhase);
         if($deckSize == 0){
             //if fromDeck is empty, reshuffle (PDF RULE is not clear)
             AutomaCards::reshuffleAutomaActionDeck($toDeck, $fromDeck);
@@ -347,15 +353,31 @@ class AutomaCards extends Cards
     AutomaCards::shuffle(CardLocation::AUTOMA_ACTION_DECK_A->value);
     AutomaCards::shuffle(CardLocation::AUTOMA_ACTION_DECK_B->value);
     
-    $auctionCards = self::getInLocation(CardLocation::AUTOMA_AUCTION_DAY_1_DECK->value)
-            ->merge(self::getInLocation(CardLocation::AUTOMA_AUCTION_DAY_2_DECK->value))
-            ->merge(self::getInLocation(CardLocation::AUTOMA_AUCTION_DAY_3_DECK->value));
-    Notifications::initAutomaAuctionCards($auctionCards);
-    $actionCards = self::getInLocation(CardLocation::AUTOMA_ACTION_DECK_A->value);
-    Notifications::initAutomaActionCards($actionCards);
-
-    //TODO JSA night phase in newRound
+    AutomaCards::setupPhase(GamePhase::DAY);
     
+  }
+  
+  public static function setupPhase(GamePhase $phase)
+  { 
+    switch($phase) {
+        case GamePhase::DAY:
+            $auctionCards = self::getInLocation(CardLocation::AUTOMA_AUCTION_DAY_1_DECK->value)
+                    ->merge(self::getInLocation(CardLocation::AUTOMA_AUCTION_DAY_2_DECK->value))
+                    ->merge(self::getInLocation(CardLocation::AUTOMA_AUCTION_DAY_3_DECK->value));
+            Notifications::initAutomaAuctionCards($auctionCards);
+            $actionCards = self::getInLocation(CardLocation::AUTOMA_ACTION_DECK_A->value);
+            Notifications::initAutomaActionCards($actionCards);
+            break;
+        case GamePhase::NIGHT:
+            $auctionCards = self::getInLocation(CardLocation::AUTOMA_AUCTION_NIGHT_1_DECK->value)
+                    ->merge(self::getInLocation(CardLocation::AUTOMA_AUCTION_NIGHT_2_DECK->value))
+                    ->merge(self::getInLocation(CardLocation::AUTOMA_AUCTION_NIGHT_3_DECK->value));
+            Notifications::initAutomaAuctionCards($auctionCards);
+            $actionCards = self::getInLocation(CardLocation::AUTOMA_ACTION_DECK_B->value);
+            Notifications::initAutomaActionCards($actionCards);
+            break;
+    }
+
   }
   /**
    * @return array of all the different types of Automa AUCTION Cards

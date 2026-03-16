@@ -10,7 +10,10 @@ use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Log;
 use Bga\Games\Goa\Helpers\Utils;
+use Bga\Games\Goa\Managers\AutomaCards;
+use Bga\Games\Goa\Managers\MoneyCards;
 use Bga\Games\Goa\Managers\Tiles;
+use Bga\Games\Goa\Models\GamePhase;
 
 class EndRound extends \Bga\GameFramework\States\GameState
 {
@@ -39,7 +42,10 @@ class EndRound extends \Bga\GameFramework\States\GameState
         }
         else if($round == NB_ROUNDS_DAY ){
             //START NIGHT PHASE
+            Notifications::newPhase(GamePhase::NIGHT);
             Tiles::setupMarket(2);
+            AutomaCards::setupPhase(GamePhase::NIGHT);
+            MoneyCards::reshuffleAutomaDeck();
         }
 
         if ($sessionEnd) {

@@ -153,12 +153,14 @@ class Game extends \Bga\GameFramework\Table
 
         $result["turn"] = Globals::getTurn();
         $result["round"] = Globals::getRound();
+        $phase = Utils::getRoundPhase();
+        $result["phase"] = $phase->value;
         $result["session"] = Globals::getSession();
         $result["players"] = Players::getUiData($current_player_id);
         $result["cards"] = [
             'all' => Cards::getUiData($current_player_id),
             'private' => Cards::getPrivateDatas($current_player_id),
-            'deck_size' => Cards::getAllDeckSizes($result["round"]),
+            'deck_size' => Cards::getAllDeckSizes($phase),
             'automa' => AutomaCards::getUiData($current_player_id),
         ];
         $result["tiles"] = Tiles::getUiData($current_player_id);

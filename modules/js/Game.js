@@ -1800,6 +1800,25 @@ export class Game {
     async notif_endRound(notif) {
         this.customDebug("notif_endRound",notif);
     }
+    async notif_newPhase(notif) {
+        this.customDebug("notif_newPhase",notif);
+        this.gamedatas.phase = notif.n;
+        let automa_id = this.gamedatas.automa_id;
+        let automa_zone = document.getElementById('goa_player_table-'+ automa_id);
+        if(automa_zone) {
+            automa_zone.dataset.phase = this.gamedatas.phase;
+
+            //CLEAR ALL CARDS from previous phase
+            let cardsDivs = [...automa_zone.querySelectorAll('.goa_automa_auction_card, .goa_automa_action_card')];
+            cardsDivs.forEach( (cardDiv) => {
+                this.destroy(cardDiv);
+            });
+            this._counters[this.gamedatas.automa_id][`goa_deck_size_automa_action`].toValue(0);
+            this._counters[this.gamedatas.automa_id][`goa_deck_size_automa_auction_1`].toValue(0);
+            this._counters[this.gamedatas.automa_id][`goa_deck_size_automa_auction_2`].toValue(0);
+            this._counters[this.gamedatas.automa_id][`goa_deck_size_automa_auction_3`].toValue(0);
+        }
+    }
     async notif_lineSeparator(notif) {
         this.customDebug("notif_lineSeparator",notif);
         //showMessage is not enough for mobile view and other things, lets use "<hr>" in message
@@ -2120,8 +2139,8 @@ export class Game {
         
         let toElement = document.getElementById('goa_automa_deck_action');
         let automaDiscardDiv = document.getElementById('goa_automa_discard_action');
-        let automaMoneyCardsDiv = [...automaDiscardDiv.querySelectorAll('.goa_card')];
-        let animations = automaMoneyCardsDiv.map(cardDiv => (() => {
+        let automaCardsDiv = [...automaDiscardDiv.querySelectorAll('.goa_card')];
+        let animations = automaCardsDiv.map(cardDiv => (() => {
             //add a back card
             toElement.insertAdjacentHTML('afterbegin', this.tplCard({'id':cardDiv.id, 'subtype': this.const.CARD_SUBTTYPE_AUTOMA_ACTION}));
             this._counters[this.gamedatas.automa_id][`goa_deck_size_automa_action`].incValue(1);
@@ -3655,14 +3674,9 @@ export class Game {
 
         let automa_zone = document.getElementById('goa_player_table-'+ automa_id);
         if(automa_zone) this.destroy(automa_zone);
-        let face = 'day';
-        let round = this.gamedatas.round;
-        if(round > this.const.NB_ROUNDS_DAY){
-            face = 'night';
-        }
         let automaColor = this.gamedatas.automa_color;
         document.getElementById('goa_main_zone').insertAdjacentHTML('beforeend', ` 
-            <div id="goa_player_table-${automa_id}" class="goa_automa_table goa_player_table whiteblock" data-pid=${this.gamedatas.automa_id} data-color='${automaColor}'>
+            <div id="goa_player_table-${automa_id}" class="goa_automa_table goa_player_table whiteblock" data-pid=${this.gamedatas.automa_id} data-color='${automaColor}' data-phase='${this.gamedatas.phase}'>
                 <div class='goa_player_table_title_name'>
                     <div><span class='goa_player_table_title_content'>
                     <div id="goa_player_avatar_${automa_id}" class="emblem goa_player_avatar goa_avatar_automa" alt="avatar"></div>
@@ -3672,7 +3686,7 @@ export class Game {
                 <div id='goa_resizable_automaboard'>
                     <div id='goa_automaboard_container'>
                         <div id='goa_automa_board' data-color='${automaColor}'>
-                            <img id='goa_automa_board_background' data-face='${face}'></img>
+                            <img id='goa_automa_board_background'></img>
                             <div id='goa_automa_decks'>
                                 <div id='goa_automa_deck_auction_1'><div class="goa_deck_size" id="goa_deck_size_automa_auction_1">0</div></div>
                                 <div id='goa_automa_deck_auction_2'><div class="goa_deck_size" id="goa_deck_size_automa_auction_2">0</div></div>

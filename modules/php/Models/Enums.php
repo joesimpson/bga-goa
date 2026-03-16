@@ -88,3 +88,8 @@ enum MoneyCardValue: int
     case MONEY_5          = 5;
     case MONEY_10         = 10;
 }
+enum GamePhase: int
+{
+    case DAY          = PHASE_DAY;
+    case NIGHT        = PHASE_NIGHT;
+}
