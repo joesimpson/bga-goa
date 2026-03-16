@@ -163,7 +163,10 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
     self::DB()
       ->update(['passed' => 0])
       ->run();
-      //TODO JSA AUTOMA
+    $automa = Players::automaPlayer();
+    if(isset($automa)){
+      $automa->setPassed(false);
+    }
   }
   public static function resetActionsPhase()
   {
