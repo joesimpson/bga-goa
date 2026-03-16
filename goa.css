@@ -1809,13 +1809,6 @@ body.notouch-device .goa_exploration_card-front.bga-cards_selectable-card:hover,
   background-size: 100% auto;
   background-repeat: no-repeat;
   border-radius: 15px;
-  background-image: url("img/expansions/solo_board_day.jpg");
-}
-#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_board_background[data-face=day] {
-  background-image: url("img/expansions/solo_board_day.jpg");
-}
-#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_board_background[data-face=night] {
-  background-image: url("img/expansions/solo_board_night.jpg");
 }
 #goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_decks {
   position: absolute;
@@ -1831,25 +1824,13 @@ body.notouch-device .goa_exploration_card-front.bga-cards_selectable-card:hover,
 #goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_decks #goa_automa_deck_auction_1 {
   position: absolute;
 }
-#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_decks #goa_automa_deck_auction_1 .goa_automa_auction_card {
-  background-position-x: 66.6666666667%;
-  background-position-y: 20%;
-}
 #goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_decks #goa_automa_deck_auction_2 {
   position: absolute;
   left: 170px;
 }
-#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_decks #goa_automa_deck_auction_2 .goa_automa_auction_card {
-  background-position-x: 77.7777777778%;
-  background-position-y: 20%;
-}
 #goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_decks #goa_automa_deck_auction_3 {
   position: absolute;
   left: 338px;
-}
-#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_decks #goa_automa_deck_auction_3 .goa_automa_auction_card {
-  background-position-x: 88.8888888889%;
-  background-position-y: 20%;
 }
 #goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_decks #goa_automa_deck_action {
   position: absolute;
@@ -2223,6 +2204,41 @@ body.notouch-device .goa_exploration_card-front.bga-cards_selectable-card:hover,
   background-position-x: -78.641221374px;
   background-position-y: 0px;
   background-size: 458.0152671756% 129.4117647059%;
+}
+
+.goa_automa_table[data-phase="1"] #goa_automa_board_background {
+  background-image: url("img/expansions/solo_board_day.jpg");
+}
+.goa_automa_table[data-phase="1"] #goa_automa_deck_auction_1 .goa_automa_auction_card {
+  background-position-x: 66.6666666667%;
+  background-position-y: 20%;
+}
+.goa_automa_table[data-phase="1"] #goa_automa_deck_auction_2 .goa_automa_auction_card {
+  background-position-x: 77.7777777778%;
+  background-position-y: 20%;
+}
+.goa_automa_table[data-phase="1"] #goa_automa_deck_auction_3 .goa_automa_auction_card {
+  background-position-x: 88.8888888889%;
+  background-position-y: 20%;
+}
+.goa_automa_table[data-phase="2"] #goa_automa_board_background {
+  background-image: url("img/expansions/solo_board_night.jpg");
+}
+.goa_automa_table[data-phase="2"] #goa_automa_deck_auction_1 .goa_automa_auction_card {
+  background-position-x: 66.6666666667%;
+  background-position-y: 60%;
+}
+.goa_automa_table[data-phase="2"] #goa_automa_deck_auction_2 .goa_automa_auction_card {
+  background-position-x: 77.7777777778%;
+  background-position-y: 60%;
+}
+.goa_automa_table[data-phase="2"] #goa_automa_deck_auction_3 .goa_automa_auction_card {
+  background-position-x: 88.8888888889%;
+  background-position-y: 60%;
+}
+.goa_automa_table[data-phase="2"] #goa_automa_deck_action .goa_automa_action_card {
+  background-position-x: 100%;
+  background-position-y: 60%;
 }
 
 body.notouch-device #goa_automa_first_player_token:hover {

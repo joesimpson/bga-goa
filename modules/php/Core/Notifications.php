@@ -11,6 +11,7 @@ use Bga\Games\Goa\Models\AuctionMarker;
 use Bga\Games\Goa\Models\AutomaActionCard;
 use Bga\Games\Goa\Models\AutomaAuctionCard;
 use Bga\Games\Goa\Models\ExplorationCard;
+use Bga\Games\Goa\Models\GamePhase;
 use Bga\Games\Goa\Models\MarketTile;
 use Bga\Games\Goa\Models\MoneyCard;
 use Bga\Games\Goa\Models\MoneyCardType;
@@ -113,6 +114,26 @@ class Notifications
       'n' => $round,
     ]);
   }
+  
+  public static function newPhase(GamePhase $gamePhase)
+  {
+    self::logsLineSeparator();
+    $msg = clienttranslate('${phaseName} phase begins');
+    $phaseName = clienttranslate('Day');
+    switch($gamePhase){
+      case GamePhase::NIGHT: 
+        $phaseName = clienttranslate('Night');
+        break;
+    }
+
+    self::notifyAll('newPhase', $msg, [
+      'phaseName' => $phaseName,
+      'n' => $gamePhase->value,
+      'i18n' => ['phaseName'],
+      'preserve' => ['n'],
+    ]);
+  }
+
 
   public static function endRound(int $round)
   {

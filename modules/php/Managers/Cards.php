@@ -10,6 +10,7 @@ use Bga\Games\Goa\Helpers\Utils;
 use Bga\Games\Goa\Models\AutomaActionCard;
 use Bga\Games\Goa\Models\AutomaAuctionCard;
 use Bga\Games\Goa\Models\ExplorationCard;
+use Bga\Games\Goa\Models\GamePhase;
 use Bga\Games\Goa\Models\MoneyCard;
 use Bga\Games\Goa\Models\Player;
 use InvalidArgumentException;
@@ -51,7 +52,7 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
    * @param int $currentPlayerId Id of current player loading the game
    * @return array all cards visible by this player
    */
-  public static function getUiData($currentPlayerId): array
+  public static function getUiData(int $currentPlayerId): array
   {
     //$privateCards = self::getExplorationHand($currentPlayerId);
 
@@ -79,12 +80,12 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
       ->get();
   }
 
-  public static function getAllDeckSizes(int $round): array
+  public static function getAllDeckSizes(GamePhase $roundPhase): array
   {
     return [
           CARD_SUBTTYPE_EXPLORATION => Cards::countInExplorationDeck(),
-          CARD_SUBTTYPE_AUTOMA_AUCTION => AutomaCards::countAutomaAuctionDeckSizes($round),
-          CARD_SUBTTYPE_AUTOMA_ACTION => AutomaCards::countAutomaActionDeckSize($round),
+          CARD_SUBTTYPE_AUTOMA_AUCTION => AutomaCards::countAutomaAuctionDeckSizes($roundPhase),
+          CARD_SUBTTYPE_AUTOMA_ACTION => AutomaCards::countAutomaActionDeckSize($roundPhase),
           CARD_SUBTTYPE_MONEY => MoneyCards::countAutomaDeckSize(),
         ];
   }
