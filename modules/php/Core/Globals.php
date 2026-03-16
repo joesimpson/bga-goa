@@ -3,8 +3,10 @@
 namespace Bga\Games\Goa\Core;
 
 use Bga\GameFramework\SystemException;
+use Bga\GameFramework\Table;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Utils;
+use Exception;
 
 /** 
  * Globals to reuse the same Globals as BGA framework but with Tisaac boilerplate Logger and cache
@@ -12,8 +14,7 @@ use Bga\Games\Goa\Helpers\Utils;
 
 class Globals extends \Bga\Games\Goa\Helpers\DB_Manager
 {
-  ////////// !! reuse the same table  as BGA framework but with boilerplate Logger and cache
-  protected static $table = 'bga_globals';
+  protected static $table = 'my_global_variables';
   protected static $primary = 'name';
 
   protected static $initialized = false;
@@ -135,7 +136,7 @@ class Globals extends \Bga\Games\Goa\Helpers\DB_Manager
     $val = json_decode(\stripslashes($row['value']), true);
     if(!isset(self::$variables[$row['name']])){
       //ERROR  Uncaught ErrorException: Undefined array key "_BGA_INITIAL_STATE_ID" 
-      Game::get()->error(__FUNCTION__."() no defined global variable ".json_encode($row['name']));
+      Game::get()->error(__CLASS__.".".__FUNCTION__."() no defined global variable ".json_encode($row['name']));
       return null;
     }
     return self::$variables[$row['name']] == 'int' ? ((int) $val) : $val;
@@ -151,6 +152,20 @@ class Globals extends \Bga\Games\Goa\Helpers\DB_Manager
     $tmp = self::$log;
     self::$log = false;
 
+    //try{
+    //Migrate from 'bga_globals' to 'my_global_variables', like I do in upgradeTableDb, but this method is called before
+    $version = Utils::gameVersion();
+    if($version <= 2603110809 && $version != 999999999){
+      Game::get()->error(__CLASS__.".".__FUNCTION__."() Version $version needs a new globals table ");
+      $sql = "CREATE TABLE IF NOT EXISTS  `my_global_variables` (
+                  `name` varchar(50) NOT NULL,
+                  `value` JSON,
+                  PRIMARY KEY (`name`)
+              ) ENGINE = InnoDB DEFAULT CHARSET = UTF8MB4
+              SELECT * FROM `bga_globals`";
+      Table::DbQuery($sql);
+    }
+
     foreach (self::DB()
         ->select(['value', 'name'])
         ->get(false)
@@ -159,6 +174,11 @@ class Globals extends \Bga\Games\Goa\Helpers\DB_Manager
         self::$data[$name] = $variable;
       }
     }
+    //} catch(Exception $e){
+    //  $class = $e::class;
+    //  Game::get()->error(__CLASS__.".".__FUNCTION__."() Exception $class: ".json_encode($e));
+    //  throw $e;
+    //}
     self::$initialized = true;
     self::$log = $tmp;
   }

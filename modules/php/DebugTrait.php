@@ -66,7 +66,6 @@ trait DebugTrait
         
         /*
         self::DbQuery("DELETE FROM `stats` where stats_type >= 10 ");
-        self::DbQuery("DELETE FROM `bga_globals`");
         self::DbQuery("DELETE FROM `player`");
         */    
         Stats::DB()->delete()->run();
