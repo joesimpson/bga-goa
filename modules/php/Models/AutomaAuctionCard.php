@@ -129,7 +129,9 @@ class AutomaAuctionCard extends Card
         }
         else {
             //IF automa bid < current BID - 1, the automa passes
-            Notifications::passBid(Players::automaPlayer(), $token);
+            $automa = Players::automaPlayer();
+            $automa->setPassed(true);
+            Notifications::passBid($automa, $token);
         }
 
     }
