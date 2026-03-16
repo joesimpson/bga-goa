@@ -24,8 +24,6 @@ class AutomaEngine {
     public function playTurn(int $roundStep) {
         Game::get()->trace(__CLASS__.'.'.__FUNCTION__."() : roundStep $roundStep");
 
-        //TODO JSA AUTOMA ENGINE RULES
-        
         switch($roundStep){
             case ROUND_STEP_PLACE_AUCTIONS:
                 $nextAuctionToken = Tokens::getNextAuctionToken(Players::automaPlayer());
