@@ -37,7 +37,7 @@ final class PlayerChoiceTest extends TestCase
     }
     public function testPlayerChoice_ActionDiscard_Exception_With_Wrong_Version(): void
     {
-        logForTests(__FUNCTION__);
+         logForTests(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $state = new PlayerChoice($game);
         $activePlayerId = 1;
@@ -50,7 +50,7 @@ final class PlayerChoiceTest extends TestCase
 
     public function testPlayerChoice_ActionDiscard_NotPossible(): void
     {
-        logForTests(__FUNCTION__);
+         logForTests(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $state = new PlayerChoice($game);
         $activePlayerId = 2;
@@ -69,7 +69,7 @@ final class PlayerChoiceTest extends TestCase
     
     public function testPlayerChoice_ActionDiscard_WrongArgs(): void
     {
-        logForTests(__FUNCTION__);
+         logForTests(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $state = new PlayerChoice($game);
         $activePlayerId = 2;
@@ -88,7 +88,7 @@ final class PlayerChoiceTest extends TestCase
     
     public function testPlayerChoice_ActionDiscard_Pass(): void
     {
-        logForTests(__FUNCTION__);
+         logForTests(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $state = new PlayerChoice($game);
         $activePlayerId = 2;

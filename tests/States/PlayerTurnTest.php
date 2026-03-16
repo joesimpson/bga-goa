@@ -37,7 +37,7 @@ final class PlayerTurnTest extends TestCase
     }
     public function testPlayerTurn_ActionProgress_Exception_With_Wrong_Version(): void
     {
-        logForTests(__FUNCTION__);
+        logForTests(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $state = new PlayerTurn($game);
         $activePlayerId = 1;
@@ -52,7 +52,7 @@ final class PlayerTurnTest extends TestCase
     
     public function testPlayerTurn_ActionProgress_Exception_Wrong_Track(): void
     {
-        logForTests(__FUNCTION__);
+        logForTests(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $state = new PlayerTurn($game);
         $activePlayerId = 1;
@@ -75,7 +75,7 @@ final class PlayerTurnTest extends TestCase
     
     public function testPlayerTurn_ActionProgress_Track1_Pass(): void
     {
-        logForTests(__FUNCTION__);
+        logForTests(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $state = new PlayerTurn($game);
         $activePlayerId = 1;
@@ -153,7 +153,7 @@ final class PlayerTurnTest extends TestCase
 
     public function testPlayerTurn_ActionProgress_Track2_Pass(): void
     {
-        logForTests(__FUNCTION__);
+        logForTests(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $state = new PlayerTurn($game);
         $activePlayerId = 1;
@@ -187,7 +187,7 @@ final class PlayerTurnTest extends TestCase
 
     public function testPlayerTurn_ActionProgress_Track3_Pass(): void
     {
-        logForTests(__FUNCTION__);
+        logForTests(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $state = new PlayerTurn($game);
         $activePlayerId = 1;
@@ -221,7 +221,7 @@ final class PlayerTurnTest extends TestCase
     
     public function testPlayerTurn_ActionProgress_Track4_Exception_With_Wrong_Spices(): void
     {
-        logForTests(__FUNCTION__);
+        logForTests(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $state = new PlayerTurn($game);
         $activePlayerId = 2;
@@ -245,7 +245,7 @@ final class PlayerTurnTest extends TestCase
 
     public function testPlayerTurn_ActionProgress_Track4_Pass(): void
     {
-        logForTests(__FUNCTION__);
+        logForTests(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $state = new PlayerTurn($game);
         $activePlayerId = 2;
@@ -279,7 +279,7 @@ final class PlayerTurnTest extends TestCase
 
     public function testPlayerTurn_ActionProgress_Track5_Exception_With_Wrong_Spices(): void
     {
-        logForTests(__FUNCTION__);
+        logForTests(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $state = new PlayerTurn($game);
         $activePlayerId = 1;
@@ -302,7 +302,7 @@ final class PlayerTurnTest extends TestCase
     }
     public function testPlayerTurn_ActionProgress_Track5_Exception_TooManySpices(): void
     {
-        logForTests(__FUNCTION__);
+        logForTests(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $state = new PlayerTurn($game);
         $activePlayerId = 1;
@@ -325,7 +325,7 @@ final class PlayerTurnTest extends TestCase
     
     public function testPlayerTurn_ActionProgress_Track5_Exception_NotEnoughSpices(): void
     {
-        logForTests(__FUNCTION__);
+        logForTests(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $state = new PlayerTurn($game);
         $activePlayerId = 1;
@@ -348,7 +348,7 @@ final class PlayerTurnTest extends TestCase
 
     public function testPlayerTurn_ActionProgress_Track5_Pass(): void
     {
-        logForTests(__FUNCTION__);
+        logForTests(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $state = new PlayerTurn($game);
         $activePlayerId = 2;
@@ -382,7 +382,7 @@ final class PlayerTurnTest extends TestCase
 
     public function testPlayerTurn_ActionDiscard_Exception_With_Wrong_Version(): void
     {
-        logForTests(__FUNCTION__);
+        logForTests(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $state = new PlayerTurn($game);
         $activePlayerId = 1;
@@ -395,7 +395,7 @@ final class PlayerTurnTest extends TestCase
 
     public function testPlayerTurn_ActionDiscard_NotPossible(): void
     {
-        logForTests(__FUNCTION__);
+        logForTests(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $state = new PlayerTurn($game);
         $activePlayerId = 2;
@@ -414,7 +414,7 @@ final class PlayerTurnTest extends TestCase
     
     public function testPlayerTurn_ActionDiscard_WrongArgs(): void
     {
-        logForTests(__FUNCTION__);
+        logForTests(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $state = new PlayerTurn($game);
         $activePlayerId = 2;
@@ -433,7 +433,7 @@ final class PlayerTurnTest extends TestCase
     
     public function testPlayerTurn_ActionDiscard_Pass(): void
     {
-        logForTests(__FUNCTION__);
+        logForTests(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $state = new PlayerTurn($game);
         $activePlayerId = 2;
@@ -458,7 +458,7 @@ final class PlayerTurnTest extends TestCase
     
     public function testPlayerTurn_Zombie_Random(): void
     {
-        logForTests(__FUNCTION__);
+        logForTests(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $state = new PlayerTurn($game);
         $activePlayerId = 2;

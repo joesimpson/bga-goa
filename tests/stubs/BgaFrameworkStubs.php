@@ -313,6 +313,15 @@ abstract class Table
                     ['name' => 'round', 'value' => 1, 'result_associative_index' => 'round'],
                     ['name' => 'roundStep', 'value' => 1, 'result_associative_index' => 'roundStep'],
                     ['name' => 'endScoring', 'value' => '[]', 'result_associative_index' => 'endScoring'],
+                    ['name' => 'automaColor', 'value' => '000000', 'result_associative_index' => 'automaColor'],
+                    ['name' => 'automaActive', 'value' => false, 'result_associative_index' => 'automaActive'],
+                    ['name' => 'automaNbActions', 'value' => 0, 'result_associative_index' => 'automaNbActions'],
+                    ['name' => 'automaPassed', 'value' => false, 'result_associative_index' => 'automaPassed'],
+                    ['name' => 'automaActionPlayed', 'value' => false, 'result_associative_index' => 'automaActionPlayed'],
+                ];
+            case "SELECT value,name FROM `bga_globals` WHERE  `name` = 'automaColor'":
+                return [
+                    ['name' => 'automaColor', 'value' => 'aaa', 'result_associative_index' => 'automaColor'],
                 ];
             case "SELECT *, token_id AS `result_associative_index` FROM `tokens` WHERE `type` = ".TOKEN_TYPE_FIRSTAUCTION_MARKER." AND `subType` = ".TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER:
                 logForTests("MOCK select first  token");
