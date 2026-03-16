@@ -1672,6 +1672,11 @@ body.notouch-device .goa_exploration_card-front.bga-cards_selectable-card:hover,
 .goa_money_card[data-value="10"] {
   background-position-x: 100%;
 }
+.goa_money_card.goa_card_log {
+  width: 50px;
+  height: 76px;
+  border-radius: 5%;
+}
 
 .goa_card_tooltip {
   display: flex;
@@ -2486,6 +2491,14 @@ body.notouch-device #goa_automa_first_player_token:hover {
 }
 .goa_automa_level_card[data-level="3"] {
   background-position-x: 33.3333333333%;
+}
+
+.goa_automa_auction_card.goa_card_log,
+.goa_automa_action_card.goa_card_log,
+.goa_automa_level_card.goa_card_log {
+  width: 50px;
+  height: 76px;
+  border-radius: 5%;
 }
 
 .goa_deck_size {

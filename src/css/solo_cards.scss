@@ -92,6 +92,18 @@ $card_height: var(--goa_automa_card_height);
     }
 }
 
+.goa_automa_auction_card,
+.goa_automa_action_card,
+.goa_automa_level_card
+{
+    &.goa_card_log{
+        //REDUCE SIZE
+        width: 50px;
+        height: 76px;
+        border-radius: 5%;
+    }
+}
+
 .goa_deck_size{
     user-select: none;
     position: absolute;

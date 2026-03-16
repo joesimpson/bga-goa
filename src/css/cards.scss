@@ -195,6 +195,12 @@ body.notouch-device{
     &[data-value="10"] {
         background-position-x: 100%;
     }
+    &.goa_card_log{
+        //REDUCE SIZE
+        width: 50px;
+        height: 76px;
+        border-radius: 5%;
+    }
 }
 
 
