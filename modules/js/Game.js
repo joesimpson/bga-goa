@@ -645,6 +645,18 @@ export class Game {
         });
         
     }
+    /**
+     * Manual operation that should be correctly done by AllVisibleDeck.cardRemoved
+     * @param {*} stock 
+     */
+    refreshAllVisibleDeck(stock){
+        this.customDebug("refreshAllVisibleDeck", stock);
+        stock.getCards().forEach((card, index) => {  
+            let cardDiv = stock.getCardElement(card); 
+            if(cardDiv) cardDiv.style.setProperty('--order', '' + index);  
+        });
+    }
+
     addCustomTooltip(divId, html, delay) {
         this.customDebug("addCustomTooltip", divId, delay);
         if( document.getElementById("ebd-body").classList.contains("touch-device") ){
@@ -1946,12 +1958,13 @@ export class Game {
             await this.animationManager.slideIn(tileDiv, voidDiv, {duration: 1000});
         } else if(isOutpost) {
             let stock = this.outpostsTilesStocks[tile.colony];
-            //KO with this type of stock ?
+            //KO with AllVisibleDeck ?
             //await stock.removeCard(tile);
             await stock.cardRemoved(tile);
             this.destroy(tileDiv);
             tileDiv = this.addTile(tile);
             await this.animationManager.slideIn(tileDiv, stock.element, {duration: 800});
+            this.refreshAllVisibleDeck(stock);
         } else {
             tileDiv = this.addTile(tile);//refresh tile dataset
             let destinationDiv = document.getElementById(this.getTileContainer(tile));
@@ -1982,10 +1995,11 @@ export class Game {
             tileDiv = document.getElementById(`goa_outpost-${tile.id}`);
             if(tileDiv){
                 let stock = this.outpostsTilesStocks[tile.colony];
-                //KO with this type of stock ?
+                //KO with this AllVisibleDeck ?
                 //await stock.removeCard(tile);
                 await stock.cardRemoved(tile);
                 await this.animationManager.slideOutAndDestroy(tileDiv, voidDiv, {duration: 1000});
+                this.refreshAllVisibleDeck(stock);
             }
         }
     }
