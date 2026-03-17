@@ -35,6 +35,7 @@
     font-size: 10px;
     //position: relative;
     //align-items: center;
+    width: 100%;
         
     .goa_first_player_container{
         /*
@@ -44,6 +45,10 @@
         height: 35px;
         width: 30px;
         */
+    }
+    .goa_level_automa{
+        font-size: 1.25em;
+        text-align: center;
     }
     
     .goa_player_counters_line{

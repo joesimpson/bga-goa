@@ -182,6 +182,8 @@ class Game extends \Bga\GameFramework\Table
         if(isset( $automaColor) && !empty($automaColor)){
             $result['automa_player'] = Players::automaPlayer();
         }
+        $result['automa_level'] = Globals::getOptionAutomaDifficulty();
+
         $result["endScoring"] = Globals::getEndScoring();
 
         $result["constants"] = ALL_MY_UI_CONSTANTS;
