@@ -41,6 +41,9 @@ class GameMock extends Game {
     public function __construct()
     {
         parent::__construct();
+        $this->gamestate = new GamestateMachineMock();
+        $this->notify = new Notify($this);
+        $this->bga = new Bga($this);
     }
 
     public function getStatTypes(){
