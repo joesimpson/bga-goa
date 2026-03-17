@@ -1240,6 +1240,7 @@ export class Game {
         let playersScoreRichest = '';
         let playersScoreTiles = '';
         let playersTotal = '';
+        let playersTotalCard = '';
         let symbolsScores = '';
         Object.keys(this.const.CARD_SYMBOLS).forEach((symbol) =>{
             let playersScoreSymbols = '';
@@ -1263,10 +1264,11 @@ export class Game {
             playersScoreTiles += `<td>${this.tplResourceCounter(player,'scoringRecap_'+this.const.SCORING_TILES)}</div></td>`;
 
             playersTotal +=`<td>${this.tplResourceCounter(player,'scoringRecap_total')}</td>`;
+            playersTotalCard +=`<td>${this.tplFinalScoringSoloCard(player.id, player.score)}</td>`;
         });
         let html = `<table id="goa_end_score_recap_table">
                 <thead>
-                    <th>${_('Score')} <div class='goa_icon_score'></th>
+                    <th>${_('Score')} <div class='goa_icon_score'></div></th>
                     ${playersNames}
                 </thead>
                 <tbody>
@@ -1288,11 +1290,25 @@ export class Game {
                         ${playersScoreTiles}
                     </tr>
                     <tr class ='goa_score_total'>
-                        <th>${_('Total')} <div class='goa_icon_score'></th>
+                        <th>${_('Total')} <div class='goa_icon_score'></div></th>
                         ${playersTotal}
+                    </tr>
+                    <tr class ='goa_score_card_total'>
+                        <th><div class='goa_score_card goa_score_card_back'></th>
+                        ${playersTotalCard}
                     </tr>
                 </tbody>
             </table>
+        `;
+        return html;
+    }
+    
+    //We may display it for any game 
+    tplFinalScoringSoloCard(playerId, playerScore){
+        this.customDebug("tplFinalScoringSoloCard()");
+        let html = `<div id="goa_score_card_${playerId}" class="goa_score_card">
+                <div id="goa_solo_card_highlight_${playerId}" class="goa_solo_card_highlight" data-score="${playerScore}"></div>
+            </div>
         `;
         return html;
     }
@@ -2275,6 +2291,7 @@ export class Game {
         if(this._counters[player_id].scoringRecap_total !=undefined){
             //IF end scoring recap displayed
             this._counters[player_id].scoringRecap_total.incValue(amount);
+            document.getElementById(`goa_solo_card_highlight_${player_id}`).dataset.score = this._counters[player_id].scoringRecap_total.getValue();
                 
             if(notif.scoringType){
                 this._counters[player_id]['scoringRecap_'+notif.scoringType].incValue(amount);
@@ -2298,6 +2315,7 @@ export class Game {
             //IF end scoring recap displayed
             this._counters[player_id].scoringRecap_total.incValue(amount);
             this._counters[player_id][`scoringRecap_${this.const.SCORING_TILES}`].incValue(amount);
+            document.getElementById(`goa_solo_card_highlight_${player_id}`).dataset.score = this._counters[player_id].scoringRecap_total.getValue();
         }
     }
     
