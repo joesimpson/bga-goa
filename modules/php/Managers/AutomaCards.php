@@ -441,7 +441,7 @@ class AutomaCards extends Cards
           [TOKEN_TYPE_AUCTION_MARKER_1], 
           [ MarketPlayType::DEPOT, MarketPlayType::SCORING, MarketPlayType::ACTION_DIRECT,  [ MarketPlayType::ACTION_REUSEABLE, MarketPlayType::ACTION_ONCE],  ],
           AutomaAuctionStartType::TOP_RIGHT,
-          AutomaAuctionDirectionType::COUNTER_LOCKWISE,
+          AutomaAuctionDirectionType::COUNTER_CLOCKWISE,
           3,
       ]), 
       6 =>  $f([
@@ -450,7 +450,7 @@ class AutomaCards extends Cards
           [TOKEN_TYPE_AUCTION_MARKER_1], 
           [  MarketPlayType::SCORING, MarketPlayType::ACTION_DIRECT, MarketPlayType::DEPOT, [ MarketPlayType::ACTION_REUSEABLE, MarketPlayType::ACTION_ONCE],  ],
           AutomaAuctionStartType::BOTTOM_RIGHT,
-          AutomaAuctionDirectionType::COUNTER_LOCKWISE,
+          AutomaAuctionDirectionType::COUNTER_CLOCKWISE,
           2,
       ]), 
       7 =>  $f([
@@ -459,7 +459,7 @@ class AutomaCards extends Cards
           [TOKEN_TYPE_AUCTION_MARKER_1], 
           [  MarketPlayType::DEPOT, [ MarketPlayType::ACTION_REUSEABLE, MarketPlayType::ACTION_ONCE], MarketPlayType::SCORING, MarketPlayType::ACTION_DIRECT, ],
           AutomaAuctionStartType::BOTTOM_LEFT,
-          AutomaAuctionDirectionType::COUNTER_LOCKWISE,
+          AutomaAuctionDirectionType::COUNTER_CLOCKWISE,
           1,
       ]), 
       8 =>  $f([
@@ -468,7 +468,7 @@ class AutomaCards extends Cards
           [TOKEN_TYPE_AUCTION_MARKER_1], 
           [ [ MarketPlayType::ACTION_REUSEABLE, MarketPlayType::ACTION_ONCE], MarketPlayType::SCORING, MarketPlayType::ACTION_DIRECT, MarketPlayType::DEPOT, ],
           AutomaAuctionStartType::TOP_LEFT,
-          AutomaAuctionDirectionType::COUNTER_LOCKWISE,
+          AutomaAuctionDirectionType::COUNTER_CLOCKWISE,
           5,
       ]), 
         
@@ -514,7 +514,7 @@ class AutomaCards extends Cards
           [TOKEN_TYPE_AUCTION_MARKER_2, TOKEN_TYPE_AUCTION_MARKER_3], 
           [ MarketPlayType::DEPOT, MarketPlayType::SCORING, MarketPlayType::ACTION_DIRECT,  [ MarketPlayType::ACTION_REUSEABLE, MarketPlayType::ACTION_ONCE],  ],
           AutomaAuctionStartType::TOP_RIGHT,
-          AutomaAuctionDirectionType::COUNTER_LOCKWISE,
+          AutomaAuctionDirectionType::COUNTER_CLOCKWISE,
           3,
       ]), 
       14 =>  $f([
@@ -523,7 +523,7 @@ class AutomaCards extends Cards
           [TOKEN_TYPE_AUCTION_MARKER_2, TOKEN_TYPE_AUCTION_MARKER_3], 
           [  MarketPlayType::SCORING, MarketPlayType::ACTION_DIRECT, MarketPlayType::DEPOT, [ MarketPlayType::ACTION_REUSEABLE, MarketPlayType::ACTION_ONCE],  ],
           AutomaAuctionStartType::BOTTOM_RIGHT,
-          AutomaAuctionDirectionType::COUNTER_LOCKWISE,
+          AutomaAuctionDirectionType::COUNTER_CLOCKWISE,
           2,
       ]), 
       15 =>  $f([
@@ -532,7 +532,7 @@ class AutomaCards extends Cards
           [TOKEN_TYPE_AUCTION_MARKER_2, TOKEN_TYPE_AUCTION_MARKER_3], 
           [  MarketPlayType::DEPOT, [ MarketPlayType::ACTION_REUSEABLE, MarketPlayType::ACTION_ONCE], MarketPlayType::SCORING, MarketPlayType::ACTION_DIRECT, ],
           AutomaAuctionStartType::BOTTOM_LEFT,
-          AutomaAuctionDirectionType::COUNTER_LOCKWISE,
+          AutomaAuctionDirectionType::COUNTER_CLOCKWISE,
           1,
       ]), 
       16 =>  $f([
@@ -541,7 +541,7 @@ class AutomaCards extends Cards
           [TOKEN_TYPE_AUCTION_MARKER_2, TOKEN_TYPE_AUCTION_MARKER_3], 
           [ [ MarketPlayType::ACTION_REUSEABLE, MarketPlayType::ACTION_ONCE], MarketPlayType::SCORING, MarketPlayType::ACTION_DIRECT, MarketPlayType::DEPOT, ],
           AutomaAuctionStartType::TOP_LEFT,
-          AutomaAuctionDirectionType::COUNTER_LOCKWISE,
+          AutomaAuctionDirectionType::COUNTER_CLOCKWISE,
           5,
       ]), 
       
@@ -552,7 +552,7 @@ class AutomaCards extends Cards
           [TOKEN_TYPE_AUCTION_MARKER_1], 
           [ [ MarketPlayType::ACTION_REUSEABLE, MarketPlayType::ACTION_ONCE],   MarketPlayType::SCORING, MarketPlayType::ACTION_DIRECT, MarketPlayType::DEPOT,],
           AutomaAuctionStartType::BOTTOM_LEFT,
-          AutomaAuctionDirectionType::COUNTER_LOCKWISE,
+          AutomaAuctionDirectionType::COUNTER_CLOCKWISE,
           2,   
       ]), 
       22 =>  $f([
@@ -561,7 +561,7 @@ class AutomaCards extends Cards
           [TOKEN_TYPE_AUCTION_MARKER_1], 
           [ [ MarketPlayType::ACTION_REUSEABLE, MarketPlayType::ACTION_ONCE],   MarketPlayType::DEPOT,MarketPlayType::SCORING, MarketPlayType::ACTION_DIRECT, ],
           AutomaAuctionStartType::TOP_LEFT,
-          AutomaAuctionDirectionType::COUNTER_LOCKWISE,
+          AutomaAuctionDirectionType::COUNTER_CLOCKWISE,
           3,   
       ]), 
       23 =>  $f([
@@ -570,7 +570,7 @@ class AutomaCards extends Cards
           [TOKEN_TYPE_AUCTION_MARKER_1], 
           [  MarketPlayType::SCORING, [ MarketPlayType::ACTION_REUSEABLE, MarketPlayType::ACTION_ONCE],  MarketPlayType::ACTION_DIRECT, MarketPlayType::DEPOT,],
           AutomaAuctionStartType::TOP_RIGHT,
-          AutomaAuctionDirectionType::COUNTER_LOCKWISE,
+          AutomaAuctionDirectionType::COUNTER_CLOCKWISE,
           4,   
       ]), 
       24 =>  $f([
@@ -579,7 +579,7 @@ class AutomaCards extends Cards
           [TOKEN_TYPE_AUCTION_MARKER_1], 
           [  MarketPlayType::SCORING, MarketPlayType::DEPOT,[ MarketPlayType::ACTION_REUSEABLE, MarketPlayType::ACTION_ONCE],  MarketPlayType::ACTION_DIRECT, ],
           AutomaAuctionStartType::BOTTOM_RIGHT,
-          AutomaAuctionDirectionType::COUNTER_LOCKWISE,
+          AutomaAuctionDirectionType::COUNTER_CLOCKWISE,
           5,   
       ]), 
       25 =>  $f([
@@ -625,7 +625,7 @@ class AutomaCards extends Cards
           [TOKEN_TYPE_AUCTION_MARKER_2, TOKEN_TYPE_AUCTION_MARKER_3], 
           [ [ MarketPlayType::ACTION_REUSEABLE, MarketPlayType::ACTION_ONCE],   MarketPlayType::SCORING, MarketPlayType::ACTION_DIRECT, MarketPlayType::DEPOT,],
           AutomaAuctionStartType::BOTTOM_LEFT,
-          AutomaAuctionDirectionType::COUNTER_LOCKWISE,
+          AutomaAuctionDirectionType::COUNTER_CLOCKWISE,
           2,   
       ]), 
       30 =>  $f([
@@ -634,7 +634,7 @@ class AutomaCards extends Cards
           [TOKEN_TYPE_AUCTION_MARKER_2, TOKEN_TYPE_AUCTION_MARKER_3], 
           [ [ MarketPlayType::ACTION_REUSEABLE, MarketPlayType::ACTION_ONCE],   MarketPlayType::DEPOT,MarketPlayType::SCORING, MarketPlayType::ACTION_DIRECT, ],
           AutomaAuctionStartType::TOP_LEFT,
-          AutomaAuctionDirectionType::COUNTER_LOCKWISE,
+          AutomaAuctionDirectionType::COUNTER_CLOCKWISE,
           3,   
       ]), 
       31 =>  $f([
@@ -643,7 +643,7 @@ class AutomaCards extends Cards
           [TOKEN_TYPE_AUCTION_MARKER_2, TOKEN_TYPE_AUCTION_MARKER_3], 
           [  MarketPlayType::SCORING, [ MarketPlayType::ACTION_REUSEABLE, MarketPlayType::ACTION_ONCE],  MarketPlayType::ACTION_DIRECT, MarketPlayType::DEPOT,],
           AutomaAuctionStartType::TOP_RIGHT,
-          AutomaAuctionDirectionType::COUNTER_LOCKWISE,
+          AutomaAuctionDirectionType::COUNTER_CLOCKWISE,
           4,   
       ]), 
       32 =>  $f([
@@ -652,7 +652,7 @@ class AutomaCards extends Cards
           [TOKEN_TYPE_AUCTION_MARKER_2, TOKEN_TYPE_AUCTION_MARKER_3], 
           [  MarketPlayType::SCORING, MarketPlayType::DEPOT,[ MarketPlayType::ACTION_REUSEABLE, MarketPlayType::ACTION_ONCE],  MarketPlayType::ACTION_DIRECT, ],
           AutomaAuctionStartType::BOTTOM_RIGHT,
-          AutomaAuctionDirectionType::COUNTER_LOCKWISE,
+          AutomaAuctionDirectionType::COUNTER_CLOCKWISE,
           5,   
       ]), 
       33 =>  $f([

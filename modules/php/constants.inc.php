@@ -160,6 +160,13 @@ const CARD_GAINS_RESSOURCES_TO_COINS = [
    4 => 12,
 ];
 
+const DIRECTION_CLOCKWISE = 1;
+const DIRECTION_COUNTER_CLOCKWISE = 2;
+
+const START_TOP_LEFT     = 1;
+const START_TOP_RIGHT    = 2;
+const START_BOTTOM_RIGHT = 3;
+const START_BOTTOM_LEFT  = 4;
 /////////////////////////////////////////////////////////
 //          TILES
 /////////////////////////////////////////////////////////
@@ -560,6 +567,14 @@ CONST ALL_MY_UI_CONSTANTS= [
    'CARD_ACTION_2_SHIPS'                 =>  CARD_ACTION_2_SHIPS                 ,
    'CARD_ACTION_5_COINS'                 =>  CARD_ACTION_5_COINS                 ,
    'CARD_ACTION_PROGRESS_WITH_COINS'     =>  CARD_ACTION_PROGRESS_WITH_COINS     ,
+
+   //'DIRECTION_CLOCKWISE' => DIRECTION_CLOCKWISE,
+   'DIRECTION_COUNTER_CLOCKWISE' => DIRECTION_COUNTER_CLOCKWISE,
+   
+   'START_TOP_LEFT'     => START_TOP_LEFT    ,
+   'START_TOP_RIGHT'    => START_TOP_RIGHT   ,
+   'START_BOTTOM_RIGHT' => START_BOTTOM_RIGHT,
+   'START_BOTTOM_LEFT'  => START_BOTTOM_LEFT ,
    
    'TILE_SUBTTYPE_OUTPOST' => TILE_SUBTTYPE_OUTPOST,
    'TILE_SUBTTYPE_MARKET' => TILE_SUBTTYPE_MARKET,

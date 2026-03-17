@@ -432,6 +432,6 @@ body.lockedInterface{
 // ------------------------------------------------------------------------------
 // Re enable list style over BGA common CSS, only for wanted section : game WIKI and some tooltips 
 #pagesection_howtoplay li, .midSizeDialog li, .standard_popin li{ margin-left: 2em; } 
-#pagesection_howtoplay ol li { list-style: decimal; } /* BEFORE ul in case there are ul under ol */ 
+#pagesection_howtoplay ol li, .midSizeDialog ol li, .standard_popin ol li { list-style: decimal; } /* BEFORE ul in case there are ul under ol */ 
 #pagesection_howtoplay ul li, .midSizeDialog ul li, .standard_popin ul li { list-style: disc; }
 // ------------------------------------------------------------------------------

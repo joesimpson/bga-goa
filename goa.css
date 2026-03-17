@@ -1932,6 +1932,12 @@ body.notouch-device .goa_exploration_card-front.bga-cards_selectable-card:hover,
 .goa_card_tooltip .goa_card_symbols {
   font-size: 0.75em;
 }
+.goa_card_tooltip[data-subtype="5"] .goa_card_text_action {
+  font-size: 0.8em;
+}
+.goa_card_tooltip[data-subtype="5"] .goa_card_text_line1 {
+  font-size: 0.7em;
+}
 
 .goa_card_tooltip hr {
   color: black !important;
@@ -1964,11 +1970,42 @@ body.notouch-device .goa_exploration_card-front.bga-cards_selectable-card:hover,
   text-align: center;
 }
 .goa_ExplorationCardsHelp .goa_card_text {
-  width: 348px;
+  width: 345px;
   order: 2;
 }
 .goa_ExplorationCardsHelp .goa_card_symbols .goa_card_symbols_score {
   display: none;
+}
+
+.goa_AutomaAuctionCardsHelp {
+  border: 1px solid;
+  width: -moz-max-content;
+  width: max-content;
+}
+.goa_AutomaAuctionCardsHelp .goa_card_title {
+  font-size: 1.5em;
+}
+.goa_AutomaAuctionCardsHelp .goa_card_text_action {
+  font-size: 0.8em;
+}
+.goa_AutomaAuctionCardsHelp .goa_card_text_line1 {
+  font-size: 0.7em;
+}
+.goa_AutomaAuctionCardsHelp .goa_card_img_wrap {
+  order: 1;
+  margin-right: 2px;
+}
+.goa_AutomaAuctionCardsHelp .goa_tooltip_block2 {
+  flex-direction: row;
+  width: -moz-max-content;
+  width: max-content;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.goa_AutomaAuctionCardsHelp .goa_card_text {
+  width: 345px;
+  order: 2;
 }
 
 /**
@@ -4016,7 +4053,7 @@ body.lockedInterface #restartActions {
   margin-left: 2em;
 }
 
-#pagesection_howtoplay ol li {
+#pagesection_howtoplay ol li, .midSizeDialog ol li, .standard_popin ol li {
   list-style: decimal;
 } /* BEFORE ul in case there are ul under ol */
 #pagesection_howtoplay ul li, .midSizeDialog ul li, .standard_popin ul li {

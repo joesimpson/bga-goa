@@ -417,6 +417,7 @@ export class Game {
                     html: `<div id='goa_first_help_popin'>
                         ${this.formatTilesHelp()}
                         ${this.formatCardsHelp()}
+                        ${this.formatSoloCardsHelp()}
                     </div>`,
                 })
             ],
@@ -2543,6 +2544,15 @@ export class Game {
     }
     formatTileTitle (tile) {
         let tileMaterial = this.gamedatas.material.tiles[tile.subtype][tile.type];
+        let description = ''; 
+        if(tile.subtype == this.const.TILE_SUBTTYPE_OUTPOST){
+            return this.bga.gameui.format_string(_("Outpost : ${name}"),{ name : this.getColonyName(tile.colony)});
+        }
+        else description = this.formatMarketTilePlayTypeName(tileMaterial.play_type);
+        let text = '<b><i>' + description + '</i></b>';
+        return text;
+    }
+    formatMarketTilePlayTypeName (play_type) {
         let descriptionMap = new Map([
             [this.const.MARKET_TYPE_PLANTATION, this.bga.gameui.format_string(_("Depot"),{ })] ,
             [this.const.MARKET_TYPE_ACTION_REUSEABLE, this.bga.gameui.format_string( _('Multi-use action'),{ } )],
@@ -2551,13 +2561,7 @@ export class Game {
             [this.const.MARKET_TYPE_SCORING, this.bga.gameui.format_string(_("Scoring"),{ })] ,
             
         ]);
-        let description = ''; 
-        if(tile.subtype == this.const.TILE_SUBTTYPE_OUTPOST){
-            return this.bga.gameui.format_string(_("Outpost : ${name}"),{ name : this.getColonyName(tile.colony)});
-        }
-        else description = descriptionMap.get(tileMaterial.play_type);
-        let text = '<b><i>' + description + '</i></b>';
-        return text;
+        return descriptionMap.get(play_type);
     }
     formatTilePlayTypeText (tile) {
         let descriptionMap;
@@ -3420,7 +3424,12 @@ export class Game {
             else {//manual add
                 document.getElementById(container).insertAdjacentHTML('beforeend', this.tplCard(card));
             }
+
             cardDiv = document.getElementById(`goa_card-${card.id}`) ;
+
+            if(card.subtype != this.const.CARD_SUBTTYPE_EXPLORATION){
+                this.addCustomTooltip(cardDiv.id, this.getCardTooltip(card));
+            }
 
         }
         else {
@@ -3467,6 +3476,7 @@ export class Game {
         let textLine1 = ''
         let title = '';
         let textSymbols = '';
+        let textAction = '';
         if(! (cardDatas.subtype)) return '';
         let cardMaterial = this.gamedatas.material.cards[cardDatas.subtype][cardDatas.type];
         if(cardDatas.subtype == this.const.CARD_SUBTTYPE_EXPLORATION){
@@ -3482,10 +3492,57 @@ export class Game {
                 { s_name: this.getCardSymbolName( cardMaterial.symbol ), s_icon: this.formatSymbolIcon(cardMaterial.symbol)}
             );
             textSymbols += this.getCardTooltipSymbolsInfos(cardDatas);
+            textAction = this.formatCardActionText( cardMaterial );
         }
-        let textAction = this.formatCardActionText( cardMaterial );
+        else if(cardDatas.subtype == this.const.CARD_SUBTTYPE_AUTOMA_AUCTION){
+            title = _('Auction card');
+            let details = '<ol>';
+            let tile_priority = cardMaterial.tile_priority;
+            Object.values(tile_priority).forEach((play_type)=> {
+                let tile_name = '';
+                if(Array.isArray(play_type)){
+                    Object.values(play_type).forEach((play_type2)=> {
+                        if(tile_name != '') tile_name += ', ';
+                        tile_name += this.formatMarketTilePlayTypeName(play_type2);
+                    });
+                }
+                else {
+                    tile_name = this.formatMarketTilePlayTypeName(play_type);
+                }
+                details += `<li>${tile_name}</li>`;
+            });
+            details += '</ol>';
+            textAction = this.bga.gameui.format_string( 
+                _("When it is Lakshmi's turn to place an Auction Token, the Tile Priority determines which type of tile Lakshmi attempts to target first : ${details}"),
+                {'details': details}
+            );
+            let directionName = _('CLOCKWISE');
+            if(cardMaterial.direction == this.const.DIRECTION_COUNTER_CLOCKWISE) directionName = _('COUNTER-CLOCKWISE');
+            let startName = '';
+            switch(cardMaterial.start){
+                case this.const.START_TOP_LEFT: startName = _('TOP LEFT'); break;
+                case this.const.START_TOP_RIGHT: startName = _('TOP RIGHT'); break;
+                case this.const.START_BOTTOM_RIGHT: startName = _('BOTTOM RIGHT'); break;
+                case this.const.START_BOTTOM_LEFT: startName = _('BOTTOM LEFT'); break;
+            }
+            textAction += this.bga.gameui.format_string(  _("Starting from the location indicated on the card (${start}), follow the specified direction ${directionName} until you reach a tile of the targeted type."),
+                {
+                    'start':'<b><u>'+_(startName)+'</u></b>', 
+                    'directionName': '<b><u>'+_(directionName)+'</u></b>'
+                });
+            textAction += ' <i>' + this.bga.gameui.format_string(  _("If no valid placement is possible for that tile type, proceed to the next tile type in the listed order and repeat until a valid placement is found."),
+                {
+                }) + '</i>';
+
+            let icon_money = this.formatIcon('money');
+            textLine1 = this.bga.gameui.format_string( 
+                _("When it is Lakshmi's turn to bid on an Auction Token, she uses the money value shown on the bottom of the card ${n} ${icon_money} + she draws another money card from her deck : the combined value is her bid."),
+                {'n': '<b><u>'+cardMaterial.auction_money+'</u></b>', 'icon_money': icon_money}
+            );
+            "Lakshmi uses: The Pardau value shown on her Auction Card"    
+        }
         let div = this.tplCard(cardDatas,'_tmp'); 
-        return [`<div class='goa_card_tooltip'>
+        return [`<div class='goa_card_tooltip' data-subtype='${cardDatas.subtype}'>
                 <div class="goa_tooltip_block1">
                     <span class="goa_card_title">${title}</span>
                 </div>
@@ -3614,6 +3671,37 @@ export class Game {
             <div class='goa_ExplorationCardsHelp goa_expandablecontent goa_expand_on'>
                 ${textSymbols}
                 <hr>
+                ${list1}
+            </div>
+        </div>
+        `;
+    }
+    
+    formatSoloCardsHelp(){
+        let list1 = "";
+        let j = 0;
+        //AUCTION CARDS
+        Object.entries(this.gamedatas.material.cards[this.const.CARD_SUBTTYPE_AUTOMA_AUCTION])
+        .forEach(([type,card_type]) => {
+            let resourceDatas = card_type;
+            resourceDatas.id = 0;
+            resourceDatas.state = 0;
+            resourceDatas.type = parseInt(type);
+            resourceDatas.subtype = this.const.CARD_SUBTTYPE_AUTOMA_AUCTION;
+            if(j>0){
+                list1 = list1.concat('<hr>');
+            }
+            list1 = list1.concat( this.getCardTooltip(resourceDatas));
+            j++; 
+        });
+        return `
+        <div class="expandable">
+            <div id="goa_AutomaAuctionCardsHelp_toggle" class="expandabletoggle expandablearrow" onclick="gameui.GameModule.onToggleExpandable(this)">
+                <div class="icon20 icon20_expand"></div>
+                <h1 class='goa_AutomaAuctionCardsHelp_title'>${ this.bga.gameui.format_string( _("Solo Auction Cards (${n})"), {n:j} ) }</h1>
+                <div class="goa_expand_ellipsis">...</div>
+            </div>
+            <div class='goa_AutomaAuctionCardsHelp goa_expandablecontent goa_expand_on'>
                 ${list1}
             </div>
         </div>
