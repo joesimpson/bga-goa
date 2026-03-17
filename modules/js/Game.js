@@ -523,6 +523,9 @@ export class Game {
             if('icon_action' in args){
                 args.icon_action = this.formatIcon('nbActions');
             }
+            if('rank_icon' in args){
+                args.rank_icon = this.formatIcon('score_rank');
+            }
             
         }
       } catch (e) {
@@ -1266,7 +1269,7 @@ export class Game {
             playersTotal +=`<td>${this.tplResourceCounter(player,'scoringRecap_total')}</td>`;
             playersTotalCard +=`<td>${this.tplFinalScoringSoloCard(player.id, player.score)}</td>`;
         });
-        let html = `<table id="goa_end_score_recap_table">
+        let html = `<table id="goa_end_score_recap_table" class="whiteblock">
                 <thead>
                     <th>${_('Score')} <div class='goa_icon_score'></div></th>
                     ${playersNames}

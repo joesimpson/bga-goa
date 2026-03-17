@@ -47,7 +47,6 @@ Icon extract in sprite with differents layers size (so % is not useful).
 }
 #goa_end_score_recap table {
   position: relative;
-  background-color: #ebd5bd;
   color: black;
   border-radius: 10px;
   overflow: hidden;
@@ -65,7 +64,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
   display: inline-block;
 }
 #goa_end_score_recap table thead {
-  background-color: #f3e5a9;
+  background-color: #b16325;
 }
 #goa_end_score_recap table thead th {
   padding: 0 5px;
@@ -1387,6 +1386,17 @@ body.notouch-device .goa_tile:hover .goa_token:not(.selectable) {
   background-position-x: -536.5px;
   background-position-y: -117.5px;
   background-size: 1008.4033613445% 366.6666666667%;
+}
+
+.goa_icon_score_rank {
+  position: relative;
+  width: 25px;
+  height: 25px;
+  background-image: url("img/expansions/solo_cards.jpg");
+  background-position-x: -908.3333333333px;
+  background-position-y: -1878.3333333333px;
+  background-size: 8444.4444444444% 7706.6666666667%;
+  border-radius: 50%;
 }
 
 /**

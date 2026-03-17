@@ -195,3 +195,10 @@ $symbol_tiny_height: 25px;
         }
         
     }
+
+.goa_icon_score_rank{
+    position: relative;
+    //take extract of "Scoring card" back image 
+    @include goa_extract_in_solo_cards(1635px,3381px,25px,25px,45px,45px);
+    border-radius: 50%;
+}    
