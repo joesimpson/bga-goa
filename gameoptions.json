@@ -3,55 +3,39 @@
     "110": {
         "name": "Automa",
         "values": {
-            "0": {
-                "name": "Disabled"
-            }
-            ,
             "1": {
                 "name": "Level I",
                 "tmdisplay": "Level I",
-                "alpha": true,
-                "description": "In Solo Mode, you face a virtual opponent: Lakshmi, a clever merchant competing with you for dominance in the spice trade. Expand Depots, establish Outposts, and build your fortune while adapting to her relentless pressure."
+                "description": "You face a virtual opponent: Lakshmi, a clever merchant competing with you for dominance in the spice trade. Expand Depots, establish Outposts, and build your fortune while adapting to her relentless pressure."
             }
             ,
             "2": {
                 "name": "Level II",
                 "tmdisplay": "Level II",
-                "alpha": true,
                 "nobeginner": true,
-                "description": "In Solo Mode, you face a virtual opponent: Lakshmi, a clever merchant competing with you for dominance in the spice trade. Expand Depots, establish Outposts, and build your fortune while adapting to her relentless pressure."
+                "description": "You face a virtual opponent: Lakshmi, a clever merchant competing with you for dominance in the spice trade. Expand Depots, establish Outposts, and build your fortune while adapting to her relentless pressure."
             }
             ,
             "3": {
                 "name": "Level III",
                 "tmdisplay": "Level III",
-                "alpha": true,
                 "nobeginner": true,
-                "description": "In Solo Mode, you face a virtual opponent: Lakshmi, a clever merchant competing with you for dominance in the spice trade. Expand Depots, establish Outposts, and build your fortune while adapting to her relentless pressure."
+                "description": "You face a virtual opponent: Lakshmi, a clever merchant competing with you for dominance in the spice trade. Expand Depots, establish Outposts, and build your fortune while adapting to her relentless pressure."
             }
             ,
             "10": {
                 "name": "Random Level",
                 "tmdisplay": "Random Level",
-                "alpha": true,
                 "nobeginner": true,
-                "description": "In Solo Mode, you face a virtual opponent: Lakshmi, a clever merchant competing with you for dominance in the spice trade. Expand Depots, establish Outposts, and build your fortune while adapting to her relentless pressure."
+                "description": "You face a virtual opponent: Lakshmi, a clever merchant competing with you for dominance in the spice trade. Expand Depots, establish Outposts, and build your fortune while adapting to her relentless pressure."
             }
         },
-        "default": 0,
+        "default": 1,
         "displaycondition": [
             {
                 "type": "maxplayers",
                 "value": 1
             }
         ]
-        ,"startcondition": {
-            "0": [
-                {
-                    "type": "minplayers",
-                    "value": 2
-                }
-            ]
-        }
     }
 }

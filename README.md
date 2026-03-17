@@ -152,6 +152,56 @@ Many options could be added in the future :
         },
         "default": 0
     }
+    ,"110": {
+        "name": "Automa",
+        "values": {
+            "0": {
+                "name": "Disabled"
+            }
+            ,
+            "1": {
+                "name": "Level I",
+                "tmdisplay": "Level I",
+                "description": "You face a virtual opponent: Lakshmi, a clever merchant competing with you for dominance in the spice trade. Expand Depots, establish Outposts, and build your fortune while adapting to her relentless pressure."
+            }
+            ,
+            "2": {
+                "name": "Level II",
+                "tmdisplay": "Level II",
+                "nobeginner": true,
+                "description": "You face a virtual opponent: Lakshmi, a clever merchant competing with you for dominance in the spice trade. Expand Depots, establish Outposts, and build your fortune while adapting to her relentless pressure."
+            }
+            ,
+            "3": {
+                "name": "Level III",
+                "tmdisplay": "Level III",
+                "nobeginner": true,
+                "description": "You face a virtual opponent: Lakshmi, a clever merchant competing with you for dominance in the spice trade. Expand Depots, establish Outposts, and build your fortune while adapting to her relentless pressure."
+            }
+            ,
+            "10": {
+                "name": "Random Level",
+                "tmdisplay": "Random Level",
+                "nobeginner": true,
+                "description": "You face a virtual opponent: Lakshmi, a clever merchant competing with you for dominance in the spice trade. Expand Depots, establish Outposts, and build your fortune while adapting to her relentless pressure."
+            }
+        },
+        "default": 0,
+        "displaycondition": [
+            {
+                "type": "maxplayers",
+                "value": 1
+            }
+        ]
+        ,"startcondition": {
+            "0": [
+                {
+                    "type": "minplayers",
+                    "value": 2
+                }
+            ]
+        }
+    }
 
     ,
     "111": {
