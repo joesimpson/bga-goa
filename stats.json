@@ -1,6 +1,11 @@
 {
     "table": {
 
+      "automaAuctionsWon": {
+        "id": 10,
+        "name": "Auctions won by automata",
+        "type": "int"
+      }
     },
     "player": {
       "score": {
