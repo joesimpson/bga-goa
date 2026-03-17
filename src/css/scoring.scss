@@ -9,7 +9,8 @@
 
     table{
         position: relative;
-        background-color: #ebd5bd;
+        //background-color: #ebd5bd;
+        //background replaced by whiteblock for easy dark theme (chrome)
         color: black;
         border-radius: 10px;
         //border-collapse: separate;
@@ -30,8 +31,7 @@
             } 
         }  
         thead{
-            //taken from river score track background
-            background-color: #f3e5a9;
+            background-color: #b16325;
             th{
                 //font-size: 30px;
                 padding: 0 5px;

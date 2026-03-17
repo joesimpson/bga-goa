@@ -184,7 +184,11 @@ class EndSession extends \Bga\GameFramework\States\GameState
             }
             $sessionScoringDatas[$pId][SCORING_TILES] = $pointsWithTiles;
         }
+
         
+        foreach($players as $pId => &$player){
+           Notifications::scoreRank($player);
+        }
         
         $endScoringDatas = Globals::getEndScoring();
         $endScoringDatas[$session] = $sessionScoringDatas;

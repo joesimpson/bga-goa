@@ -778,6 +778,33 @@ class Notifications
       'n' => $session,
     ]);
   }
+  public static function scoreRank(Player $player)
+  {
+    $score = $player->getScore();
+    $rank = 1;
+    if($score > 55){
+      $rank = 5;
+      $rank_name = clienttranslate("Rich");
+    } else if($score >= 46){
+      $rank = 4;
+      $rank_name = clienttranslate("Savvy");
+    } else if($score >= 36){
+      $rank = 3;
+      $rank_name = clienttranslate("Average");
+    } else if($score >= 25){
+      $rank = 2;
+      $rank_name = clienttranslate("Struggling");
+    } else {
+      $rank_name = clienttranslate("Poor");
+    }
+    self::notifyAll("scoreRank", clienttranslate('${player_name} merchant rank is ${n} ${rank_icon}: ${rank_name}'), [
+      'n' => $rank,
+      "player" => $player,
+      'rank_icon' => '',
+      'rank_name' => $rank_name,
+      'i18n' => ['rank_name'],
+    ]);
+  }
   /**
    * @param Player $player
    * @param int $points
