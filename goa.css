@@ -3509,6 +3509,7 @@ button .goa_tile {
   display: flex;
   flex-direction: column;
   font-size: 10px;
+  width: 100%;
 }
 .goa_panel .goa_first_player_container {
   /*
@@ -3518,6 +3519,10 @@ button .goa_tile {
   height: 35px;
   width: 30px;
   */
+}
+.goa_panel .goa_level_automa {
+  font-size: 1.25em;
+  text-align: center;
 }
 .goa_panel .goa_player_counters_line {
   display: flex;

@@ -3869,9 +3869,19 @@ export class Game {
         let automa_id = this.gamedatas.automa_id;
         let automa_panel = this.bga.playerPanels.getElement(automa_id);
         let automa_nbActions = this.gamedatas.automa_nbActions;
+        let effectiveAutomaLevel = '';
+        switch(this.gamedatas.automa_level){
+            case 1: effectiveAutomaLevel = _('Level I');    break;//OPTION_AUTOMA_DIFFICULTY_1
+            case 2: effectiveAutomaLevel = _('Level II');   break;//OPTION_AUTOMA_DIFFICULTY_2
+            case 3: effectiveAutomaLevel = _('Level III');  break;//OPTION_AUTOMA_DIFFICULTY_3
+            default:
+            case 0: effectiveAutomaLevel = '';              break;
+        }
+
         if(!automa_panel.querySelector('.goa_panel')){
             this.bga.playerPanels.getElement(automa_id).insertAdjacentHTML('beforeend', `
                 <div class='goa_panel' id ='goa_panel-${automa_id}'>
+                    <div class='goa_level_automa'>${effectiveAutomaLevel}</div>
                     <div class='goa_player_counters_line goa_player_counters_lastline'>
                         ${this.tplResourceCounter({'id':automa_id},'nbActions',_('Round Actions'))}
                         <div id="goa_first_player_container_${automa_id}" class="goa_first_player_container" alt="${_('Nazar Stone (Starting player)')}" title="${_('Nazar Stone (Starting player)')}"></div>
