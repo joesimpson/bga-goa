@@ -251,6 +251,14 @@ body.notouch-device{
     .goa_card_symbols{
         font-size: 0.75em;
     }
+    &[data-subtype="5"]{//CARD_SUBTTYPE_AUTOMA_AUCTION
+        .goa_card_text_action{
+            font-size: 0.8em;
+        }
+        .goa_card_text_line1{
+            font-size: 0.7em;
+        }
+    }
 }
 .goa_card_tooltip hr {
     color: black !important;
@@ -280,7 +288,7 @@ body.notouch-device{
         text-align: center;
     }
     .goa_card_text{
-        width: 348px;
+        width: 345px;
         order: 2;
     }
     .goa_card_symbols{
@@ -288,5 +296,34 @@ body.notouch-device{
             //no need to display 30 times
             display: none;
         }
+    }
+}
+.goa_AutomaAuctionCardsHelp {
+    border: 1px solid;
+    width: max-content;
+    
+    .goa_card_title{
+        font-size: 1.5em;
+    }
+    .goa_card_text_action{
+        font-size: 0.8em;
+    }
+    .goa_card_text_line1{
+        font-size: 0.7em;
+    }
+    .goa_card_img_wrap{
+        order: 1;
+        margin-right: 2px;
+    }
+    .goa_tooltip_block2 {
+        flex-direction: row;
+        width: max-content;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+    .goa_card_text{
+        width: 345px;
+        order: 2;
     }
 }

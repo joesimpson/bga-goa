@@ -47,15 +47,15 @@ enum MarketPlayType: int
 
 enum AutomaAuctionStartType: int
 {
-    case TOP_LEFT       = 1;
-    case TOP_RIGHT      = 2;
-    case BOTTOM_RIGHT   = 3;
-    case BOTTOM_LEFT    = 4;
+    case TOP_LEFT       = START_TOP_LEFT    ;
+    case TOP_RIGHT      = START_TOP_RIGHT   ;
+    case BOTTOM_RIGHT   = START_BOTTOM_RIGHT;
+    case BOTTOM_LEFT    = START_BOTTOM_LEFT ;
 }
 enum AutomaAuctionDirectionType: int
 {
-    case CLOCKWISE          = 1;
-    case COUNTER_LOCKWISE   = 2;
+    case CLOCKWISE          = DIRECTION_CLOCKWISE;
+    case COUNTER_CLOCKWISE   = DIRECTION_COUNTER_CLOCKWISE;
 }
 
 enum AutomaActionType: int
