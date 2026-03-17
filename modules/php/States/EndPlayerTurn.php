@@ -82,6 +82,7 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
                             $moneyCard = MoneyCards::bankAutomaAuction($auctionToken->getType());
                             
                             Notifications::winsAuctionWithCard($currentAuctioneer, $highBid, $moneyCard);
+                            Stats::inc( "automaAuctionsWon");
                         } else {
                             if($highBid>0){
                                 Players::giveMoney($currentAuctioneer, - $highBid, false);
@@ -98,6 +99,7 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
                             //AUTOMATA PAYS the player with a card
                             $highBidPlayer = Players::automaPlayer();
                             MoneyCards::automaGiveToPlayer($auctionToken->getType(), $highBidPlayer, $currentAuctioneer);
+                            Stats::inc( "automaAuctionsWon");
                         } else if($currentAuctioneerId == AUTOMA_PLAYER_ID){
                             //AUTOMA REceives Player Money card
                             Players::giveMoney($highBidPlayer, - $highBid , false);
