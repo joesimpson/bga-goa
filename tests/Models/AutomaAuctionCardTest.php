@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Models;
 
-use Bga\GameFramework\Bga;
 use Bga\GameFramework\GameMock;
-use Bga\GameFramework\GamestateMachineMock;
-use Bga\GameFramework\Notify;
 use Bga\Games\Goa\Helpers\Collection;
 use Bga\Games\Goa\Helpers\GridUtils;
 use Bga\Games\Goa\Managers\AutomaCards;
@@ -31,7 +28,7 @@ final class AutomaAuctionCardTest extends TestCase
         $boardTiles = new Collection();
             
         $addTile = function ($id,$type, $row, $col,) use (&$boardTiles) {
-            $boardTiles[$id] = new MarketTile(['tile_id'=>$id, 'tile_row'=> $row, 'tile_col'=> $col],Tiles::getMarketTilesTypes()[$type]);
+            $boardTiles[$id] = new MarketTile(['tile_id'=>$id, 'tile_row'=> $row, 'tile_col'=> $col,'row'=> $row, 'col'=> $col],Tiles::getMarketTilesTypes()[$type]);
         };
         // Real use case taken from DB
         // SELECT tile_id,type, tile_row, tile_col FROM `tiles` where tile_location='market' ORDER BY `tiles`.`tile_row` ASC, `tile_col` ASC;
@@ -83,7 +80,7 @@ final class AutomaAuctionCardTest extends TestCase
         $boardTiles = $this->prepareBoardTiles();
         $allAuctionableSpots = GridUtils::listPossibleSpotsForNextAuctionMarker($token, $boardTiles);
         $card = new AutomaAuctionCard([],AutomaCards::getAutomaAuctionCardsTypes()[2]);
-        $expectedSpot = ['row'=> 5, 'col'=>3];//teal tile on market bottom
+        $expectedSpot = ['row'=> 6, 'col'=>3];//teal tile on market bottom
         
         $result = $card->findAuctionSpotByPriority($auctionType,$boardTiles, $allAuctionableSpots);
 
@@ -99,7 +96,7 @@ final class AutomaAuctionCardTest extends TestCase
         $boardTiles = $this->prepareBoardTiles();
         $allAuctionableSpots = GridUtils::listPossibleSpotsForNextAuctionMarker($token, $boardTiles);
         $card = new AutomaAuctionCard([],AutomaCards::getAutomaAuctionCardsTypes()[3]);
-        $expectedSpot = ['row'=> 5, 'col'=>5];
+        $expectedSpot = ['row'=> 6, 'col'=>5];
         
         $result = $card->findAuctionSpotByPriority($auctionType,$boardTiles, $allAuctionableSpots);
 
@@ -115,7 +112,7 @@ final class AutomaAuctionCardTest extends TestCase
         $boardTiles = $this->prepareBoardTiles();
         $allAuctionableSpots = GridUtils::listPossibleSpotsForNextAuctionMarker($token, $boardTiles);
         $card = new AutomaAuctionCard([],AutomaCards::getAutomaAuctionCardsTypes()[4]);
-        $expectedSpot = ['row'=> 5, 'col'=>1];
+        $expectedSpot = ['row'=> 5, 'col'=>0];
         
         $result = $card->findAuctionSpotByPriority($auctionType,$boardTiles, $allAuctionableSpots);
 
@@ -131,7 +128,7 @@ final class AutomaAuctionCardTest extends TestCase
         $boardTiles = $this->prepareBoardTiles();
         $allAuctionableSpots = GridUtils::listPossibleSpotsForNextAuctionMarker($token, $boardTiles);
         $card = new AutomaAuctionCard([],AutomaCards::getAutomaAuctionCardsTypes()[5]);
-        $expectedSpot = ['row'=> 2, 'col'=>1];
+        $expectedSpot = ['row'=> 2, 'col'=>0];
         
         $result = $card->findAuctionSpotByPriority($auctionType,$boardTiles, $allAuctionableSpots);
 
@@ -154,8 +151,8 @@ final class AutomaAuctionCardTest extends TestCase
         self::assertSame( $expectedSpot, $result, );
         
         //Test 2 without the scoring tile
-        $boardTiles[1]->setType(2);
-        $expectedSpot = ['row'=> 5, 'col'=>3];
+        unset($boardTiles[1]);
+        $expectedSpot = ['row'=> 3, 'col'=>0];
         $result = $card->findAuctionSpotByPriority($auctionType,$boardTiles, $allAuctionableSpots);
         self::assertSame( $expectedSpot, $result, );
 
@@ -169,7 +166,7 @@ final class AutomaAuctionCardTest extends TestCase
         $boardTiles = $this->prepareBoardTiles();
         $allAuctionableSpots = GridUtils::listPossibleSpotsForNextAuctionMarker($token, $boardTiles);
         $card = new AutomaAuctionCard([],AutomaCards::getAutomaAuctionCardsTypes()[7]);
-        $expectedSpot = ['row'=> 5, 'col'=>2];
+        $expectedSpot = ['row'=> 6, 'col'=>2];
         
         $result = $card->findAuctionSpotByPriority($auctionType,$boardTiles, $allAuctionableSpots);
         self::assertSame( $expectedSpot, $result, );
@@ -182,15 +179,66 @@ final class AutomaAuctionCardTest extends TestCase
         $token = new AuctionMarker(['type'=>$auctionType],[]);
         $boardTiles = $this->prepareBoardTiles();
         $allAuctionableSpots = GridUtils::listPossibleSpotsForNextAuctionMarker($token, $boardTiles);
-        $card = new AutomaAuctionCard([],AutomaCards::getAutomaAuctionCardsTypes()[8]);
+        $cardType = 8;
+        $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
         $expectedSpot = ['row'=> 0, 'col'=>4];
         
         $result = $card->findAuctionSpotByPriority($auctionType,$boardTiles, $allAuctionableSpots);
         self::assertSame( $expectedSpot, $result, );
 
         //Test 2 without the scoring tile
-        $boardTiles[1]->setType(2);
-        $expectedSpot = ['row'=> 5, 'col'=>3];
+        logForTests(__CLASS__.".".__FUNCTION__);
+        unset($boardTiles[1]);
+        $allAuctionableSpots = GridUtils::listPossibleSpotsForNextAuctionMarker($token, $boardTiles);
+        $expectedSpot = ['row'=> 3, 'col'=>0];
+        $result = $card->findAuctionSpotByPriority($auctionType,$boardTiles, $allAuctionableSpots);
+        self::assertSame( $expectedSpot, $result, );
+        
+        //Test 3 without the teal tile 5
+        logForTests(__CLASS__.".".__FUNCTION__);
+        unset($boardTiles[5]);
+        $allAuctionableSpots = GridUtils::listPossibleSpotsForNextAuctionMarker($token, $boardTiles);
+        $expectedSpot = ['row'=> 4, 'col'=>0];
+        $result = $card->findAuctionSpotByPriority($auctionType,$boardTiles, $allAuctionableSpots);
+        self::assertSame( $expectedSpot, $result, );
+        
+        //Test 4 without the teal tile 10, now we can reach Blue tile
+        logForTests(__CLASS__.".".__FUNCTION__);
+        unset($boardTiles[10]);
+        $allAuctionableSpots = GridUtils::listPossibleSpotsForNextAuctionMarker($token, $boardTiles);
+        $expectedSpot = ['row'=> 4, 'col'=>1];
+        $result = $card->findAuctionSpotByPriority($auctionType,$boardTiles, $allAuctionableSpots);
+        self::assertSame( $expectedSpot, $result, );
+        
+        //Test 5 without the blue tile 11
+        logForTests(__CLASS__.".".__FUNCTION__);
+        unset($boardTiles[11]);
+        $allAuctionableSpots = GridUtils::listPossibleSpotsForNextAuctionMarker($token, $boardTiles);
+        $expectedSpot = ['row'=> 5, 'col'=>0];
+        $result = $card->findAuctionSpotByPriority($auctionType,$boardTiles, $allAuctionableSpots);
+        self::assertSame( $expectedSpot, $result, );
+        
+        //Test 6 without the teal tile 15
+        logForTests(__CLASS__.".".__FUNCTION__);
+        unset($boardTiles[15]);
+        $allAuctionableSpots = GridUtils::listPossibleSpotsForNextAuctionMarker($token, $boardTiles);
+        $expectedSpot = ['row'=> 6, 'col'=>3];
+        $result = $card->findAuctionSpotByPriority($auctionType,$boardTiles, $allAuctionableSpots);
+        self::assertSame( $expectedSpot, $result, );
+        
+        //Test 7 without the teal tile 17
+        logForTests(__CLASS__.".".__FUNCTION__);
+        unset($boardTiles[17]);
+        $allAuctionableSpots = GridUtils::listPossibleSpotsForNextAuctionMarker($token, $boardTiles);
+        $expectedSpot = ['row'=> 2, 'col'=>5];
+        $result = $card->findAuctionSpotByPriority($auctionType,$boardTiles, $allAuctionableSpots);
+        self::assertSame( $expectedSpot, $result, );
+        
+        //Test 8 without the last teal tile, we can use depot
+        logForTests(__CLASS__.".".__FUNCTION__);
+        unset($boardTiles[4]);
+        $allAuctionableSpots = GridUtils::listPossibleSpotsForNextAuctionMarker($token, $boardTiles);
+        $expectedSpot = ['row'=> 2, 'col'=>0];
         $result = $card->findAuctionSpotByPriority($auctionType,$boardTiles, $allAuctionableSpots);
         self::assertSame( $expectedSpot, $result, );
     }
