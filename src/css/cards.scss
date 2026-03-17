@@ -245,6 +245,15 @@ body.notouch-device{
             height: 229px;
         } 
     }
+    
+    .goa_card_text{
+        .goa_card {//If a card is refered in another card tooltip (ex : money_card)
+            width: calc( 0.35 * var(--goa_automa_card_with) );
+            height: calc( 0.35 * var(--goa_automa_card_height) );
+            display: inline-block;
+            vertical-align: middle;
+        }
+    }
     .goa_card_text_action{
         font-size: 1.1em;
     } 
@@ -298,18 +307,13 @@ body.notouch-device{
         }
     }
 }
-.goa_AutomaAuctionCardsHelp {
+.goa_AutomaAuctionCardsHelp,
+.goa_AutomaActionCardsHelp {
     border: 1px solid;
     width: max-content;
     
     .goa_card_title{
         font-size: 1.5em;
-    }
-    .goa_card_text_action{
-        font-size: 0.8em;
-    }
-    .goa_card_text_line1{
-        font-size: 0.7em;
     }
     .goa_card_img_wrap{
         order: 1;
@@ -325,5 +329,13 @@ body.notouch-device{
     .goa_card_text{
         width: 345px;
         order: 2;
+    }
+}
+.goa_AutomaAuctionCardsHelp {
+    .goa_card_text_action{
+        font-size: 0.8em;
+    }
+    .goa_card_text_line1{
+        font-size: 0.7em;
     }
 }

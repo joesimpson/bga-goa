@@ -1926,6 +1926,12 @@ body.notouch-device .goa_exploration_card-front.bga-cards_selectable-card:hover,
   width: 150px;
   height: 229px;
 }
+.goa_card_tooltip .goa_card_text .goa_card {
+  width: calc(0.35 * var(--goa_automa_card_with));
+  height: calc(0.35 * var(--goa_automa_card_height));
+  display: inline-block;
+  vertical-align: middle;
+}
 .goa_card_tooltip .goa_card_text_action {
   font-size: 1.1em;
 }
@@ -1977,25 +1983,23 @@ body.notouch-device .goa_exploration_card-front.bga-cards_selectable-card:hover,
   display: none;
 }
 
-.goa_AutomaAuctionCardsHelp {
+.goa_AutomaAuctionCardsHelp,
+.goa_AutomaActionCardsHelp {
   border: 1px solid;
   width: -moz-max-content;
   width: max-content;
 }
-.goa_AutomaAuctionCardsHelp .goa_card_title {
+.goa_AutomaAuctionCardsHelp .goa_card_title,
+.goa_AutomaActionCardsHelp .goa_card_title {
   font-size: 1.5em;
 }
-.goa_AutomaAuctionCardsHelp .goa_card_text_action {
-  font-size: 0.8em;
-}
-.goa_AutomaAuctionCardsHelp .goa_card_text_line1 {
-  font-size: 0.7em;
-}
-.goa_AutomaAuctionCardsHelp .goa_card_img_wrap {
+.goa_AutomaAuctionCardsHelp .goa_card_img_wrap,
+.goa_AutomaActionCardsHelp .goa_card_img_wrap {
   order: 1;
   margin-right: 2px;
 }
-.goa_AutomaAuctionCardsHelp .goa_tooltip_block2 {
+.goa_AutomaAuctionCardsHelp .goa_tooltip_block2,
+.goa_AutomaActionCardsHelp .goa_tooltip_block2 {
   flex-direction: row;
   width: -moz-max-content;
   width: max-content;
@@ -2003,9 +2007,17 @@ body.notouch-device .goa_exploration_card-front.bga-cards_selectable-card:hover,
   align-items: center;
   text-align: center;
 }
-.goa_AutomaAuctionCardsHelp .goa_card_text {
+.goa_AutomaAuctionCardsHelp .goa_card_text,
+.goa_AutomaActionCardsHelp .goa_card_text {
   width: 345px;
   order: 2;
+}
+
+.goa_AutomaAuctionCardsHelp .goa_card_text_action {
+  font-size: 0.8em;
+}
+.goa_AutomaAuctionCardsHelp .goa_card_text_line1 {
+  font-size: 0.7em;
 }
 
 /**

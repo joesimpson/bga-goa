@@ -3541,6 +3541,21 @@ export class Game {
             );
             "Lakshmi uses: The Pardau value shown on her Auction Card"    
         }
+        else if(cardDatas.subtype == this.const.CARD_SUBTTYPE_AUTOMA_ACTION){
+            title = _('Action card');
+            let nazarStone = this.formatIcon('nazar_stone',_('Nazar Stone (Starting player)'));
+            textAction = this.bga.gameui.format_string(  _("If Lakshmi doesn't hold the ${token_icon} : ${effect}"),
+                {
+                    'token_icon': nazarStone,
+                    'effect': this.formatAutomaActionCardText(cardMaterial.not_first),
+                });
+            textLine1 = this.bga.gameui.format_string(  _("If Lakshmi currently holds the ${token_icon} : ${effect}"),
+                {
+                    'token_icon': nazarStone,
+                    'effect': this.formatAutomaActionCardText(cardMaterial.when_first),
+                });
+
+        }
         let div = this.tplCard(cardDatas,'_tmp'); 
         return [`<div class='goa_card_tooltip' data-subtype='${cardDatas.subtype}'>
                 <div class="goa_tooltip_block1">
@@ -3632,6 +3647,52 @@ export class Game {
         return '';
     }
     
+    formatAutomaActionCardText(automaActionType){
+        let effect = '';
+        let moneyCardValue = 1;
+        let moneyCard = '';
+        switch(automaActionType){
+            case this.const.AUTOMA_ACTION_GAIN_MONEY_1: 
+                moneyCardValue = 1;
+                moneyCard = this.tplCard({'id':'tooltip_money', 'value': moneyCardValue, 'subtype': this.const.CARD_SUBTTYPE_MONEY});
+                effect = this.bga.gameui.format_string(  _("place a ${card} on Lakshmi's Pardau Discard Pile"),{'card': moneyCard} ); 
+                break;
+            case this.const.AUTOMA_ACTION_GAIN_MONEY_2: 
+                moneyCardValue = 2;
+                moneyCard = this.tplCard({'id':'tooltip_money', 'value': moneyCardValue, 'subtype': this.const.CARD_SUBTTYPE_MONEY});
+                effect = this.bga.gameui.format_string(  _("place a ${card} on Lakshmi's Pardau Discard Pile"),{'card': moneyCard} ); 
+                break;
+            case this.const.AUTOMA_ACTION_GAIN_MONEY_5: 
+                moneyCardValue = 5;
+                moneyCard = this.tplCard({'id':'tooltip_money', 'value': moneyCardValue, 'subtype': this.const.CARD_SUBTTYPE_MONEY});
+                effect = this.bga.gameui.format_string(  _("place a ${card} on Lakshmi's Pardau Discard Pile"),{'card': moneyCard} ); 
+                break;
+            case this.const.AUTOMA_ACTION_GAIN_MONEY_10: 
+                moneyCardValue = 10;
+                moneyCard = this.tplCard({'id':'tooltip_money', 'value': moneyCardValue, 'subtype': this.const.CARD_SUBTTYPE_MONEY});
+                effect = this.bga.gameui.format_string(  _("place a ${card} on Lakshmi's Pardau Discard Pile"),{'card': moneyCard} ); 
+                break;
+            case this.const.AUTOMA_ACTION_NOGAIN_MONEY_2: 
+                moneyCardValue = 2;
+                moneyCard = this.tplCard({'id':'tooltip_money', 'value': moneyCardValue, 'subtype': this.const.CARD_SUBTTYPE_MONEY});
+                effect = this.bga.gameui.format_string(  _("she doesn't get the card ${card}"),{'card': moneyCard} ); 
+                break;
+            case this.const.AUTOMA_ACTION_NOGAIN_MONEY_5: 
+                moneyCardValue = 5;
+                moneyCard = this.tplCard({'id':'tooltip_money', 'value': moneyCardValue, 'subtype': this.const.CARD_SUBTTYPE_MONEY});
+                effect = this.bga.gameui.format_string(  _("she doesn't get the card ${card}"),{'card': moneyCard} ); 
+                break;
+                
+            case this.const.AUTOMA_ACTION_DISCARD_2_KOLLAM: 
+                effect = this.bga.gameui.format_string(  _("discard ${n} random ${name} Outposts"),{'n': 2, 'name': this.getColonyName(this.const.COLONY_KOLLAM)} ); 
+                break;
+            case this.const.AUTOMA_ACTION_DISCARD_2_MADRAS: 
+                effect = this.bga.gameui.format_string(  _("discard ${n} random ${name} Outposts"),{'n': 2, 'name': this.getColonyName(this.const.COLONY_MADRAS)} ); 
+                break;
+        }
+        return effect;
+    }
+
     formatCardsHelp(){
         let list1 = "";
         let j = 0;
@@ -3678,6 +3739,8 @@ export class Game {
     }
     
     formatSoloCardsHelp(){
+        if(! this.gamedatas.automa_id) return '';
+
         let list1 = "";
         let j = 0;
         //AUCTION CARDS
@@ -3694,6 +3757,22 @@ export class Game {
             list1 = list1.concat( this.getCardTooltip(resourceDatas));
             j++; 
         });
+        let list2 = "";
+        let k = 0;
+        //ACTION CARDS
+        Object.entries(this.gamedatas.material.cards[this.const.CARD_SUBTTYPE_AUTOMA_ACTION])
+        .forEach(([type,card_type]) => {
+            let resourceDatas = card_type;
+            resourceDatas.id = 0;
+            resourceDatas.state = 0;
+            resourceDatas.type = parseInt(type);
+            resourceDatas.subtype = this.const.CARD_SUBTTYPE_AUTOMA_ACTION;
+            if(k>0){
+                list2 = list2.concat('<hr>');
+            }
+            list2 = list2.concat( this.getCardTooltip(resourceDatas));
+            k++; 
+        });
         return `
         <div class="expandable">
             <div id="goa_AutomaAuctionCardsHelp_toggle" class="expandabletoggle expandablearrow" onclick="gameui.GameModule.onToggleExpandable(this)">
@@ -3703,6 +3782,16 @@ export class Game {
             </div>
             <div class='goa_AutomaAuctionCardsHelp goa_expandablecontent goa_expand_on'>
                 ${list1}
+            </div>
+        </div>
+        <div class="expandable">
+            <div id="goa_AutomaActionCardsHelp_toggle" class="expandabletoggle expandablearrow" onclick="gameui.GameModule.onToggleExpandable(this)">
+                <div class="icon20 icon20_expand"></div>
+                <h1 class='goa_AutomaActionCardsHelp_title'>${ this.bga.gameui.format_string( _("Solo Action Cards (${n})"), {n:k} ) }</h1>
+                <div class="goa_expand_ellipsis">...</div>
+            </div>
+            <div class='goa_AutomaActionCardsHelp goa_expandablecontent goa_expand_on'>
+                ${list2}
             </div>
         </div>
         `;

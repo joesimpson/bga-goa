@@ -60,17 +60,15 @@ enum AutomaAuctionDirectionType: int
 
 enum AutomaActionType: int
 {
-    case GAIN_MONEY_1          = 1;
-    case GAIN_MONEY_2          = 2;
-    case GAIN_MONEY_5          = 3;
-    case GAIN_MONEY_10         = 4;
-
-    case NOGAIN_MONEY_2        = 6;
-    case NOGAIN_MONEY_5        = 7;
-    case NOGAIN_MONEY_10       = 8;
-
-    case DISCARD_2_KOLLAM      = 9;
-    case DISCARD_2_MADRAS      = 10;
+    case GAIN_MONEY_1          = AUTOMA_ACTION_GAIN_MONEY_1    ;
+    case GAIN_MONEY_2          = AUTOMA_ACTION_GAIN_MONEY_2    ;
+    case GAIN_MONEY_5          = AUTOMA_ACTION_GAIN_MONEY_5    ;
+    case GAIN_MONEY_10         = AUTOMA_ACTION_GAIN_MONEY_10   ;
+    case NOGAIN_MONEY_2        = AUTOMA_ACTION_NOGAIN_MONEY_2  ;
+    case NOGAIN_MONEY_5        = AUTOMA_ACTION_NOGAIN_MONEY_5  ;
+    case NOGAIN_MONEY_10       = AUTOMA_ACTION_NOGAIN_MONEY_10 ;
+    case DISCARD_2_KOLLAM      = AUTOMA_ACTION_DISCARD_2_KOLLAM;
+    case DISCARD_2_MADRAS      = AUTOMA_ACTION_DISCARD_2_MADRAS;
 
 }
 
