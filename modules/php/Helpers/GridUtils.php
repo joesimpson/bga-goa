@@ -146,9 +146,10 @@ abstract class GridUtils
      */
     public static function rotateClockwise(array $baseSpots): array
     {
+        $size = count($baseSpots) / 4;
         return array_merge(
-            array_slice($baseSpots,MARKET_GRID_SIZE,MARKET_GRID_SIZE*3 ),
-            array_slice($baseSpots,0,MARKET_GRID_SIZE )
+            array_slice($baseSpots, $size, $size*3 ),
+            array_slice($baseSpots,0, $size )
         );
     }
     
@@ -157,6 +158,133 @@ abstract class GridUtils
         return ['row' => 3, 'col'=>3];
     }
     
+    /**
+     * First row/col we encounter on the grid
+     */
+    public static function listOrderedSpotsExterior_TopLeft_ClockWise(): array
+    {
+        $spots = [];
+        //Edges of the grid :
+        for($col=1;$col<=MARKET_GRID_SIZE;$col++){
+            $row = 1;
+            $spots[] = ['row'=>$row,'col'=>$col];
+        }
+        for($row=1;$row<=MARKET_GRID_SIZE;$row++){
+            $col = MARKET_GRID_SIZE;
+            $spots[] = ['row'=>$row,'col'=>$col];
+        }
+        for($col=MARKET_GRID_SIZE;$col>=1;$col--){
+            $row = MARKET_GRID_SIZE;
+            $spots[] = ['row'=>$row,'col'=>$col];
+        }
+        for($row=MARKET_GRID_SIZE;$row>=1;$row--){
+            $col = 1;
+            $spots[] = ['row'=>$row,'col'=>$col];
+        }
+        return $spots;
+    }
+    public static function listOrderedSpotsExterior_TopRight_Clockwise(): array
+    {
+        $baseSpots = GridUtils::listOrderedSpotsExterior_TopLeft_Clockwise();
+        return GridUtils::rotateClockwise($baseSpots);
+    }
+    public static function listOrderedSpotsExterior_BottomRight_Clockwise(): array
+    {
+        $baseSpots = GridUtils::listOrderedSpotsExterior_TopRight_Clockwise();
+        return GridUtils::rotateClockwise($baseSpots);
+    }
+    public static function listOrderedSpotsExterior_BottomLeft_Clockwise(): array
+    {
+        $baseSpots = GridUtils::listOrderedSpotsExterior_BottomRight_Clockwise();
+        return GridUtils::rotateClockwise($baseSpots);
+    }
+
+    public static function listOrderedSpotsExterior_TopLeft_CounterClockWise(): array
+    {
+        $baseSpots = GridUtils::listOrderedSpotsExterior_TopLeft_ClockWise();
+        $size = count($baseSpots);
+        return array_merge(
+            array_slice($baseSpots,0, 1 ),
+            array_reverse(array_slice($baseSpots, 1, $size )),
+        );
+    }
+    public static function listOrderedSpotsExterior_TopRight_CounterClockwise(): array
+    {
+        $baseSpots = GridUtils::listOrderedSpotsExterior_BottomRight_CounterClockwise();
+        return GridUtils::rotateClockwise($baseSpots);
+    }
+    public static function listOrderedSpotsExterior_BottomRight_CounterClockwise(): array
+    {
+        $baseSpots = GridUtils::listOrderedSpotsExterior_BottomLeft_CounterClockwise();
+        return GridUtils::rotateClockwise($baseSpots);
+    }
+    public static function listOrderedSpotsExterior_BottomLeft_CounterClockwise(): array
+    {
+        $baseSpots = GridUtils::listOrderedSpotsExterior_TopLeft_CounterClockWise();
+        return GridUtils::rotateClockwise($baseSpots);
+    }
+    
+    public static function listOrderedSpotsMiddle_TopLeft_Clockwise(): array
+    {
+        $spots = [];
+        for($col=1+1;$col<=MARKET_GRID_SIZE-1;$col++){
+            $row = 2;
+            $spots[] = ['row'=>$row,'col'=>$col];
+        }
+        for($row=1+2;$row<=MARKET_GRID_SIZE-1;$row++){
+            $col = MARKET_GRID_SIZE-1;
+            $spots[] = ['row'=>$row,'col'=>$col];
+        }
+        for($col=MARKET_GRID_SIZE-2;$col>=1+1;$col--){
+            $row = MARKET_GRID_SIZE-1;
+            $spots[] = ['row'=>$row,'col'=>$col];
+        }
+        for($row=MARKET_GRID_SIZE-2;$row>=1+2;$row--){
+            $col = 2;
+            $spots[] = ['row'=>$row,'col'=>$col];
+        }
+        return $spots;
+    }
+    
+    public static function listOrderedSpotsMiddle_TopRight_Clockwise(): array
+    {
+        $baseSpots = GridUtils::listOrderedSpotsMiddle_TopLeft_Clockwise();
+        return GridUtils::rotateClockwise($baseSpots);
+    }
+    public static function listOrderedSpotsMiddle_BottomRight_Clockwise(): array
+    {
+        $baseSpots = GridUtils::listOrderedSpotsMiddle_TopRight_Clockwise();
+        return GridUtils::rotateClockwise($baseSpots);
+    }
+    public static function listOrderedSpotsMiddle_BottomLeft_Clockwise(): array
+    {
+        $baseSpots = GridUtils::listOrderedSpotsMiddle_BottomRight_Clockwise();
+        return GridUtils::rotateClockwise($baseSpots);
+    }
+    public static function listOrderedSpotsMiddle_TopLeft_CounterClockWise(): array
+    {
+        $baseSpots = GridUtils::listOrderedSpotsMiddle_TopLeft_ClockWise();
+        $size = count($baseSpots);
+        return array_merge(
+            array_slice($baseSpots,0, 1 ),
+            array_reverse(array_slice($baseSpots, 1, $size )),
+        );
+    }
+    public static function listOrderedSpotsMiddle_TopRight_CounterClockwise(): array
+    {
+        $baseSpots = GridUtils::listOrderedSpotsMiddle_BottomRight_CounterClockwise();
+        return GridUtils::rotateClockwise($baseSpots);
+    }
+    public static function listOrderedSpotsMiddle_BottomRight_CounterClockwise(): array
+    {
+        $baseSpots = GridUtils::listOrderedSpotsMiddle_BottomLeft_CounterClockwise();
+        return GridUtils::rotateClockwise($baseSpots);
+    }
+    public static function listOrderedSpotsMiddle_BottomLeft_CounterClockwise(): array
+    {
+        $baseSpots = GridUtils::listOrderedSpotsMiddle_TopLeft_CounterClockWise();
+        return GridUtils::rotateClockwise($baseSpots);
+    }
     
     /**
      * @param bool $withDiag (default false) : specify true to also check diagonally

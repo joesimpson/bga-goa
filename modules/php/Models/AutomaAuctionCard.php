@@ -82,6 +82,8 @@ class AutomaAuctionCard extends Card
     
     public function sortAuctionSpotsFromStart(int $auctionType,array $pAuctionableSpots) :array
     {
+        $auctionableSpots = [];
+
         $startSpot = $this->getStart();
         $dir = $this->getDirection();
         $orderedSpots = GridUtils::listOrderedSpotsOnEdges_TopLeft_ClockWise();
@@ -91,14 +93,16 @@ class AutomaAuctionCard extends Card
                     case AutomaAuctionDirectionType::CLOCKWISE:
                         $orderedSpots = array_merge(
                             GridUtils::listOrderedSpotsOnEdges_TopLeft_ClockWise(),
-                            //TODO JSA ADD MIDDLE spots
+                            GridUtils::listOrderedSpotsExterior_TopLeft_ClockWise(),
+                            GridUtils::listOrderedSpotsMiddle_TopLeft_Clockwise(),
                             [GridUtils::center()],
                         );
                         break;
                     case AutomaAuctionDirectionType::COUNTER_CLOCKWISE:
                         $orderedSpots = array_merge(
                             GridUtils::listOrderedSpotsOnEdges_TopLeft_CounterClockWise(),
-                            //TODO JSA ADD MIDDLE spots
+                            GridUtils::listOrderedSpotsExterior_TopLeft_CounterClockWise(),
+                            GridUtils::listOrderedSpotsMiddle_TopLeft_CounterClockwise(),
                             [GridUtils::center()],
                         );
                         break;
@@ -109,14 +113,16 @@ class AutomaAuctionCard extends Card
                     case AutomaAuctionDirectionType::CLOCKWISE:
                         $orderedSpots = array_merge(
                             GridUtils::listOrderedSpotsOnEdges_TopRight_ClockWise(),
-                            //TODO JSA ADD MIDDLE spots
+                            GridUtils::listOrderedSpotsExterior_TopRight_Clockwise(),
+                            GridUtils::listOrderedSpotsMiddle_TopRight_Clockwise(),
                             [GridUtils::center()],
                         );
                         break;
                     case AutomaAuctionDirectionType::COUNTER_CLOCKWISE:
                         $orderedSpots = array_merge(
                             GridUtils::listOrderedSpotsOnEdges_TopRight_CounterClockwise(),
-                            //TODO JSA ADD MIDDLE spots
+                            GridUtils::listOrderedSpotsExterior_TopRight_CounterClockwise(),
+                            GridUtils::listOrderedSpotsMiddle_TopRight_CounterClockwise(),
                             [GridUtils::center()],
                         );
                         break;
@@ -127,14 +133,16 @@ class AutomaAuctionCard extends Card
                     case AutomaAuctionDirectionType::CLOCKWISE:
                         $orderedSpots = array_merge(
                             GridUtils::listOrderedSpotsOnEdges_BottomRight_Clockwise(),
-                            //TODO JSA ADD MIDDLE spots
+                            GridUtils::listOrderedSpotsExterior_BottomRight_Clockwise(),
+                            GridUtils::listOrderedSpotsMiddle_BottomRight_Clockwise(),
                             [GridUtils::center()],
                         );
                         break;
                     case AutomaAuctionDirectionType::COUNTER_CLOCKWISE:
                         $orderedSpots = array_merge(
                             GridUtils::listOrderedSpotsOnEdges_BottomRight_CounterClockwise(),
-                            //TODO JSA ADD MIDDLE spots
+                            GridUtils::listOrderedSpotsExterior_BottomRight_CounterClockwise(),
+                            GridUtils::listOrderedSpotsMiddle_BottomRight_CounterClockwise(),
                             [GridUtils::center()],
                         );
                         break;
@@ -145,37 +153,43 @@ class AutomaAuctionCard extends Card
                     case AutomaAuctionDirectionType::CLOCKWISE:
                         $orderedSpots = array_merge(
                             GridUtils::listOrderedSpotsOnEdges_BottomLeft_Clockwise(),
-                            //TODO JSA ADD MIDDLE spots
+                            GridUtils::listOrderedSpotsExterior_BottomLeft_Clockwise(),
+                            GridUtils::listOrderedSpotsMiddle_BottomLeft_Clockwise(),
                             [GridUtils::center()],
                         );
                         break;
                     case AutomaAuctionDirectionType::COUNTER_CLOCKWISE:
                         $orderedSpots = array_merge(
                             GridUtils::listOrderedSpotsOnEdges_BottomLeft_CounterClockwise(),
-                            //TODO JSA ADD MIDDLE spots
+                            GridUtils::listOrderedSpotsExterior_BottomLeft_CounterClockwise(),
+                            GridUtils::listOrderedSpotsMiddle_BottomLeft_CounterClockwise(),
                             [GridUtils::center()],
                         );
                         break;
                 }
                 break;
         }
-        //TODO JSA RULE 2: Starting from the location indicated on the card, follow the specified direction (clockwise or counterclockwise) until you reach a tile of the targeted type.
 
         switch($auctionType){
             case TOKEN_TYPE_AUCTION_MARKER_1:
+                foreach($orderedSpots as $spot){
+                    //if(in_array($spot,$pAuctionableSpots)){
+                        $auctionableSpots[] = $spot;
+                    //}
+                }
                 break;
             case TOKEN_TYPE_AUCTION_MARKER_2:
             case TOKEN_TYPE_AUCTION_MARKER_3:
                 //TODO JSA RULE : For Levels and , start adjacent to the position where the previous marker was placed.
+                foreach($orderedSpots as $spot){
+                    //if(in_array($spot,$pAuctionableSpots)){
+                        $auctionableSpots[] = $spot;
+                    //}
+                }
                 break;
         }
 
-        $auctionableSpots = [];
-        foreach($orderedSpots as $spot){
-            if(in_array($spot,$pAuctionableSpots)){
-                $auctionableSpots[] = $spot;
-            }
-        }
+        //Game::get()->trace(__CLASS__.".".__FUNCTION__.": sorted auctionableSpots =".json_encode($auctionableSpots));
         return $auctionableSpots;
     }
     
@@ -186,15 +200,20 @@ class AutomaAuctionCard extends Card
     {
         $pAuctionableSpots = $this->sortAuctionSpotsFromStart($auctionType,$pAuctionableSpots);  
 
+        $isEmptySpot = function ($row,$col) use ($boardTiles){
+            return $boardTiles->filter(function ($tile) use($row,$col){
+                return $row == $tile->getRow() && $col == $tile->getCol() ;
+            })->count() == 0;
+        };
+
         foreach($this->getTile_priority() as $marketPlayType){
             //RULE 1 LOOP: If no valid placement is possible for that tile type, proceed to the next tile type in the listed order and repeat until a valid placement is found.
-            Game::get()->trace(__CLASS__.'.'.__FUNCTION__."() : auction card ".json_encode($this)." search play type ".json_encode($marketPlayType));
+            Game::get()->trace(__CLASS__.'.'.__FUNCTION__."() : auction card ".json_encode($this->getType())." search play type ".json_encode($marketPlayType));
             foreach($pAuctionableSpots as $auctionableSpot){
                 $tmp_row = $auctionableSpot['row'];
                 $tmp_col = $auctionableSpot['col'];
-                $matchTileOnSpot = $boardTiles->filter(function ($tile) use($tmp_row,$tmp_col, $marketPlayType){
-                    if($tmp_row == $tile->getRow() && $tmp_col == $tile->getCol()){
-                        Game::get()->trace(__CLASS__.'.'.__FUNCTION__."() : [{$tile->getRow()},{$tile->getCol()}] found play type ".json_encode($tile->getPlay_type()));
+                $matchNearTileOnSpot = $boardTiles->filter(function ($tile) use($tmp_row,$tmp_col, $marketPlayType){
+                    if( GridUtils::isAdjacentCoord($tmp_row ,$tmp_col, $tile->getRow(), $tile->getCol())){
                         if(is_array($marketPlayType)) {
                             $expectedPlayTypes = array_map(function ($v){return $v->value;},$marketPlayType);
                             return in_array($tile->getPlay_type(),$expectedPlayTypes);
@@ -203,12 +222,28 @@ class AutomaAuctionCard extends Card
                     }
                     return false;
                 })->first();
-                if(isset($matchTileOnSpot)){
+                $matchTileOnSpot = $boardTiles->filter(function ($tile) use($tmp_row,$tmp_col, $marketPlayType){
+                    if($tmp_row == $tile->getRow() && $tmp_col == $tile->getCol()){
+                        //Game::get()->trace(__CLASS__.'.'.__FUNCTION__."() : [{$tile->getRow()},{$tile->getCol()}] found play type ".json_encode($tile->getPlay_type()));
+                        if(is_array($marketPlayType)) {
+                            $expectedPlayTypes = array_map(function ($v){return $v->value;},$marketPlayType);
+                            return in_array($tile->getPlay_type(),$expectedPlayTypes);
+                        }
+                        return $marketPlayType->value == $tile->getPlay_type() ;
+                    }
+                    return false;
+                })->first();
+                
+                if($auctionType == TOKEN_TYPE_AUCTION_MARKER_1 && isset($matchNearTileOnSpot) && $isEmptySpot($tmp_row,$tmp_col)){
+                    return $auctionableSpot;
+                }
+                if($auctionType != TOKEN_TYPE_AUCTION_MARKER_1 && isset($matchTileOnSpot)){
                     return $auctionableSpot;
                 }
             }
         }
-        
+        Game::get()->trace(__CLASS__.'.'.__FUNCTION__."() : NOT FOUND use first possible spot ".json_encode($pAuctionableSpots[0]));
+        //TODO JSA make sure pAuctionableSpots[0] is a possible spot
         return $pAuctionableSpots[0];
     }
 
