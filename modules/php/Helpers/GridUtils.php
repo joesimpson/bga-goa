@@ -16,10 +16,9 @@ abstract class GridUtils
      *  else non empty spots near the previous auction (if any) 
      *  else all non empty spots 
      */
-    public static function listPossibleSpotsForNextAuctionMarker(Token $token): array
+    public static function listPossibleSpotsForNextAuctionMarker(Token $token, Collection $boardTiles): array
     {
         $boardTokens = Tokens::getBoardTokens();
-        $boardTiles = Tiles::getBoardTiles();
         $isNearTile = function ($row,$col) use ($boardTiles){
             $nearTiles = $boardTiles->filter(function ($tile) use($row,$col){
                 return GridUtils::isAdjacentCoord($row,$col, $tile->getRow(), $tile->getCol());
@@ -42,18 +41,9 @@ abstract class GridUtils
         if($type == TOKEN_TYPE_AUCTION_MARKER_1){
             //if#1 spots on the edges near non empty spot+ empty spots near non empty spot in the grid, 
             //Edges of the grid :
-            for($col=1;$col<=MARKET_GRID_SIZE;$col++){
-                $row = 0;
-                if($isNearTile($row,$col) ) $spots[] = ['row'=>$row,'col'=>$col];
-            }
-            for($row=1;$row<=MARKET_GRID_SIZE;$row++){
-                $col = 0;
-                if($isNearTile($row,$col) ) $spots[] = ['row'=>$row,'col'=>$col];
-                $col = MARKET_GRID_SIZE+1;
-                if($isNearTile($row,$col) ) $spots[] = ['row'=>$row,'col'=>$col];
-            }
-            for($col=1;$col<=MARKET_GRID_SIZE;$col++){
-                $row = MARKET_GRID_SIZE+1;
+            foreach(self::listOrderedSpotsOnEdges_TopLeft_ClockWise() as $edge){
+                $row = $edge['row'];
+                $col = $edge['col'];
                 if($isNearTile($row,$col) ) $spots[] = ['row'=>$row,'col'=>$col];
             }
 
@@ -90,6 +80,83 @@ abstract class GridUtils
 
         return $spots;
     }
+
+    public static function listOrderedSpotsOnEdges_TopLeft_ClockWise(): array
+    {
+        $spots = [];
+        //Edges of the grid :
+        for($col=1;$col<=MARKET_GRID_SIZE;$col++){
+            $row = 0;
+            $spots[] = ['row'=>$row,'col'=>$col];
+        }
+        for($row=1;$row<=MARKET_GRID_SIZE;$row++){
+            $col = MARKET_GRID_SIZE+1;
+            $spots[] = ['row'=>$row,'col'=>$col];
+        }
+        for($col=MARKET_GRID_SIZE;$col>=1;$col--){
+            $row = MARKET_GRID_SIZE+1;
+            $spots[] = ['row'=>$row,'col'=>$col];
+        }
+        for($row=MARKET_GRID_SIZE;$row>=1;$row--){
+            $col = 0;
+            $spots[] = ['row'=>$row,'col'=>$col];
+        }
+        return $spots;
+    }
+    
+    public static function listOrderedSpotsOnEdges_TopLeft_CounterClockWise(): array
+    {
+        $spots = GridUtils::listOrderedSpotsOnEdges_TopLeft_ClockWise();
+        $spots = array_reverse($spots);
+        return $spots;
+    }
+    public static function listOrderedSpotsOnEdges_TopRight_Clockwise(): array
+    {
+        $baseSpots = GridUtils::listOrderedSpotsOnEdges_TopLeft_ClockWise();
+        return GridUtils::rotateClockwise($baseSpots);
+    }
+    public static function listOrderedSpotsOnEdges_BottomRight_Clockwise(): array
+    {
+        $baseSpots = GridUtils::listOrderedSpotsOnEdges_TopRight_Clockwise();
+        return GridUtils::rotateClockwise($baseSpots);
+    }
+    public static function listOrderedSpotsOnEdges_BottomLeft_Clockwise(): array
+    {
+        $baseSpots = GridUtils::listOrderedSpotsOnEdges_BottomRight_Clockwise();
+        return GridUtils::rotateClockwise($baseSpots);
+    }
+    
+    public static function listOrderedSpotsOnEdges_TopRight_CounterClockwise(): array
+    {
+        $baseSpots = GridUtils::listOrderedSpotsOnEdges_BottomRight_CounterClockwise();
+        return GridUtils::rotateClockwise($baseSpots);
+    }
+    public static function listOrderedSpotsOnEdges_BottomRight_CounterClockwise(): array
+    {
+        $baseSpots = GridUtils::listOrderedSpotsOnEdges_BottomLeft_CounterClockwise();
+        return GridUtils::rotateClockwise($baseSpots);
+    }
+    public static function listOrderedSpotsOnEdges_BottomLeft_CounterClockwise(): array
+    {
+        $baseSpots = GridUtils::listOrderedSpotsOnEdges_TopLeft_CounterClockWise();
+        return GridUtils::rotateClockwise($baseSpots);
+    }
+    /**
+     * @return array same array as param but rotate order 90deg Clockwise
+     */
+    public static function rotateClockwise(array $baseSpots): array
+    {
+        return array_merge(
+            array_slice($baseSpots,MARKET_GRID_SIZE,MARKET_GRID_SIZE*3 ),
+            array_slice($baseSpots,0,MARKET_GRID_SIZE )
+        );
+    }
+    
+    public static function center(): array
+    {
+        return ['row' => 3, 'col'=>3];
+    }
+    
     
     /**
      * @param bool $withDiag (default false) : specify true to also check diagonally
