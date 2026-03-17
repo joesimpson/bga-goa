@@ -1696,6 +1696,11 @@ export class Game {
             let pId = player.id;
             //UPDATE ALL PLAYER COUNTERS
             this.bga.playerPanels.getScoreCounter(pId).toValue(player.score);
+            if(this._counters[pId].scoringRecap_total !=undefined){
+                //IF end scoring recap displayed
+                this._counters[pId].scoringRecap_total.toValue(player.score);
+                document.getElementById(`goa_solo_card_highlight_${pId}`).dataset.score = player.score;
+            }
             
             this._counters[pId]['exploration_hand_size'].toValue(player.exploration_hand_size);
             this._counters[pId]['ships'].toValue(player.ships);
@@ -1744,8 +1749,8 @@ export class Game {
         });
 
         //RESET AUTOMA board
-        this._counters[this.gamedatas.automa_id][`goa_deck_size_automa_action`].toValue(0);
-        this._counters[this.gamedatas.automa_id][`goa_deck_size_automa_money`].toValue(0);
+        if(this.gamedatas.automa_id) this._counters[this.gamedatas.automa_id][`goa_deck_size_automa_action`].toValue(0);
+        if(this.gamedatas.automa_id) this._counters[this.gamedatas.automa_id][`goa_deck_size_automa_money`].toValue(0);
 
     }
     
@@ -1829,10 +1834,12 @@ export class Game {
             cardsDivs.forEach( (cardDiv) => {
                 this.destroy(cardDiv);
             });
-            this._counters[this.gamedatas.automa_id][`goa_deck_size_automa_action`].toValue(0);
-            this._counters[this.gamedatas.automa_id][`goa_deck_size_automa_auction_1`].toValue(0);
-            this._counters[this.gamedatas.automa_id][`goa_deck_size_automa_auction_2`].toValue(0);
-            this._counters[this.gamedatas.automa_id][`goa_deck_size_automa_auction_3`].toValue(0);
+            if(this.gamedatas.automa_id) {
+                this._counters[this.gamedatas.automa_id][`goa_deck_size_automa_action`].toValue(0);
+                this._counters[this.gamedatas.automa_id][`goa_deck_size_automa_auction_1`].toValue(0);
+                this._counters[this.gamedatas.automa_id][`goa_deck_size_automa_auction_2`].toValue(0);
+                this._counters[this.gamedatas.automa_id][`goa_deck_size_automa_auction_3`].toValue(0);
+            }
         }
     }
     async notif_lineSeparator(notif) {
@@ -3277,24 +3284,28 @@ export class Game {
             }),
         );
 
-        Object.values([1,2,3]).forEach(i => {
-            let nb = this.gamedatas.cards.deck_size[this.const.CARD_SUBTTYPE_AUTOMA_AUCTION][i];
-            this._counters[this.gamedatas.automa_id][`goa_deck_size_automa_auction_${i}`].toValue(nb);
-            for(let k=0; k<= nb;k++){
-                document.getElementById(`goa_automa_deck_auction_${i}`).insertAdjacentHTML('afterbegin', this.tplCard({'id':k, 'subtype': this.const.CARD_SUBTTYPE_AUTOMA_AUCTION}));
-            }    
-        });
-        let nb = this.gamedatas.cards.deck_size[this.const.CARD_SUBTTYPE_AUTOMA_ACTION];
-        this._counters[this.gamedatas.automa_id][`goa_deck_size_automa_action`].toValue(nb);
-        for(let k=0; k<= nb;k++){
-            document.getElementById('goa_automa_deck_action').insertAdjacentHTML('afterbegin', this.tplCard({'id':k, 'subtype': this.const.CARD_SUBTTYPE_AUTOMA_ACTION}));
-        }    
+        if(this.gamedatas.automa_id ){
 
-        nb = this.gamedatas.cards.deck_size[this.const.CARD_SUBTTYPE_MONEY];
-        this._counters[this.gamedatas.automa_id][`goa_deck_size_automa_money`].toValue(nb);
-        for(let k=0; k<= nb;k++){
-            document.getElementById('goa_automa_deck_money').insertAdjacentHTML('afterbegin', this.tplCard({'id':k, 'subtype': this.const.CARD_SUBTTYPE_MONEY}));
-        }
+            Object.values([1,2,3]).forEach(i => {
+                let nb = this.gamedatas.cards.deck_size[this.const.CARD_SUBTTYPE_AUTOMA_AUCTION][i];
+                this._counters[this.gamedatas.automa_id][`goa_deck_size_automa_auction_${i}`].toValue(nb);
+                for(let k=0; k<= nb;k++){
+                    document.getElementById(`goa_automa_deck_auction_${i}`).insertAdjacentHTML('afterbegin', this.tplCard({'id':k, 'subtype': this.const.CARD_SUBTTYPE_AUTOMA_AUCTION}));
+                }    
+            });
+            let nb = this.gamedatas.cards.deck_size[this.const.CARD_SUBTTYPE_AUTOMA_ACTION];
+                
+            this._counters[this.gamedatas.automa_id][`goa_deck_size_automa_action`].toValue(nb);
+            for(let k=0; k<= nb;k++){
+                document.getElementById('goa_automa_deck_action').insertAdjacentHTML('afterbegin', this.tplCard({'id':k, 'subtype': this.const.CARD_SUBTTYPE_AUTOMA_ACTION}));
+            }    
+
+            nb = this.gamedatas.cards.deck_size[this.const.CARD_SUBTTYPE_MONEY];
+            this._counters[this.gamedatas.automa_id][`goa_deck_size_automa_money`].toValue(nb);
+            for(let k=0; k<= nb;k++){
+                document.getElementById('goa_automa_deck_money').insertAdjacentHTML('afterbegin', this.tplCard({'id':k, 'subtype': this.const.CARD_SUBTTYPE_MONEY}));
+            }
+        }  
 
         await Promise.all (
             this.gamedatas.cards.automa.map( async (card) => {
