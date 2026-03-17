@@ -43,6 +43,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
   justify-content: center;
   align-items: center;
   margin-bottom: 5px;
+  gap: 5px;
 }
 #goa_end_score_recap table {
   position: relative;
@@ -86,6 +87,202 @@ Icon extract in sprite with differents layers size (so % is not useful).
   color: black;
   background-color: #b16325;
   font-weight: bold;
+}
+
+.goa_score_card {
+  width: 148px;
+  height: 225px;
+  border-radius: 5px;
+  box-shadow: 1px 1px 2px 1px black;
+  background-size: 1000% 600%;
+  background-image: url("img/expansions/solo_cards.jpg");
+  background-position-x: 44.444444444%;
+  background-position-y: 100%;
+  position: relative;
+}
+.goa_score_card .goa_solo_card_highlight {
+  width: 85%;
+  height: 11%;
+  position: absolute;
+  border: 5px solid green;
+  border-radius: 5px;
+  left: 3%;
+  bottom: 52%;
+  transition: all 0.4s ease-in-out;
+}
+.goa_score_card .goa_solo_card_highlight[data-score=undefined], .goa_score_card .goa_solo_card_highlight[data-score=""] {
+  bottom: 3%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="0"] {
+  bottom: 3%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="1"] {
+  bottom: 3%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="2"] {
+  bottom: 3%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="3"] {
+  bottom: 3%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="4"] {
+  bottom: 3%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="5"] {
+  bottom: 3%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="6"] {
+  bottom: 3%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="7"] {
+  bottom: 3%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="8"] {
+  bottom: 3%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="9"] {
+  bottom: 3%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="10"] {
+  bottom: 3%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="11"] {
+  bottom: 3%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="12"] {
+  bottom: 3%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="13"] {
+  bottom: 3%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="14"] {
+  bottom: 3%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="15"] {
+  bottom: 3%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="16"] {
+  bottom: 3%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="17"] {
+  bottom: 3%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="18"] {
+  bottom: 3%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="19"] {
+  bottom: 3%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="20"] {
+  bottom: 3%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="21"] {
+  bottom: 3%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="22"] {
+  bottom: 3%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="23"] {
+  bottom: 3%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="24"] {
+  bottom: 3%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="25"] {
+  bottom: 15%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="26"] {
+  bottom: 15%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="27"] {
+  bottom: 15%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="28"] {
+  bottom: 15%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="29"] {
+  bottom: 15%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="30"] {
+  bottom: 15%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="31"] {
+  bottom: 15%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="32"] {
+  bottom: 15%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="33"] {
+  bottom: 15%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="34"] {
+  bottom: 15%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="35"] {
+  bottom: 15%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="36"] {
+  bottom: 28%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="37"] {
+  bottom: 28%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="38"] {
+  bottom: 28%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="39"] {
+  bottom: 28%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="40"] {
+  bottom: 28%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="41"] {
+  bottom: 28%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="42"] {
+  bottom: 28%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="43"] {
+  bottom: 28%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="44"] {
+  bottom: 28%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="45"] {
+  bottom: 28%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="46"] {
+  bottom: 40%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="47"] {
+  bottom: 40%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="48"] {
+  bottom: 40%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="49"] {
+  bottom: 40%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="50"] {
+  bottom: 40%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="51"] {
+  bottom: 40%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="52"] {
+  bottom: 40%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="53"] {
+  bottom: 40%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="54"] {
+  bottom: 40%;
+}
+.goa_score_card .goa_solo_card_highlight[data-score="55"] {
+  bottom: 40%;
+}
+.goa_score_card.goa_score_card_back {
+  background-position-x: 55.55555555%;
 }
 
 #goa_resizable_board {

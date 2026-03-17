@@ -5,6 +5,7 @@
     justify-content: center;
     align-items: center;
     margin-bottom: 5px;
+    gap: 5px;
 
     table{
         position: relative;
@@ -62,5 +63,63 @@
             background-color: #b16325;
             font-weight: bold;
         }
+    }
+}
+
+.goa_score_card{
+    width: 148px;
+    height: 225px;
+    border-radius: 5px;
+
+    box-shadow: 1px 1px 2px 1px black;
+
+    //sprite positions
+    background-size: 1000% 600%;
+    background-image: url("img/expansions/solo_cards.jpg");
+    background-position-x: 44.444444444%;
+    background-position-y: 100%;
+
+    position: relative;
+
+    .goa_solo_card_highlight{
+        width: 85%;
+        height: 11%;
+        position: absolute;
+        border: 5px solid green;
+        border-radius: 5px;
+        left: 3%;
+
+        //Default top line
+        bottom: 52%;
+        
+        transition: all 0.4s ease-in-out;
+
+        &[data-score='undefined'], &[data-score='']{
+            bottom: 3%;
+        }
+        @for $i from 0 through 24 {
+            &[data-score='#{$i}']{
+                bottom: 3%;
+            }
+        }
+        @for $i from 25 through 35 {
+            &[data-score='#{$i}']{
+                bottom: 15%;
+            }
+        }
+        @for $i from 36 through 45 {
+            &[data-score='#{$i}']{
+                bottom: 28%;
+            }
+        }
+        @for $i from 46 through 55 {
+            &[data-score='#{$i}']{
+                bottom: 40%;
+            }
+        }
+    }
+
+    &.goa_score_card_back{
+        background-position-x: 55.55555555%;
     }
 }
