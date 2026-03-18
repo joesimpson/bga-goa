@@ -245,6 +245,20 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
     $token = $placedTokens->first();
     return $token;
   }
+  
+  /**
+   * @param int $nextType : the next auction marker type we want to place
+   * @param Collection $boardTokens : the already read list of tokens placed on board
+   */
+  public static function findPreviousAuctionMarker(int $nextType, Collection $boardTokens): AuctionMarker|null
+  {
+    $currentTypeIndex = array_search($nextType,TOKEN_TYPE_AUCTION_MARKERS);
+    $previousMarkerType = TOKEN_TYPE_AUCTION_MARKERS[$currentTypeIndex-1];
+    $previousMarker = $boardTokens->filter(function ($pToken) use($previousMarkerType){
+        return ($pToken instanceof AuctionMarker) && $previousMarkerType == $pToken->getType() ;
+    })->first();
+    return $previousMarker;
+  }
 
   public static function returnAuctionMarkerToPlayer(Player $player, AuctionMarker $token) {
     $token->setLocation(TOKEN_LOCATION_PLAYER_BOARD);

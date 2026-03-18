@@ -59,8 +59,9 @@ class PlayerTurn extends GameState
                 $nextAuctionToken = Tokens::getNextAuctionToken($player);
                 if(isset($nextAuctionToken)) {
                     $boardTiles = Tiles::getBoardTiles();
+                    $boardTokens = Tokens::getBoardTokens();
                     $args['token'] = $nextAuctionToken->getUiData();
-                    $args['pAuctionableSpots'] = GridUtils::listPossibleSpotsForNextAuctionMarker($nextAuctionToken, $boardTiles, );
+                    $args['pAuctionableSpots'] = GridUtils::listPossibleSpotsForNextAuctionMarker($nextAuctionToken, $boardTiles, $boardTokens,);
                     Utils::addPossibleActionInArgs('actPlaceAuction', $args);
                 }
                 break;
