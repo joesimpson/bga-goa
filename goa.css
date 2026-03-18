@@ -1988,6 +1988,11 @@ body.notouch-device .goa_exploration_card-front.bga-cards_selectable-card:hover,
   border: 1px solid;
   width: -moz-max-content;
   width: max-content;
+  color: inherit;
+}
+.goa_AutomaAuctionCardsHelp .goa_card_tooltip,
+.goa_AutomaActionCardsHelp .goa_card_tooltip {
+  color: inherit;
 }
 .goa_AutomaAuctionCardsHelp .goa_card_title,
 .goa_AutomaActionCardsHelp .goa_card_title {
