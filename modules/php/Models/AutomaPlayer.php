@@ -12,6 +12,12 @@ use Bga\Games\Goa\Core\Globals;
 class AutomaPlayer extends Player
 {  
 
+    /**
+     * @return int minimum number of actions to be played by this player during actions phase
+     */
+    public function getMinRoundActions(): int {
+        return NB_AUTOMA_ACTIONS_PER_ROUND;
+    }
 
     function getCardsPlayed(){
         return [];

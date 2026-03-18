@@ -114,4 +114,11 @@ class Player extends \Bga\Games\Goa\Helpers\DB_Model
     ];
 
   }
+  
+  /**
+   * @return int minimum number of actions to be played by this player during actions phase
+   */
+  public function getMinRoundActions(): int {
+    return NB_MIN_ACTIONS_PER_ROUND;
+  }
 }

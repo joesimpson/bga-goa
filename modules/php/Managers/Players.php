@@ -185,7 +185,7 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
    */
   public static function registerNewAction(Player $player, string $serverAction)
   {
-    if($player->getNbActions() >= NB_MIN_ACTIONS_PER_ROUND){
+    if($player->getNbActions() >= $player->getMinRoundActions()){
         Players::giveExtraActionCards($player,-1);
     }
     $player->incNbActions();
@@ -293,7 +293,7 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
     if(in_array($nextPlayer->getId(), $tried_pid) ) return null;
     if(isset($nextPlayer) 
       && $nextPlayer->isPassed() != 1 
-      && ($nextPlayer->getNbActions() <NB_MIN_ACTIONS_PER_ROUND || $nextPlayer->getCompasses() > 0 )
+      && ($nextPlayer->getNbActions() < $nextPlayer->getMinRoundActions() || $nextPlayer->getCompasses() > 0 )
     ){
       return $nextPlayer;
     }

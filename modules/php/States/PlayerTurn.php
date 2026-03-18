@@ -113,9 +113,9 @@ class PlayerTurn extends GameState
                 $actionPlayed = $player->isActionPlayed();
                 $args['actionPlayed'] = $actionPlayed;
                 $args['nbActions'] = $player->getNbActions();
-                $args['minActions'] = NB_MIN_ACTIONS_PER_ROUND + max(0,$player->getCompasses()-1);
+                $args['minActions'] = $player->getMinRoundActions() + max(0,$player->getCompasses()-1);
                 if(! $actionPlayed) {
-                    if($player->getNbActions() <NB_MIN_ACTIONS_PER_ROUND || $player->getCompasses()>0){
+                    if($player->getNbActions() < $player->getMinRoundActions() || $player->getCompasses()>0){
                         Utils::addPossibleActionInArgs('actProgress', $args);
                         $args['progressTracks'] = Tokens::getUpgradableProgressMarkers($player);
                         Utils::addPossibleActionInArgs('actBuildShips', $args);
@@ -132,7 +132,7 @@ class PlayerTurn extends GameState
                         Utils::addPossibleActionInArgs('actExploration', $args);
                     }
                     //if($player->getNbActions() >= $args['minActions'] ) {
-                    if($player->getNbActions() >= NB_MIN_ACTIONS_PER_ROUND && $player->getCompasses()<=1){
+                    if($player->getNbActions() >= $player->getMinRoundActions() && $player->getCompasses()<=1){
                         //Game rule : player must keep max 1 compass card
                         Utils::addPossibleActionInArgs('actPassAction', $args);
                     }
