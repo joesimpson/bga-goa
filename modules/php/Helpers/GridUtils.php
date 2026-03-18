@@ -149,6 +149,17 @@ abstract class GridUtils
             array_slice($baseSpots,0, $size )
         );
     }
+    /**
+     * @return array same array as param but reverse DIRECTIOn order 
+     */
+    public static function counterClockwise(array $baseSpots): array
+    {
+        $size = count($baseSpots);
+        return array_merge(
+            array_slice($baseSpots,0, 1 ),
+            array_reverse(array_slice($baseSpots, 1, $size )),
+        );
+    }
     
     public static function center(): array
     {
@@ -199,11 +210,7 @@ abstract class GridUtils
     public static function listOrderedSpotsExterior_TopLeft_CounterClockWise(): array
     {
         $baseSpots = GridUtils::listOrderedSpotsExterior_TopLeft_ClockWise();
-        $size = count($baseSpots);
-        return array_merge(
-            array_slice($baseSpots,0, 1 ),
-            array_reverse(array_slice($baseSpots, 1, $size )),
-        );
+        return GridUtils::counterClockwise($baseSpots);
     }
     public static function listOrderedSpotsExterior_TopRight_CounterClockwise(): array
     {
@@ -261,11 +268,7 @@ abstract class GridUtils
     public static function listOrderedSpotsMiddle_TopLeft_CounterClockWise(): array
     {
         $baseSpots = GridUtils::listOrderedSpotsMiddle_TopLeft_ClockWise();
-        $size = count($baseSpots);
-        return array_merge(
-            array_slice($baseSpots,0, 1 ),
-            array_reverse(array_slice($baseSpots, 1, $size )),
-        );
+        return GridUtils::counterClockwise($baseSpots);
     }
     public static function listOrderedSpotsMiddle_TopRight_CounterClockwise(): array
     {
@@ -400,28 +403,28 @@ abstract class GridUtils
                     case AutomaAuctionDirectionType::CLOCKWISE: 
                         return $orderedSpots;
                     case AutomaAuctionDirectionType::COUNTER_CLOCKWISE:
-                        return array_reverse($orderedSpots);
+                        return GridUtils::counterClockwise($orderedSpots);
                 }
             case AutomaAuctionStartType::TOP_RIGHT:
                 switch($dir){
                     case AutomaAuctionDirectionType::CLOCKWISE:
                         return GridUtils::rotateClockwise($orderedSpots);
                     case AutomaAuctionDirectionType::COUNTER_CLOCKWISE:
-                        return GridUtils::rotateClockwise(GridUtils::rotateClockwise(GridUtils::rotateClockwise(array_reverse($orderedSpots))));
+                        return GridUtils::counterClockwise(GridUtils::rotateClockwise($orderedSpots));
                 }
             case AutomaAuctionStartType::BOTTOM_RIGHT:
                 switch($dir){
                     case AutomaAuctionDirectionType::CLOCKWISE:
                         return GridUtils::rotateClockwise(GridUtils::rotateClockwise($orderedSpots));
                     case AutomaAuctionDirectionType::COUNTER_CLOCKWISE:
-                        return GridUtils::rotateClockwise(GridUtils::rotateClockwise(array_reverse($orderedSpots)));
+                        return GridUtils::counterClockwise(GridUtils::rotateClockwise(GridUtils::rotateClockwise($orderedSpots)));
                 }
             case AutomaAuctionStartType::BOTTOM_LEFT:
                 switch($dir){
                     case AutomaAuctionDirectionType::CLOCKWISE:
                         return GridUtils::rotateClockwise(GridUtils::rotateClockwise(GridUtils::rotateClockwise($orderedSpots)));
                     case AutomaAuctionDirectionType::COUNTER_CLOCKWISE:
-                        return GridUtils::rotateClockwise(array_reverse($orderedSpots));
+                        return GridUtils::counterClockwise(GridUtils::rotateClockwise(GridUtils::rotateClockwise(GridUtils::rotateClockwise($orderedSpots))));
                 }
         }
 
