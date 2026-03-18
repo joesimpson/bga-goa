@@ -5,6 +5,8 @@ use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Managers\Tiles;
 use Bga\Games\Goa\Managers\Tokens;
 use Bga\Games\Goa\Models\AuctionMarker;
+use Bga\Games\Goa\Models\AutomaAuctionDirectionType;
+use Bga\Games\Goa\Models\AutomaAuctionStartType;
 use Bga\Games\Goa\Models\Player;
 use Bga\Games\Goa\Models\Token;
 
@@ -16,9 +18,8 @@ abstract class GridUtils
      *  else non empty spots near the previous auction (if any) 
      *  else all non empty spots 
      */
-    public static function listPossibleSpotsForNextAuctionMarker(Token $token, Collection $boardTiles): array
+    public static function listPossibleSpotsForNextAuctionMarker(Token $token, Collection $boardTiles, Collection $boardTokens): array
     {
-        $boardTokens = Tokens::getBoardTokens();
         $isNearTile = function ($row,$col) use ($boardTiles){
             $nearTiles = $boardTiles->filter(function ($tile) use($row,$col){
                 return GridUtils::isAdjacentCoord($row,$col, $tile->getRow(), $tile->getCol());
@@ -56,11 +57,7 @@ abstract class GridUtils
         }
         else {
             //else non empty spots near the previous auction (if any) 
-            $currentTypeIndex = array_search($type,TOKEN_TYPE_AUCTION_MARKERS);
-            $previousMarkerType = TOKEN_TYPE_AUCTION_MARKERS[$currentTypeIndex-1];
-            $previousMarker = $boardTokens->filter(function ($pToken) use($previousMarkerType){
-                return ($pToken instanceof AuctionMarker) && $previousMarkerType == $pToken->getType() ;
-            })->first();
+            $previousMarker = Tokens::findPreviousAuctionMarker($type, $boardTokens);
             $nearPrevious = GridUtils::listAdjacentSpots($previousMarker->getRow(), $previousMarker->getCol());
             foreach($nearPrevious as $pSpot){
                 $row = $pSpot['row'];
@@ -286,6 +283,151 @@ abstract class GridUtils
         return GridUtils::rotateClockwise($baseSpots);
     }
     
+    /**
+     * @return array of ordered spots according to start and direction. order is snail-shaped
+     */
+    public static function listOrderedSpots_SnailAroundBoard(AutomaAuctionStartType $startSpot, AutomaAuctionDirectionType $dir): array
+    {
+        $orderedSpots = GridUtils::listOrderedSpotsOnEdges_TopLeft_ClockWise();
+        switch($startSpot){
+            case AutomaAuctionStartType::TOP_LEFT:
+                switch($dir){
+                    case AutomaAuctionDirectionType::CLOCKWISE:
+                        $orderedSpots = array_merge(
+                            GridUtils::listOrderedSpotsOnEdges_TopLeft_ClockWise(),
+                            GridUtils::listOrderedSpotsExterior_TopLeft_ClockWise(),
+                            GridUtils::listOrderedSpotsMiddle_TopLeft_Clockwise(),
+                            [GridUtils::center()],
+                        );
+                        break;
+                    case AutomaAuctionDirectionType::COUNTER_CLOCKWISE:
+                        $orderedSpots = array_merge(
+                            GridUtils::listOrderedSpotsOnEdges_TopLeft_CounterClockWise(),
+                            GridUtils::listOrderedSpotsExterior_TopLeft_CounterClockWise(),
+                            GridUtils::listOrderedSpotsMiddle_TopLeft_CounterClockwise(),
+                            [GridUtils::center()],
+                        );
+                        break;
+                }
+                break;
+            case AutomaAuctionStartType::TOP_RIGHT:
+                switch($dir){
+                    case AutomaAuctionDirectionType::CLOCKWISE:
+                        $orderedSpots = array_merge(
+                            GridUtils::listOrderedSpotsOnEdges_TopRight_ClockWise(),
+                            GridUtils::listOrderedSpotsExterior_TopRight_Clockwise(),
+                            GridUtils::listOrderedSpotsMiddle_TopRight_Clockwise(),
+                            [GridUtils::center()],
+                        );
+                        break;
+                    case AutomaAuctionDirectionType::COUNTER_CLOCKWISE:
+                        $orderedSpots = array_merge(
+                            GridUtils::listOrderedSpotsOnEdges_TopRight_CounterClockwise(),
+                            GridUtils::listOrderedSpotsExterior_TopRight_CounterClockwise(),
+                            GridUtils::listOrderedSpotsMiddle_TopRight_CounterClockwise(),
+                            [GridUtils::center()],
+                        );
+                        break;
+                }
+                break;
+            case AutomaAuctionStartType::BOTTOM_RIGHT:
+                switch($dir){
+                    case AutomaAuctionDirectionType::CLOCKWISE:
+                        $orderedSpots = array_merge(
+                            GridUtils::listOrderedSpotsOnEdges_BottomRight_Clockwise(),
+                            GridUtils::listOrderedSpotsExterior_BottomRight_Clockwise(),
+                            GridUtils::listOrderedSpotsMiddle_BottomRight_Clockwise(),
+                            [GridUtils::center()],
+                        );
+                        break;
+                    case AutomaAuctionDirectionType::COUNTER_CLOCKWISE:
+                        $orderedSpots = array_merge(
+                            GridUtils::listOrderedSpotsOnEdges_BottomRight_CounterClockwise(),
+                            GridUtils::listOrderedSpotsExterior_BottomRight_CounterClockwise(),
+                            GridUtils::listOrderedSpotsMiddle_BottomRight_CounterClockwise(),
+                            [GridUtils::center()],
+                        );
+                        break;
+                }
+                break;
+            case AutomaAuctionStartType::BOTTOM_LEFT:
+                switch($dir){
+                    case AutomaAuctionDirectionType::CLOCKWISE:
+                        $orderedSpots = array_merge(
+                            GridUtils::listOrderedSpotsOnEdges_BottomLeft_Clockwise(),
+                            GridUtils::listOrderedSpotsExterior_BottomLeft_Clockwise(),
+                            GridUtils::listOrderedSpotsMiddle_BottomLeft_Clockwise(),
+                            [GridUtils::center()],
+                        );
+                        break;
+                    case AutomaAuctionDirectionType::COUNTER_CLOCKWISE:
+                        $orderedSpots = array_merge(
+                            GridUtils::listOrderedSpotsOnEdges_BottomLeft_CounterClockwise(),
+                            GridUtils::listOrderedSpotsExterior_BottomLeft_CounterClockwise(),
+                            GridUtils::listOrderedSpotsMiddle_BottomLeft_CounterClockwise(),
+                            [GridUtils::center()],
+                        );
+                        break;
+                }
+                break;
+        }
+        return $orderedSpots;
+    }
+    
+    /**
+     * @return array of 8 ordered spots according to start and direction around the specified position [row,col]. They may be out of  the grid and must be checked according to tiles/tokens placed
+     */
+    public static function listOrderedSpotsAround(
+        int $rowA, int $colA,
+        AutomaAuctionStartType $startSpot, AutomaAuctionDirectionType $dir
+    ): array
+    {
+        $orderedSpots = [];
+        
+        //Base is TOP LEFT - CLOCKWISE
+        $orderedSpots[] = ['row'=>$rowA - 1 ,'col'=>$colA - 1];
+        $orderedSpots[] = ['row'=>$rowA - 1 ,'col'=>$colA    ];
+        $orderedSpots[] = ['row'=>$rowA - 1 ,'col'=>$colA + 1];
+        $orderedSpots[] = ['row'=>$rowA     ,'col'=>$colA + 1];
+        $orderedSpots[] = ['row'=>$rowA + 1 ,'col'=>$colA + 1];
+        $orderedSpots[] = ['row'=>$rowA + 1 ,'col'=>$colA ];
+        $orderedSpots[] = ['row'=>$rowA + 1 ,'col'=>$colA - 1];
+        $orderedSpots[] = ['row'=>$rowA     ,'col'=>$colA - 1];
+
+        switch($startSpot){
+            case AutomaAuctionStartType::TOP_LEFT:
+                switch($dir){
+                    case AutomaAuctionDirectionType::CLOCKWISE: 
+                        return $orderedSpots;
+                    case AutomaAuctionDirectionType::COUNTER_CLOCKWISE:
+                        return array_reverse($orderedSpots);
+                }
+            case AutomaAuctionStartType::TOP_RIGHT:
+                switch($dir){
+                    case AutomaAuctionDirectionType::CLOCKWISE:
+                        return GridUtils::rotateClockwise($orderedSpots);
+                    case AutomaAuctionDirectionType::COUNTER_CLOCKWISE:
+                        return GridUtils::rotateClockwise(GridUtils::rotateClockwise(GridUtils::rotateClockwise(array_reverse($orderedSpots))));
+                }
+            case AutomaAuctionStartType::BOTTOM_RIGHT:
+                switch($dir){
+                    case AutomaAuctionDirectionType::CLOCKWISE:
+                        return GridUtils::rotateClockwise(GridUtils::rotateClockwise($orderedSpots));
+                    case AutomaAuctionDirectionType::COUNTER_CLOCKWISE:
+                        return GridUtils::rotateClockwise(GridUtils::rotateClockwise(array_reverse($orderedSpots)));
+                }
+            case AutomaAuctionStartType::BOTTOM_LEFT:
+                switch($dir){
+                    case AutomaAuctionDirectionType::CLOCKWISE:
+                        return GridUtils::rotateClockwise(GridUtils::rotateClockwise(GridUtils::rotateClockwise($orderedSpots)));
+                    case AutomaAuctionDirectionType::COUNTER_CLOCKWISE:
+                        return GridUtils::rotateClockwise(array_reverse($orderedSpots));
+                }
+        }
+
+        return $orderedSpots;
+    }
+
     /**
      * @param bool $withDiag (default false) : specify true to also check diagonally
      * @return bool true if points A (rowA, colA) and B (rowB, colB) are ORTHOGONALLY adjacent, else otherwise

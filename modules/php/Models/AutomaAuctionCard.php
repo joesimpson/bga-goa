@@ -10,6 +10,7 @@ use Bga\Games\Goa\Helpers\GridUtils;
 use Bga\Games\Goa\Managers\MoneyCards;
 use Bga\Games\Goa\Managers\Players;
 use Bga\Games\Goa\Managers\Tiles;
+use Bga\Games\Goa\Managers\Tokens;
 
 class AutomaAuctionCard extends Card
 {  
@@ -41,10 +42,10 @@ class AutomaAuctionCard extends Card
     {
         if(isset($token)) {
             $boardTiles = Tiles::getBoardTiles();
-            $pAuctionableSpots = GridUtils::listPossibleSpotsForNextAuctionMarker($token, $boardTiles);
 
             $auctionType = $token->getType();
-            $spot = $this->findAuctionSpotByPriority($auctionType, $boardTiles, $pAuctionableSpots);
+            $boardTokens = Tokens::getBoardTokens();
+            $spot = $this->findAuctionSpotByPriority($token, $boardTiles, $boardTokens, );
 
             $row = $spot['row'];
             $col = $spot['col'];
@@ -80,113 +81,38 @@ class AutomaAuctionCard extends Card
 
     }
     
-    public function sortAuctionSpotsFromStart(int $auctionType,array $pAuctionableSpots) :array
+    public function sortAuctionSpotsFromStart(int $auctionType,array $pAuctionableSpots, Collection $boardTokens,) :array
     {
         $auctionableSpots = [];
 
         $startSpot = $this->getStart();
         $dir = $this->getDirection();
-        $orderedSpots = GridUtils::listOrderedSpotsOnEdges_TopLeft_ClockWise();
-        switch($startSpot){
-            case AutomaAuctionStartType::TOP_LEFT:
-                switch($dir){
-                    case AutomaAuctionDirectionType::CLOCKWISE:
-                        $orderedSpots = array_merge(
-                            GridUtils::listOrderedSpotsOnEdges_TopLeft_ClockWise(),
-                            GridUtils::listOrderedSpotsExterior_TopLeft_ClockWise(),
-                            GridUtils::listOrderedSpotsMiddle_TopLeft_Clockwise(),
-                            [GridUtils::center()],
-                        );
-                        break;
-                    case AutomaAuctionDirectionType::COUNTER_CLOCKWISE:
-                        $orderedSpots = array_merge(
-                            GridUtils::listOrderedSpotsOnEdges_TopLeft_CounterClockWise(),
-                            GridUtils::listOrderedSpotsExterior_TopLeft_CounterClockWise(),
-                            GridUtils::listOrderedSpotsMiddle_TopLeft_CounterClockwise(),
-                            [GridUtils::center()],
-                        );
-                        break;
-                }
-                break;
-            case AutomaAuctionStartType::TOP_RIGHT:
-                switch($dir){
-                    case AutomaAuctionDirectionType::CLOCKWISE:
-                        $orderedSpots = array_merge(
-                            GridUtils::listOrderedSpotsOnEdges_TopRight_ClockWise(),
-                            GridUtils::listOrderedSpotsExterior_TopRight_Clockwise(),
-                            GridUtils::listOrderedSpotsMiddle_TopRight_Clockwise(),
-                            [GridUtils::center()],
-                        );
-                        break;
-                    case AutomaAuctionDirectionType::COUNTER_CLOCKWISE:
-                        $orderedSpots = array_merge(
-                            GridUtils::listOrderedSpotsOnEdges_TopRight_CounterClockwise(),
-                            GridUtils::listOrderedSpotsExterior_TopRight_CounterClockwise(),
-                            GridUtils::listOrderedSpotsMiddle_TopRight_CounterClockwise(),
-                            [GridUtils::center()],
-                        );
-                        break;
-                }
-                break;
-            case AutomaAuctionStartType::BOTTOM_RIGHT:
-                switch($dir){
-                    case AutomaAuctionDirectionType::CLOCKWISE:
-                        $orderedSpots = array_merge(
-                            GridUtils::listOrderedSpotsOnEdges_BottomRight_Clockwise(),
-                            GridUtils::listOrderedSpotsExterior_BottomRight_Clockwise(),
-                            GridUtils::listOrderedSpotsMiddle_BottomRight_Clockwise(),
-                            [GridUtils::center()],
-                        );
-                        break;
-                    case AutomaAuctionDirectionType::COUNTER_CLOCKWISE:
-                        $orderedSpots = array_merge(
-                            GridUtils::listOrderedSpotsOnEdges_BottomRight_CounterClockwise(),
-                            GridUtils::listOrderedSpotsExterior_BottomRight_CounterClockwise(),
-                            GridUtils::listOrderedSpotsMiddle_BottomRight_CounterClockwise(),
-                            [GridUtils::center()],
-                        );
-                        break;
-                }
-                break;
-            case AutomaAuctionStartType::BOTTOM_LEFT:
-                switch($dir){
-                    case AutomaAuctionDirectionType::CLOCKWISE:
-                        $orderedSpots = array_merge(
-                            GridUtils::listOrderedSpotsOnEdges_BottomLeft_Clockwise(),
-                            GridUtils::listOrderedSpotsExterior_BottomLeft_Clockwise(),
-                            GridUtils::listOrderedSpotsMiddle_BottomLeft_Clockwise(),
-                            [GridUtils::center()],
-                        );
-                        break;
-                    case AutomaAuctionDirectionType::COUNTER_CLOCKWISE:
-                        $orderedSpots = array_merge(
-                            GridUtils::listOrderedSpotsOnEdges_BottomLeft_CounterClockwise(),
-                            GridUtils::listOrderedSpotsExterior_BottomLeft_CounterClockwise(),
-                            GridUtils::listOrderedSpotsMiddle_BottomLeft_CounterClockwise(),
-                            [GridUtils::center()],
-                        );
-                        break;
-                }
-                break;
-        }
 
         switch($auctionType){
+            default:
             case TOKEN_TYPE_AUCTION_MARKER_1:
-                foreach($orderedSpots as $spot){
-                    //if(in_array($spot,$pAuctionableSpots)){
-                        $auctionableSpots[] = $spot;
-                    //}
-                }
+                $orderedSpots = GridUtils::listOrderedSpots_SnailAroundBoard($startSpot, $dir);
                 break;
             case TOKEN_TYPE_AUCTION_MARKER_2:
             case TOKEN_TYPE_AUCTION_MARKER_3:
-                //TODO JSA RULE : For Levels and , start adjacent to the position where the previous marker was placed.
+                //RULE : For Levels and , start adjacent to the position where the previous marker was placed.
+                $previousMarker = Tokens::findPreviousAuctionMarker($auctionType, $boardTokens);
+                $orderedSpots = GridUtils::listOrderedSpotsAround($previousMarker->getRow(), $previousMarker->getCol(), $startSpot, $dir);
                 foreach($orderedSpots as $spot){
-                    //if(in_array($spot,$pAuctionableSpots)){
+                    if(in_array($spot,$pAuctionableSpots)){
                         $auctionableSpots[] = $spot;
-                    //}
+                    }
+                }
+                if(count($auctionableSpots) == 0 ){
+                    //if no possible spot around, do default list
+                    $orderedSpots = GridUtils::listOrderedSpots_SnailAroundBoard($startSpot, $dir);
                 }
                 break;
+        }
+        foreach($orderedSpots as $spot){
+            if(in_array($spot,$pAuctionableSpots)){
+                $auctionableSpots[] = $spot;
+            }
         }
 
         //Game::get()->trace(__CLASS__.".".__FUNCTION__.": sorted auctionableSpots =".json_encode($auctionableSpots));
@@ -196,9 +122,12 @@ class AutomaAuctionCard extends Card
     /**
      * @return array as ['row' => 2, 'col'=>4]
      */
-    public function findAuctionSpotByPriority(int $auctionType, Collection $boardTiles,array $pAuctionableSpots) : array
+    public function findAuctionSpotByPriority(AuctionMarker $token, Collection $boardTiles, Collection $boardTokens,) : array
     {
-        $pAuctionableSpots = $this->sortAuctionSpotsFromStart($auctionType,$pAuctionableSpots);  
+        
+        $auctionType = $token->getType();
+        $auctionableSpots = GridUtils::listPossibleSpotsForNextAuctionMarker($token, $boardTiles, $boardTokens,);
+        $pAuctionableSpots = $this->sortAuctionSpotsFromStart($auctionType,$auctionableSpots, $boardTokens,);  
 
         $isEmptySpot = function ($row,$col) use ($boardTiles){
             return $boardTiles->filter(function ($tile) use($row,$col){
@@ -242,8 +171,8 @@ class AutomaAuctionCard extends Card
                 }
             }
         }
+        if(count($pAuctionableSpots) ==0 ) return $auctionableSpots[0];//SHOULD NOT HAPPEN
         Game::get()->trace(__CLASS__.'.'.__FUNCTION__."() : NOT FOUND use first possible spot ".json_encode($pAuctionableSpots[0]));
-        //TODO JSA make sure pAuctionableSpots[0] is a possible spot
         return $pAuctionableSpots[0];
     }
 

@@ -4,6 +4,7 @@ namespace Bga\Games\Goa;
 use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Core\Stats;
+use Bga\Games\Goa\Helpers\Collection;
 use Bga\Games\Goa\Helpers\Log;
 use Bga\Games\Goa\Helpers\QueryBuilder;
 use Bga\Games\Goa\Helpers\Utils;
@@ -14,6 +15,7 @@ use Bga\Games\Goa\Managers\Players;
 use Bga\Games\Goa\Managers\Tiles;
 use Bga\Games\Goa\Managers\Tokens;
 use Bga\Games\Goa\Models\CardLocation;
+use Bga\Games\Goa\Models\MarketTile;
 use Bga\Games\Goa\States\EndSession;
 
 /**
@@ -591,6 +593,57 @@ trait DebugTrait
         $possibleSets[3] =  [[1034,1032,],[1035,1032],[1035,1034]];
         $sets = Utils::array_cartesian_productV3($possibleSets);
         Notifications::message("debug_Utils C3: ".json_encode($sets),['sets'=>$sets]);
+    }
+    
+    /**
+     * In order to visualise tested board tiles from some TestCase 
+     * 
+     * Example : from AutomaAuctionCardTest.prepareBoardTiles()
+    */
+    function debug_UnitTestTiles(){
+        $player = Players::getCurrent();
+        $player_id = $player->getId();
+        Log::addStep();
+        
+        Tiles::moveAllInLocation(TILE_LOCATION_BOARD_MARKET, TILE_LOCATION_BOARD_MARKET.'before_test');
+
+        $boardTiles = [];
+            
+        $addTile = function ($id,$type, $row, $col,) use (&$boardTiles) {
+            $boardTiles[$id] = [
+                'location'=> TILE_LOCATION_BOARD_MARKET,
+                'tile_start_location' => 'test',
+                'type' => $type,
+                'subtype' => TILE_SUBTTYPE_MARKET,
+                'nbr' => 1,
+                'tile_id'=>$id, 'tile_row'=> $row, 'tile_col'=> $col,'row'=> $row, 'col'=> $col
+            ];
+        };
+        // Real use case taken from DB
+        // SELECT tile_id,type, tile_row, tile_col FROM `tiles` where tile_location='market' ORDER BY `tiles`.`tile_row` ASC, `tile_col` ASC;
+        $addTile(1, 37, 1,4);
+        $addTile(2, 3,  2,1);
+        $addTile(3, 11, 2,3);
+        $addTile(4, 28, 2,4);
+        $addTile(5, 26, 3,1);
+        $addTile(6, 13, 3,2);
+        $addTile(7 , 14, 3,3);
+        $addTile(8 , 7, 3,4);
+        $addTile(9 , 11, 3,5);
+        $addTile(10, 27, 4,1);
+        $addTile(11, 8, 4,2);
+        $addTile(12, 14, 4,3);
+        $addTile(13, 15, 4,4);
+        $addTile(14, 2, 4,5);
+        $addTile(15, 24, 5,1);
+        $addTile(16, 4, 5,2);
+        $addTile(17, 25, 5,3);
+        $addTile(18, 5, 5,4);
+        $addTile(19, 13, 5,5);
+        Tiles::create($boardTiles);
+
+        $this->debug_refreshUI();
+        $this->refresh_state();
     }
 
     ////////////////////////////////////////////////////

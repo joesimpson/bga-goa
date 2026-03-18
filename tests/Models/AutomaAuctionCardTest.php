@@ -9,6 +9,7 @@ use Bga\Games\Goa\Helpers\Collection;
 use Bga\Games\Goa\Helpers\GridUtils;
 use Bga\Games\Goa\Managers\AutomaCards;
 use Bga\Games\Goa\Managers\Tiles;
+use Bga\Games\Goa\Managers\Tokens;
 use Bga\Games\Goa\Models\AuctionMarker;
 use Bga\Games\Goa\Models\AutomaAuctionCard;
 use Bga\Games\Goa\Models\MarketTile;
@@ -54,6 +55,22 @@ final class AutomaAuctionCardTest extends TestCase
 
         return $boardTiles;
     }
+    
+    private function prepareBoardTokens(int $nb = 0) : Collection
+    {
+        $boardTokens = new Collection();
+            
+        $addToken = function ($id,$type, $row, $col,) use (&$boardTokens) {
+            $boardTokens[$id] = new AuctionMarker([
+                'type' => $type,
+                'token_id'=> $id, 'token_row'=> $row, 'token_col'=> $col,'row'=> $row, 'col'=> $col],
+                Tokens::getTokensTypes()[$type]);
+        };
+        if($nb>=1) $addToken(1, TOKEN_TYPE_AUCTION_MARKER_1, 2,2);
+        if($nb>=2) $addToken(2, TOKEN_TYPE_AUCTION_MARKER_2, 3,3);
+
+        return $boardTokens;
+    }
 
     public function test_TilePriority_Card1(): void
     {
@@ -62,11 +79,11 @@ final class AutomaAuctionCardTest extends TestCase
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_1;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
         $boardTiles = $this->prepareBoardTiles();
-        $allAuctionableSpots = GridUtils::listPossibleSpotsForNextAuctionMarker($token, $boardTiles);
+        $boardTokens = $this->prepareBoardTokens();
         $card = new AutomaAuctionCard([],AutomaCards::getAutomaAuctionCardsTypes()[1]);
         $expectedSpot = ['row'=> 3, 'col'=>6];
         
-        $result = $card->findAuctionSpotByPriority($auctionType,$boardTiles, $allAuctionableSpots);
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
 
         self::assertSame( $expectedSpot, $result, );
     }
@@ -78,11 +95,11 @@ final class AutomaAuctionCardTest extends TestCase
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_1;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
         $boardTiles = $this->prepareBoardTiles();
-        $allAuctionableSpots = GridUtils::listPossibleSpotsForNextAuctionMarker($token, $boardTiles);
+        $boardTokens = $this->prepareBoardTokens();
         $card = new AutomaAuctionCard([],AutomaCards::getAutomaAuctionCardsTypes()[2]);
         $expectedSpot = ['row'=> 6, 'col'=>3];//teal tile on market bottom
         
-        $result = $card->findAuctionSpotByPriority($auctionType,$boardTiles, $allAuctionableSpots);
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
 
         self::assertSame( $expectedSpot, $result, );
     }
@@ -94,11 +111,11 @@ final class AutomaAuctionCardTest extends TestCase
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_1;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
         $boardTiles = $this->prepareBoardTiles();
-        $allAuctionableSpots = GridUtils::listPossibleSpotsForNextAuctionMarker($token, $boardTiles);
+        $boardTokens = $this->prepareBoardTokens();
         $card = new AutomaAuctionCard([],AutomaCards::getAutomaAuctionCardsTypes()[3]);
         $expectedSpot = ['row'=> 6, 'col'=>5];
         
-        $result = $card->findAuctionSpotByPriority($auctionType,$boardTiles, $allAuctionableSpots);
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
 
         self::assertSame( $expectedSpot, $result, );
     }
@@ -110,11 +127,11 @@ final class AutomaAuctionCardTest extends TestCase
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_1;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
         $boardTiles = $this->prepareBoardTiles();
-        $allAuctionableSpots = GridUtils::listPossibleSpotsForNextAuctionMarker($token, $boardTiles);
+        $boardTokens = $this->prepareBoardTokens();
         $card = new AutomaAuctionCard([],AutomaCards::getAutomaAuctionCardsTypes()[4]);
         $expectedSpot = ['row'=> 5, 'col'=>0];
         
-        $result = $card->findAuctionSpotByPriority($auctionType,$boardTiles, $allAuctionableSpots);
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
 
         self::assertSame( $expectedSpot, $result, );
     }
@@ -126,11 +143,11 @@ final class AutomaAuctionCardTest extends TestCase
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_1;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
         $boardTiles = $this->prepareBoardTiles();
-        $allAuctionableSpots = GridUtils::listPossibleSpotsForNextAuctionMarker($token, $boardTiles);
+        $boardTokens = $this->prepareBoardTokens();
         $card = new AutomaAuctionCard([],AutomaCards::getAutomaAuctionCardsTypes()[5]);
         $expectedSpot = ['row'=> 2, 'col'=>0];
         
-        $result = $card->findAuctionSpotByPriority($auctionType,$boardTiles, $allAuctionableSpots);
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
 
         self::assertSame( $expectedSpot, $result, );
     }
@@ -143,17 +160,17 @@ final class AutomaAuctionCardTest extends TestCase
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_1;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
         $boardTiles = $this->prepareBoardTiles();
-        $allAuctionableSpots = GridUtils::listPossibleSpotsForNextAuctionMarker($token, $boardTiles);
+        $boardTokens = $this->prepareBoardTokens();
         $card = new AutomaAuctionCard([],AutomaCards::getAutomaAuctionCardsTypes()[6]);
         $expectedSpot = ['row'=> 0, 'col'=>4];
         
-        $result = $card->findAuctionSpotByPriority($auctionType,$boardTiles, $allAuctionableSpots);
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
         self::assertSame( $expectedSpot, $result, );
         
         //Test 2 without the scoring tile
         unset($boardTiles[1]);
         $expectedSpot = ['row'=> 3, 'col'=>0];
-        $result = $card->findAuctionSpotByPriority($auctionType,$boardTiles, $allAuctionableSpots);
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
         self::assertSame( $expectedSpot, $result, );
 
     }
@@ -164,11 +181,11 @@ final class AutomaAuctionCardTest extends TestCase
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_1;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
         $boardTiles = $this->prepareBoardTiles();
-        $allAuctionableSpots = GridUtils::listPossibleSpotsForNextAuctionMarker($token, $boardTiles);
+        $boardTokens = $this->prepareBoardTokens();
         $card = new AutomaAuctionCard([],AutomaCards::getAutomaAuctionCardsTypes()[7]);
         $expectedSpot = ['row'=> 6, 'col'=>2];
         
-        $result = $card->findAuctionSpotByPriority($auctionType,$boardTiles, $allAuctionableSpots);
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
         self::assertSame( $expectedSpot, $result, );
     }
     public function test_TilePriority_Card8(): void
@@ -178,68 +195,338 @@ final class AutomaAuctionCardTest extends TestCase
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_1;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
         $boardTiles = $this->prepareBoardTiles();
-        $allAuctionableSpots = GridUtils::listPossibleSpotsForNextAuctionMarker($token, $boardTiles);
+        $boardTokens = $this->prepareBoardTokens();
         $cardType = 8;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
         $expectedSpot = ['row'=> 0, 'col'=>4];
         
-        $result = $card->findAuctionSpotByPriority($auctionType,$boardTiles, $allAuctionableSpots);
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
         self::assertSame( $expectedSpot, $result, );
 
         //Test 2 without the scoring tile
         logForTests(__CLASS__.".".__FUNCTION__);
         unset($boardTiles[1]);
-        $allAuctionableSpots = GridUtils::listPossibleSpotsForNextAuctionMarker($token, $boardTiles);
         $expectedSpot = ['row'=> 3, 'col'=>0];
-        $result = $card->findAuctionSpotByPriority($auctionType,$boardTiles, $allAuctionableSpots);
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
         self::assertSame( $expectedSpot, $result, );
         
         //Test 3 without the teal tile 5
         logForTests(__CLASS__.".".__FUNCTION__);
         unset($boardTiles[5]);
-        $allAuctionableSpots = GridUtils::listPossibleSpotsForNextAuctionMarker($token, $boardTiles);
         $expectedSpot = ['row'=> 4, 'col'=>0];
-        $result = $card->findAuctionSpotByPriority($auctionType,$boardTiles, $allAuctionableSpots);
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
         self::assertSame( $expectedSpot, $result, );
         
         //Test 4 without the teal tile 10, now we can reach Blue tile
         logForTests(__CLASS__.".".__FUNCTION__);
         unset($boardTiles[10]);
-        $allAuctionableSpots = GridUtils::listPossibleSpotsForNextAuctionMarker($token, $boardTiles);
         $expectedSpot = ['row'=> 4, 'col'=>1];
-        $result = $card->findAuctionSpotByPriority($auctionType,$boardTiles, $allAuctionableSpots);
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
         self::assertSame( $expectedSpot, $result, );
         
         //Test 5 without the blue tile 11
         logForTests(__CLASS__.".".__FUNCTION__);
         unset($boardTiles[11]);
-        $allAuctionableSpots = GridUtils::listPossibleSpotsForNextAuctionMarker($token, $boardTiles);
         $expectedSpot = ['row'=> 5, 'col'=>0];
-        $result = $card->findAuctionSpotByPriority($auctionType,$boardTiles, $allAuctionableSpots);
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
         self::assertSame( $expectedSpot, $result, );
         
         //Test 6 without the teal tile 15
         logForTests(__CLASS__.".".__FUNCTION__);
         unset($boardTiles[15]);
-        $allAuctionableSpots = GridUtils::listPossibleSpotsForNextAuctionMarker($token, $boardTiles);
         $expectedSpot = ['row'=> 6, 'col'=>3];
-        $result = $card->findAuctionSpotByPriority($auctionType,$boardTiles, $allAuctionableSpots);
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
         self::assertSame( $expectedSpot, $result, );
         
         //Test 7 without the teal tile 17
         logForTests(__CLASS__.".".__FUNCTION__);
         unset($boardTiles[17]);
-        $allAuctionableSpots = GridUtils::listPossibleSpotsForNextAuctionMarker($token, $boardTiles);
         $expectedSpot = ['row'=> 2, 'col'=>5];
-        $result = $card->findAuctionSpotByPriority($auctionType,$boardTiles, $allAuctionableSpots);
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
         self::assertSame( $expectedSpot, $result, );
         
         //Test 8 without the last teal tile, we can use depot
         logForTests(__CLASS__.".".__FUNCTION__);
         unset($boardTiles[4]);
-        $allAuctionableSpots = GridUtils::listPossibleSpotsForNextAuctionMarker($token, $boardTiles);
         $expectedSpot = ['row'=> 2, 'col'=>0];
-        $result = $card->findAuctionSpotByPriority($auctionType,$boardTiles, $allAuctionableSpots);
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+        self::assertSame( $expectedSpot, $result, );
+    }
+    
+    public function test_TilePriority_Card9_Auction2(): void
+    {
+        logForTests(__CLASS__.".".__FUNCTION__);
+        $game = $this->createGameMock();
+        $auctionType = TOKEN_TYPE_AUCTION_MARKER_2;
+        $token = new AuctionMarker(['type'=>$auctionType],[]);
+        $boardTiles = $this->prepareBoardTiles();
+        $boardTokens = $this->prepareBoardTokens(1);
+        $cardType = 9;
+        $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
+        $expectedSpot = ['row'=> 2, 'col'=>3];
+        
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+
+        self::assertSame( $expectedSpot, $result, );
+    }
+    
+    public function test_TilePriority_Card9_Auction3(): void
+    {
+        logForTests(__CLASS__.".".__FUNCTION__);
+        $game = $this->createGameMock();
+        $auctionType = TOKEN_TYPE_AUCTION_MARKER_3;
+        $token = new AuctionMarker(['type'=>$auctionType],[]);
+        $boardTiles = $this->prepareBoardTiles();
+        $boardTokens = $this->prepareBoardTokens(2);
+        $cardType = 9;
+        $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
+        $expectedSpot = ['row'=> 2, 'col'=>3];
+        
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+        self::assertSame( $expectedSpot, $result, );
+
+        //TEST 2 if there is 1 possible spot around previous marker : 
+        $boardTokens[1]->setRow(2); $boardTokens[1]->setCol(4);
+        $boardTokens[2]->setRow(1); $boardTokens[2]->setCol(4);
+        $expectedSpot = ['row'=> 2, 'col'=>3];
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+        self::assertSame( $expectedSpot, $result, );
+        
+        //TEST 3 if there is 0 possible spot around previous marker : look elsewhere !
+        unset($boardTiles[3]);
+        $expectedSpot = ['row'=> 3, 'col'=>5];
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+        self::assertSame( $expectedSpot, $result, );
+    }
+    
+    public function test_TilePriority_Card10_Auction2(): void
+    {
+        logForTests(__CLASS__.".".__FUNCTION__);
+        $game = $this->createGameMock();
+        $auctionType = TOKEN_TYPE_AUCTION_MARKER_2;
+        $token = new AuctionMarker(['type'=>$auctionType],[]);
+        $boardTiles = $this->prepareBoardTiles();
+        $boardTokens = $this->prepareBoardTokens(1);
+        $cardType = 10;
+        $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
+        $expectedSpot = ['row'=> 3, 'col'=>1];
+        
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+
+        self::assertSame( $expectedSpot, $result, );
+    }
+    public function test_TilePriority_Card10_Auction3(): void
+    {
+        logForTests(__CLASS__.".".__FUNCTION__);
+        $game = $this->createGameMock();
+        $auctionType = TOKEN_TYPE_AUCTION_MARKER_3;
+        $token = new AuctionMarker(['type'=>$auctionType],[]);
+        $boardTiles = $this->prepareBoardTiles();
+        $boardTokens = $this->prepareBoardTokens(2);
+        $cardType = 10;
+        $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
+        $expectedSpot = ['row'=> 2, 'col'=>4];
+        
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+
+        self::assertSame( $expectedSpot, $result, );
+    }
+    
+    public function test_TilePriority_Card11_Auction2(): void
+    {
+        logForTests(__CLASS__.".".__FUNCTION__);
+        $game = $this->createGameMock();
+        $auctionType = TOKEN_TYPE_AUCTION_MARKER_2;
+        $token = new AuctionMarker(['type'=>$auctionType],[]);
+        $boardTiles = $this->prepareBoardTiles();
+        $boardTokens = $this->prepareBoardTokens(1);
+        $cardType = 11;
+        $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
+        $expectedSpot = ['row'=> 3, 'col'=>3];
+        
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+
+        self::assertSame( $expectedSpot, $result, );
+    }
+    public function test_TilePriority_Card11_Auction3(): void
+    {
+        logForTests(__CLASS__.".".__FUNCTION__);
+        $game = $this->createGameMock();
+        $auctionType = TOKEN_TYPE_AUCTION_MARKER_3;
+        $token = new AuctionMarker(['type'=>$auctionType],[]);
+        $boardTiles = $this->prepareBoardTiles();
+        $boardTokens = $this->prepareBoardTokens(2);
+        $cardType = 11;
+        $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
+        $expectedSpot = ['row'=> 4, 'col'=>3];
+        
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+
+        self::assertSame( $expectedSpot, $result, );
+    }
+    
+    public function test_TilePriority_Card12_Auction2(): void
+    {
+        logForTests(__CLASS__.".".__FUNCTION__);
+        $game = $this->createGameMock();
+        $auctionType = TOKEN_TYPE_AUCTION_MARKER_2;
+        $token = new AuctionMarker(['type'=>$auctionType],[]);
+        $boardTiles = $this->prepareBoardTiles();
+        $boardTokens = $this->prepareBoardTokens(1);
+        $cardType = 12;
+        $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
+        $expectedSpot = ['row'=> 3, 'col'=>1];
+        
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+
+        self::assertSame( $expectedSpot, $result, );
+    }
+    public function test_TilePriority_Card12_Auction3(): void
+    {
+        logForTests(__CLASS__.".".__FUNCTION__);
+        $game = $this->createGameMock();
+        $auctionType = TOKEN_TYPE_AUCTION_MARKER_3;
+        $token = new AuctionMarker(['type'=>$auctionType],[]);
+        $boardTiles = $this->prepareBoardTiles();
+        $boardTokens = $this->prepareBoardTokens(2);
+        $cardType = 12;
+        $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
+        $expectedSpot = ['row'=> 2, 'col'=>4];
+        
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+
+        self::assertSame( $expectedSpot, $result, );
+    }
+    
+    public function test_TilePriority_Card13_Auction2(): void
+    {
+        logForTests(__CLASS__.".".__FUNCTION__);
+        $game = $this->createGameMock();
+        $auctionType = TOKEN_TYPE_AUCTION_MARKER_2;
+        $token = new AuctionMarker(['type'=>$auctionType],[]);
+        $boardTiles = $this->prepareBoardTiles();
+        $boardTokens = $this->prepareBoardTokens(1);
+        $cardType = 13;
+        $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
+        $expectedSpot = ['row'=> 2, 'col'=>1];
+        
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+
+        self::assertSame( $expectedSpot, $result, );
+    }
+    public function test_TilePriority_Card13_Auction3(): void
+    {
+        logForTests(__CLASS__.".".__FUNCTION__);
+        $game = $this->createGameMock();
+        $auctionType = TOKEN_TYPE_AUCTION_MARKER_3;
+        $token = new AuctionMarker(['type'=>$auctionType],[]);
+        $boardTiles = $this->prepareBoardTiles();
+        $boardTokens = $this->prepareBoardTokens(2);
+        $cardType = 13;
+        $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
+        $expectedSpot = ['row'=> 2, 'col'=>3];
+        
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+
+        self::assertSame( $expectedSpot, $result, );
+    }
+    
+    public function test_TilePriority_Card14_Auction2(): void
+    {
+        logForTests(__CLASS__.".".__FUNCTION__);
+        $game = $this->createGameMock();
+        $auctionType = TOKEN_TYPE_AUCTION_MARKER_2;
+        $token = new AuctionMarker(['type'=>$auctionType],[]);
+        $boardTiles = $this->prepareBoardTiles();
+        $boardTokens = $this->prepareBoardTokens(1);
+        $cardType = 14;
+        $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
+        $expectedSpot = ['row'=> 3, 'col'=>1];
+        
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+
+        self::assertSame( $expectedSpot, $result, );
+    }
+    public function test_TilePriority_Card14_Auction3(): void
+    {
+        logForTests(__CLASS__.".".__FUNCTION__);
+        $game = $this->createGameMock();
+        $auctionType = TOKEN_TYPE_AUCTION_MARKER_3;
+        $token = new AuctionMarker(['type'=>$auctionType],[]);
+        $boardTiles = $this->prepareBoardTiles();
+        $boardTokens = $this->prepareBoardTokens(2);
+        $cardType = 14;
+        $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
+        $expectedSpot = ['row'=> 2, 'col'=>4];
+        
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+
+        self::assertSame( $expectedSpot, $result, );
+    }
+    
+    public function test_TilePriority_Card15_Auction2(): void
+    {
+        logForTests(__CLASS__.".".__FUNCTION__);
+        $game = $this->createGameMock();
+        $auctionType = TOKEN_TYPE_AUCTION_MARKER_2;
+        $token = new AuctionMarker(['type'=>$auctionType],[]);
+        $boardTiles = $this->prepareBoardTiles();
+        $boardTokens = $this->prepareBoardTokens(1);
+        $cardType = 15;
+        $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
+        $expectedSpot = ['row'=> 3, 'col'=>2];
+        
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+
+        self::assertSame( $expectedSpot, $result, );
+    }
+    public function test_TilePriority_Card15_Auction3(): void
+    {
+        logForTests(__CLASS__.".".__FUNCTION__);
+        $game = $this->createGameMock();
+        $auctionType = TOKEN_TYPE_AUCTION_MARKER_3;
+        $token = new AuctionMarker(['type'=>$auctionType],[]);
+        $boardTiles = $this->prepareBoardTiles();
+        $boardTokens = $this->prepareBoardTokens(2);
+        $cardType = 15;
+        $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
+        $expectedSpot = ['row'=> 4, 'col'=>3];
+        
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+
+        self::assertSame( $expectedSpot, $result, );
+    }
+    
+    public function test_TilePriority_Card16_Auction2(): void
+    {
+        logForTests(__CLASS__.".".__FUNCTION__);
+        $game = $this->createGameMock();
+        $auctionType = TOKEN_TYPE_AUCTION_MARKER_2;
+        $token = new AuctionMarker(['type'=>$auctionType],[]);
+        $boardTiles = $this->prepareBoardTiles();
+        $boardTokens = $this->prepareBoardTokens(1);
+        $cardType = 16;
+        $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
+        $expectedSpot = ['row'=> 3, 'col'=>1];
+        
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+
+        self::assertSame( $expectedSpot, $result, );
+    }
+    public function test_TilePriority_Card16_Auction3(): void
+    {
+        logForTests(__CLASS__.".".__FUNCTION__);
+        $game = $this->createGameMock();
+        $auctionType = TOKEN_TYPE_AUCTION_MARKER_3;
+        $token = new AuctionMarker(['type'=>$auctionType],[]);
+        $boardTiles = $this->prepareBoardTiles();
+        $boardTokens = $this->prepareBoardTokens(2);
+        $cardType = 16;
+        $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
+        $expectedSpot = ['row'=> 4, 'col'=>2];
+        
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+
         self::assertSame( $expectedSpot, $result, );
     }
 }
