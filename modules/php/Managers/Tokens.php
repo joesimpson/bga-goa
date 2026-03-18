@@ -165,7 +165,7 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
     $token = self::getFirstPlayerToken();
     $token->setRow($row);
     $token->setCol($col);
-    $token->setPId($player->getId());
+    $token->setPId(null);
     $token->setLocation(TOKEN_LOCATION_BOARD);
     return $token;
   }

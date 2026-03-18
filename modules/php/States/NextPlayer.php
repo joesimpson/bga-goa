@@ -37,6 +37,15 @@ class NextPlayer extends \Bga\GameFramework\States\GameState
 
         $roundStep = Globals::getRoundStep();
         switch($roundStep){
+            case ROUND_STEP_PLACE_AUCTIONS:
+                $firstPlayerToken = Tokens::getFirstPlayerToken();
+                if( isset($firstPlayerToken) && (null !== $firstPlayerToken->getPId()) 
+                    && TOKEN_LOCATION_BOARD != $firstPlayerToken->getLocation())
+                {
+                    //Starting player must be the first the place the auction token and release the first player token
+                    $nextPlayer = Players::get($firstPlayerToken->getPId());
+                }
+                break;
             case ROUND_STEP_TILE_AUCTIONS:
                 $nextAuctionTokenToBid = Tokens::getCurrentAuctionToken();
                 if(!isset($nextAuctionTokenToBid)) {
