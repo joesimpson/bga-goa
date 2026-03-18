@@ -82,7 +82,8 @@ class Notifications
     $msg = '';
     if($session > 1){
       //visible message only when game with multiples sessions
-      $msg = clienttranslate('Session ${n} begins');
+      //Don't add it translate HQ until option is Enabled
+      //$msg = clienttranslate('Session ${n} begins');
     }
 
     self::notifyAll('newSession', $msg, [
@@ -115,7 +116,7 @@ class Notifications
     ]);
   }
   
-  public static function newPhase(GamePhase $gamePhase)
+  public static function newPhase(GamePhase $gamePhase, bool $silent = false)
   {
     self::logsLineSeparator();
     $msg = clienttranslate('${phaseName} phase begins');
@@ -125,6 +126,7 @@ class Notifications
         $phaseName = clienttranslate('Night');
         break;
     }
+    if($silent) $msg = '';
 
     self::notifyAll('newPhase', $msg, [
       'phaseName' => $phaseName,

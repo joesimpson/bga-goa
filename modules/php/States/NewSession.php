@@ -15,6 +15,7 @@ use Bga\Games\Goa\Managers\Cards;
 use Bga\Games\Goa\Managers\Players;
 use Bga\Games\Goa\Managers\Tiles;
 use Bga\Games\Goa\Managers\Tokens;
+use Bga\Games\Goa\Models\GamePhase;
 
 class NewSession extends \Bga\GameFramework\States\GameState
 {
@@ -40,6 +41,7 @@ class NewSession extends \Bga\GameFramework\States\GameState
         $session ++;
         Globals::setSession($session);
         Notifications::newSession($session);
+        Notifications::newPhase(GamePhase::DAY);
         
         Globals::setRound(0);
         Cards::setupSession($session);
