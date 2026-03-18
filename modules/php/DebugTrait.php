@@ -600,7 +600,7 @@ trait DebugTrait
      * 
      * Example : from AutomaAuctionCardTest.prepareBoardTiles()
     */
-    function debug_UnitTestTiles(){
+    function debug_UnitTestTiles(bool $day = true){
         $player = Players::getCurrent();
         $player_id = $player->getId();
         Log::addStep();
@@ -621,25 +621,51 @@ trait DebugTrait
         };
         // Real use case taken from DB
         // SELECT tile_id,type, tile_row, tile_col FROM `tiles` where tile_location='market' ORDER BY `tiles`.`tile_row` ASC, `tile_col` ASC;
-        $addTile(1, 37, 1,4);
-        $addTile(2, 3,  2,1);
-        $addTile(3, 11, 2,3);
-        $addTile(4, 28, 2,4);
-        $addTile(5, 26, 3,1);
-        $addTile(6, 13, 3,2);
-        $addTile(7 , 14, 3,3);
-        $addTile(8 , 7, 3,4);
-        $addTile(9 , 11, 3,5);
-        $addTile(10, 27, 4,1);
-        $addTile(11, 8, 4,2);
-        $addTile(12, 14, 4,3);
-        $addTile(13, 15, 4,4);
-        $addTile(14, 2, 4,5);
-        $addTile(15, 24, 5,1);
-        $addTile(16, 4, 5,2);
-        $addTile(17, 25, 5,3);
-        $addTile(18, 5, 5,4);
-        $addTile(19, 13, 5,5);
+        if($day) {
+            $addTile(1, 37, 1,4);
+            $addTile(2, 3,  2,1);
+            $addTile(3, 11, 2,3);
+            $addTile(4, 28, 2,4);
+            $addTile(5, 26, 3,1);
+            $addTile(6, 13, 3,2);
+            $addTile(7 , 14, 3,3);
+            $addTile(8 , 7, 3,4);
+            $addTile(9 , 11, 3,5);
+            $addTile(10, 27, 4,1);
+            $addTile(11, 8, 4,2);
+            $addTile(12, 14, 4,3);
+            $addTile(13, 15, 4,4);
+            $addTile(14, 2, 4,5);
+            $addTile(15, 24, 5,1);
+            $addTile(16, 4, 5,2);
+            $addTile(17, 25, 5,3);
+            $addTile(18, 5, 5,4);
+            $addTile(19, 13, 5,5);
+        }
+        else {
+            $addTile(1,  27, 1, 1);
+            $addTile(2,  27, 1, 2);
+            $addTile(3,  20, 1, 3);
+            $addTile(4,  23, 1, 4);
+            $addTile(5,  19, 1, 5);
+            $addTile(6,  33, 2, 1);
+            $addTile(7 , 24, 2, 2);
+            $addTile(8 , 31, 2, 3);
+            $addTile(9 , 10, 2, 4);
+            $addTile(10, 21, 2, 5);
+            $addTile(11, 26, 3, 1);
+            $addTile(12, 23, 3, 2);
+            $addTile(13, 38, 3, 3);
+            $addTile(14, 26, 3, 4);
+            $addTile(15, 32, 3, 5);
+            $addTile(16, 17, 4, 4);
+            $addTile(17, 18, 4, 5);
+            $addTile(18, 35, 5, 1);
+            $addTile(19, 12, 5, 3);
+            $addTile(20, 36, 5, 4);
+            $addTile(21, 25, 5, 5);
+        }
+
         Tiles::create($boardTiles);
 
         $this->debug_refreshUI();

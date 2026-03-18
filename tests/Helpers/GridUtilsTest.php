@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Tests\Helpers;
 
 use Bga\Games\Goa\Helpers\GridUtils;
+use Bga\Games\Goa\Models\AutomaAuctionDirectionType;
+use Bga\Games\Goa\Models\AutomaAuctionStartType;
 use PHPUnit\Framework\TestCase;
 
 final class GridUtilsTest extends TestCase
@@ -414,6 +416,161 @@ final class GridUtilsTest extends TestCase
             ['row'=> 3, 'col'=>2],
             ];
             $result = GridUtils::listOrderedSpotsMiddle_BottomLeft_CounterClockwise();
+        self::assertSame( $expectedArray, $result, );
+    }
+
+    
+    public function test_orderedSpotsAround_TopLeft_Clockwise(): void
+    {
+        logForTests(__CLASS__.".".__FUNCTION__);
+        $ref = ['row'=> 3, 'col'=>3];
+        $start = AutomaAuctionStartType::TOP_LEFT;
+        $dir = AutomaAuctionDirectionType::CLOCKWISE;
+        $expectedArray = [
+            ['row'=> 2, 'col'=>2],
+            ['row'=> 2, 'col'=>3],
+            ['row'=> 2, 'col'=>4],
+            ['row'=> 3, 'col'=>4],
+            ['row'=> 4, 'col'=>4],
+            ['row'=> 4, 'col'=>3],
+            ['row'=> 4, 'col'=>2],
+            ['row'=> 3, 'col'=>2],
+            ];
+        $result = GridUtils::listOrderedSpotsAround($ref['row'], $ref['col'], $start,$dir);
+        self::assertSame( $expectedArray, $result, );
+    }
+    public function test_orderedSpotsAround_TopLeft_CounterClockwise(): void
+    {
+        logForTests(__CLASS__.".".__FUNCTION__);
+        $ref = ['row'=> 3, 'col'=>3];
+        $start = AutomaAuctionStartType::TOP_LEFT;
+        $dir = AutomaAuctionDirectionType::COUNTER_CLOCKWISE;
+        $expectedArray = [
+            ['row'=> 2, 'col'=>2],
+            ['row'=> 3, 'col'=>2],
+            ['row'=> 4, 'col'=>2],
+            ['row'=> 4, 'col'=>3],
+            ['row'=> 4, 'col'=>4],
+            ['row'=> 3, 'col'=>4],
+            ['row'=> 2, 'col'=>4],
+            ['row'=> 2, 'col'=>3],
+            ];
+        $result = GridUtils::listOrderedSpotsAround($ref['row'], $ref['col'], $start,$dir);
+        self::assertSame( $expectedArray, $result, );
+    }
+    
+    public function test_orderedSpotsAround_TopRight_Clockwise(): void
+    {
+        logForTests(__CLASS__.".".__FUNCTION__);
+        $ref = ['row'=> 3, 'col'=>3];
+        $start = AutomaAuctionStartType::TOP_RIGHT;
+        $dir = AutomaAuctionDirectionType::CLOCKWISE;
+        $expectedArray = [
+            ['row'=> 2, 'col'=>4],
+            ['row'=> 3, 'col'=>4],
+            ['row'=> 4, 'col'=>4],
+            ['row'=> 4, 'col'=>3],
+            ['row'=> 4, 'col'=>2],
+            ['row'=> 3, 'col'=>2],
+            ['row'=> 2, 'col'=>2],
+            ['row'=> 2, 'col'=>3],
+            ];
+        $result = GridUtils::listOrderedSpotsAround($ref['row'], $ref['col'], $start,$dir);
+        self::assertSame( $expectedArray, $result, );
+    }
+    public function test_orderedSpotsAround_TopRight_CounterClockwise(): void
+    {
+        logForTests(__CLASS__.".".__FUNCTION__);
+        $ref = ['row'=> 3, 'col'=>3];
+        $start = AutomaAuctionStartType::TOP_RIGHT;
+        $dir = AutomaAuctionDirectionType::COUNTER_CLOCKWISE;
+        $expectedArray = [
+            ['row'=> 2, 'col'=>4],
+            ['row'=> 2, 'col'=>3],
+            ['row'=> 2, 'col'=>2],
+            ['row'=> 3, 'col'=>2],
+            ['row'=> 4, 'col'=>2],
+            ['row'=> 4, 'col'=>3],
+            ['row'=> 4, 'col'=>4],
+            ['row'=> 3, 'col'=>4],
+            ];
+        $result = GridUtils::listOrderedSpotsAround($ref['row'], $ref['col'], $start,$dir);
+        self::assertSame( $expectedArray, $result, );
+    }
+    public function test_orderedSpotsAround_BottomRight_Clockwise(): void
+    {
+        logForTests(__CLASS__.".".__FUNCTION__);
+        $ref = ['row'=> 3, 'col'=>3];
+        $start = AutomaAuctionStartType::BOTTOM_RIGHT;
+        $dir = AutomaAuctionDirectionType::CLOCKWISE;
+        $expectedArray = [
+            ['row'=> 4, 'col'=>4],
+            ['row'=> 4, 'col'=>3],
+            ['row'=> 4, 'col'=>2],
+            ['row'=> 3, 'col'=>2],
+            ['row'=> 2, 'col'=>2],
+            ['row'=> 2, 'col'=>3],
+            ['row'=> 2, 'col'=>4],
+            ['row'=> 3, 'col'=>4],
+            ];
+        $result = GridUtils::listOrderedSpotsAround($ref['row'], $ref['col'], $start,$dir);
+        self::assertSame( $expectedArray, $result, );
+    }
+    public function test_orderedSpotsAround_BottomRight_Counterclockwise(): void
+    {
+        logForTests(__CLASS__.".".__FUNCTION__);
+        $ref = ['row'=> 3, 'col'=>3];
+        $start = AutomaAuctionStartType::BOTTOM_RIGHT;
+        $dir = AutomaAuctionDirectionType::COUNTER_CLOCKWISE;
+        $expectedArray = [
+            ['row'=> 4, 'col'=>4],
+            ['row'=> 3, 'col'=>4],
+            ['row'=> 2, 'col'=>4],
+            ['row'=> 2, 'col'=>3],
+            ['row'=> 2, 'col'=>2],
+            ['row'=> 3, 'col'=>2],
+            ['row'=> 4, 'col'=>2],
+            ['row'=> 4, 'col'=>3],
+            ];
+        $result = GridUtils::listOrderedSpotsAround($ref['row'], $ref['col'], $start,$dir);
+        self::assertSame( $expectedArray, $result, );
+    }
+    public function test_orderedSpotsAround_BottomLeft_Clockwise(): void
+    {
+        logForTests(__CLASS__.".".__FUNCTION__);
+        $ref = ['row'=> 3, 'col'=>3];
+        $start = AutomaAuctionStartType::BOTTOM_LEFT;
+        $dir = AutomaAuctionDirectionType::CLOCKWISE;
+        $expectedArray = [
+            ['row'=> 4, 'col'=>2],
+            ['row'=> 3, 'col'=>2],
+            ['row'=> 2, 'col'=>2],
+            ['row'=> 2, 'col'=>3],
+            ['row'=> 2, 'col'=>4],
+            ['row'=> 3, 'col'=>4],
+            ['row'=> 4, 'col'=>4],
+            ['row'=> 4, 'col'=>3],
+            ];
+        $result = GridUtils::listOrderedSpotsAround($ref['row'], $ref['col'], $start,$dir);
+        self::assertSame( $expectedArray, $result, );
+    }
+    public function test_orderedSpotsAround_BottomLeft_Counterclockwise(): void
+    {
+        logForTests(__CLASS__.".".__FUNCTION__);
+        $ref = ['row'=> 3, 'col'=>3];
+        $start = AutomaAuctionStartType::BOTTOM_LEFT;
+        $dir = AutomaAuctionDirectionType::COUNTER_CLOCKWISE;
+        $expectedArray = [
+            ['row'=> 4, 'col'=>2],
+            ['row'=> 4, 'col'=>3],
+            ['row'=> 4, 'col'=>4],
+            ['row'=> 3, 'col'=>4],
+            ['row'=> 2, 'col'=>4],
+            ['row'=> 2, 'col'=>3],
+            ['row'=> 2, 'col'=>2],
+            ['row'=> 3, 'col'=>2],
+            ];
+        $result = GridUtils::listOrderedSpotsAround($ref['row'], $ref['col'], $start,$dir);
         self::assertSame( $expectedArray, $result, );
     }
 }
