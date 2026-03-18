@@ -493,8 +493,8 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
     
     $nbBidders = count($players);
 
-    $automaColor = Globals::getAutomaColor();
-    if(isset($automaColor)){
+    $automaId = Utils::getAutomaPId();
+    if(isset($automaId)){
       $nbBidders++;
     }
     

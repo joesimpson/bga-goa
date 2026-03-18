@@ -27,7 +27,7 @@ class MoneyCards extends Cards
             ];
         }
         $ids = self::create($cards);
-        $elements = self::get($ids);
+        $elements = self::getMany($ids);
         Notifications::initAutomaMoney($elements);
         self::shuffle(CardLocation::AUTOMA_MONEY_DECK->value);
         return $elements;
@@ -130,7 +130,7 @@ class MoneyCards extends Cards
         if(count($cardsTmp) == 0) return new Collection([]);
 
         $ids = self::create($cardsTmp);
-        $cards = self::get($ids);
+        $cards = self::getMany($ids);
         foreach($cards as $card) {
             MoneyCards::insertOnTop($card->getId(), CardLocation::AUTOMA_MONEY_DISCARD->value);
         }
