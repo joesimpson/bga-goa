@@ -1,33 +1,33 @@
 {
 
     "110": {
-        "name": "Automa",
+        "name": "Automaton",
         "values": {
             "1": {
                 "name": "Level I",
                 "tmdisplay": "Level I",
-                "description": "You face a virtual opponent: Lakshmi, a clever merchant competing with you for dominance in the spice trade. Expand Depots, establish Outposts, and build your fortune while adapting to her relentless pressure."
+                "description": "You face a virtual opponent: Lakshmi, a clever merchant competing with you for dominance in the spice trade. Expand Depots, establish Outposts, and build your fortune while adapting to her relentless pressure. On higher levels, Lakshmi starts the game with more money."
             }
             ,
             "2": {
                 "name": "Level II",
                 "tmdisplay": "Level II",
                 "nobeginner": true,
-                "description": "You face a virtual opponent: Lakshmi, a clever merchant competing with you for dominance in the spice trade. Expand Depots, establish Outposts, and build your fortune while adapting to her relentless pressure."
+                "description": "You face a virtual opponent: Lakshmi, a clever merchant competing with you for dominance in the spice trade. Expand Depots, establish Outposts, and build your fortune while adapting to her relentless pressure. On higher levels, Lakshmi starts the game with more money."
             }
             ,
             "3": {
                 "name": "Level III",
                 "tmdisplay": "Level III",
                 "nobeginner": true,
-                "description": "You face a virtual opponent: Lakshmi, a clever merchant competing with you for dominance in the spice trade. Expand Depots, establish Outposts, and build your fortune while adapting to her relentless pressure."
+                "description": "You face a virtual opponent: Lakshmi, a clever merchant competing with you for dominance in the spice trade. Expand Depots, establish Outposts, and build your fortune while adapting to her relentless pressure. On higher levels, Lakshmi starts the game with more money."
             }
             ,
             "10": {
                 "name": "Random Level",
                 "tmdisplay": "Random Level",
                 "nobeginner": true,
-                "description": "You face a virtual opponent: Lakshmi, a clever merchant competing with you for dominance in the spice trade. Expand Depots, establish Outposts, and build your fortune while adapting to her relentless pressure."
+                "description": "You face a virtual opponent: Lakshmi, a clever merchant competing with you for dominance in the spice trade. Expand Depots, establish Outposts, and build your fortune while adapting to her relentless pressure. On higher levels, Lakshmi starts the game with more money."
             }
         },
         "default": 1,
