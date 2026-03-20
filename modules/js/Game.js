@@ -633,9 +633,12 @@ export class Game {
             stock.setOpened(false);
         });
 
-        document.getElementById('goa_top_zone').classList.remove('goa_display');
-        //Empty it only when displayed again in order to have smooth transition
+        let topClasses = document.getElementById('goa_top_zone').classList;
+        //Empty it only when displayed again in order to have smooth transition 
         //this.empty(document.getElementById('goa_top_zone_content'));
+        if(topClasses.contains('goa_display')){
+            topClasses.remove('goa_display');
+        }
         
         [...gameContainer.getElementsByClassName('goa_playerboard_top_zone')].forEach((node) => {
             $(node).classList.remove('goa_display');
@@ -1656,6 +1659,10 @@ export class Game {
     }
     async notif_automaDrawMoney(notif) {
         this.customDebug('notif_automaDrawMoney:', notif);
+
+        //Wait during goa_top_zone css transition ( grid-template-rows 500ms)
+        //await new Promise(r => setTimeout(r, 550));
+        await this.bga.gameui.wait(501);
 
         let card = notif.card;
         let fromElement = document.getElementById(`goa_automa_deck_money`);
