@@ -1622,7 +1622,15 @@ export class Game {
         if(counterName){
             this._counters[this.gamedatas.automa_id][counterName].incValue(-1);
         }
-        this.destroy($(`goa_card-${card.id}`));
+        //remove back card:
+        let existingCard = $(`goa_card-${card.id}`);
+        if(existingCard) this.destroy(existingCard);
+        else {
+            let firstCardBack = fromElement.querySelector('.goa_card');
+            if( firstCardBack) {
+                this.destroy(firstCardBack);
+            }
+        }
         let cardDiv = await this.addCard(card);
         await this.animationManager.slideIn(cardDiv, fromElement, {duration: 1000});
     }
@@ -1634,7 +1642,15 @@ export class Game {
         let fromElement = document.getElementById(`goa_automa_deck_action`);
         this._counters[this.gamedatas.automa_id]['goa_deck_size_automa_action'].incValue(-1);
 
-        this.destroy($(`goa_card-${card.id}`));
+        //remove back card:
+        let existingCard = $(`goa_card-${card.id}`);
+        if(existingCard) this.destroy(existingCard);
+        else {
+            let firstCardBack = fromElement.querySelector('.goa_card');
+            if( firstCardBack) {
+                this.destroy(firstCardBack);
+            }
+        }
         let cardDiv = await this.addCard(card);
         await this.animationManager.slideIn(cardDiv, fromElement, {duration: 1000});
     }
@@ -1645,7 +1661,15 @@ export class Game {
         let fromElement = document.getElementById(`goa_automa_deck_money`);
         this._counters[this.gamedatas.automa_id]['goa_deck_size_automa_money'].incValue(-1);
 
-        this.destroy($(`goa_card-${card.id}`));
+        //remove back card:
+        let existingCard = $(`goa_card-${card.id}`);
+        if(existingCard) this.destroy(existingCard);
+        else {
+            let firstCardBack = fromElement.querySelector('.goa_card');
+            if( firstCardBack) {
+                this.destroy(firstCardBack);
+            }
+        }
         let cardDiv = await this.addCard(card);
         await this.animationManager.slideIn(cardDiv, fromElement, {duration: 1000});
     }
@@ -2150,7 +2174,8 @@ export class Game {
         let automaMoneyCardsDiv = [...automaDiscardDiv.querySelectorAll('.goa_card')];
         let animations = automaMoneyCardsDiv.map(cardDiv => (() => {
             //add a back card
-            toElement.insertAdjacentHTML('afterbegin', this.tplCard({'id':cardDiv.id, 'subtype': this.const.CARD_SUBTTYPE_MONEY}));
+            let cardId = cardDiv.id.split('-')[1];
+            toElement.insertAdjacentHTML('afterbegin', this.tplCard({'id':cardId, 'subtype': this.const.CARD_SUBTTYPE_MONEY}));
             this._counters[this.gamedatas.automa_id][`goa_deck_size_automa_money`].incValue(1);
 
             this.animationManager.slideFloatingElement(
@@ -2167,6 +2192,9 @@ export class Game {
         await this.bga.gameui.wait(1000);
         await this.animationManager.playInterval(animations);
         await this.bga.gameui.wait(2000);
+
+        //Clear remaining cards if animations didn't happen (ex : replay fast)
+        [...automaDiscardDiv.querySelectorAll('.goa_card')].forEach(cardDiv => this.destroy(cardDiv));
     }
     
     async notif_reshuffleAutomaActionDeck(notif) {
@@ -3304,20 +3332,20 @@ export class Game {
             Object.values([1,2,3]).forEach(i => {
                 let nb = this.gamedatas.cards.deck_size[this.const.CARD_SUBTTYPE_AUTOMA_AUCTION][i];
                 this._counters[this.gamedatas.automa_id][`goa_deck_size_automa_auction_${i}`].toValue(nb);
-                for(let k=0; k<= nb;k++){
+                for(let k=1; k<= nb;k++){
                     document.getElementById(`goa_automa_deck_auction_${i}`).insertAdjacentHTML('afterbegin', this.tplCard({'id':k, 'subtype': this.const.CARD_SUBTTYPE_AUTOMA_AUCTION}));
                 }    
             });
             let nb = this.gamedatas.cards.deck_size[this.const.CARD_SUBTTYPE_AUTOMA_ACTION];
                 
             this._counters[this.gamedatas.automa_id][`goa_deck_size_automa_action`].toValue(nb);
-            for(let k=0; k<= nb;k++){
+            for(let k=1; k<= nb;k++){
                 document.getElementById('goa_automa_deck_action').insertAdjacentHTML('afterbegin', this.tplCard({'id':k, 'subtype': this.const.CARD_SUBTTYPE_AUTOMA_ACTION}));
             }    
 
             nb = this.gamedatas.cards.deck_size[this.const.CARD_SUBTTYPE_MONEY];
             this._counters[this.gamedatas.automa_id][`goa_deck_size_automa_money`].toValue(nb);
-            for(let k=0; k<= nb;k++){
+            for(let k=1; k<= nb;k++){
                 document.getElementById('goa_automa_deck_money').insertAdjacentHTML('afterbegin', this.tplCard({'id':k, 'subtype': this.const.CARD_SUBTTYPE_MONEY}));
             }
         }  
@@ -3447,6 +3475,7 @@ export class Game {
     }
     
     tplCard(card, prefix ='') {
+        this.customDebug("tplCard",card.id, card,prefix);
         if(card.subtype == this.const.CARD_SUBTTYPE_EXPLORATION) 
             return `<div id="goa_card${prefix}-${card.id}" class="goa_card goa_exploration_card goa_card${prefix} goa_card${prefix}_${card.type}" data-type='${card.type}' data-pid='${card.pId}'></div>`;
         
