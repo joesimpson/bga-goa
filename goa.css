@@ -1399,6 +1399,15 @@ body.notouch-device .goa_tile:hover .goa_token:not(.selectable) {
   border-radius: 50%;
 }
 
+.goa_icon_score_flower {
+  width: 35px;
+  height: 34px;
+  background-image: url("img/icons.png");
+  background-position-x: -564.5px;
+  background-position-y: 0px;
+  background-size: 1714.2857142857% 485.2941176471%;
+}
+
 /**
  *------
  * BGA framework: Gregory Isabelli & Emmanuel Colin & BoardGameArena

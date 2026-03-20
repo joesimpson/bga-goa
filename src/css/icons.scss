@@ -202,3 +202,7 @@ $symbol_tiny_height: 25px;
     @include goa_extract_in_solo_cards(1635px,3381px,25px,25px,45px,45px);
     border-radius: 50%;
 }    
+
+.goa_icon_score_flower{
+    @include goa_icons_sprite(1129px,0px,0.5 * 70px,0.5 * 68px,70px,68px);
+} 

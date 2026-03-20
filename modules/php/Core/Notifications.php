@@ -835,35 +835,38 @@ class Notifications
   }
   
   public static function addPointsWithTile(Player $player,int $points, Tile $tile){
-    $msg = clienttranslate('${player_name} scores ${n} points with the tile ${tile_icon}');
+    $msg = clienttranslate('${player_name} scores ${n} points ${icon_score} with the tile ${tile_icon}');
     $args = [ 
       'player' => $player,
       'n' => $points,
       "tile" => $tile->getUiData(),
       "tile_icon" => '',
+      'icon_score' => '',
       'preserve'=>['tile'],
     ];
     self::notifyAll('addPointsWithTile',$msg, $args, );
   }
   
   public static function addPointsWithMoney(Player $player,int $points,int $money){
-    $msg = clienttranslate('${player_name} scores ${n} points for having the most Pardaos : ${n2} ${icon_money}');
+    $msg = clienttranslate('${player_name} scores ${n} points ${icon_score} for having the most Pardaos : ${n2} ${icon_money}');
     $args = [ 
       'player' => $player,
       'n' => $points,
       'n2' => $money,
       'icon_money' => clienttranslate('Pardaos'),
+      'icon_score' => '',
       'i18n' => ['icon_money'],
     ];
     self::notifyAll('addPointsWithMoney',$msg, $args, );
   }
   
   public static function addPointsWithSymbols(Player $player,int $points,int $nbSymbols, int $symbolType){
-    $msg = clienttranslate('${player_name} scores ${n} points with ${n2} ${icon_symbol} symbols');
+    $msg = clienttranslate('${player_name} scores ${n} points ${icon_score} with ${n2} ${icon_symbol} symbols');
     $args = [ 
       'player' => $player,
       'n' => $points,
       'n2' => $nbSymbols,
+      'icon_score' => '',
       'symbolType' => $symbolType,
       'icon_symbol' => CARD_SYMBOLS[$symbolType],
       'i18n' => ['icon_symbol'],
@@ -873,22 +876,24 @@ class Notifications
   }
   
   public static function addPointsWithProgress(Player $player,int $points){
-    $msg = clienttranslate('${player_name} scores ${n} points with progress markers');
+    $msg = clienttranslate('${player_name} scores ${n} points ${icon_score} with progress markers');
     $args = [ 
       'player' => $player,
       'n' => $points,
       'scoringType' => SCORING_PROGRESS,
+      'icon_score' => '',
       'preserve'=>['scoringType'],
     ];
     self::notifyAll('addPoints',$msg, $args, );
   }
   
   public static function addPointsWithOutposts(Player $player,int $points, int $nbTiles){
-    $msg = clienttranslate('${player_name} scores ${n} points with ${n2} outposts');
+    $msg = clienttranslate('${player_name} scores ${n} points ${icon_score} with ${n2} outposts');
     $args = [ 
       'player' => $player,
       'n' => $points,
       'n2' => $nbTiles,
+      'icon_score' => '',
       'scoringType' => SCORING_OUTPOSTS,
       'preserve'=>['scoringType'],
     ];

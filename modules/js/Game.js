@@ -529,6 +529,9 @@ export class Game {
             if('rank_icon' in args){
                 args.rank_icon = this.formatIcon('score_rank');
             }
+            if('icon_score' in args) {
+                args.icon_score = this.formatIcon('score_flower', _('Score'));
+            }
             
         }
       } catch (e) {
@@ -1277,7 +1280,7 @@ export class Game {
         });
         let html = `<table id="goa_end_score_recap_table" class="whiteblock">
                 <thead>
-                    <th>${_('Score')} <div class='goa_icon_score'></div></th>
+                    <th>${_('Score')} ${this.formatIcon('score_flower')}</th>
                     ${playersNames}
                 </thead>
                 <tbody>
@@ -1299,7 +1302,7 @@ export class Game {
                         ${playersScoreTiles}
                     </tr>
                     <tr class ='goa_score_total'>
-                        <th>${_('Total')} <div class='goa_icon_score'></div></th>
+                        <th>${_('Total')} ${this.formatIcon('score_flower')}</th>
                         ${playersTotal}
                     </tr>
                     <tr class ='goa_score_card_total'>
