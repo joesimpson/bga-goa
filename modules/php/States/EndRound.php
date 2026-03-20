@@ -44,8 +44,11 @@ class EndRound extends \Bga\GameFramework\States\GameState
             //START NIGHT PHASE
             Notifications::newPhase(GamePhase::NIGHT);
             Tiles::setupMarket(2);
-            AutomaCards::setupPhase(GamePhase::NIGHT);
-            MoneyCards::reshuffleAutomaDeck();
+                    
+            if(Utils::isGameWithAutoma()){
+                AutomaCards::setupPhase(GamePhase::NIGHT);
+                MoneyCards::reshuffleAutomaDeck();
+            }
         }
 
         if ($sessionEnd) {
