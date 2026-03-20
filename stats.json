@@ -3,7 +3,7 @@
 
       "automaAuctionsWon": {
         "id": 10,
-        "name": "Auctions won by automata",
+        "name": "Auctions won by automaton",
         "type": "int"
       }
     },
