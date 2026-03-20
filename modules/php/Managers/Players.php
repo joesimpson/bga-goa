@@ -10,6 +10,7 @@ use Bga\Games\Goa\Core\Stats;
 use Bga\Games\Goa\Exceptions\PrematureStateChangeException;
 use Bga\Games\Goa\Helpers\Utils;
 use Bga\Games\Goa\Models\AutomaPlayer;
+use Bga\Games\Goa\Models\CardLocation;
 use Bga\Games\Goa\Models\Player;
 use Bga\Games\Goa\Models\Tile;
 use Bga\Games\Goa\States\PlayerChoice;
@@ -323,6 +324,16 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
       ]);
   }
 
+  public static function automaPlayerMoney() : int {
+    $cards = MoneyCards::getInLocation(CardLocation::AUTOMA_MONEY_DECK->value)
+      ->merge(MoneyCards::getInLocation(CardLocation::AUTOMA_MONEY_DISCARD->value));
+    if( $cards->count()>0){
+
+      return $cards->map(function ($card) {return $card->getValue();})
+        ->reduce( function ($ax, $dx) { return $ax + (int)$dx; },0);
+    }
+    return 0;
+  }
   /*
    * Return the number of players
    */

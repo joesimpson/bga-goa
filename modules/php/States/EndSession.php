@@ -132,8 +132,15 @@ class EndSession extends \Bga\GameFramework\States\GameState
         }
         
         //Players LOOP 4 : SCORING_COINS
+        $automaMoney = Players::automaPlayerMoney();
         $mostCoins = 0;
         $mostCoinsPlayers = [];//may be tied
+        if($automaMoney > $mostCoins) {
+            $automa = Players::automaPlayer();
+            $mostCoins = $automaMoney;
+            $mostCoinsPlayers = [$automa->getId()];
+            Notifications::revealMoney($automa, $automaMoney);
+        }
         foreach($players as $pId => &$player){
             $coins = $player->getMoney();
             if($coins > $mostCoins){
