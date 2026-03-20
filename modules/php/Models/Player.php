@@ -69,7 +69,8 @@ class Player extends \Bga\Games\Goa\Helpers\DB_Model
   {
     if($points == 0) return;
     //REAL INC in DB in case of not up to date score in object
-    Players::incPlayerScore($this->getId(), $points);
+    $newScore = Players::incPlayerScore($this->getId(), $points);
+    $this->setScore($newScore);
     Stats::inc( "score", $this->getId(), $points );
     if($sendNotif) Notifications::addPoints($this,$points);
   }

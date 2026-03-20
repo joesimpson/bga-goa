@@ -208,15 +208,22 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
   /**
    * @param int $pId
    * @param int $score score to add to current score
+   * @return int $newScore
    */
-  public static function incPlayerScore(int $pId, int $score)
+  public static function incPlayerScore(int $pId, int $score) : int
   {
     Game::get()->trace("incPlayerScore($pId, $score)");
 
-    return self::DB()
+    self::DB()
       ->inc(['player_score' => $score])
       ->wherePlayer($pId)
       ->run();
+    return self::DB()
+      ->select(['player_score', ])
+      ->wherePlayer($pId)
+      ->get()
+      ->first()
+      ->getScore();
   }
 
   public static function getActiveId()
