@@ -543,6 +543,10 @@ trait DebugTrait
     }
     function debug_scoring(){
         Log::addStep();
+        $player = Players::getCurrent();
+        $player->setScore(0);
+        $this->debug_refreshUI(); 
+        
         $session = Globals::getSession();
         EndSession::computeScoring($session);
         
