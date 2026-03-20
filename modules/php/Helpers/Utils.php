@@ -328,6 +328,15 @@ class Utils {
         return null;
     }
 
+    public static function isGameWithAutoma() : bool {
+        $difficulty = Globals::getOptionAutomaDifficulty();
+        if(!isset($difficulty)) return false;
+        if(OPTION_AUTOMA_DIFFICULTY_OFF == $difficulty){
+            return false;
+        }
+        return true;
+    }
+
     public static function getRoundPhase() : GamePhase {
         $round = Globals::getRound();
         if($round > NB_ROUNDS_DAY) return GamePhase::NIGHT;
