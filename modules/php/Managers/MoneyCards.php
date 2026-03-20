@@ -18,6 +18,14 @@ class MoneyCards extends Cards
     public static function initAutoma(array $typesAmount): Collection
     {
         $cards = [];
+
+        //CLEAR PREVIOUS MONEY CARDS (from deck/discard)
+        $previousCards = self::getInLocation(CardLocation::AUTOMA_MONEY_DECK->value)
+            ->merge(self::getInLocation(CardLocation::AUTOMA_MONEY_DISCARD->value));
+        foreach($previousCards as $pCard){
+            self::DB()->delete($pCard->getId());
+        }
+
         foreach($typesAmount as $cardType => $amount){
             $cards[] = [
                 'type' => $cardType,

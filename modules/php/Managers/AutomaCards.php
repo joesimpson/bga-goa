@@ -291,8 +291,6 @@ class AutomaCards extends Cards
 
   public static function setupSession(int $session)
   {
-    //TODO JSA CAMPAIGN SOLO
-
     $difficulty = Globals::getOptionAutomaDifficulty();
     switch($difficulty){
         case OPTION_AUTOMA_DIFFICULTY_OFF: return;
@@ -341,7 +339,6 @@ class AutomaCards extends Cards
         AutomaCards::moveAllInLocation(CardLocation::AUTOMA_AUCTION_NIGHT_3_BOARD->value, CardLocation::AUTOMA_AUCTION_NIGHT_3_DECK->value,);
         AutomaCards::moveAllInLocation(CardLocation::AUTOMA_ACTION_BOARD_A ->value,     CardLocation::AUTOMA_ACTION_DECK_A->value,        );
         AutomaCards::moveAllInLocation(CardLocation::AUTOMA_ACTION_BOARD_B ->value,   CardLocation::AUTOMA_ACTION_DECK_B->value,        );
-        AutomaCards::moveAllInLocation(CardLocation::AUTOMA_MONEY_DISCARD->value,         CardLocation::AUTOMA_MONEY_DECK->value,           );
     }
 
     AutomaCards::shuffle(CardLocation::AUTOMA_AUCTION_DAY_1_DECK->value);
