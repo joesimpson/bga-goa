@@ -199,6 +199,13 @@ class Notifications
 
   public static function auctionPlaced(Player $player, int $row, int $col, Token $token)
   {
+    if($token instanceof AuctionMarker){
+      $tokenIndex = $token->getAuctionOrder();
+    }
+    else {
+      $tokenIndex = 0;
+    }
+
     //${player_name} places the auction marker ${token_icon} on the market (row ${row}, column ${col}) 
     //Change message for less verbose because the token is visible in the grid
     self::notifyAll("auctionPlaced", clienttranslate('${player_name} places the auction marker ${token_icon} on the market'), [
@@ -206,7 +213,7 @@ class Notifications
         "row" => $row,
         "col" => $col,
         "token" => $token->getUiData(),
-        "token_icon" => '',
+        "token_icon" => $tokenIndex,
         'preserve'=>['token'],
     ]);
   }
