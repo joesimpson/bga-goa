@@ -126,6 +126,7 @@ export class Game {
 
         this.const = gamedatas.constants;
 
+
         // add a div on the game area
         this.bga.gameArea.getElement().insertAdjacentHTML('beforeend', `
             <div id="goa_overall_background"></div>
@@ -135,6 +136,7 @@ export class Game {
             </div>
             <div id="goa_end_score_recap"></div>
             <div id="goa_game_container">
+                <div id="goa_exploration_top_hand_holder" class="goa_exploration_top_hand_holder"></div>
                 <div id="goa_main_zone">
                     <div id='goa_resizable_board'>
                         <div id='goa_board_container'>
@@ -347,7 +349,7 @@ export class Game {
                             </div>
                         </div>
                     </div>
-                    <div id="goa_exploration_hand_holder-${player.id}" class="exploration_hand_holder">
+                    <div id="goa_exploration_hand_holder-${player.id}" class="goa_exploration_hand_holder">
                         <div id="goa_exploration_hand-${player.id}" class="exploration_hand"></div>
                     </div>
                 </div>
@@ -1359,9 +1361,7 @@ export class Game {
                 //this.bga.userPreferences.toggleVisibility(this.const.PREF_UNDO_STYLE, pref_value != this.const.PREF_CONFIRM_DISABLED);
                 break;
             case this.const.PREF_HAND_POSITION: 
-                //goa_pref_hand_float
-                let isFloat = (pref_value == this.const.PREF_HAND_POSITION_FLOAT);
-                this.onChangeHandLocationPref(isFloat);
+                this.onChangeHandLocationPref(pref_value);
                 break;
             case this.const.PREF_HAND_DISCARD_ANYTIME: 
                 this.displayDiscardAnytime = (pref_value == this.const.PREF_HAND_DISCARD_ANYTIME_ON);
@@ -1370,13 +1370,17 @@ export class Game {
         }
     }
 
-    onChangeHandLocationPref(isFloat) {
-        this.customDebug('onChangeHandLocationPref()',isFloat);
+    onChangeHandLocationPref(prefHand) {
+        this.customDebug('onChangeHandLocationPref()',prefHand);
         if(!this.explorationHand) return;
         //let hand = this.explorationHand.element;
         let hand = document.getElementById(`goa_exploration_hand-${this.bga.gameui.player_id}`);
         if (hand) {
-            let container = isFloat ? 'goa_floating_hand_holder' : `goa_exploration_hand_holder-${this.bga.gameui.player_id}`;
+            let container = `goa_exploration_hand_holder-${this.bga.gameui.player_id}`;
+            //goa_pref_hand_float
+            if(prefHand == this.const.PREF_HAND_POSITION_FLOAT) container = 'goa_floating_hand_holder';
+            //goa_pref_hand_top
+            if(prefHand == this.const.PREF_HAND_POSITION_TOP) container = `goa_exploration_top_hand_holder`;
             $(container).insertAdjacentElement('beforeend', hand);
         }
     }
@@ -3290,10 +3294,10 @@ export class Game {
 
                     //ScrollableStock
                         leftButton: {
-                            html: '&lt;'
+                            html: `<div class='goa_arrow'>&lt;</div>${this.formatIcon('exploration_hand_size')}`
                         },
                         rightButton: {
-                            html: '&gt;'
+                            html: `<div class='goa_arrow'>&gt;</div>${this.formatIcon('exploration_hand_size')}`
                         },
                 });
                 this.refreshHandCount();

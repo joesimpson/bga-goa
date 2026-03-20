@@ -1033,7 +1033,7 @@ body.notouch-device .goa_tile:hover .goa_token:not(.selectable) {
   box-shadow: 0px 0px 0px 3px #feb713 !important;
 }
 
-.exploration_hand {
+.goa_player_table .exploration_hand {
   max-width: calc(var(--goa_playerboard_display_scale) * 745px);
 }
 
@@ -1633,6 +1633,8 @@ body.notouch-device .goa_spice.selectable:hover {
   width: 25px !important;
   color: white;
   background-color: #17768a;
+  box-shadow: 0px 0px 0px 2px #17768a;
+  background-color: #b16325;
   cursor: pointer;
   font-size: x-large;
 }
@@ -1644,6 +1646,10 @@ body.notouch-device .goa_spice.selectable:hover {
   position: absolute;
   right: -20px;
   height: 100%;
+}
+.exploration_hand.scrollable-stock button .goa_icon_container {
+  top: 10px;
+  position: relative;
 }
 .exploration_hand.scrollable-stock .bga-cards_card-side {
   transition: transform 0.5s;
@@ -1659,8 +1665,16 @@ body.notouch-device .goa_spice.selectable:hover {
   display: none;
 }
 
-.exploration_hand_holder {
+.goa_exploration_hand_holder {
   width: calc(100% - 20px);
+}
+
+.goa_exploration_top_hand_holder {
+  align-self: flex-start;
+  position: relative;
+  max-width: 87%;
+  width: 87%;
+  left: 3%;
 }
 
 html.goa_pref_hand_default #goa_floating_hand_holder {
@@ -1864,6 +1878,9 @@ body.notouch-device .goa_exploration_card-front.selectable:hover,
 body.notouch-device .goa_exploration_card-front.bga-cards_selectable-card:hover, body.notouch-device .goa_exploration_card-back.selectable:hover, body.notouch-device .goa_exploration_card-back.bga-cards_selectable-card:hover {
   outline-color: var(--goa_selectable_hover_color) !important;
   outline-style: solid !important;
+}
+body.notouch-device .scrollable-stock button:hover .goa_arrow {
+  transform: scale(1.5);
 }
 
 .goa_money_card {
@@ -3792,6 +3809,7 @@ html.goa_pref_background_none #goa_overall_background {
 
 #goa_game_container {
   display: flex;
+  flex-direction: column;
   flex-wrap: wrap;
   justify-content: center;
 }
@@ -3886,6 +3904,9 @@ html.goa_pref_background_none #goa_overall_background {
 #goa_box_tiles_container {
   height: -moz-fit-content;
   height: fit-content;
+  align-content: center;
+  text-align: center;
+  align-self: center;
   border-radius: 10px;
   box-shadow: 0px 0px 0px 2px black;
   order: 10;

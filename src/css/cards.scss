@@ -61,6 +61,8 @@ $card_height: var(--goa_explo_card_height);
             width: 25px !important;
             color: white;
             background-color: #17768a;
+            box-shadow: 0px 0px 0px 2px #17768a;
+            background-color: #b16325;
             cursor: pointer;
             font-size: x-large;
             &.left{
@@ -71,6 +73,10 @@ $card_height: var(--goa_explo_card_height);
                 position: absolute;
                 right: -20px;
                 height: 100%;
+            }
+            .goa_icon_container{
+                top: 10px;
+                position: relative;
             }
         }
         .bga-cards_card-side{
@@ -89,8 +95,15 @@ $card_height: var(--goa_explo_card_height);
         }
     }
 }
-.exploration_hand_holder{
+.goa_exploration_hand_holder{
     width: calc(100% - 20px);
+}
+.goa_exploration_top_hand_holder{
+    align-self: flex-start;
+    position: relative;
+    max-width: 87%;
+    width: 87%;
+    left: 3%;
 }
 html.goa_pref_hand_default{
     #goa_floating_hand_holder{
@@ -169,6 +182,9 @@ body.notouch-device{
                 outline-style: solid !important;
             }
         }
+    }
+    .scrollable-stock  button:hover .goa_arrow{
+        transform: scale(1.5);
     }
 }
 .goa_money_card{

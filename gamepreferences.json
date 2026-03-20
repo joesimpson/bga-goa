@@ -64,12 +64,16 @@
         "needReload": false,
         "values": {
             "1": {
-                "name": "Near player board",
-                "cssPref": "goa_pref_hand_default"
-            },
-            "2": {
                 "name": "Bottom of window",
                 "cssPref": "goa_pref_hand_float"
+            },
+            "2": {
+                "name": "Top of game area",
+                "cssPref": "goa_pref_hand_top"
+            },
+            "3": {
+                "name": "Near player board",
+                "cssPref": "goa_pref_hand_default"
             }
         },
         "default": 1

@@ -786,7 +786,9 @@ body.notouch-device{
         }
     }
 }
-
+.goa_player_table{
+    
 .exploration_hand{
     max-width: calc(var(--goa_playerboard_display_scale) * $playerboard_img_width);
+}
 }
