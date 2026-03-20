@@ -522,7 +522,7 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
       }
     }
 
-    if(isset($automaColor)){
+    if(isset($automaId)){
       //INIT AUTOMA Auction tokens
       
       for($k = 0; $k < $nbBidders +1; $k++){

@@ -1507,6 +1507,14 @@ export class Game {
 
     async notif_initAutomaMoney(notif) {
         this.customDebug('notif_initAutomaMoney:', notif);
+        //clear previous money cards if new session
+        let automa_zone = document.getElementById('goa_player_table-'+ this.gamedatas.automa_id);
+        let cardsDivs = [...automa_zone.querySelectorAll('.goa_money_card')];
+        cardsDivs.forEach( (cardDiv) => {
+            this.destroy(cardDiv);
+        });
+        this._counters[this.gamedatas.automa_id][`goa_deck_size_automa_money`].toValue(0);
+        
         let levelCard = this.formatAutomaLevelCard(notif.n);
         document.getElementById(`goa_board_components`).insertAdjacentHTML('beforeend', levelCard);
 
