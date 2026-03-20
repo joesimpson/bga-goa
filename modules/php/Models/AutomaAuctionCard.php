@@ -187,7 +187,9 @@ class AutomaAuctionCard extends Card
         $bid = $this->getAuction_money();
         //RULE : Auction money + draw 1 MONEY CARD
         $moneyCard = MoneyCards::drawAutoma($token->getType());
-        $bid += $moneyCard->getValue();
+        if(isset($moneyCard)){
+            $bid += $moneyCard->getValue();
+        }
         if($bid >= $currentBid - 1 ){
             $nextBid = $bid;
             Globals::setCurrentBid($nextBid);

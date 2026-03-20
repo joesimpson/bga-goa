@@ -71,7 +71,7 @@ class MoneyCards extends Cards
         Notifications::reshuffleAutomaMoneyDeck($decksize );
         return $decksize;
     }
-    public static function drawAutoma(int $token_type) : MoneyCard
+    public static function drawAutoma(int $token_type) : MoneyCard | null
     {
         $decksize = self::countAutomaDeckSize();
         if($decksize == 0){
@@ -82,7 +82,7 @@ class MoneyCards extends Cards
             ->where( 'subType', CARD_SUBTTYPE_MONEY)
             ->where(static::$prefix . 'location', CardLocation::AUTOMA_MONEY_DECK->value)
             ->get()->first();
-
+        if(!isset($card)) return null;
         $toLocation = self::getAutomaLocationForToken($token_type)->value;
 
         $card->setLocation($toLocation);

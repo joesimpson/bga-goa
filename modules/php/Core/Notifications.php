@@ -267,14 +267,17 @@ class Notifications
     }
   }
   
-  public static function winsAuctionWithCard(Player $playerWins, int $bid, MoneyCard $card, Player|null $player2Auctioneer = null )
+  public static function winsAuctionWithCard(Player $playerWins, int $bid, MoneyCard|null $card, Player|null $player2Auctioneer = null )
   {
+    $cardDatas = null;
+    if(isset($card)) $cardDatas = $card->getUiData();
+    
     if(isset($player2Auctioneer)){
       self::notifyAll("winsAuction", clienttranslate('${player_name} wins the auction and gives ${n} ${icon_money} to ${player_name2}'), [
         "player" => $playerWins,
         "player2" => $player2Auctioneer,
         "n" => $bid,
-        "card" => $card,
+        "card" => $cardDatas,
         "icon_money" => clienttranslate('Pardaos'),
         "i18n" => ['icon_money'],
         "preserve" => ['card'],
@@ -284,7 +287,7 @@ class Notifications
       self::notifyAll("winsAuctionBank", clienttranslate('${player_name} wins the auction and gives ${n} ${icon_money} to the bank'), [
         "player" => $playerWins,
         "n" => $bid,
-        "card" => $card,
+        "card" => $cardDatas,
         "icon_money" => clienttranslate('Pardaos'),
         "i18n" => ['icon_money'],
         "preserve" => ['card'],
