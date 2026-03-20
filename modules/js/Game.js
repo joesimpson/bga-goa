@@ -258,6 +258,8 @@ export class Game {
                     </div>
                 </div>
             `);
+            let panelContainer = this.bga.playerPanels.getElement(player.id).parentNode.parentNode.parentNode;
+            panelContainer.dataset.color = player.color;
             this.addCustomTooltipToClass(`goa_first_player_container`, _('Nazar Stone (Starting player)'));
 
             if(this.gamedatas.automa_player){
@@ -3933,6 +3935,8 @@ export class Game {
                 </div>
             `);
             this.createCounter(automa_id,'nbActions',automa_nbActions);
+            let panelContainer = this.bga.playerPanels.getElement(automa_id).parentNode.parentNode.parentNode;
+            panelContainer.dataset.color = this.gamedatas.automa_color;
         }
 
         let automa_zone = document.getElementById('goa_player_table-'+ automa_id);

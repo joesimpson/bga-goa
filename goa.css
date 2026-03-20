@@ -3561,6 +3561,19 @@ button .goa_tile {
   display: block;
 }
 
+#player_boards > .player-board[data-color="0090ba"] {
+  box-shadow: 0px 0px 0px 3px #0090ba;
+}
+#player_boards > .player-board[data-color="84cba2"] {
+  box-shadow: 0px 0px 0px 3px #84cba2;
+}
+#player_boards > .player-board[data-color=e14a9b] {
+  box-shadow: 0px 0px 0px 3px #e14a9b;
+}
+#player_boards > .player-board[data-color=feb713] {
+  box-shadow: 0px 0px 0px 3px #feb713;
+}
+
 body.notouch-device .goa_panel .goa_player_resource .goa_reserve:hover {
   outline: 2px solid green;
   z-index: 2;
