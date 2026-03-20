@@ -1331,7 +1331,7 @@ body.notouch-device .goa_tile:hover .goa_token:not(.selectable) {
 }
 .goa_button_action .goa_action_text {
   white-space: normal;
-  width: 62px;
+  width: 63px;
   height: 50px;
 }
 
