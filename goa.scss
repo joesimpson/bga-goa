@@ -127,6 +127,9 @@ html {
                 flex-grow: 0;
             }
         }
+        #goa_bid_remaining{
+            line-height: 2.8em;//to see goa_icon_money border
+        }
     }
     #goa_harvest_inc{
         button{
