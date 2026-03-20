@@ -428,6 +428,16 @@ abstract class Table
                 return [
                     $cards[200],
                 ];
+            case "SELECT player_score,player_id FROM `player` WHERE `player_id` = 1":
+            case "SELECT player_id AS `result_associative_index` , `player_score` FROM `player` WHERE `player_id` = 1":
+                return[
+                    $players[1],
+                ];
+            case "SELECT player_score,player_id FROM `player` WHERE `player_id` = 2":
+            case "SELECT player_id AS `result_associative_index` , `player_score` FROM `player` WHERE `player_id` = 2":
+                return[
+                    $players[2],
+                ];
         }
         if( str_starts_with( $sql, 'SELECT *, player_id AS `result_associative_index` FROM `player`' )){
             logForTests("MOCK select players");
