@@ -459,6 +459,7 @@ final class PlayerTurnTest extends TestCase
         logForTests(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $state = new PlayerTurn($game);
+        Globals::setOptionPlanned(OPTION_PLANNED_OFF);
         $activePlayerId = 1;
         Table::$test_activePlayerId = $activePlayerId;
         $gameVersion = 999999;

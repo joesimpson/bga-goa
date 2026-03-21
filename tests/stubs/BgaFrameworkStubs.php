@@ -339,6 +339,10 @@ abstract class Table
                 return [
                     $tokens[1],
                 ];
+            //case "SELECT token_id AS `result_associative_index` , `token_id` , `token_location` , `token_state` , `player_id` , `type` , `subtype` , `token_row` , `token_col` FROM `tokens` WHERE (`token_id` IN ('1'))":
+            //    return [
+            //        $tokens[1],
+            //    ];
             case "SELECT *, token_id AS `result_associative_index` FROM `tokens` WHERE `type` = 1 AND `subtype` = 1 AND `player_id` = 1":
                 return [ $tokens[11] ];
             case "SELECT *, token_id AS `result_associative_index` FROM `tokens` WHERE `type` = 2 AND `subtype` = 1 AND `player_id` = 1":
@@ -469,12 +473,12 @@ abstract class Table
                     $tokens[3],
                 ];
         }
-        if( str_starts_with( $sql,'SELECT *, tile_id AS `result_associative_index` FROM `tiles` WHERE `subtype` = '.TILE_SUBTTYPE_OUTPOST)){
-            logForTests("MOCK select tiles ");
-            return [
-                    $tiles[1],
-                ];
-        }
+        //if( str_starts_with( $sql,'SELECT *, tile_id AS `result_associative_index` FROM `tiles` WHERE `subtype` = '.TILE_SUBTTYPE_OUTPOST)){
+        //    logForTests("MOCK select tiles ");
+        //    return [
+        //            $tiles[1],
+        //        ];
+        //}
 
         logForTests(" /!\ __ don't know what to return for this request __ /!\ ");
         return [];

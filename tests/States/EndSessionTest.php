@@ -33,7 +33,7 @@ final class EndSessionTest extends TestCase
             $session => [
                 $player1 => [
                     SCORING_PROGRESS     => 8,
-                    SCORING_OUTPOSTS     => 1,
+                    SCORING_OUTPOSTS     => 0,
                     SCORING_EXPLORATION  => [
                         /*
                         CARD_SYMBOL_ELEPHANT => 0,
@@ -49,7 +49,7 @@ final class EndSessionTest extends TestCase
                 ],
                 $player2 => [
                     SCORING_PROGRESS     => 1,
-                    SCORING_OUTPOSTS     => 1,
+                    SCORING_OUTPOSTS     => 0,
                     SCORING_EXPLORATION  => [
                         /*
                         CARD_SYMBOL_ELEPHANT => 0,
