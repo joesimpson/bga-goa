@@ -46,6 +46,16 @@ class Effects extends \Bga\Games\Goa\Helpers\Pieces
       ])
       ->run();
   }
+
+  public static function ignore(int $effectId)  : int {
+    return self::DB()
+      ->where(static::$prefix . 'id', $effectId)
+      ->update([
+        static::$prefix .'state' => EFFECT_STATE_IGNORED,
+        static::$prefix .'location' => EFFECT_LOCATION_IGNORED,
+      ])
+      ->run();
+  }
   
   public static function addEffectOnTile(
     Player $player,

@@ -216,7 +216,6 @@ export class Game {
             `;
             this.addCustomTooltip(`goa_board_round_cell_${round}`, tooltip);
         }
-        //TODO JSA PRELOAD OVERLAY
         let currentPlayerNo = 1;
         let nPlayers = 0;
         let currentPlayer = this.bga.players.getCurrentPlayer();
@@ -1827,6 +1826,7 @@ export class Game {
         this.customDebug("notif_setupMarket",notif);
         let tiles = notif.tiles;
         let boxTiles = notif.boxTiles;
+        let bonanzaTilesPositions = notif.bonanzaTilesPositions;
         let voidDiv = document.getElementById('goa_top_zone');
         
         let marketDiv = document.getElementById('goa_board_market_grid');
@@ -1847,6 +1847,11 @@ export class Game {
         }));
         await this.animationManager.playInterval(animationsCleanBox);
         //-----------------------
+        
+        let animationsRefillBonanza = Object.values(bonanzaTilesPositions).map(spot =>  (async() => {
+            this.animationManager.slideIn(await this.addBonanzaBackTile(spot), voidDiv, {duration: 1000});
+        }));
+        await this.animationManager.playInterval(animationsRefillBonanza);
 
         let animationsRefill = Object.values(tiles).map(tile =>  (async() => {
             this.animationManager.slideIn(await this.addTile(tile), voidDiv, {duration: 1000});
@@ -2081,9 +2086,13 @@ export class Game {
         this.customDebug("notif_discardTile",notif);
         let tile = notif.tile;
         let isOutpost = tile.subtype == this.const.TILE_SUBTTYPE_OUTPOST;
+        let isMarket = tile.subtype == this.const.TILE_SUBTTYPE_MARKET;
         let voidDiv = document.getElementById('goa_top_zone');
         let tileDiv = document.getElementById(`goa_tile-${tile.id}`);
         if(tileDiv){
+            if(isMarket && parseInt(tileDiv.dataset.type) == this.const.BONANZA_TILE_BACK){
+                tileDiv.dataset.type = tile.type;//reveal real type
+            }
             await this.animationManager.slideOutAndDestroy(tileDiv, voidDiv, {duration: 1000});
         }
         else if(isOutpost){
@@ -2555,6 +2564,19 @@ export class Game {
 
         return tileDiv;
     }
+    async addBonanzaBackTile(spot){
+        let tileDatas ={};
+        tileDatas.id = `BonanzaBack_${spot.row}_${spot.col}`;
+        tileDatas.type = this.const.BONANZA_TILE_BACK;//BACK TILE IMAGE
+        tileDatas.subtype = this.const.TILE_SUBTTYPE_MARKET;
+        tileDatas.isBonanza = true;
+        tileDatas.location = this.const.TILE_LOCATION_BOARD_MARKET;
+        tileDatas.row = spot.row;
+        tileDatas.col = spot.col;
+        tileDatas.state = 0;
+        let div = await this.addTile(tileDatas);
+        return div;
+    }
     getTileTooltip(tile) {
         let tileMaterial = this.gamedatas.material.tiles[tile.subtype][tile.type];
         let cardDatas = tile;
@@ -2565,12 +2587,13 @@ export class Game {
         if(phaseA && phaseB) phaseLabel = _('Day') + ' / '+ _('Night');
         else if(phaseA) phaseLabel = _('Day');
         else if(phaseB) phaseLabel = _('Night');
-        let textLine1 = this.bga.gameui.format_string( 
+        let textLine1 = phaseLabel == '' ? '' : this.bga.gameui.format_string( 
             bga_format(_('Phase deck : *${x}*'), {
                             '*': (t) => '<b><i>' + t + '</i></b>',
                         }),
              {'x': phaseLabel }
         );
+
         if(tile.subtype == this.const.TILE_SUBTTYPE_OUTPOST){
             textLine1 = this.bga.gameui.format_string( 
                 _('Requires ${n} ${resource_name} : ${icon_resource}'),
@@ -2589,7 +2612,7 @@ export class Game {
                         ${textLine1 == '' ? '' : '<span class="goa_tile_text_line1">'+textLine1+'</span>'}
                         ${textAction == '' ? '' : '<hr><span class="goa_tile_text_action">'+textAction+'</span>'}
                         <hr>
-                        <span class="goa_tile_text_playType" data-playType="${tileMaterial.play_type}">${this.formatTilePlayTypeText( tile )}</span>
+                        <span class="goa_tile_text_playType" data-playType="${tileMaterial.play_type}" data-isBonanza="${tileMaterial.isBonanza}">${this.formatTilePlayTypeText( tile )}</span>
                         
                     </div>
                 </div>
@@ -2627,9 +2650,9 @@ export class Game {
             case this.const.TILE_SUBTTYPE_MARKET: 
                 descriptionMap = new Map([
                     [this.const.MARKET_TYPE_PLANTATION, this.bga.gameui.format_string(_("When you gain a Depot, place it face up in an empty upper space on your Player Board. Immediately fill these fields with the matching Goods from the supply : this one have ${x} fields. If you already have four Depots on your board, you must first discard one Depot (along with any Goods on it) before placing the new one. If the discarded Depot shows a VP symbol, keep it face down in your play area. It is worth ${n} Victory Points at the end of the game."),{ x: tileMaterial.spice_slots.length , n : tileMaterial.end_score })] ,
-                    [this.const.MARKET_TYPE_ACTION_REUSEABLE, this.bga.gameui.format_string( _('Blue Tile : players must put it face up in their play area. They can use it before, during or after their action. This tile can be played during a future action, but only once per round. After using it, the player must flip it and may no longer use it for the rest of the round. At the beginning of the following round, players flip the tile face up and can use it again.'),{ } )],
-                    [this.const.MARKET_TYPE_ACTION_DIRECT, this.bga.gameui.format_string(_("Teal Tile : When a player acquires this tile, they immediately take the appropriate resources. After being used, the tile is discarded."),{ })] ,
-                    [this.const.MARKET_TYPE_ACTION_ONCE, this.bga.gameui.format_string(_("Yellow Tile : This tile may only be used once during the game. Once used, the tile is discarded."),{ })] ,
+                    [this.const.MARKET_TYPE_ACTION_REUSEABLE, this.bga.gameui.format_string( _('${tile_type_name} : players must put it face up in their play area. They can use it before, during or after their action. This tile can be played during a future action, but only once per round. After using it, the player must flip it and may no longer use it for the rest of the round. At the beginning of the following round, players flip the tile face up and can use it again.'),{ 'tile_type_name': (_('Blue Tile')) } )],
+                    [this.const.MARKET_TYPE_ACTION_DIRECT, this.bga.gameui.format_string(_("${tile_type_name} : When a player acquires this tile, they immediately take the appropriate resources. After being used, the tile is discarded."),{ 'tile_type_name': (tileMaterial.isBonanza ? _('Bonanza Tile'): _('Teal Tile')) })] ,
+                    [this.const.MARKET_TYPE_ACTION_ONCE, this.bga.gameui.format_string(_("${tile_type_name} : This tile may only be used once during the game. Once used, the tile is discarded."),{ 'tile_type_name': (_('Yellow Tile'))  })] ,
                     [this.const.MARKET_TYPE_SCORING, this.formatScoringTileText(tile)] ,
                 ]);
                 break;

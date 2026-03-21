@@ -1,5 +1,20 @@
 {
-
+    "102": {
+        "name": "Bonanza",
+        "values": {
+            "0": {
+                "name": "Disabled"
+            },
+            "1": {
+                "name": "Enabled",
+                "tmdisplay": "Bonanza",
+                "nobeginner": false,
+                "description": "This mini-expansion adds a touch of extra spice to the auctions by introducing Bonanza Tiles. Certain locations will now offer two rewards instead of one, giving players additional incentives to compete for these spaces and making those auctions noticeably more dynamic."
+            }
+        },
+        "default": 0
+    }
+    ,
     "103": {
         "name": "Planned Expansion Variant",
         "values": {

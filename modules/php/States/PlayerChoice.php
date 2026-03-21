@@ -320,6 +320,42 @@ class PlayerChoice extends GameState
         if($doCheckpoint) Log::addStateCheckpoint($nextStateClass);
         return $nextStateClass;
     }
+
+    
+    /**
+     *
+     * @throws UserException
+     */
+    #[PossibleAction]
+    public function actIgnoreEffect(
+        int $id, 
+        int $activePlayerId, array $args,
+        int $v,
+    )
+    {
+        Utils::checkVersion($v);
+        $this->game->trace("actIgnoreEffect( $id, $activePlayerId)");
+        // check input values
+        if ( !in_array('actResolveEffect',$args['possibleActions'])) {
+            throw new UnexpectedException(502,"Invalid action actResolveEffect");
+        } 
+        $effects = $args['effects'];
+        if ( !in_array($id,array_keys($effects))) {
+            throw new UnexpectedException(503,"Invalid effect $id");
+        } 
+        $effect = $effects[$id];
+        $type = $effect['type'];
+        $ignoreableTypes = [EFFECT_TYPE_HARVEST]; //we may ignore a direct harvest while we have no empty spot, but we must resolve others
+        if ( !in_array($type,$ignoreableTypes)) {
+            throw new UnexpectedException(504,"Invalid effect type to ignore $type");
+        } 
+        Log::addStep();
+
+        Effects::ignore($id);
+
+        return PlayerChoice::class;
+
+    }
     
     /**
      * Player action : discard some card in hand

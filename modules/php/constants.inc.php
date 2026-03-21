@@ -196,6 +196,7 @@ const TILE_LOCATION_PLAYER_WAITING_PLANTATION = 'p_wait';
 const TILE_LOCATION_DISCARD = 'discard';
 /** For tiles we return to the game box (not the tiles we play and discard) */
 const TILE_LOCATION_BOX = 'box';
+const TILE_LOCATION_BONANZA_DECK = 'bonanza_d';
 
 const TILE_LOCATION_BOARD_OUTPOST = 'board_c';
 const TILE_LOCATION_BOARD_OUTPOSTS = [
@@ -214,6 +215,18 @@ const MARKET_TYPE_SCORING           = 6;
 const MARKET_TYPE_ESPIONAGE = 34;
 const MARKET_TYPE_FOREMAN = 37;
 const MARKET_TYPE_DUTY = 38;
+
+/**
+ * 2 copies of each bonanza tile
+ */
+const NB_BONANZA_TILES_COPIES = 2;
+const BONANZA_TILE_BACK = 41;
+const BONANZA_MARKET_SPACES = [
+   ['row' => 1, 'col'=> 1],
+   ['row' => MARKET_GRID_SIZE, 'col'=> 1],
+   ['row' => 1, 'col'=> MARKET_GRID_SIZE],
+   ['row' => MARKET_GRID_SIZE, 'col'=> MARKET_GRID_SIZE],
+];
 
 /////////////////////////////////////////////////////////
 //          MEEPLES
@@ -325,9 +338,11 @@ const PROGRESS_COST_AS_COINS = [
 /////////////////////////////////////////////////////////
 const EFFECT_LOCATION_TO_RESOLVE = 'to_resolve';
 const EFFECT_LOCATION_SOLVED = 'solved';
+const EFFECT_LOCATION_IGNORED = 'ignored';
 
 const EFFECT_STATE_TO_SOLVE   = 0;
 const EFFECT_STATE_SOLVED     = 1;
+const EFFECT_STATE_IGNORED    = 2;
 
 const EFFECT_TYPE_PICK_ACTION    = 1;
 const EFFECT_TYPE_PICK_TILE      = 2;
@@ -618,6 +633,8 @@ CONST ALL_MY_UI_CONSTANTS= [
    'MARKET_TYPE_ACTION_DIRECT'      => MARKET_TYPE_ACTION_DIRECT   ,
    'MARKET_TYPE_ACTION_ONCE'        => MARKET_TYPE_ACTION_ONCE     ,
    'MARKET_TYPE_SCORING'            => MARKET_TYPE_SCORING         ,
+
+   'BONANZA_TILE_BACK' => BONANZA_TILE_BACK,
 
    'TOKEN_LOCATION_BOARD'        => TOKEN_LOCATION_BOARD ,
    'TOKEN_LOCATION_PLAYER_BOARD' => TOKEN_LOCATION_PLAYER_BOARD,

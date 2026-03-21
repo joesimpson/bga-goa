@@ -188,6 +188,8 @@ export class ClientSelectTileEffect {
                                 'destination': document.getElementById('customPrimary'),
                                 'title': this.game.formatActionName(this.game.const.ACTION_TYPE_PRODUCE),  
                             }); 
+                            //Add a way to ignore if we don't have enough spots
+                            this.bga.statusBar.addActionButton(_('Ignore effect'), () => this.game.customPerformAction("actIgnoreEffect", {'id':args.choice_index,}), {'id':`goa_button_ignore_effect`, 'destination': document.getElementById('customSecondary'), 'color':'alert' }); 
                             break;
                         case this.game.const.ACTION_SHIP:
                             let buttonText = this.bga.gameui.format_string(

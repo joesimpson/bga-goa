@@ -68,17 +68,17 @@ $tile_height: 108px;
     { 
 
         //sprite positions
-        background-size: 700% 600%;
+        background-size: 700% 700%;
         background-image: url("img/market.jpg");
         
         //back tile
         background-position-x: 0%;
         background-position-y: 0%;
 
-        @for $i from 0 through 40 {
+        @for $i from 0 through 45 {
             &[data-type="#{$i + 1}"] {
-                background-position-x: math.div(($i % 7) * 100%, 6);//7 columns, 6 rows
-                background-position-y: math.div(math.div($i - ($i % 7), 7) * 100%, 5);//7 columns , 6 rows
+                background-position-x: math.div(($i % 7) * 100%, 6);//7 columns
+                background-position-y: math.div(math.div($i - ($i % 7), 7) * 100%, 6);//7 columns , 7 rows
             }
         }
     }
@@ -256,6 +256,10 @@ body.notouch-device{
         &[data-playType='4']{//MARKET_TYPE_ACTION_DIRECT
             color: black;
             background-color: #87d2d6;
+            &[data-isBonanza='true']{
+                color: white;
+                background-color: #10a062;
+            }
         }
         &[data-playType='5']{//MARKET_TYPE_ACTION_ONCE
             color: black;
@@ -295,7 +299,7 @@ body.notouch-device{
     }
     .goa_tile_img_wrap{
         order: 1;
-        margin-right: 2px;
+        //margin-right: 2px;
     }
     .goa_tooltip_block2 {
         flex-direction: row;

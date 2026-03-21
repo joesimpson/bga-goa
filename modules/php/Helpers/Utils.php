@@ -345,6 +345,15 @@ class Utils {
         }
         return true;
     }
+    
+    public static function isGameBonanza() : bool {
+        $bonanza = Globals::getOptionBonanza();
+        if(!isset($bonanza)) return false;
+        if(OPTION_BONANZA_OFF == $bonanza){
+            return false;
+        }
+        return true;
+    }
 
     public static function getRoundPhase() : GamePhase {
         $round = Globals::getRound();

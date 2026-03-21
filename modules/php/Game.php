@@ -176,6 +176,8 @@ class Game extends \Bga\GameFramework\Table
                 CARD_SUBTTYPE_MONEY => MoneyCards::getMoneyCardsTypes(),
             ],
         ];
+        $result["material"]['tiles'][TILE_SUBTTYPE_MARKET][BONANZA_TILE_BACK] = Tiles::getBonanzaBackTypeMaterial();
+        
         $result["tokens"] = Tokens::getUiData($current_player_id);
         
         $automaColor = Globals::getAutomaColor();
@@ -184,6 +186,7 @@ class Game extends \Bga\GameFramework\Table
         }
         $result['automa_level'] = Globals::getOptionAutomaDifficulty();
         $result['planned_expansion'] = Utils::isGamePlannedExpansion();
+        $result['bonanza_expansion'] = Utils::isGameBonanza();
 
         $result["endScoring"] = Globals::getEndScoring();
 

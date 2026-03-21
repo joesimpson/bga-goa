@@ -11,6 +11,7 @@ use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Collection;
 use Bga\Games\Goa\Helpers\GridUtils;
 use Bga\Games\Goa\Helpers\Utils;
+use Bga\Games\Goa\Models\BonanzaTile;
 use Bga\Games\Goa\Models\MarketTile;
 use Bga\Games\Goa\Models\OutpostTile;
 use Bga\Games\Goa\Models\Player;
@@ -46,6 +47,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
         return new OutpostTile($row, $data);
       case TILE_SUBTTYPE_MARKET:
         $data = self::getMarketTilesTypes()[$type];
+        if($data['isBonanza']) return new BonanzaTile($row, $data);
         return new MarketTile($row, $data);
     }
 
@@ -122,18 +124,33 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
       ->where('tile_row', $row)
       ->where('tile_col', $col)
       ->whereNotIn(static::$prefix .'id', $blackListIds)
+      ->orderBy(static::$prefix .'state', 'DESC')
       ->get();
-      //TODO JSA multiples if BONANZA + warning if Tile WILD spice, it adds another choice 
 
-    $tile = $tilesOnMarketSpace->first();
-    if(isset($tile)){
-      if($player->getId() == AUTOMA_PLAYER_ID){
-        //AUTOMA DISCARD every tiles
-        Tiles::discardTileFromMarket($player, $tile);
+    //$tile = $tilesOnMarketSpace->first();
+    foreach($tilesOnMarketSpace as $tile){
+      try{
+        if(isset($tile)){
+          if($tile instanceof BonanzaTile){
+            //REVEAL TILE
+            $doCheckpoint = true;
+          }
+          if($player->getId() == AUTOMA_PLAYER_ID){
+            //AUTOMA DISCARD every tiles
+            Tiles::discardTileFromMarket($player, $tile);
+          }
+          else {
+            Tiles::giveMarketTileToPlayer($player, $tile, $doCheckpoint);
+          }
+        }
       }
-      else {
-        Tiles::giveMarketTileToPlayer($player, $tile, $doCheckpoint);
+      catch(PrematureStateChangeException $exc){
+        $stateExc = $exc;
       }
+    }
+    
+    if(isset($stateExc)) {
+      throw $stateExc;
     }
   }
   
@@ -425,20 +442,42 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
 
       //Game::get()->trace("setupMarket($phase), nbRemovedPlantations = $nbRemovedPlantations ...");
     }
+
+    $withBonanza = Utils::isGameBonanza();
+    $bonanzaTilesPositions = [];
+    if($withBonanza){
+      //Reset bonanza deck before each phase
+      Tiles::resetMarketBonanzaDeck();
+      foreach(BONANZA_MARKET_SPACES as $market_space){
+        $tile = Tiles::pickOneForLocation(TILE_LOCATION_BONANZA_DECK, TILE_LOCATION_BOARD_MARKET);
+        $tile->setLocation(TILE_LOCATION_BOARD_MARKET);
+        $tile->setRow($market_space['row']);
+        $tile->setCol($market_space['col']);
+        $tile->setState(0);
+        $bonanzaTilesPositions[] = $market_space;
+      }
+    }
     
     //DRAW TILES
     $deckPhase = self::getInLocationOrdered($deck);
     $counter = 0;
     foreach($deckPhase as $tile_id => &$tile){
       $tile->setLocation(TILE_LOCATION_BOARD_MARKET);
-      $tile->setRow(1 + intval($counter / MARKET_GRID_SIZE) );
-      $tile->setCol(1 + $counter - ($tile->getRow()-1)*MARKET_GRID_SIZE );
+      $row = 1 + intval($counter / MARKET_GRID_SIZE) ;
+      $col = 1 + $counter - ($row-1)*MARKET_GRID_SIZE ;
+      $tile->setRow($row);
+      $tile->setCol($col);
+      if(in_array(['row' => $row, 'col' => $col], $bonanzaTilesPositions)){
+        $tile->setState(1);
+      } else {
+        $tile->setState(0);
+      }
       $counter++;
     }
 
     //NOTIFY
     $allBoxTiles = Tiles::getInLocationOrdered(TILE_LOCATION_BOX);
-    Notifications::setupMarket($phase,$deckPhase, $allBoxTiles);
+    Notifications::setupMarket($phase,$deckPhase, $allBoxTiles, $bonanzaTilesPositions);
   }
   
   /**
@@ -816,6 +855,24 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
         ])
       ->run();
     self::shuffle(TILE_LOCATION_DECK_B);
+    
+    Tiles::resetMarketBonanzaDeck();
+  }
+
+  public static function resetMarketBonanzaDeck()
+  {
+    self::DB()
+      ->where('subtype', TILE_SUBTTYPE_MARKET)
+      ->where( 'tile_start_location', TILE_LOCATION_BONANZA_DECK)
+      ->update([
+        static::$prefix .'location' => TILE_LOCATION_BONANZA_DECK, 
+        'player_id'=> null,
+        'tile_row'=> null,
+        'tile_col'=> null,
+        'tile_state' => 0,
+        ])
+      ->run();
+    self::shuffle(TILE_LOCATION_BONANZA_DECK);
   }
 
   ///////////////////////////////////////////////////////////////////////////////
@@ -825,6 +882,8 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
   {
     $tiles = [];
     $nbPlayers = count($players);
+
+    $withBonanza = Utils::isGameBonanza();
 
     $outposts = self::getOutpostTilesTypes();
     
@@ -865,11 +924,23 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
             'nbr' => $market['nbr_B'],
           ];
         }
+        
+      if($market['isBonanza'] && $withBonanza ){
+        $location = TILE_LOCATION_BONANZA_DECK;
+        $tiles[] = [
+          'location' => $location,
+          'tile_start_location' => $location,
+          'type' => $type,
+          'subtype' => TILE_SUBTTYPE_MARKET,
+          'nbr' => NB_BONANZA_TILES_COPIES,
+        ];
+      }
     }
 
     self::create($tiles);
     self::shuffle(TILE_LOCATION_DECK_A);
     self::shuffle(TILE_LOCATION_DECK_B);
+    self::shuffle(TILE_LOCATION_BONANZA_DECK);
 
   }
    
@@ -905,6 +976,22 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
     ];
   }
   
+  public static function getBonanzaBackTypeMaterial()
+  {
+    $f = function ($t) {
+      return [
+        'nbr_A' => $t[0],
+        'nbr_B' => $t[1],
+        'play_type' => $t[2],
+        'spice_slots' => $t[3],
+        'actions' => $t[4],
+        'end_score' => $t[5],
+        'name' => $t[6],
+        'isBonanza' => isset($t[7]) ? $t[7] : false,
+      ];
+    };
+    return $f([ 0, 0, MARKET_TYPE_ACTION_DIRECT, [], [], 0,   clienttranslate('Bonanza Tile (back)'),     true,  ]);
+  }
   /**
    * @return array of all the different types of Market Tiles
    */
@@ -922,6 +1009,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
         'actions' => $t[4],
         'end_score' => $t[5],
         'name' => $t[6],
+        'isBonanza' => isset($t[7]) ? $t[7] : false,
       ];
     };
 
@@ -974,6 +1062,14 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
       MARKET_TYPE_DUTY    => $f([ 1, 1, MARKET_TYPE_SCORING, [], [ACTION_SPEND_SPICES => 6], 5,  clienttranslate('Duty'),  ]),
       39 => $f([ 0, 1, MARKET_TYPE_SCORING, [], [], 2,   clienttranslate('Small Mission'),  ]),
       40 => $f([ 0, 1, MARKET_TYPE_SCORING, [], [], 3,   clienttranslate('Large Mission'),  ]),
+      
+      //FAKE TILE for easy UI 
+      //BONANZA_TILE_BACK => $f([ 0, 0, MARKET_TYPE_ACTION_DIRECT, [], [], 0,   clienttranslate('Bonanza Tile'),     true,  ]),
+
+      42 => $f([ 0, 0, MARKET_TYPE_ACTION_DIRECT, [SPICES_ALL], [ACTION_SPICE => 1, ], 0,   clienttranslate('Haggler'),     true,  ]),
+      43 => $f([ 0, 0, MARKET_TYPE_ACTION_DIRECT, [], [ACTION_MONEY => 3, ], 0,     clienttranslate('Lucky find'),  true,  ]),
+      44 => $f([ 0, 0, MARKET_TYPE_ACTION_DIRECT, [], [ACTION_CONTRACT => 1, ], 0,  clienttranslate('Small Deal'),  true,  ]),
+      45 => $f([ 0, 0, MARKET_TYPE_ACTION_DIRECT, [], [ACTION_SHIP => 1, ], 0,      clienttranslate('Boatman'),     true,  ]),
 
     ];
   }

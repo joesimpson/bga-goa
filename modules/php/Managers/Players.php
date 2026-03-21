@@ -462,6 +462,9 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
   {
     switch($gainType){
       // gains from tiles with MARKET_TYPE_ACTION_DIRECT
+      case ACTION_MONEY://for tile 42
+        Players::giveMoney($player, $gainQuantity);
+        break;
       case ACTION_CONTRACT:
         Players::giveContracts($player, $gainQuantity);
         break;
@@ -478,6 +481,10 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
         //Save datas for next state
         Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_PICK_ACTION, $gainQuantity, [ACTION_SHIP, ACTION_CONTRACT]);
         throw new PrematureStateChangeException (1,PlayerChoice::class,$player);
+      case ACTION_SPICE://for tile 42
+        Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_HARVEST, $gainQuantity, [ACTION_HARVEST]);
+        throw new PrematureStateChangeException (1,PlayerChoice::class,$player);
+        break;
       case ACTION_FAVOR: 
         $tilesToChoose = Tiles::getTilesForFavor()->map(function ($tile) {
           return $tile->getType();

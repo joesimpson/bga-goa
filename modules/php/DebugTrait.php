@@ -45,7 +45,7 @@ trait DebugTrait
         $options = [
             "DEBUG_SETUP"=> true,
             OPTION_AUTOMA_DIFFICULTY => $automaDiff,
-            //OPTION_BONANZA => ($bonanza ? OPTION_BONANZA_ON : OPTION_BONANZA_OFF) ,
+            OPTION_BONANZA => ($bonanza ? OPTION_BONANZA_ON : OPTION_BONANZA_OFF) ,
             OPTION_PLANNED => ($plannedExpansion ? OPTION_PLANNED_ON : OPTION_PLANNED_OFF) ,
             //OPTION_QUICK_STARTER => ($quickStarter ? OPTION_QUICK_STARTER_ON : OPTION_QUICK_STARTER_OFF) ,
             //OPTION_STORIES => ($story ? OPTION_STORIES_RANDOM : OPTION_STORIES_OFF) ,
