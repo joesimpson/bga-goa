@@ -307,6 +307,14 @@ abstract class Table
 
            200 => ['result_associative_index' => 200,'card_id' => 200, 'card_location' => CARD_LOCATION_AUTOMA_MONEY_DECK, 'card_state' => 0, 'player_id' => AUTOMA_PLAYER_ID, 'type' => 1, 'subtype' => CARD_SUBTTYPE_MONEY,],
         ];
+        $tiles = [
+           1 => ['result_associative_index' => 1,'tile_id' => 1, 'tile_location' => TILE_LOCATION_BOARD_OUTPOSTS[COLONY_KOLLAM], 'tile_state' => 0, 'player_id' => null, 'type' => 1, 'subtype' => TILE_SUBTTYPE_OUTPOST, 'tile_start_location' => null , 'tile_row' => 1 , 'tile_col' => 1],
+        ];
+        
+        $effects = [//SELECT effect_id AS `result_associative_index` , `effect_id` , `effect_location` , `effect_state` , `player_id` , `effect_parent_id` , `effect_type` , `effect_qty` , `effect_source_tile` , `effect_source_action` , `effect_result` FROM `effects` WHERE (`effect_id` IN ('1'))
+           1 => ['result_associative_index' => 1,'effect_id' => 1, 'effect_location' => EFFECT_LOCATION_TO_RESOLVE, 'effect_state' => 0, 'player_id' => null, 'effect_parent_id' => null, 'effect_type' => 1, 'effect_qty' => 1, 'effect_source_tile' => null , 'effect_source_action' => null , 'effect_result' => '[]'],
+        ];
+        
 
         switch($sql){
             case 'SELECT name AS `result_associative_index` , `value` , `name` FROM `my_global_variables`':
@@ -438,6 +446,14 @@ abstract class Table
                 return[
                     $players[2],
                 ];
+            case "SELECT tile_id AS `result_associative_index` , `tile_id` , `tile_location` , `tile_state` , `player_id` , `type` , `subtype` , `tile_start_location` , `tile_row` , `tile_col` FROM `tiles` WHERE (`tile_id` IN ('1'))":
+                return [
+                        $tiles[1],
+                    ];
+            case "SELECT effect_id AS `result_associative_index` , `effect_id` , `effect_location` , `effect_state` , `player_id` , `effect_parent_id` , `effect_type` , `effect_qty` , `effect_source_tile` , `effect_source_action` , `effect_result` FROM `effects` WHERE (`effect_id` IN ('1'))":
+                return [
+                        $effects[1],
+                    ];
         }
         if( str_starts_with( $sql, 'SELECT *, player_id AS `result_associative_index` FROM `player`' )){
             logForTests("MOCK select players");
@@ -451,6 +467,12 @@ abstract class Table
             return [
                     $tokens[2],
                     $tokens[3],
+                ];
+        }
+        if( str_starts_with( $sql,'SELECT *, tile_id AS `result_associative_index` FROM `tiles` WHERE `subtype` = '.TILE_SUBTTYPE_OUTPOST)){
+            logForTests("MOCK select tiles ");
+            return [
+                    $tiles[1],
                 ];
         }
 

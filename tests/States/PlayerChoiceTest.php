@@ -28,9 +28,6 @@ final class PlayerChoiceTest extends TestCase
     private function createGameMock()
     {
         $mock = new GameMock();
-        $mock->gamestate = new GamestateMachineMock();
-        $mock->bga = new Bga($mock);
-        $mock->notify = new Notify($mock);
         $roundStep = ROUND_STEP_PLAYER_ACTIONS;
         Globals::setRoundStep($roundStep);
         return $mock;

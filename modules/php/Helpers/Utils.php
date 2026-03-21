@@ -336,6 +336,15 @@ class Utils {
         }
         return true;
     }
+    
+    public static function isGamePlannedExpansion() : bool {
+        $planned = Globals::getOptionPlanned();
+        if(!isset($planned)) return false;
+        if(OPTION_PLANNED_OFF == $planned){
+            return false;
+        }
+        return true;
+    }
 
     public static function getRoundPhase() : GamePhase {
         $round = Globals::getRound();

@@ -420,7 +420,13 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
   {
     $cards = [];
 
+    $planned = Utils::isGamePlannedExpansion();
+
     foreach (self::getExplorationCardsTypes() as $type => $card) {
+      if($planned && $card['action'] == CARD_ACTION_OUTPOST_EXTRA_CONTRACTS){
+        //Expansion RULE  : don't play with the 'd' cards
+        continue;
+      }
       $cards[] = [
         'location' => CARD_LOCATION_EXP_DECK,
         'type' => $type,

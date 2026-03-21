@@ -216,7 +216,7 @@ export class Game {
             `;
             this.addCustomTooltip(`goa_board_round_cell_${round}`, tooltip);
         }
-        
+        //TODO JSA PRELOAD OVERLAY
         let currentPlayerNo = 1;
         let nPlayers = 0;
         let currentPlayer = this.bga.players.getCurrentPlayer();
@@ -330,7 +330,9 @@ export class Game {
                     <div class='goa_resizable_playerboard'>
                         <div class='goa_playerboard_container'>
                             <div class="goa_playerboard">
-                                <div class="goa_playerboard_background"></div>
+                                <div class="goa_playerboard_background">
+                                    ${(this.gamedatas.planned_expansion) ? '<div class="goa_playerboard_overlay"></div>' : ''}
+                                </div>
                                 <div id="goa_playerboard_top_zone-${player.id}" class="goa_playerboard_top_zone">
                                     <div></div>
                                     <div class="goa_harvest_zone"></div>
@@ -3144,6 +3146,7 @@ export class Game {
             case 5: 
                 action_label = this.formatActionName(track);
                 action_gains = this.const.PROGRESS_GAINS_OUTPOST;
+                if(this.gamedatas.planned_expansion) action_gains = this.const.PROGRESS_GAINS_PLAN_OUTPOST;
 
                 let action_gains_desc = `<table>
                         <thead>
@@ -3162,11 +3165,12 @@ export class Game {
                 action_gains_desc += `</table>`;
                 
                 action_desc = '<ul>'
-                            + '<li>' + this.bga.gameui.format_string( _("First, choose one of the four Outposts. You may not choose an Outpost you have already Established"),{  } ) + '</li>'
+                            + '<li>' + this.bga.gameui.format_string( _("First, choose one of the four Outposts. You may not choose an Outpost you have already Established."),{  } ) + '</li>'
                             + '<li>' + this.bga.gameui.format_string( _("The row of your progress marker will give a base number of contracts."),{  } ) + '</li>'
                             + '<li>' + action_gains_desc + '</li>' 
-                            + '<li>' + this.bga.gameui.format_string( _("Draw ${n} Exploration Cards and add together the Contracts shown in the bottom-left corner of those cards."),{ n: 2 } ) + '</li>'
-                            + '<li>' + this.bga.gameui.format_string( _("You may add any number of contracts from your hand."),{  } ) + '</li>'
+                            ;
+                if(!this.gamedatas.planned_expansion) action_desc += '<li>' + this.bga.gameui.format_string( _("Draw ${n} Exploration Cards and add together the Contracts shown in the bottom-left corner of those cards."),{ n: 2 } ) + '</li>'
+                action_desc += '<li>' + this.bga.gameui.format_string( _("You may add any number of contracts from your hand."),{  } ) + '</li>'
                             + '<li>' + this.bga.gameui.format_string( _("If you successfully meet the requirement of the chosen outpost, take it and place it on your board, filling the Goods fields on it; If you cannot (or choose not to) provide enough Contracts, the attempt fails : Take ${n} ${icon_contracts}"),{ 'n':1, 'icon_contracts': this.formatIcon('contracts',_('Contracts')) } ) + '</li>'
                         + '</ul>'
                         ;

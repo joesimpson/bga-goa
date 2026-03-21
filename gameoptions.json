@@ -1,5 +1,21 @@
 {
 
+    "103": {
+        "name": "Planned Expansion Variant",
+        "values": {
+            "0": {
+                "name": "Disabled"
+            }
+            ,
+            "1": {
+                "name": "Enabled",
+                "tmdisplay": "Planned",
+                "description": "This variant reduces the luck factor when Establishing Outposts by replacing Exploration Card draws with fixed Contract values based on your Progress Marker. This makes Outpost access more predictable while still allowing players to push ahead earlier by investing additional Contracts."
+            }
+        },
+        "default": 0
+    }
+    ,
     "110": {
         "name": "Automaton",
         "values": {

@@ -71,9 +71,6 @@ final class NextPlayerTest extends TestCase
     private function createGameMock()
     {
         $mock = new GameMock();
-        $mock->gamestate = new GamestateMachineMock();
-        $mock->notify = new Notify($mock);
-        $mock->bga = new Bga($mock);
         return $mock;
     }
 }

@@ -460,6 +460,14 @@ class Notifications
         "icon_contracts" => clienttranslate('Contracts'),
     ]);
   }
+  public static function planFoundOutpost(Player $player, int $nbContracts)
+  {
+    self::notifyAll("planFoundOutpost", clienttranslate('${player_name} plans to establish the outpost with ${n} ${icon_contracts}'), [
+        "player" => $player,
+        "n" => $nbContracts,
+        "icon_contracts" => clienttranslate('Contracts'),
+    ]);
+  }
   public static function abandonOutpost(Player $player, OutpostTile $tile)
   {
     self::notifyAll("abandonOutpost", clienttranslate('${player_name} chooses not to establish the ${outpostname} outpost'), [

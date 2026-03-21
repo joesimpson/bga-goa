@@ -19,9 +19,6 @@ final class EndSessionTest extends TestCase
     private function createGameMock()
     {
         $mock = new GameMock();
-        $mock->gamestate = new GamestateMachineMock();
-        $mock->notify = new Notify($mock);
-        $mock->bga = new Bga($mock);
         DB_Manager::startLog();
         Globals::fetch();
         return $mock;
@@ -36,7 +33,7 @@ final class EndSessionTest extends TestCase
             $session => [
                 $player1 => [
                     SCORING_PROGRESS     => 8,
-                    SCORING_OUTPOSTS     => 0,
+                    SCORING_OUTPOSTS     => 1,
                     SCORING_EXPLORATION  => [
                         /*
                         CARD_SYMBOL_ELEPHANT => 0,
@@ -52,7 +49,7 @@ final class EndSessionTest extends TestCase
                 ],
                 $player2 => [
                     SCORING_PROGRESS     => 1,
-                    SCORING_OUTPOSTS     => 0,
+                    SCORING_OUTPOSTS     => 1,
                     SCORING_EXPLORATION  => [
                         /*
                         CARD_SYMBOL_ELEPHANT => 0,

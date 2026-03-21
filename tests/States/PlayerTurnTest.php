@@ -12,6 +12,7 @@ use Bga\GameFramework\Table;
 use Bga\GameFramework\UserException;
 use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Exceptions\UnexpectedException;
+use Bga\Games\Goa\States\PlayerChoice;
 use Bga\Games\Goa\States\PlayerTurn;
 use PHPUnit\Framework\TestCase;
 
@@ -28,9 +29,6 @@ final class PlayerTurnTest extends TestCase
     private function createGameMock()
     {
         $mock = new GameMock();
-        $mock->gamestate = new GamestateMachineMock();
-        $mock->bga = new Bga($mock);
-        $mock->notify = new Notify($mock);
         $roundStep = ROUND_STEP_PLAYER_ACTIONS;
         Globals::setRoundStep($roundStep);
         return $mock;
@@ -455,7 +453,54 @@ final class PlayerTurnTest extends TestCase
         $newState = $state->actDiscard($cardIds, $gameVersion, $activePlayerId, $args, );
         self::assertSame(PlayerTurn::class, $newState );
     }
-    
+
+    public function testPlayerTurn_ActionFound_Pass(): void
+    {
+        logForTests(__CLASS__.".".__FUNCTION__);
+        $game = $this->createGameMock();
+        $state = new PlayerTurn($game);
+        $activePlayerId = 1;
+        Table::$test_activePlayerId = $activePlayerId;
+        $gameVersion = 999999;
+        $args = $state->getArgs();
+        $outpostId = 1;
+        $cardid = null;
+
+        $args['playerBaseContracts'] = 6;
+        $args['outpostsToFound'] = [$outpostId];
+        $newState = $state->actFoundOutpost(
+            $outpostId, 
+            $cardid, 
+            $activePlayerId, 
+            $args,
+            $gameVersion
+        );
+        self::assertSame(PlayerChoice::class, $newState );
+    }
+    public function testPlayerTurn_ActionFound_PlannedExpansion(): void
+    {
+        logForTests(__CLASS__.".".__FUNCTION__);
+        $game = $this->createGameMock();
+        $state = new PlayerTurn($game);
+        Globals::setOptionPlanned(OPTION_PLANNED_ON);
+        $activePlayerId = 1;
+        Table::$test_activePlayerId = $activePlayerId;
+        $gameVersion = 999999;
+        $args = $state->getArgs();
+        $outpostId = 1;
+        $cardid = null;
+
+        $args['playerBaseContracts'] = 10;
+        $args['outpostsToFound'] = [$outpostId];
+        $newState = $state->actFoundOutpost(
+            $outpostId, 
+            $cardid, 
+            $activePlayerId, 
+            $args,
+            $gameVersion
+        );
+        self::assertSame(PlayerChoice::class, $newState );
+    }
     public function testPlayerTurn_Zombie_Random(): void
     {
         logForTests(__CLASS__.".".__FUNCTION__);

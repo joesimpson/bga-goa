@@ -758,19 +758,30 @@ class PlayerTurn extends GameState
         }
         Log::addStep();
         $player = Players::get($activePlayerId);
+        $doCheckpoint = false;
 
         Players::registerNewAction($player,'actFoundOutpost');
         
-        PlayerTurn::actFoundOutpost_content($tile_id,$card_id, $player, $activePlayerId, $args);
+        PlayerTurn::actFoundOutpost_content($tile_id,$card_id, $doCheckpoint, $player, $activePlayerId, $args);
 
-        //CHECKPOINT because draw cards
-        Log::addStateCheckpoint(PlayerChoice::class);
+        if($doCheckpoint) Log::addStateCheckpoint(PlayerChoice::class);
         return PlayerChoice::class;
     }
     
+    /**
+     * 
+     * @param int $tile_id : which outpost tile is targeted
+     * @param int|null $card_id : which card is played
+     * @param bool &$doCheckpoint (auto updated arg) : whether the card action leads to a need for a checkpoint
+     * @param Player $player : who is playing 
+     * @param int $progressRefPlayerId : which player board is played
+     * @param array $args : state args
+     * @param int|null $fromEffectId : which effect leads to this action
+     */
     public static function actFoundOutpost_content(
         int $tile_id, 
         int|null $card_id,
+        bool &$doCheckpoint, 
         Player $player, 
         int $progressRefPlayerId,
         array $args,
@@ -800,16 +811,28 @@ class PlayerTurn extends GameState
         $tile = Tiles::get($tile_id);
         $nbNeededContracts = Utils::getNbContractsForColony($tile->getColony());
         Notifications::tryFoundOutpost($player, $tile, $nbNeededContracts);
-        $cards = Cards::drawAndDiscardExploration($player, $nbCardsToDraw);
-        $doCheckpoint = true;
+        
         if(isset($args['playersBaseContracts'])) $base = $args['playersBaseContracts'][$progressRefPlayerId];
         else $base = $args['playerBaseContracts'];
-        $sum = 0;
-        foreach($cards as $card){
-            $sum += $card->getContracts();
+
+        $planned = Utils::isGamePlannedExpansion();
+        if($planned){
+            //PLANNED Expansion -> USE BASE ONLY
+            $sum = $base;
+            Notifications::planFoundOutpost($player, $sum);
+        } else {
+            $cards = Cards::drawAndDiscardExploration($player, $nbCardsToDraw);
+            //CHECKPOINT because draw cards
+            $doCheckpoint = true;
+            $sum = 0;
+            foreach($cards as $card){
+                $sum += $card->getContracts();
+            }
+            Notifications::resultFoundOutpost($player, $sum);
+            
+            $sum+= $base;
         }
-        Notifications::resultFoundOutpost($player, $sum);
-        $sum+= $base;
+        
         $missingContracts = max(0,$nbNeededContracts - $sum);
         $canSpendContracts = $player->getContracts() >= $missingContracts;
 

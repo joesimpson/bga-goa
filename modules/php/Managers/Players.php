@@ -417,6 +417,9 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
   public static function getFoundBaseContracts(Player $player) : int
   {
     $outpostMarker = Tokens::getProgressMarkerByType(TOKEN_TYPE_PROGRESS_MARKER_OUTPOST, $player->getId());
+    if(Utils::isGamePlannedExpansion()){
+      return PROGRESS_GAINS_PLAN_OUTPOST[$outpostMarker->getRow() - 1];
+    }
     return PROGRESS_GAINS_OUTPOST[$outpostMarker->getRow() - 1];
   }
   public static function giveContracts(Player &$player, int $nb = 1)

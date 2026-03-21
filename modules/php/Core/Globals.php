@@ -44,6 +44,7 @@ class Globals extends \Bga\Games\Goa\Helpers\DB_Manager
     //Start OPTIONS
     'optionQuickStarter' => 'int',
     'optionBonanza' => 'int',
+    'optionPlanned' => 'int',
     'optionStories' => 'int',
     'optionCaptains' => 'int',
     'optionGambit' => 'int',
@@ -83,6 +84,10 @@ class Globals extends \Bga\Games\Goa\Helpers\DB_Manager
     $optionBonanza = OPTION_BONANZA_OFF;
     Utils::updateDataFromArray($options,OPTION_BONANZA,$optionBonanza);
     self::setOptionBonanza($optionBonanza);
+    
+    $optionPlanned = OPTION_PLANNED_OFF;
+    Utils::updateDataFromArray($options,OPTION_PLANNED,$optionPlanned);
+    self::setOptionPlanned($optionPlanned);
 
     $optionStories = OPTION_STORIES_OFF;
     Utils::updateDataFromArray($options,OPTION_STORIES,$optionStories);

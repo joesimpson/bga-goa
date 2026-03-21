@@ -716,6 +716,14 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-repeat: no-repeat;
   border-radius: 10px;
 }
+.goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_playerboard_background .goa_playerboard_overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  background-image: url("img/boards/plannedExpansionOverlay.png");
+}
 .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_auction_markers {
   position: absolute;
   top: 99px;
