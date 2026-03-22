@@ -1,3 +1,5 @@
+@use "sass:math";
+@use "variables" as *;
 
 $board_img_width: calc(1 * 1000px);
 $board_img_height: calc(1 * calc(1429px + var(--goa_board_height_offset)));
@@ -100,6 +102,16 @@ $board_img_height: calc(1 * calc(1429px + var(--goa_board_height_offset)));
                         .goa_auction_marker{
                             left: 50%;
                             z-index: 3;
+                            
+                            .goa_icon_auction_marker_shadow{
+                                //drop shadow  made on gimp
+                                position: absolute;
+                                left: -4px;
+                                top: -4px;
+                                $width: 50px;
+                                $height: 50px;
+                                @include goa_icons_sprite(117px,0px,calc($width + 8px),calc($height + 8px),97px,96px);
+                            }
                         }
                     }
 
@@ -464,14 +476,24 @@ $playerboard_img_height: calc(1 * 777px);
                 //outline: 10px solid BLACK;
 
                 .goa_auction_marker{
-                    width: 60px;
-                    height: 60px;
+                    $width : 60px;
+                    $height : $width;
+                    width: $width;
+                    height: $height;
                     position: absolute;
 
                     @for $i from 1 through 5 {
                         &[data-value="#{$i}"] {
-                            top: calc($i - 1) * 60px;
+                            top: calc($i - 1) * $height;
                         } 
+                    }
+
+                    .goa_icon_auction_marker_shadow{
+                        //drop shadow  made on gimp
+                        position: absolute;
+                        left: -4px;
+                        top: -4px;
+                        @include goa_icons_sprite(117px,0px,calc($width + 8px),calc($height + 8px),97px,96px);
                     }
                 }
             }
@@ -727,6 +749,9 @@ body.notouch-device{
             //height: 0;
             //View behind token : 
             margin-top: -50%;
+        }
+        &:hover .goa_first_auction_marker{
+            margin-top: -30%;
         }
         &.selectable:hover{
                 transform: scale(1.1) !important;

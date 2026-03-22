@@ -216,8 +216,8 @@ trait DebugTrait
                 'location' => TOKEN_LOCATION_BOARD,
                 'type' => TOKEN_TYPE_FIRSTAUCTION_MARKER,
                 'subtype' => TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER,
-                'row' => $row,
-                'col' => $col,
+                'token_row' => $row,
+                'token_col' => $col,
                 'nbr' => 1,
             ];
             $row = MARKET_GRID_SIZE+1;
@@ -225,8 +225,8 @@ trait DebugTrait
                 'location' => TOKEN_LOCATION_BOARD,
                 'type' => TOKEN_TYPE_FIRSTAUCTION_MARKER,
                 'subtype' => TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER,
-                'row' => $row,
-                'col' => $col,
+                'token_row' => $row,
+                'token_col' => $col,
                 'nbr' => 1,
             ];
         }
@@ -236,8 +236,8 @@ trait DebugTrait
                 'location' => TOKEN_LOCATION_BOARD,
                 'type' => TOKEN_TYPE_FIRSTAUCTION_MARKER,
                 'subtype' => TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER,
-                'row' => $row,
-                'col' => $col,
+                'token_row' => $row,
+                'token_col' => $col,
                 'nbr' => 1,
             ];
             $col = MARKET_GRID_SIZE+1;
@@ -245,8 +245,8 @@ trait DebugTrait
                 'location' => TOKEN_LOCATION_BOARD,
                 'type' => TOKEN_TYPE_FIRSTAUCTION_MARKER,
                 'subtype' => TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER,
-                'row' => $row,
-                'col' => $col,
+                'token_row' => $row,
+                'token_col' => $col,
                 'nbr' => 1,
             ];
         }
@@ -257,8 +257,8 @@ trait DebugTrait
                     'location' => TOKEN_LOCATION_BOARD,
                     'type' => TOKEN_TYPE_FIRSTAUCTION_MARKER,
                     'subtype' => TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER,
-                    'row' => $row,
-                    'col' => $col,
+                    'token_row' => $row,
+                    'token_col' => $col,
                     'nbr' => 1,
                 ];
             }
@@ -284,8 +284,8 @@ trait DebugTrait
                     'type' => TOKEN_TYPE_AUCTION_MARKERS[$k],
                     'subtype' => TOKEN_SUBTTYPE_AUCTION_MARKER,
                     'player_id' => $pId,
-                    'row' => $index + $k,
-                    'col' => $index,
+                    'token_row' => $index + $k,
+                    'token_col' => $index,
                     'nbr' => 1,
                 ];
             }

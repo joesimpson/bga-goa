@@ -70,7 +70,7 @@
 
 .goa_first_auction_marker{
     position: relative; 
-    @include goa_icons_sprite(355px,0px,60px,60px,109px,106px);
+    @include goa_icons_sprite(355px,0px,65px,63px,109px,106px);
     &.goa_token_log {
         //REDUCE SIZE IN LOG
         @include goa_icons_sprite(355px,0px,25px,25px,109px,106px);

@@ -149,8 +149,10 @@ $automaboard_img_height: calc(713px);
                 display: flex;
 
                 .goa_token{
-                    width: 62px;
-                    height: 62px;
+                    $width: 62px;
+                    $height: 62px;
+                    width: $width;
+                    height: $height;
                     position: absolute;  
                     &[data-value="1"]{
                         left: 95px;
@@ -160,6 +162,13 @@ $automaboard_img_height: calc(713px);
                     }
                     &[data-value="3"]{
                         left: 438px;
+                    }
+                    .goa_icon_auction_marker_shadow{
+                        //drop shadow  made on gimp
+                        position: absolute;
+                        left: -4px;
+                        top: -4px;
+                        @include goa_icons_sprite(117px,0px,calc($width + 8px),calc($height + 8px),97px,96px);
                     }
                 }
             }

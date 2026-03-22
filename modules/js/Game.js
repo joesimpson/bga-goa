@@ -3064,7 +3064,9 @@ export class Game {
             let tokenColor = this.gamedatas.automa_color;
             if(token.pId && token.pId!=this.gamedatas.automa_id) tokenColor = this.gamedatas.players[token.pId].color;
 
-            return `<div id="goa_token${prefix}-${token.id}" class="goa_token goa_token${prefix} goa_auction_marker" data-id="${token.id}" data-value='${token.auctionOrder}' data-color='${tokenColor}' data-pid='${token.pId}'></div>`;
+            return `<div id="goa_token${prefix}-${token.id}" class="goa_token goa_token${prefix} goa_auction_marker" data-id="${token.id}" data-value='${token.auctionOrder}' data-color='${tokenColor}' data-pid='${token.pId}'>
+                    ${this.formatIcon('auction_marker_shadow')}
+                </div>`;
         }
         if(token.subtype == this.const.TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER) 
             return `<div id="goa_token${prefix}-${token.id}" class="goa_token goa_token${prefix} goa_first_auction_marker" data-id="${token.id}" ></div>`;

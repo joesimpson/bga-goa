@@ -284,6 +284,20 @@ Icon extract in sprite with differents layers size (so % is not useful).
   background-position-x: 55.55555555%;
 }
 
+/**
+ *------
+ * BGA framework: Gregory Isabelli & Emmanuel Colin & BoardGameArena
+ * Goa implementation : © joesimpson <1324811+joesimpson@users.noreply.github.com>
+ *
+ * This code has been produced on the BGA studio platform for use on http://boardgamearena.com.
+ * See http://en.boardgamearena.com/#!doc/Studio for more information.
+ * -----
+ *
+ * goa.scss
+ *
+ * Goa stylesheet
+ *
+ */
 #goa_resizable_board {
   align-self: flex-start;
   width: calc(var(--goa_board_display_scale) * 1000px);
@@ -370,6 +384,17 @@ Icon extract in sprite with differents layers size (so % is not useful).
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market .goa_grid_space .goa_auction_marker {
   left: 50%;
   z-index: 3;
+}
+#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market .goa_grid_space .goa_auction_marker .goa_icon_auction_marker_shadow {
+  position: absolute;
+  left: -4px;
+  top: -4px;
+  width: 58px;
+  height: 58px;
+  background-image: url("img/icons.png");
+  background-position-x: -69.9587628866px;
+  background-position-y: 0px;
+  background-size: 1237.1134020619% 343.75%;
 }
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_left,
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_frame #goa_board_market_right {
@@ -756,6 +781,17 @@ Icon extract in sprite with differents layers size (so % is not useful).
 .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_auction_markers .goa_auction_marker[data-value="5"] {
   top: 240px;
 }
+.goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_auction_markers .goa_auction_marker .goa_icon_auction_marker_shadow {
+  position: absolute;
+  left: -4px;
+  top: -4px;
+  width: 68px;
+  height: 68px;
+  background-image: url("img/icons.png");
+  background-position-x: -82.0206185567px;
+  background-position-y: 0px;
+  background-size: 1237.1134020619% 343.75%;
+}
 .goa_resizable_playerboard .goa_playerboard_container .goa_playerboard .goa_player_progress_headers {
   position: absolute;
   top: 364px;
@@ -978,6 +1014,9 @@ Icon extract in sprite with differents layers size (so % is not useful).
 body.notouch-device #goa_board_market .goa_grid_space:hover .goa_token {
   opacity: 0.7;
   margin-top: -50%;
+}
+body.notouch-device #goa_board_market .goa_grid_space:hover .goa_first_auction_marker {
+  margin-top: -30%;
 }
 body.notouch-device #goa_board_market .goa_grid_space.selectable:hover {
   transform: scale(1.1) !important;
@@ -1500,10 +1539,10 @@ body.notouch-device .goa_tile:hover .goa_token:not(.selectable) {
 
 .goa_first_auction_marker {
   position: relative;
-  width: 60px;
-  height: 60px;
+  width: 65px;
+  height: 63px;
   background-image: url("img/icons.png");
-  background-position-x: -195.4128440367px;
+  background-position-x: -211.6972477064px;
   background-position-y: 0px;
   background-size: 1100.9174311927% 311.320754717%;
 }
@@ -2673,6 +2712,17 @@ body.notouch-device .scrollable-stock button:hover .goa_arrow {
 }
 #goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_tokens .goa_token[data-value="3"] {
   left: 438px;
+}
+#goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_tokens .goa_token .goa_icon_auction_marker_shadow {
+  position: absolute;
+  left: -4px;
+  top: -4px;
+  width: 70px;
+  height: 70px;
+  background-image: url("img/icons.png");
+  background-position-x: -84.4329896907px;
+  background-position-y: 0px;
+  background-size: 1237.1134020619% 343.75%;
 }
 #goa_resizable_automaboard #goa_automaboard_container #goa_automa_board #goa_automa_first_player_token {
   position: absolute;
