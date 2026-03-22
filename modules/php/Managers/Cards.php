@@ -96,6 +96,13 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
       ->where(static::$prefix . 'location', CARD_LOCATION_EXP_DECK)
       ->count();
   }
+  public static function countInExplorationDiscard() : int
+  {
+    return self::DB()
+      ->where( 'subType', CARD_SUBTTYPE_EXPLORATION)
+      ->where(static::$prefix . 'location', CARD_LOCATION_EXP_DISCARD)
+      ->count();
+  }
   public static function getExplorationHand(int $pId) : Collection
   {
     return self::DB()
@@ -291,16 +298,15 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
   public static function drawExplorationCardsToPlayer(Player $player,int $nb, bool &$doCheckpoint) : Collection
   {
     Game::get()->trace("drawExplorationCardsToPlayer($nb)");
-    //$nbDiscardBefore = Cards::countInLocation(CARD_LOCATION_EXP_DISCARD);
+    $nbDiscardBefore = Cards::countInExplorationDiscard();
     $nbDeckBefore = Cards::countInExplorationDeck();
 
     $cards = Cards::pickForLocation($nb, CARD_LOCATION_EXP_DECK,CARD_LOCATION_HAND,);
     
     //$nbDiscard = Cards::countInLocation(CARD_LOCATION_EXP_DISCARD);
     if($nbDeckBefore< $nb){
-      $nbDeck = Cards::countInExplorationDeck();
       //notify deck size BEFORE drawing, because we have an animation after
-      $nbDeckRightAfterShuffle = $nbDeck + max($nb,$nbDeckBefore);
+      $nbDeckRightAfterShuffle = max(0, $nbDeckBefore + $nbDiscardBefore);
       Notifications::reshuffleExplorationDeck($player, $nbDeckRightAfterShuffle );
     }
 
@@ -317,15 +323,14 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
   }
   public static function drawAndDiscardExploration(Player $player,int $nb): Collection
   {
+    $nbDiscardBefore = Cards::countInExplorationDiscard();
     $nbDeckBefore = Cards::countInExplorationDeck();
 
     $cards = Cards::pickForLocation($nb, CARD_LOCATION_EXP_DECK,CARD_LOCATION_EXP_DISCARD,);
 
     if($nbDeckBefore< $nb){
-      $nbDeck = Cards::countInExplorationDeck();
       //notify deck size BEFORE drawing, because we have an animation after
-      $nbDeckRightAfterShuffle = $nbDeck + max($nb,$nbDeckBefore);
-      //TODO JSA FIX if not enough cards
+      $nbDeckRightAfterShuffle = max(0, $nbDeckBefore + $nbDiscardBefore);
       Notifications::reshuffleExplorationDeck($player, $nbDeckRightAfterShuffle );
     }
 
