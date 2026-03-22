@@ -1075,7 +1075,7 @@ body.notouch-device .goa_tile:hover .goa_token:not(.selectable) {
   background-image: url("img/icons.png");
   background-position-x: 0px;
   background-position-y: 0px;
-  background-size: 606.0606060606% 170.9844559585%;
+  background-size: 1090.9090909091% 305.5555555556%;
 }
 
 .goa_icon_round_step_1 {
@@ -1503,17 +1503,17 @@ body.notouch-device .goa_tile:hover .goa_token:not(.selectable) {
   width: 60px;
   height: 60px;
   background-image: url("img/icons.png");
-  background-position-x: -46.2595419847px;
+  background-position-x: -195.4128440367px;
   background-position-y: 0px;
-  background-size: 458.0152671756% 129.4117647059%;
+  background-size: 1100.9174311927% 311.320754717%;
 }
 .goa_first_auction_marker.goa_token_log {
   width: 25px;
   height: 25px;
   background-image: url("img/icons.png");
-  background-position-x: -19.2748091603px;
+  background-position-x: -81.4220183486px;
   background-position-y: 0px;
-  background-size: 458.0152671756% 129.4117647059%;
+  background-size: 1100.9174311927% 311.320754717%;
 }
 
 .goa_icon_nazar_stone,
@@ -1521,9 +1521,9 @@ body.notouch-device .goa_tile:hover .goa_token:not(.selectable) {
   width: 30px;
   height: 30px;
   background-image: url("img/icons.png");
-  background-position-x: -23.1297709924px;
+  background-position-x: -97.7064220183px;
   background-position-y: 0px;
-  background-size: 458.0152671756% 129.4117647059%;
+  background-size: 1100.9174311927% 311.320754717%;
 }
 
 .goa_tile_spot .goa_icon_spice_shadow {
@@ -2681,9 +2681,9 @@ body.notouch-device .scrollable-stock button:hover .goa_arrow {
   width: 102px;
   height: 102px;
   background-image: url("img/icons.png");
-  background-position-x: -78.641221374px;
+  background-position-x: -332.2018348624px;
   background-position-y: 0px;
-  background-size: 458.0152671756% 129.4117647059%;
+  background-size: 1100.9174311927% 311.320754717%;
 }
 
 .goa_automa_table[data-phase="1"] #goa_automa_board_background {

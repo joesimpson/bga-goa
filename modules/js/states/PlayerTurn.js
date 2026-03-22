@@ -48,8 +48,8 @@ export class PlayerTurn {
                 let titleActive =  _('${you} must select an action ${icon_action}').replace('${icon_action}',iconAction);
                 let titleOthers =  _('${actplayer} must select an action ${icon_action}').replace('${icon_action}',iconAction);
                 if(args.actionPlayed){
-                    titleActive =  _('${you} may play a card or tile');
-                    titleOthers =  _('${actplayer} may play a card or tile');
+                    titleActive =  _('${you} may play a card or tile after your action');
+                    titleOthers =  _('${actplayer} may play a card or tile after their action');
                 }
                 if(possibleActions.includes('actPassAction')){
                     titleActive =  _('${you} may pass or spend 1 ${compass_card} for an action ${icon_action}').replace('${compass_card}',this.game.formatIcon('compasses',_('Compass card'))).replace('${icon_action}',iconAction);
