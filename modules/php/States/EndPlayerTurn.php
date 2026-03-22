@@ -151,7 +151,7 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
 
         if(isset($prematureStateChange) ){
             Players::changeActive($prematureStateChange->changePlayer->getId());
-            if($activePlayerId != $prematureStateChange->changePlayer->getId() || $doCheckpoint){
+            if($activePlayerId != $prematureStateChange->changePlayer->getId() || $doCheckpoint || $automaActive){
                 Log::addStateCheckpoint($prematureStateChange->nextStateClass);
             }
             return $prematureStateChange->nextStateClass;
