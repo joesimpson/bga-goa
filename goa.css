@@ -3928,6 +3928,7 @@ html.goa_pref_background_none #goa_overall_background {
 }
 #goa_top_zone #goa_bid_hints .goa_bid_hint_text {
   font-style: italic;
+  line-height: 2.8em;
 }
 #goa_top_zone #goa_bid_hints span {
   align-self: center;
@@ -3947,9 +3948,6 @@ html.goa_pref_background_none #goa_overall_background {
 #goa_top_zone #goa_bid_hints .goa_bid span, #goa_top_zone #goa_bid_hints .goa_bid button {
   align-self: center;
   flex-grow: 0;
-}
-#goa_top_zone #goa_bid_hints #goa_bid_remaining {
-  line-height: 2.8em;
 }
 #goa_top_zone #goa_harvest_inc button span {
   padding: 4px;

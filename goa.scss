@@ -107,6 +107,7 @@ html {
 
         .goa_bid_hint_text {
             font-style: italic;
+            line-height: 2.8em;//to see goa_icon_money/goa_icon_compass border
         }
         span{
             align-self: center;
@@ -127,9 +128,6 @@ html {
                 align-self: center;
                 flex-grow: 0;
             }
-        }
-        #goa_bid_remaining{
-            line-height: 2.8em;//to see goa_icon_money border
         }
     }
     #goa_harvest_inc{
