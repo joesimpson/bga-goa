@@ -1216,7 +1216,8 @@ class PlayerTurn extends GameState
                         Game::get()->trace(__FUNCTION__."($playerId) : UnexpectedException, continue zombie choices. ", json_encode($exc));
                     }
                 }
-                break;
+                //DEFAULT ACTION if we don't know ...
+                return $this->actTaxes( $gameVersion, $playerId, $args,);
             default: break;
         }
 
