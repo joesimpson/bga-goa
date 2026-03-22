@@ -8,10 +8,10 @@ use Bga\GameFramework\StateType;
 use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Core\Stats;
-use Bga\Games\Goa\Exceptions\PrematureStateChangeException;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Log;
 use Bga\Games\Goa\Helpers\Utils;
+use Bga\Games\Goa\Managers\Effects;
 use Bga\Games\Goa\Managers\MoneyCards;
 use Bga\Games\Goa\Managers\Players;
 use Bga\Games\Goa\Managers\Tiles;
@@ -41,7 +41,6 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
         $this->game->trace("EndPlayerTurn.onEnteringState($activePlayerId, $automaActive)");
 
         $roundEnd = false;
-        $prematureStateChange = null;
         $doCheckpoint = false;
 
         $player = Players::get($activePlayerId);
@@ -124,12 +123,7 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
                     }
                     else {
                         //ELSE highBidPlayer receives a tile
-                        try{
                             Tiles::giveMarketTileToPlayerAt($highBidPlayer, $auctionToken->getRow(), $auctionToken->getCol(), $doCheckpoint );
-                        }
-                        catch(PrematureStateChangeException $exc){
-                            $prematureStateChange = $exc;
-                        }
                     }
 
                     Tokens::returnAuctionMarkerToPlayer($currentAuctioneer,$auctionToken);
@@ -149,12 +143,14 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
             default : break;
         }
 
-        if(isset($prematureStateChange) ){
-            Players::changeActive($prematureStateChange->changePlayer->getId());
-            if($activePlayerId != $prematureStateChange->changePlayer->getId() || $doCheckpoint || $automaActive){
-                Log::addStateCheckpoint($prematureStateChange->nextStateClass);
+        $nextPlayerToResolve = Effects::nextPlayerToResolve();
+        if(isset($nextPlayerToResolve) ){
+            Players::changeActive($nextPlayerToResolve);
+            $nextStateClass = PlayerChoice::class;
+            if($activePlayerId != $nextPlayerToResolve || $doCheckpoint || $automaActive){
+                Log::addStateCheckpoint($nextStateClass);
             }
-            return $prematureStateChange->nextStateClass;
+            return $nextStateClass;
         }
         else if ($roundEnd) {
             //Log::addStateCheckpoint(EndTurn::class);

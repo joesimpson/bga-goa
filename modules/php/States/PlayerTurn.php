@@ -12,7 +12,6 @@ use Bga\GameFramework\States\PossibleAction;
 use Bga\GameFramework\UserException;
 use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Core\Notifications;
-use Bga\Games\Goa\Exceptions\PrematureStateChangeException;
 use Bga\Games\Goa\Exceptions\UnexpectedException;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Collection;
@@ -543,7 +542,7 @@ class PlayerTurn extends GameState
         if(isset($card_id)){
             Cards::playExploration($player, $card_id, $doCheckpoint);
         } else if(isset($tile_id)){
-            $tile = Tiles::playTile($player, $tile_id, null, $doCheckpoint, $prematureStateChange );
+            $tile = Tiles::playTile($player, $tile_id, null, $doCheckpoint, );
         }
 
         PlayerTurn::actHarvest_content(
@@ -557,11 +556,12 @@ class PlayerTurn extends GameState
             $activePlayerId, 
             $args,
         );
- 
-        if(isset($prematureStateChange) ){
+        $nextPlayerToResolve = Effects::nextPlayerToResolve();
+        if(isset($nextPlayerToResolve)){
             //SHOULD NOT HAPPEN IN this use case
-            $nextStateClass = $prematureStateChange->nextStateClass;
+            $nextStateClass = PlayerChoice::class;
         }
+ 
         if($doCheckpoint) Log::addStateCheckpoint($nextStateClass);
         return $nextStateClass;
 
@@ -927,9 +927,10 @@ class PlayerTurn extends GameState
         Utils::checkVersion($v);
         $doCheckpoint = false;
         $nextStateClass = PlayerTurn::class;
-        PlayerTurn::actPlayTile_content($tile_id, $row, $col, $activePlayerId, $args, $doCheckpoint,$prematureStateChange);
-        if(isset($prematureStateChange) ){
-            $nextStateClass = $prematureStateChange->nextStateClass;
+        PlayerTurn::actPlayTile_content($tile_id, $row, $col, $activePlayerId, $args, $doCheckpoint,);
+        $nextPlayerToResolve = Effects::nextPlayerToResolve();
+        if(isset($nextPlayerToResolve) ){
+            $nextStateClass = PlayerChoice::class;
         }
         if($doCheckpoint) Log::addStateCheckpoint($nextStateClass);
         return $nextStateClass;
@@ -943,7 +944,6 @@ class PlayerTurn extends GameState
         int $activePlayerId, 
         array $args, 
         bool &$doCheckpoint,
-        PrematureStateChangeException| null &$stateChange = null, //modify arg  directly instead of throw in order to go until the return value
     )
     { 
         Game::get()->trace("actPlayTile_content($tile_id,$row,$col,$activePlayerId)");
@@ -970,7 +970,7 @@ class PlayerTurn extends GameState
         Log::addStep();
         $player = Players::get($activePlayerId);
 
-        Tiles::playTile($player, $tile_id, ['row'=>$row, 'col'=>$col], $doCheckpoint, $stateChange, );
+        Tiles::playTile($player, $tile_id, ['row'=>$row, 'col'=>$col], $doCheckpoint,  );
     }
     
     /**
@@ -995,12 +995,8 @@ class PlayerTurn extends GameState
             $activePlayerId,
             $args,
             $doCheckpoint,
-            $prematureStateChange,
         );
         
-        if(isset($prematureStateChange) ){//should not happen in this use case
-            $nextStateClass = $prematureStateChange->nextStateClass;
-        }
         if($doCheckpoint) Log::addStateCheckpoint($nextStateClass);
         return $nextStateClass;
     }
@@ -1011,7 +1007,6 @@ class PlayerTurn extends GameState
         int|null $tile_id,
         int $activePlayerId, array $args,
         bool &$doCheckpoint, 
-        PrematureStateChangeException| null &$stateChange = null,
     )
     { 
         Game::get()->trace("actSpendSpices(".json_encode($t_ids)."$card_id,$tile_id,$activePlayerId)");
@@ -1068,7 +1063,7 @@ class PlayerTurn extends GameState
             Cards::playExploration($player, $card_id, $doCheckpoint );
         }
         if(isset($tile_id)){
-            $tile = Tiles::playTile($player, $tile_id, null, $doCheckpoint, $prematureStateChange);
+            $tile = Tiles::playTile($player, $tile_id, null, $doCheckpoint,);
         }
         $playerSpices = Tokens::getPlayerSpices($player->getId());
         $tokens = $playerSpices->filter(function($t) use ($t_ids){

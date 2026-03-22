@@ -11,7 +11,6 @@ use Bga\GameFramework\States\PossibleAction;
 use Bga\GameFramework\UserException;
 use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Core\Notifications;
-use Bga\Games\Goa\Exceptions\PrematureStateChangeException;
 use Bga\Games\Goa\Exceptions\UnexpectedException;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Log;
@@ -188,10 +187,8 @@ class PlayerChoice extends GameState
         $player = Players::get($activePlayerId);
 
         // game logic  
-        $prematureStateChange = null;
         $doCheckpoint = false;
         $roundStep = Globals::getRoundStep();
-        try{
             switch($effect['type']){
                 //use 2 different switches, because in case of DB elements ids (like tiles ids), we cannot tell in advance if the id is the same as an predefined action id
                 case EFFECT_TYPE_PICK_TILE:
@@ -301,22 +298,11 @@ class PlayerChoice extends GameState
                     }
                 break;
             }
-        }
-        catch(PrematureStateChangeException $exc){
-            $prematureStateChange = $exc;
-        }
 
         Effects::resolve($choice_index);
 
         // at the end of the action, move to the next state
-        if(isset($prematureStateChange) ){
-            //Players::changeActive($prematureStateChange->changePlayer->getId());
-            //Should not be necessary, but we cannot change active player in active state
-            $nextStateClass = $prematureStateChange->nextStateClass;
-        }
-        else {
             $nextStateClass = PlayerChoice::class;
-        }
         if($doCheckpoint) Log::addStateCheckpoint($nextStateClass);
         return $nextStateClass;
     }
@@ -406,9 +392,10 @@ class PlayerChoice extends GameState
         
         $doCheckpoint = false;
         $nextStateClass = self::class;
-        PlayerTurn::actPlayTile_content($tile_id, $row, $col, $activePlayerId, $args, $doCheckpoint,$prematureStateChange);
-        if(isset($prematureStateChange) ){
-            $nextStateClass = $prematureStateChange->nextStateClass;
+        PlayerTurn::actPlayTile_content($tile_id, $row, $col, $activePlayerId, $args, $doCheckpoint,);
+        $nextPlayerToResolve = Effects::nextPlayerToResolve();
+        if(isset($nextPlayerToResolve) ){
+            $nextStateClass = PlayerChoice::class;
         }
         
         if($doCheckpoint) Log::addStateCheckpoint($nextStateClass);
@@ -437,12 +424,8 @@ class PlayerChoice extends GameState
             $activePlayerId,
             $args,
             $doCheckpoint,
-            $prematureStateChange,
         );
         
-        if(isset($prematureStateChange) ){//should not happen in this use case
-            $nextStateClass = $prematureStateChange->nextStateClass;
-        }
         if($doCheckpoint) Log::addStateCheckpoint($nextStateClass);
         return $nextStateClass;
     }
@@ -477,7 +460,7 @@ class PlayerChoice extends GameState
             Cards::playExploration($player, $card_id, $doCheckpoint );
         } 
         else if(isset($tile_id)){
-            $tile = Tiles::playTile($player, $tile_id, null, $doCheckpoint, $prematureStateChange );
+            $tile = Tiles::playTile($player, $tile_id, null, $doCheckpoint, );
         }
 
         PlayerTurn::actHarvest_content(
@@ -492,10 +475,6 @@ class PlayerChoice extends GameState
             $args,
         );
  
-        if(isset($prematureStateChange) ){
-            //SHOULD NOT HAPPEN IN this use case
-            $nextStateClass = $prematureStateChange->nextStateClass;
-        }
         if($doCheckpoint) Log::addStateCheckpoint($nextStateClass);
         return $nextStateClass;
     }

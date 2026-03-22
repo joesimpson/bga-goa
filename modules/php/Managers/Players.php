@@ -7,13 +7,11 @@ use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Core\Stats;
-use Bga\Games\Goa\Exceptions\PrematureStateChangeException;
 use Bga\Games\Goa\Helpers\Utils;
 use Bga\Games\Goa\Models\AutomaPlayer;
 use Bga\Games\Goa\Models\CardLocation;
 use Bga\Games\Goa\Models\Player;
 use Bga\Games\Goa\Models\Tile;
-use Bga\Games\Goa\States\PlayerChoice;
 
 /*
  * Players manager : allows to easily access players ...
@@ -456,7 +454,6 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
   }
 
   /**
-   * @throws PrematureStateChangeException when caller will need to go to another state than default one
    * */
   public static function directGain(Player &$player, int $gainType, int $gainQuantity, Tile $tile, bool &$doCheckpoint)
   {
@@ -480,17 +477,15 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
       case ACTION_SHIPS_OR_CONTRACTS: 
         //Save datas for next state
         Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_PICK_ACTION, $gainQuantity, [ACTION_SHIP, ACTION_CONTRACT]);
-        throw new PrematureStateChangeException (1,PlayerChoice::class,$player);
+        break;
       case ACTION_SPICE://for tile 42
         Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_HARVEST, $gainQuantity, [ACTION_HARVEST]);
-        throw new PrematureStateChangeException (1,PlayerChoice::class,$player);
         break;
       case ACTION_FAVOR: 
         $tilesToChoose = Tiles::getTilesForFavor()->map(function ($tile) {
           return $tile->getType();
         })->getIds();
         Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_PICK_TILE, $gainQuantity, $tilesToChoose);
-        throw new PrematureStateChangeException (2,PlayerChoice::class,$player);
         break;
       default: break;
     }

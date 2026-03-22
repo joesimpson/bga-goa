@@ -5,7 +5,6 @@ namespace Bga\Games\Goa\Managers;
 use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Core\Notifications;
 use Bga\Games\Goa\Core\Stats;
-use Bga\Games\Goa\Exceptions\PrematureStateChangeException;
 use Bga\Games\Goa\Exceptions\UnexpectedException;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Collection;
@@ -115,7 +114,6 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
    * then give it to player
    * @param array $blackListIds (optional) list of ids we don't want to give
    * 
-   * @throws PrematureStateChangeException when caller will need to go to another state than default one
    * */
   public static function giveMarketTileToPlayerAt(Player $player, int $row, int $col, bool &$doCheckpoint, array $blackListIds = []):void
   {
@@ -129,7 +127,6 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
 
     //$tile = $tilesOnMarketSpace->first();
     foreach($tilesOnMarketSpace as $tile){
-      try{
         if(isset($tile)){
           if($tile instanceof BonanzaTile){
             //REVEAL TILE
@@ -143,26 +140,15 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
             Tiles::giveMarketTileToPlayer($player, $tile, $doCheckpoint);
           }
         }
-      }
-      catch(PrematureStateChangeException $exc){
-        $stateExc = $exc;
-      }
-    }
-    
-    if(isset($stateExc)) {
-      throw $stateExc;
     }
   }
   
   /**
    * Get the selected market tile
    * then give it to player
-   * @throws PrematureStateChangeException when caller will need to go to another state than default one
    * */
   public static function giveMarketTileToPlayer(Player $player, MarketTile &$tile, bool &$doCheckpoint) :void
   {
-    $stateExc = null;  
-    
     if(isset($tile)){
 
       $updateTileDatas = function ( $player, &$tile, bool $waiting = false) {
@@ -189,8 +175,8 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
             $replacableIds = $playerPlantations->getIds();
             $replacableIds[] = $tile->getId(); //allow to discard waiting tile
             Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_REPLACE_TILE, 1, $replacableIds);
-            throw new PrematureStateChangeException (3,PlayerChoice::class, $player);
-            //don't modify tile location before this exception !
+            return;
+            //don't modify tile location before this return !
           }
           $updateTileDatas($player,$tile, false);
 
@@ -205,12 +191,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
           Stats::inc("playedTiles", $player->getId());
           $gains = $tile->getActions();
           foreach($gains as $type => $quantity){
-            try{
               Players::directGain($player,$type,$quantity, $tile, $doCheckpoint);
-            }
-            catch(PrematureStateChangeException $exc){
-              $stateExc = $exc;
-            }
           }
           break;
         default:
@@ -220,16 +201,12 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
       }
 
     }
-    if(isset($stateExc)) {
-        throw $stateExc;
-    }
   }
   
   
   /**
    * Get the selected outpost tile
    * then give it to player
-   * @throws PrematureStateChangeException when caller will need to go to another state than default one
    * */
   public static function giveOutpostToPlayer(Player $player, OutpostTile &$tile) :void
   {
@@ -251,11 +228,9 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
   }
   
   /**
-   * @throws PrematureStateChangeException when caller will need to go to another state than default one
    * */
   public static function fillPlayerTileWithSpices(Player $player, Tile &$tile)
   {
-    $stateExc = null;  
     //FILL tile spices_slots
     $slots = $tile->getSpice_slots();
     $slotPosition = 0;
@@ -267,7 +242,6 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
         //IF WILD SPICE, ASK PLAYER choice ! 
         //Save datas for next state
         Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_PICK_SPICE, $slotPosition, $spice);
-        $stateExc = new PrematureStateChangeException (3,PlayerChoice::class, $player);
       }
       else {
         $spiceTokenType = Tokens::getTokenSpiceTypeFromSpice($spice);
@@ -275,11 +249,6 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
       }
     }
     Notifications::newSpices($player, new Collection($tokenSpices));
-    
-    if(isset($stateExc)) {
-      throw $stateExc;
-    }
-
   }
 
   public static function discardTileFromMarket(Player $player, Tile &$tile)
@@ -690,14 +659,12 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
    * Action of a tile in player actions turn
    * 
    * @param array|null $coords New coordinates to set on tile
-   * @param PrematureStateChangeException &$stateChange : this function modify arg  directly instead of throw in order to go until the return value
    */
   public static function playTile(
     Player &$player,
     int $tileId, 
     array|null $coords, 
     bool &$doCheckpoint, 
-    PrematureStateChangeException| null &$stateChange = null,
   ): Tile
   { 
     $tile = Tiles::get($tileId);
@@ -764,16 +731,11 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
           Players::giveMoney($player, $nb);
           break;
         case ACTION_SWAP: 
-          try{
             if(!isset($row) || !isset($col)){
               throw new UnexpectedException(122,("Missing coordinate to swap"));
             }
             //Don't forget to blacklist THE SWAP TILE itself because we just placed it in the same spot
             Tiles::giveMarketTileToPlayerAt($player, $row, $col, $doCheckpoint, [$tileId] );
-          }
-          catch(PrematureStateChangeException $exc){
-            $stateChange = $exc;
-          }
           break;
         case ACTION_RESUPPLY: 
           $cards = Cards::drawAndDiscardExploration($player, 2);
@@ -784,13 +746,11 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
           }
           Notifications::resultDrawNCards($player,$sum);
           Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_HARVEST, $sum, [ACTION_HARVEST, ACTION_CONTRACT, ACTION_SHIP]);
-          $stateChange = new PrematureStateChangeException (5,PlayerChoice::class,$player);
           break;
         case ACTION_HARVEST:  //done in actHarvest
           break;
         case ACTION_ESPIONAGE: 
           Effects::addEffectOnTile($player,$tile->getId(), EFFECT_TYPE_ESPIONAGE, 1, [ACTION_SHIP, ACTION_HARVEST, ACTION_MONEY, ACTION_FOUND_ABANDON]);
-          $stateChange = new PrematureStateChangeException (5,PlayerChoice::class,$player);
           break;
         case ACTION_VICEKING: //done in actProgress
           break;

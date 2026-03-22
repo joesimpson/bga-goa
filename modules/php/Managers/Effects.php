@@ -117,6 +117,18 @@ class Effects extends \Bga\Games\Goa\Helpers\Pieces
       ->get();
   }
   
+  /**
+   * @return int|null next player id with effects to resolve
+   */
+  public static function nextPlayerToResolve() : int|null {
+    return self::DB()
+      ->where(static::$prefix .'location', EFFECT_LOCATION_TO_RESOLVE)
+      ->where(static::$prefix .'state', EFFECT_STATE_TO_SOLVE)
+      ->get()
+      ->map(function($effect) { return $effect->getPId();})
+      ->first();
+  }
+  
   public static function countPlayerEffectsToResolve(int $playerId)  : int {
     return self::DB()
       ->where(static::$prefix .'state', EFFECT_STATE_TO_SOLVE)
