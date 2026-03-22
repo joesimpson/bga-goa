@@ -777,7 +777,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
           break;
         case ACTION_RESUPPLY: 
           $cards = Cards::drawAndDiscardExploration($player, 2);
-          $doCheckpoint = true;
+          $doCheckpoint = $cards->count() >0;
           $sum = 0;
           foreach($cards as $card){
             $sum += $card->getContracts();

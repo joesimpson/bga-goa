@@ -732,11 +732,11 @@ class PlayerTurn extends GameState
             Notifications::cleanHandStart($player, $nbMaxToKeep);
             Effects::addEffectOnAction($player,ACTION_TYPE_EXP, EFFECT_TYPE_CLEAN_HAND, null, []);
 
-            Log::addStateCheckpoint(PlayerChoice::class);
+            if($doCheckpoint) Log::addStateCheckpoint(PlayerChoice::class);
             return PlayerChoice::class;
         }
 
-        Log::addStateCheckpoint(PlayerTurn::class);
+        if($doCheckpoint) Log::addStateCheckpoint(PlayerTurn::class);
         return PlayerTurn::class;
     }
     /**
@@ -823,7 +823,7 @@ class PlayerTurn extends GameState
         } else {
             $cards = Cards::drawAndDiscardExploration($player, $nbCardsToDraw);
             //CHECKPOINT because draw cards
-            $doCheckpoint = true;
+            $doCheckpoint = $cards->count() >0;
             $sum = 0;
             foreach($cards as $card){
                 $sum += $card->getContracts();

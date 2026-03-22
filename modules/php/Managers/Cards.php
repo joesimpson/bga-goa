@@ -312,7 +312,7 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
     Notifications::giveExplorationCardsToPlayer($player,$cards);
     //we don't know here which state to save, and the action may be unfinished here
     //Log::addStateCheckpoint($nextStateClass);
-    $doCheckpoint = true;
+    $doCheckpoint = $cards->count()>0;
     return $cards;
   }
   public static function drawAndDiscardExploration(Player $player,int $nb): Collection
@@ -325,6 +325,7 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
       $nbDeck = Cards::countInExplorationDeck();
       //notify deck size BEFORE drawing, because we have an animation after
       $nbDeckRightAfterShuffle = $nbDeck + max($nb,$nbDeckBefore);
+      //TODO JSA FIX if not enough cards
       Notifications::reshuffleExplorationDeck($player, $nbDeckRightAfterShuffle );
     }
 
@@ -387,7 +388,7 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
           $sum += $card->getContracts();
         }
         Notifications::resultFoundOutpost($player, $sum);
-        $doCheckpoint = true;
+        $doCheckpoint = $cards->count() >0;
         Utils::refreshFoundTileEffectWithContracts($player->getId(), $sum, null);
         break;
       case CARD_ACTION_RESSOURCES_TO_COINS: //done in actSpendSpices
