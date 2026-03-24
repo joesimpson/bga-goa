@@ -343,7 +343,7 @@ export class ClientHarvestResources {
                     possibleSpices = harvestSpots[id]['spices'];
                     possibleSpices.forEach((spice) => {
                         let spice_icon = this.game.formatSpiceIcon(spice);
-                        this.bga.statusBar.addActionButton( spice_icon, () => {
+                        let clickSpiceAction = () => {
                             elt.classList.remove('selected_for_client_state');
                             selectedResources.set(parseInt(id),spice);
                             let tmpTokenDiv = this.game.addToken(
@@ -361,7 +361,13 @@ export class ClientHarvestResources {
                              
                             selectedTiles[tile_id] ++;
                             updateStatus();
-                        }, { 'id': 'btnHarvestSelect'+spice, 'destination': harvestResourcesZone,  }); 
+                        };
+                        this.bga.statusBar.addActionButton( spice_icon, clickSpiceAction, { 'id': 'btnHarvestSelect'+spice, 'destination': harvestResourcesZone,  }); 
+
+                        if(possibleSpices.length == 1){
+                            //IF ONLY 1 to select => auto select
+                            clickSpiceAction();
+                        }
                     });
 
 
