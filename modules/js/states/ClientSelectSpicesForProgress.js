@@ -176,12 +176,12 @@ export class ClientSelectSpicesForProgress {
                     selectedElements.push(parseInt(id));
                     let currentSpiceCount = countResources.get(parseInt(spice));
                     currentSpiceCount++;
-                    countResources.set(parseInt(spice),countResources);
+                    countResources.set(parseInt(spice),currentSpiceCount);
                 } else {
                     selectedElements.splice(index, 1);
                     let currentSpiceCount = countResources.get(parseInt(spice));
                     currentSpiceCount--;
-                    countResources.set(parseInt(spice),countResources);
+                    countResources.set(parseInt(spice),currentSpiceCount);
                 }
                 updateStatus();
                 checkPossibleSets();
