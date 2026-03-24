@@ -159,17 +159,17 @@ class Globals extends \Bga\Games\Goa\Helpers\DB_Manager
 
     //try{
     //Migrate from 'bga_globals' to 'my_global_variables', like I do in upgradeTableDb, but this method is called before
-    $version = Utils::gameVersion();
-    if($version <= 2603110809 && $version != 999999999){
-      Game::get()->error(__CLASS__.".".__FUNCTION__."() Version $version needs a new globals table ");
-      $sql = "CREATE TABLE IF NOT EXISTS  `my_global_variables` (
-                  `name` varchar(50) NOT NULL,
-                  `value` JSON,
-                  PRIMARY KEY (`name`)
-              ) ENGINE = InnoDB DEFAULT CHARSET = UTF8MB4
-              SELECT * FROM `bga_globals`";
-      Table::DbQuery($sql);
-    }
+    //$version = Utils::gameVersion();
+    //if($version <= 2603110809 && $version != 999999999){
+    //  Game::get()->error(__CLASS__.".".__FUNCTION__."() Version $version needs a new globals table ");
+    //  $sql = "CREATE TABLE IF NOT EXISTS  `my_global_variables` (
+    //              `name` varchar(50) NOT NULL,
+    //              `value` JSON,
+    //              PRIMARY KEY (`name`)
+    //          ) ENGINE = InnoDB DEFAULT CHARSET = UTF8MB4
+    //          SELECT * FROM `bga_globals`";
+    //  Table::DbQuery($sql);
+    //}
 
     foreach (self::DB()
         ->select(['value', 'name'])
