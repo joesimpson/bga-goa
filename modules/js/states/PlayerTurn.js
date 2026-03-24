@@ -41,6 +41,13 @@ export class PlayerTurn {
                     _('Auction ${token_icon} : ${you} may pass or raise the current bid of ${bid} ${icon_money}').replace('${bid}', currentBid).replace('${icon_money}', icon_money).replace('${token_icon}', token_icon) :
                     _('Auction ${token_icon} : ${actplayer} may pass or raise the current bid of ${bid} ${icon_money}').replace('${bid}', currentBid).replace('${icon_money}', icon_money).replace('${token_icon}', token_icon)
                 );
+                if(currentBid == 0){
+                    this.bga.statusBar.setTitle(isCurrentPlayerActive ? 
+                        _('Auction ${token_icon} : ${you} must either place a bid or pass').replace('${token_icon}', token_icon) :
+                        _('Auction ${token_icon} : ${actplayer} must either place a bid or pass').replace('${token_icon}', token_icon)
+                    );
+                }
+
                 break;
             case this.game.const.ROUND_STEP_PLAYER_ACTIONS: 
                 let iconAction = this.game.formatIcon('nbActions');
