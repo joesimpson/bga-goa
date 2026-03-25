@@ -698,7 +698,9 @@ export class Game {
         //FAST MODE => do nothing
         if(this.bga.gameui.instantaneousMode) return;
         await this.bga.gameui.wait(100);
-        document.getElementById(divId).scrollIntoView({'behavior': 'smooth', 'block':'center'});
+        let div = document.getElementById(divId);
+        if(!div) return;
+        div.scrollIntoView({'behavior': 'smooth', 'block':'center'});
     }
 
     onClick(node, callback) {
