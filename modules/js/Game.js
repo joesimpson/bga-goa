@@ -3242,13 +3242,13 @@ export class Game {
         if(row>1){
 
             line1 = this.bga.gameui.format_string( 
-                _('When the player has moved all of their markers to this row or above, they take ${n} Compass card.'),
+                _('When the player has moved all of their markers to this row or above, they take ${n} Compass cards.'),
                 { 'n': '<span>'+1 +'</span>'}
             );
         }
         if(row>=4){
             line2 = this.bga.gameui.format_string( 
-                _('The first player to reach this row before the other players draws ${n} Exploration card.'),
+                _('The first player to reach this row before the other players draws ${n} Exploration cards.'),
                 { 'n': '<span>'+1 +'</span>'}
             );
         }

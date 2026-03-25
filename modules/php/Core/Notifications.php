@@ -787,7 +787,7 @@ class Notifications
   
   public static function automaPlayAction(Player $player)
   {
-    self::notifyAll("playAction", clienttranslate('${player_name} perform an action ${icon_action}'), [
+    self::notifyAll("playAction", clienttranslate('${player_name} plays an action ${icon_action}'), [
         "player" => $player,
         "icon_action" => '',
     ]);
