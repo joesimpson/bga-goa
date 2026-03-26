@@ -129,6 +129,7 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
       $cards = Cards::drawAndDiscardExploration($player, 1);
       $card = $cards->first();
       if(isset($card) && $card->getSymbol() === CARD_SYMBOL_ELEPHANT ){
+        $firstPlayerId = $player->getId();
         Globals::setFirstPlayer($firstPlayerId);
         $elephantFound = true;
         break;
