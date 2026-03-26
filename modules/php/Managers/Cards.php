@@ -338,7 +338,7 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
       //insertOnTop to keep order of discarded cards on pile
       Cards::insertOnTop($card->getId(),$card->getLocation());
       $card = Cards::get($card->getId());//refresh object
-      Notifications::drawAndDiscardExploration($player->getId(), $card);
+      Notifications::drawAndDiscardExploration($player, $card);
     }
     return $cards;
   }

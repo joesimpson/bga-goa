@@ -495,13 +495,12 @@ class Notifications
     ]);
   }
 
-  public static function drawAndDiscardExploration(int $playerId, ExplorationCard $card)
+  public static function drawAndDiscardExploration(Player $player, ExplorationCard $card)
   {
     $symbolType = $card->getSymbol();
 
     self::notifyAll("drawAndDiscardExploration", clienttranslate('${player_name} draws and discard ${card_icon} (${icon_symbol})'), [
-       "player_id" => $playerId,
-        "player_name" => Game::get()->getPlayerNameById($playerId),
+       "player" => $player,
         "card" => $card->getUiData(),
         "card_id" => $card->getId(),
         "card_icon" => '',
