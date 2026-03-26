@@ -243,7 +243,7 @@ class Notifications
     self::notifyAll("passBid", clienttranslate('${player_name} passes the auction ${token_icon}'), [
         "player" => $player,
         "token" => $token->getUiData(),
-        "token_icon" => '',
+        "token_icon" => $token->getAuctionOrder(),
         'preserve'=>['token'],
     ]);
   }
@@ -303,12 +303,12 @@ class Notifications
     }
   }
 
-  public static function auctionMarkerBack(Player $player, Token $token)
+  public static function auctionMarkerBack(Player $player, AuctionMarker $token)
   {
     self::notifyAll("auctionMarkerBack", clienttranslate('${player_name} takes back the auction marker ${token_icon}'), [
         "player" => $player,
         "token" => $token->getUiData(),
-        "token_icon" => '',
+        "token_icon" => $token->getAuctionOrder(),
         'preserve'=>['token'],
     ]);
   }
@@ -320,6 +320,7 @@ class Notifications
         "player" => $player,
         "n" => $n,
         "icon_contracts" => clienttranslate('Contracts'),
+        "i18n" => ['icon_contracts'],
       ]);
     }
     else {
@@ -327,6 +328,7 @@ class Notifications
         "player" => $player,
         "n" => -$n,
         "icon_contracts" => clienttranslate('Contracts'),
+        "i18n" => ['icon_contracts'],
       ]);
     }
   }
@@ -338,6 +340,7 @@ class Notifications
           "player" => $player,
           "n" => $n,
           "icon_ships" => clienttranslate('Ships'),
+          "i18n" => ['icon_ships'],
       ]);
     }
     else {
@@ -345,6 +348,7 @@ class Notifications
           "player" => $player,
           "n" => -$n,
           "icon_ships" => clienttranslate('Ships'),
+          "i18n" => ['icon_ships'],
       ]);
     }
   }
@@ -355,6 +359,7 @@ class Notifications
           "player" => $player,
           "n" => $n,
           "icon_compass" => clienttranslate('Compass cards'),
+          "i18n" => ['icon_compass'],
       ]);
     }
     else {
@@ -362,6 +367,7 @@ class Notifications
           "player" => $player,
           "n" => -$n,
           "icon_compass" => clienttranslate('Compass cards'),
+          "i18n" => ['icon_compass'],
       ]);
     }
   }
@@ -441,7 +447,7 @@ class Notifications
         "outpostname" => ($colonyName),
         "icon_contracts" => clienttranslate('Contracts'),
         'preserve'=>['tile'],
-        'i18n'=>['outpostname'],
+        'i18n'=>['outpostname','icon_contracts'],
     ]);
   }
   
@@ -451,6 +457,7 @@ class Notifications
         "player" => $player,
         "n" => $nbContracts,
         "icon_contracts" => clienttranslate('Contracts'),
+        'i18n'=>['icon_contracts'],
     ]);
   }
   public static function resultFoundOutpost(Player $player, int $nbContracts)
@@ -459,6 +466,7 @@ class Notifications
         "player" => $player,
         "n" => $nbContracts,
         "icon_contracts" => clienttranslate('Contracts'),
+        'i18n'=>['icon_contracts'],
     ]);
   }
   public static function planFoundOutpost(Player $player, int $nbContracts)
@@ -467,6 +475,7 @@ class Notifications
         "player" => $player,
         "n" => $nbContracts,
         "icon_contracts" => clienttranslate('Contracts'),
+        'i18n'=>['icon_contracts'],
     ]);
   }
   public static function abandonOutpost(Player $player, OutpostTile $tile)
