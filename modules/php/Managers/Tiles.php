@@ -256,6 +256,7 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
     $tile->setPId(null);
     $tile->setLocation(TILE_LOCATION_DISCARD);
     Notifications::discardTile($player,$tile);
+    //Don't erase row/col right now for Bonanza back to be found...
   }
   
   public static function discardTilesFromOutpostStack(Player $player, int $colony, int $amount)
