@@ -2089,8 +2089,13 @@ export class Game {
         let tile = notif.tile;
         let isOutpost = tile.subtype == this.const.TILE_SUBTTYPE_OUTPOST;
         let isMarket = tile.subtype == this.const.TILE_SUBTTYPE_MARKET;
+        let tileMaterial = this.gamedatas.material.tiles[tile.subtype][tile.type];
         let voidDiv = document.getElementById('goa_top_zone');
         let tileDiv = document.getElementById(`goa_tile-${tile.id}`);
+        if(!tileDiv && isMarket && tileMaterial.isBonanza){
+            this.customDebug("Discard bonanza back from notif_setupMarket : example goa_tile-BonanzaBack_1_1", );
+            tileDiv = document.getElementById(`goa_tile-BonanzaBack_${tile.row}_${tile.col}`); 
+        }
         if(tileDiv){
             if(isMarket && parseInt(tileDiv.dataset.type) == this.const.BONANZA_TILE_BACK){
                 tileDiv.dataset.type = tile.type;//reveal real type
