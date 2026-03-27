@@ -130,6 +130,20 @@ trait DebugTrait
         //Game::get()->notify->player($player_id,'reloadPage', "/!\ : Refresh page to see game has restarted...", []);
         Notifications::refreshUI(Game::get()->getAllDatas($player_id));
     }
+    function debug_UndoToMove(int $moveId = 65){
+        $player = Players::getCurrent();
+        $query = new QueryBuilder('log', null, 'id');
+        $query = $query->select(['id'])->where('move_id', $moveId);
+        $logMove = $query
+            ->orderBy('id', 'DESC')
+            ->limit(1)
+            ->get()
+            ->first();
+        Log::revertTo($logMove['id']);
+        Notifications::restartTurn($player);
+    }
+
+
     function debug_changeRound(int $round = 1, int $roundStep = ROUND_STEP_PLAYER_ACTIONS){
         Globals::setRound($round);
         Globals::setRoundStep($roundStep);
