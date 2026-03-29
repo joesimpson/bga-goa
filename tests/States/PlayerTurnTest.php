@@ -103,6 +103,36 @@ final class PlayerTurnTest extends TestCase
         ];
         self::assertSame($expectedArgs, $state->getArgs() );
         
+        //TEST 4 : Previous bid == player money +1 -> they can have the rebate or Pass
+        Globals::setCurrentBid(4);
+        $expectedArgs = [
+            'roundStep' => $roundStep,
+            'possibleActions' => [ 'actBid', 'actPassBid'],
+            'token' => $auctionTokenData,
+            'bid' => 4,
+            'currentMoney' => 3,
+            'minBid' => -1,
+            'maxBid' => -1,
+            'bidRebate' => 1,
+            'undo' => [ 'previousSteps' => [], 'previousChoices' => 0, ],
+        ];
+        self::assertSame($expectedArgs, $state->getArgs() );
+        
+        //TEST 5 : Previous bid == player money +2 -> they cannot have the rebate but can Pass
+        Globals::setCurrentBid(5);
+        $expectedArgs = [
+            'roundStep' => $roundStep,
+            'possibleActions' => [ 'actPassBid'],
+            'token' => $auctionTokenData,
+            'bid' => 5,
+            'currentMoney' => 3,
+            'minBid' => 1,
+            'maxBid' => 1,
+            'bidRebate' => 1,
+            'undo' => [ 'previousSteps' => [], 'previousChoices' => 0, ],
+        ];
+        self::assertSame($expectedArgs, $state->getArgs() );
+        
     }
     
     public function testPlayerTurn_getArgs_tileAuctions_CanBid(): void
@@ -220,8 +250,8 @@ final class PlayerTurnTest extends TestCase
             'token' => $auctionTokenData,
             'bid' => 2,
             'currentMoney' => 1,
-            'minBid' => -1,
-            'maxBid' => 0,
+            'minBid' => 1,
+            'maxBid' => 1,
             'bidRebate' => 0,
             'undo' => [ 'previousSteps' => [], 'previousChoices' => 0, ],
         ];
@@ -236,8 +266,8 @@ final class PlayerTurnTest extends TestCase
             'token' => $auctionTokenData,
             'bid' => 2,
             'currentMoney' => 0,
-            'minBid' => -2,
-            'maxBid' => 0,
+            'minBid' => 1,
+            'maxBid' => 1,
             'bidRebate' => 0,
             'undo' => [ 'previousSteps' => [], 'previousChoices' => 0, ],
         ];
@@ -274,8 +304,8 @@ final class PlayerTurnTest extends TestCase
             'token' => $auctionTokenData,
             'bid' => 3,
             'currentMoney' => 3,
-            'minBid' => 0,
-            'maxBid' => 0,
+            'minBid' => 1,
+            'maxBid' => 1,
             'bidRebate' => 0,
             'undo' => [ 'previousSteps' => [], 'previousChoices' => 0, ],
         ];

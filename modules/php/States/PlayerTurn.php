@@ -71,11 +71,16 @@ class PlayerTurn extends GameState
                 $currentAuctioneer = $auctionToken->getPId();
                 $args['bid'] = $currentBid;
                 $args['currentMoney'] = $player->getMoney();
-            //TODO JSA actBid should not be in args in that case : $args['currentMoney'] == $currentBid
-                $args['minBid'] = min(1, $args['currentMoney'] - $currentBid);
-                $args['maxBid'] = max(0, $args['currentMoney'] - $currentBid);
+                $availableOverbid = $args['currentMoney'] - $currentBid;
+                $args['minBid'] = max(1, min(1, $availableOverbid));
+                $args['maxBid'] = max(1, $availableOverbid);
                 $args['bidRebate'] = 0;
                 $canPass = true;
+                $canBid = false;
+
+                if($availableOverbid >= 1 ){
+                    $canBid = true;
+                }
 
                 $automaActive = Globals::isAutomaActive();
                 $currentAuctioneerActive = isset($currentAuctioneer) 
@@ -88,21 +93,22 @@ class PlayerTurn extends GameState
                         $args['minBid'] = 0;
                         $args['maxBid'] = 0;
                         $canPass = false;
+                        $canBid = true;
                     }
                     else {
+                        //auctioneer may pay N-1 to win the auction
                         $args['bidRebate'] = 1;
                         $minMoneyForAuctioneer = $currentBid - $args['bidRebate'];
                         if($args['currentMoney'] >= $minMoneyForAuctioneer) {
                             $args['minBid'] = $minMoneyForAuctioneer - $currentBid;
                             $args['maxBid'] = $args['minBid'];
+                            $canBid = true;
                         }
                     }
                 }
 
 
-                if($args['minBid'] + $args['bidRebate'] >= 0 
-                && $args['maxBid'] >= $args['minBid'] 
-                ){
+                if($canBid){
                     Utils::addPossibleActionInArgs('actBid', $args);
                 }
                 if($canPass){
