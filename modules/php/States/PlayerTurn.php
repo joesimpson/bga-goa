@@ -71,6 +71,7 @@ class PlayerTurn extends GameState
                 $currentAuctioneer = $auctionToken->getPId();
                 $args['bid'] = $currentBid;
                 $args['currentMoney'] = $player->getMoney();
+            //TODO JSA actBid should not be in args in that case : $args['currentMoney'] == $currentBid
                 $args['minBid'] = min(1, $args['currentMoney'] - $currentBid);
                 $args['maxBid'] = max(0, $args['currentMoney'] - $currentBid);
                 $args['bidRebate'] = 0;

@@ -18,9 +18,8 @@
     "test": "@php vendor/bin/phpunit --colors --display-errors --display-warnings --bootstrap tests/bootstrap.php tests --testdox-html testsresults/results.html",
     "test:github": "@php -dxdebug.mode=coverage vendor/bin/phpunit --colors --display-errors --display-warnings --bootstrap tests/bootstrap.php tests --testdox-html testsresults/results.html --coverage-html testsresults\\coverage/ ",
     "test:coverage": [
-      "Echo Script test:coverage... clean testsresults"
-      ,"IF EXIST testsresults rmdir testsresults /Q /S"
-      ,"mkdir testsresults"
+      "Echo Script test:coverage... clean testsresults\\coverage"
+      ,"IF EXIST testsresults\\coverage rmdir testsresults\\coverage /Q /S"
       ,"@php -dxdebug.mode=coverage vendor/bin/phpunit --colors --display-errors --display-warnings --bootstrap tests/bootstrap.php tests --testdox-html testsresults/results.html --coverage-html testsresults\\coverage/ > testsresults/coverage.log"
     ],
     "test:deprecation": "@php vendor/bin/phpunit --colors --display-errors --display-warnings --display-deprecation --bootstrap tests/bootstrap.php tests > testsresults/check_deprecation.log"

@@ -22,7 +22,6 @@ final class PlayersTest extends TestCase
         $mock = new GameMock();
         $mock->gamestate = new GamestateMachineMock();
         $mock->bga = new Bga($mock);
-        DB_Manager::startLog();
         Globals::fetch();
         return $mock;
     }

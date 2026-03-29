@@ -8,6 +8,7 @@ use Bga\GameFramework\Bga;
 use Bga\GameFramework\GameMock;
 use Bga\GameFramework\GamestateMachineMock;
 use Bga\GameFramework\Notify;
+use Bga\GameFramework\Table;
 use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Helpers\DB_Manager;
 use Bga\Games\Goa\States\EndSession;
@@ -19,7 +20,6 @@ final class EndSessionTest extends TestCase
     private function createGameMock()
     {
         $mock = new GameMock();
-        DB_Manager::startLog();
         Globals::fetch();
         return $mock;
     }
@@ -29,6 +29,9 @@ final class EndSessionTest extends TestCase
         $session = 1;
         $player1 = 1;
         $player2 = 2;
+        
+        Table::$test_players[$player1]['money'] = 3;
+        Table::$test_players[$player2]['money'] = 87;
         $expected = [ 
             $session => [
                 $player1 => [

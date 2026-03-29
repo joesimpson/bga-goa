@@ -44,6 +44,7 @@ class GameMock extends Game {
         $this->gamestate = new GamestateMachineMock();
         $this->notify = new Notify($this);
         $this->bga = new Bga($this);
+        //DB_Manager::startLog();
     }
 
     public function getStatTypes(){
@@ -197,6 +198,10 @@ abstract class Table
 {
     //added for tests
     static $test_activePlayerId = 1;
+    static $test_players = [
+           1 => ['player_id' => 1, 'money' => 87 ,'ships' => 12 ,'player_name' => 'Player_1', 'player_score' => 19, 'contracts' => 1, 'compasses' => 0, 'nbActions' => 0, 'passed' => 0, 'actionPlayed' => 0, 'cardsPlayed' => '[]','result_associative_index' => 1, ],
+           2 => ['player_id' => 2, 'money' => 88 ,'ships' => 15 ,'player_name' => 'Player_2', 'player_score' => 27, 'contracts' => 1, 'compasses' => 0, 'nbActions' => 0, 'passed' => 0, 'actionPlayed' => 0, 'cardsPlayed' => '[]','result_associative_index' => 2, ],
+        ];
 
     public function __construct()
     {
@@ -225,6 +230,9 @@ abstract class Table
     }
     public function getGameStateValue(string $label, ?int $default = null): int|string
     {
+        switch($label){
+            case 'logging' : return 0;
+        }
         return '0';
     }
 
@@ -257,10 +265,6 @@ abstract class Table
     public static function getObjectListFromDB(string $sql, bool $bUniqueValue = false): array
     {
         logForTests("getObjectListFromDB: $sql");
-        $players = [
-           1 => ['player_id' => 1, 'money' => 87 ,'ships' => 12 ,'player_name' => 'Player_1', 'player_score' => 19, 'contracts' => 1, 'compasses' => 0, 'nbActions' => 0, 'passed' => 0, 'actionPlayed' => 0, 'cardsPlayed' => '[]','result_associative_index' => 1, ],
-           2 => ['player_id' => 2, 'money' => 88 ,'ships' => 15 ,'player_name' => 'Player_2', 'player_score' => 27, 'contracts' => 1, 'compasses' => 0, 'nbActions' => 0, 'passed' => 0, 'actionPlayed' => 0, 'cardsPlayed' => '[]','result_associative_index' => 2, ],
-        ];
         $tokens = [
             1 => ['token_id' => 1, 'token_state' => 0, 'token_location'=>TOKEN_LOCATION_BOARD,'type' => TOKEN_TYPE_FIRSTAUCTION_MARKER, 'subtype' => TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER,'token_row' => 3, 'token_col' => 1,  'player_id' => 1,  'result_associative_index' => 1,  ],
             2 => ['token_id' => 2, 'token_state' => 0, 'token_location'=>TOKEN_LOCATION_BOARD,'type' => TOKEN_TYPE_AUCTION_MARKER_1, 'subtype' => TOKEN_SUBTTYPE_AUCTION_MARKER,'token_row' => 2, 'token_col' => 1,  'player_id' => 1,  'result_associative_index' => 2,  ],
@@ -404,17 +408,17 @@ abstract class Table
             case 'SELECT *, player_id AS `result_associative_index` FROM `player` WHERE  `player_id` = 1 LIMIT 1': 
                 logForTests("MOCK select  player one ");
                 return [
-                    $players[1],
+                    Table::$test_players[1],
                     ];
             case "SELECT *, player_id AS `result_associative_index` FROM `player` WHERE  `player_id` = '0' LIMIT 1":
             case 'SELECT *, player_id AS `result_associative_index` FROM `player` WHERE  `player_id` = 2 LIMIT 1': 
                 logForTests("MOCK select  player two ");
                 return [
-                    $players[2],
+                    Table::$test_players[2],
                     ];
             case 'SELECT player_score,player_id FROM `player` WHERE `player_id` = 2':
                 return [
-                    $players[2],
+                    Table::$test_players[2],
                 ];
             case 'SELECT stats_value,stats_id FROM `stats` WHERE `stats_type` = 11 AND `stats_player_id` = 2':
                 return [
@@ -443,12 +447,12 @@ abstract class Table
             case "SELECT player_score,player_id FROM `player` WHERE `player_id` = 1":
             case "SELECT player_id AS `result_associative_index` , `player_score` FROM `player` WHERE `player_id` = 1":
                 return[
-                    $players[1],
+                    Table::$test_players[1],
                 ];
             case "SELECT player_score,player_id FROM `player` WHERE `player_id` = 2":
             case "SELECT player_id AS `result_associative_index` , `player_score` FROM `player` WHERE `player_id` = 2":
                 return[
-                    $players[2],
+                    Table::$test_players[2],
                 ];
             case "SELECT tile_id AS `result_associative_index` , `tile_id` , `tile_location` , `tile_state` , `player_id` , `type` , `subtype` , `tile_start_location` , `tile_row` , `tile_col` FROM `tiles` WHERE (`tile_id` IN ('1'))":
                 return [
@@ -462,8 +466,8 @@ abstract class Table
         if( str_starts_with( $sql, 'SELECT *, player_id AS `result_associative_index` FROM `player`' )){
             logForTests("MOCK select players");
             return [
-                $players[1],
-                $players[2],
+                Table::$test_players[1],
+                Table::$test_players[2],
             ];
         }
         if( str_starts_with( $sql,'SELECT *, token_id AS `result_associative_index` FROM `tokens` WHERE `subType` = '.TOKEN_SUBTTYPE_AUCTION_MARKER)){
@@ -503,6 +507,7 @@ abstract class Table
     }
     public static function DbQuery(string $sql): null|\mysqli_result|bool
     {
+        logForTests("DbQuery: $sql");
         return null;
     }
     public function getNextPlayerTable(): array

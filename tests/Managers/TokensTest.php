@@ -19,7 +19,6 @@ final class TokensTest extends TestCase
     {
         $mock = new GameMock();
         $mock->gamestate = new GamestateMachineMock();
-        DB_Manager::startLog();
         return $mock;
     }
     
