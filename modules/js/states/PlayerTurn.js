@@ -311,8 +311,13 @@ export class PlayerTurn {
         let icon_money = this.game.formatIcon('money',null);
         let icon_arrow = '<i class="fa6 fa6-arrow-right goa_icon_arrow"></i>';
 
-        this.bga.statusBar.addActionButton(this.bga.gameui.format_string(  _('Overbid +${n} ${icon_money} ${icon_arrow} ${m} ${icon_money}') ,
-                    { 'n': this.selectedBid, m: (this.currentBid + this.selectedBid), icon_money: icon_money,icon_arrow}), 
+        this.bga.statusBar.addActionButton(this.bga.gameui.format_string(  _('Overbid ${n} ${icon_money} ${icon_arrow} ${m} ${icon_money}') ,
+                    { 
+                        //... It could be improved for translation ...
+                        'n': this.selectedBid > 0 ? '+' + this.selectedBid : this.selectedBid, 
+                        'm': (this.currentBid + this.selectedBid), 
+                        'icon_money': icon_money,icon_arrow
+                    }), 
                 () => this.onBid(this.selectedBid) 
             , {'id':'goa_button_bid', 'title':_('Confirm the bid'),destination: document.getElementById('customPrimary')}
             );
