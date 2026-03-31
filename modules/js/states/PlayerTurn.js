@@ -151,8 +151,14 @@ export class PlayerTurn {
                 this.refreshBidButton();
 
             }
+
+            let mainActionsPhase = roundStep == this.game.const.ROUND_STEP_PLAYER_ACTIONS && ! (possibleActions.includes('actStopAction'));
             
-            if(possibleActions.includes('actProgress') && args.progressTracks && args.progressTracks.length>0){
+            let possibleProgress = possibleActions.includes('actProgress') && args.progressTracks && args.progressTracks.length>0;
+            if(possibleProgress
+                //add condition to display button as disabled
+                || mainActionsPhase
+            ){
                 let actionName = this.game.formatActionName(this.game.const.ACTION_TYPE_PROGRESS);
                 let actionButton = this.game.formatActionButton(0, actionName);
                 let actionHint = this.bga.gameui.format_string(_('Player action : ${name}'),{'name': actionName});
@@ -166,7 +172,9 @@ export class PlayerTurn {
                         //description : _("${actplayer} must select a progress track to improve on his board"),
                         args: {'progressTracks': args.progressTracks },
                     });
-                }, { 'id':`goa_button_action_${0}`, 'title':actionHint,'destination': document.getElementById('customPrimary') }); 
+                }, { 'id':`goa_button_action_${0}`, 'title':actionHint,'destination': document.getElementById('customPrimary')
+                    , 'disabled': !(possibleProgress)
+                 }); 
             }
 
             if(possibleActions.includes('actBuildShips')){
