@@ -286,6 +286,50 @@ abstract class GridUtils
         return GridUtils::rotateClockwise($baseSpots);
     }
     
+    
+    /**
+     * @return array of ordered spots according to start and direction. 
+     */
+    public static function listOrderedSpotsOnEdges_From(AutomaAuctionStartType $startSpot, AutomaAuctionDirectionType $dir): array
+    {
+        $orderedSpots = GridUtils::listOrderedSpotsOnEdges_TopLeft_ClockWise();
+        switch($startSpot){
+            case AutomaAuctionStartType::TOP_LEFT:
+                switch($dir){
+                    case AutomaAuctionDirectionType::CLOCKWISE:
+                        return GridUtils::listOrderedSpotsOnEdges_TopLeft_ClockWise();
+                    case AutomaAuctionDirectionType::COUNTER_CLOCKWISE:
+                        return GridUtils::listOrderedSpotsOnEdges_TopLeft_CounterClockWise();
+                }
+                break;
+            case AutomaAuctionStartType::TOP_RIGHT:
+                switch($dir){
+                    case AutomaAuctionDirectionType::CLOCKWISE:
+                        return GridUtils::listOrderedSpotsOnEdges_TopRight_ClockWise();
+                    case AutomaAuctionDirectionType::COUNTER_CLOCKWISE:
+                        return GridUtils::listOrderedSpotsOnEdges_TopRight_CounterClockwise();
+                }
+                break;
+            case AutomaAuctionStartType::BOTTOM_RIGHT:
+                switch($dir){
+                    case AutomaAuctionDirectionType::CLOCKWISE:
+                        return GridUtils::listOrderedSpotsOnEdges_BottomRight_Clockwise();
+                    case AutomaAuctionDirectionType::COUNTER_CLOCKWISE:
+                        return GridUtils::listOrderedSpotsOnEdges_BottomRight_CounterClockwise();
+                }
+                break;
+            case AutomaAuctionStartType::BOTTOM_LEFT:
+                switch($dir){
+                    case AutomaAuctionDirectionType::CLOCKWISE:
+                        return GridUtils::listOrderedSpotsOnEdges_BottomLeft_Clockwise();
+                    case AutomaAuctionDirectionType::COUNTER_CLOCKWISE:
+                        return GridUtils::listOrderedSpotsOnEdges_BottomLeft_CounterClockwise();
+                }
+                break;
+        }
+        return $orderedSpots;
+    }
+
     /**
      * @return array of ordered spots according to start and direction. order is snail-shaped
      */

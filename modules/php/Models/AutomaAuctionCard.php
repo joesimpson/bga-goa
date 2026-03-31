@@ -91,7 +91,8 @@ class AutomaAuctionCard extends Card
         switch($auctionType){
             default:
             case TOKEN_TYPE_AUCTION_MARKER_1:
-                $orderedSpots = GridUtils::listOrderedSpots_SnailAroundBoard($startSpot, $dir);
+                //$orderedSpots = GridUtils::listOrderedSpots_SnailAroundBoard($startSpot, $dir);
+                $orderedSpots = GridUtils::listOrderedSpotsOnEdges_From($startSpot, $dir);
                 break;
             case TOKEN_TYPE_AUCTION_MARKER_2:
             case TOKEN_TYPE_AUCTION_MARKER_3:

@@ -33,6 +33,7 @@ final class AutomaAuctionCardTest extends TestCase
         };
         // Real use case taken from DB
         // SELECT tile_id,type, tile_row, tile_col FROM `tiles` where tile_location='market' ORDER BY `tiles`.`tile_row` ASC, `tile_col` ASC;
+        // Call debug function DebugTrait.debug_UnitTestTiles() to see it in Interface
         $addTile(1, 37, 1,4);
         $addTile(2, 3,  2,1);
         $addTile(3, 11, 2,3);
@@ -71,6 +72,7 @@ final class AutomaAuctionCardTest extends TestCase
         };
         // Real use case taken from DB
         // SELECT tile_id,type, tile_row, tile_col FROM `tiles` where tile_location='market' ORDER BY `tiles`.`tile_row` ASC, `tile_col` ASC;
+        // Call debug function DebugTrait.debug_UnitTestTiles() to see it in Interface
         $addTile(1,  27, 1, 1);
         $addTile(2,  27, 1, 2);
         $addTile(3,  20, 1, 3);
@@ -258,9 +260,11 @@ final class AutomaAuctionCardTest extends TestCase
         self::assertSame( $expectedSpot, $result, );
         
         //Test 4 without the teal tile 10, now we can reach Blue tile
+        //$expectedSpot = ['row'=> 4, 'col'=>1];
+        //Change rule : only edges, we cannot reach Blue tile
+        $expectedSpot = ['row'=> 5, 'col'=>0];
         logForTests(__CLASS__.".".__FUNCTION__);
         unset($boardTiles[10]);
-        $expectedSpot = ['row'=> 4, 'col'=>1];
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
         self::assertSame( $expectedSpot, $result, );
         
@@ -281,7 +285,9 @@ final class AutomaAuctionCardTest extends TestCase
         //Test 7 without the teal tile 17
         logForTests(__CLASS__.".".__FUNCTION__);
         unset($boardTiles[17]);
-        $expectedSpot = ['row'=> 2, 'col'=>5];
+        //$expectedSpot = ['row'=> 2, 'col'=>5];
+        //Change rule : only edges, we cannot reach last Teal tile
+        $expectedSpot = ['row'=> 2, 'col'=>0];
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
         self::assertSame( $expectedSpot, $result, );
         
@@ -614,6 +620,8 @@ final class AutomaAuctionCardTest extends TestCase
         $cardType = 23;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
         $expectedSpot = ['row'=> 4, 'col'=>3];
+        //Change rule : only edges, we cannot reach scoring tile
+        $expectedSpot = ['row'=> 2, 'col'=>0];
         
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
 
@@ -630,6 +638,8 @@ final class AutomaAuctionCardTest extends TestCase
         $cardType = 24;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
         $expectedSpot = ['row'=> 4, 'col'=>3];
+        //Change rule : only edges, we cannot reach scoring tile
+        $expectedSpot = ['row'=> 4, 'col'=>6];
         
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
 
