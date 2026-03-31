@@ -117,24 +117,24 @@ export class PlayerTurn {
                             <span class="goa_bid_hint_text" id="goa_bid_remaining" data-start="${args.currentMoney}"></span>
                         </div>
                     `);
-                    
-                this.refreshBidButton();
 
                 this.bga.statusBar.addActionButton(this.bga.gameui.format_string(  hintLineMin ,{ n:args.minBid, m: (this.currentBid + args.minBid) , icon_money: icon_money}), 
                         () => {
                             //this.onBid(args.minBid);
                             this.selectedBid = args.minBid;
+                            this.refreshEnabledBidButtons(args.minBid,args.maxBid);
                             this.refreshBidButton();
                         }
-                    ,{ 'title':_('Set to Minimum bid'),destination:document.getElementById('goa_bid_reset_min'), 'color':'secondary' }
+                    ,{'id':'goa_button_bid_min', 'title':_('Set to Minimum bid'),destination:document.getElementById('goa_bid_reset_min'), 'color':'secondary' }
                 );
                 this.bga.statusBar.addActionButton(this.bga.gameui.format_string(  hintLineMax ,{ n:args.minBid, m: (this.currentBid + args.minBid) , icon_money: icon_money}), 
                         () => {
                             //this.onBid(args.maxBid);
                             this.selectedBid = args.maxBid;
+                            this.refreshEnabledBidButtons(args.minBid,args.maxBid);
                             this.refreshBidButton();
                         } 
-                    ,{ 'title':_('Set to Maximum bid'),destination: document.getElementById('goa_bid_reset_max') , 'color':'secondary'}
+                    ,{'id':'goa_button_bid_max', 'title':_('Set to Maximum bid'),destination: document.getElementById('goa_bid_reset_max') , 'color':'secondary'}
                 );
 
                 this.bga.statusBar.addActionButton('-1', 
@@ -146,6 +146,9 @@ export class PlayerTurn {
                         () => this.onIncreaseBid(1, args.minBid, args.maxBid) 
                     ,{ 'id':'goa_button_bid_inc','title':_('Increase bid'),destination: document.getElementById('goa_bid_inc'), 'color':'secondary'  }
                 );
+                
+                this.refreshEnabledBidButtons(args.minBid,args.maxBid);
+                this.refreshBidButton();
 
             }
             
@@ -302,10 +305,55 @@ export class PlayerTurn {
         }
         this.selectedBid = nextBid;
 
+        this.refreshEnabledBidButtons(minBid,maxBid);
         this.refreshBidButton();
     }
 
+    
+    refreshEnabledBidButtons(minBid,maxBid){
+        this.game.customDebug( 'refreshEnabledBidButtons',minBid,maxBid);
+
+        let increaseButtons = [
+            //document.getElementById('goa_button_bid_max'),
+            document.getElementById('goa_button_bid_inc'),
+        ];
+        let decreaseButtons = [
+            //document.getElementById('goa_button_bid_min'),
+            document.getElementById('goa_button_bid_dec'),
+        ];
+
+        if(this.selectedBid + 1 > maxBid){
+            //DISABLE INCREASE BUTTONS
+            increaseButtons.forEach( div => {
+                //Bga Framework use "disabled" attribute on css side after defining this.bga.statusBar.addActionButton
+                div.setAttribute('disabled','');
+                //div.classList.add('disabled');
+            });
+        }
+        else {
+            increaseButtons.forEach( div => {
+                div.removeAttribute('disabled');
+                //div.classList.remove('disabled');
+            });
+        }
+
+        if(this.selectedBid - 1 < minBid){
+            //DISABLE DECREASE BUTTONS
+            decreaseButtons.forEach( div => {
+                //Bga Framework use "disabled" attribute on css side after defining this.bga.statusBar.addActionButton
+                div.setAttribute('disabled','');
+                //div.classList.add('disabled');
+            });
+        }
+        else {
+            decreaseButtons.forEach( div => {
+                div.removeAttribute('disabled');
+                //div.classList.remove('disabled');
+            });
+        }
+    }
     refreshBidButton(){
+        this.game.customDebug( 'refreshBidButton',);
         let button = document.getElementById('goa_button_bid');
         if(button) this.game.destroy(button);
         let icon_money = this.game.formatIcon('money',null);
