@@ -629,11 +629,12 @@ trait DebugTrait
 
         $boardTiles = [];
             
-        $addTile = function ($id,$type, $row, $col,) use (&$boardTiles) {
+        $addTile = function ($id,$type, $row, $col, $state = 0,) use (&$boardTiles) {
             $boardTiles[$id] = [
                 'location'=> TILE_LOCATION_BOARD_MARKET,
                 'tile_start_location' => 'test',
                 'type' => $type,
+                'state' => $state,
                 'subtype' => TILE_SUBTTYPE_MARKET,
                 'nbr' => 1,
                 'tile_id'=>$id, 'tile_row'=> $row, 'tile_col'=> $col,'row'=> $row, 'col'=> $col
@@ -656,18 +657,22 @@ trait DebugTrait
             $addTile(12, 14, 4,3);
             //$addTile(13, 15, 4,4);
             //$addTile(14, 2, 4,5);
-            $addTile(15, 24, 5,1);
+            $addTile(103, 42, 5,1);//BONANZA TILE
+            $addTile(15, 2, 5,1, 1);
             $addTile(16, 4, 5,2);
             $addTile(17, 25, 5,3);
             //$addTile(18, 5, 5,4);
-            $addTile(19, 13, 5,5);
+            $addTile(104, 43, 5,5);//BONANZA TILE
+            $addTile(19, 13, 5,5, 1);
         }
         else {
-            $addTile(1,  27, 1, 1);
+            $addTile(101, 42, 1,1);//BONANZA TILE
+            $addTile(1,  27, 1, 1, 1);
             $addTile(2,  27, 1, 2);
             $addTile(3,  20, 1, 3);
             $addTile(4,  23, 1, 4);
-            $addTile(5,  19, 1, 5);
+            $addTile(102,43, 1, 5);//BONANZA TILE
+            $addTile(5,  19, 1, 5, 1);
             $addTile(6,  33, 2, 1);
             $addTile(7 , 24, 2, 2);
             $addTile(8 , 31, 2, 3);
@@ -680,10 +685,12 @@ trait DebugTrait
             $addTile(15, 32, 3, 5);
             $addTile(16, 17, 4, 4);
             $addTile(17, 18, 4, 5);
-            $addTile(18, 35, 5, 1);
+            $addTile(103,44, 5, 1);//BONANZA TILE
+            $addTile(18, 35, 5, 1, 1);
             $addTile(19, 12, 5, 3);
             $addTile(20, 36, 5, 4);
-            $addTile(21, 25, 5, 5);
+            $addTile(104,45, 5, 5);//BONANZA TILE
+            $addTile(21, 39, 5, 5, 1);
         }
 
         Tiles::create($boardTiles);

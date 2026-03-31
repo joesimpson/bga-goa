@@ -12,6 +12,7 @@ use Bga\Games\Goa\Managers\Tiles;
 use Bga\Games\Goa\Managers\Tokens;
 use Bga\Games\Goa\Models\AuctionMarker;
 use Bga\Games\Goa\Models\AutomaAuctionCard;
+use Bga\Games\Goa\Models\BonanzaTile;
 use Bga\Games\Goa\Models\MarketTile;
 use PHPUnit\Framework\TestCase;
 
@@ -37,9 +38,21 @@ final class AutomaAuctionCardTest extends TestCase
     private function prepareBoardTiles() : Collection
     {
         $boardTiles = new Collection();
-            
-        $addTile = function ($id,$type, $row, $col,) use (&$boardTiles) {
-            $boardTiles[$id] = new MarketTile(['tile_id'=>$id, 'tile_row'=> $row, 'tile_col'=> $col,'row'=> $row, 'col'=> $col],Tiles::getMarketTilesTypes()[$type]);
+
+        $addTile = function ($id,$type, $row, $col, $state = 0,) use (&$boardTiles) {
+            $className = MarketTile::class;
+            $data = Tiles::getMarketTilesTypes()[$type];
+            if($data['isBonanza']) $className = BonanzaTile::class;
+            $boardTiles[$id] = new $className([
+                'location'=> TILE_LOCATION_BOARD_MARKET,
+                'tile_start_location' => 'test',
+                'type' => $type,
+                'subtype' => TILE_SUBTTYPE_MARKET,
+                'tile_id'=>$id, 
+                'tile_row'=> $row, 
+                'tile_col'=> $col,
+                'state' => $state,
+                ],$data);
         };
         // Real use case taken from DB
         // SELECT tile_id,type, tile_row, tile_col FROM `tiles` where tile_location='market' ORDER BY `tiles`.`tile_row` ASC, `tile_col` ASC;
@@ -58,11 +71,13 @@ final class AutomaAuctionCardTest extends TestCase
         $addTile(12, 14, 4,3);
         //$addTile(13, 15, 4,4);
         //$addTile(14, 2, 4,5);
-        $addTile(15, 24, 5,1);
+        $addTile(103, 42, 5,1,);//BONANZA TILE
+        $addTile(15, 2, 5,1, 1);
         $addTile(16, 4, 5,2);
         $addTile(17, 25, 5,3);
         //$addTile(18, 5, 5,4);
-        $addTile(19, 13, 5,5);
+        $addTile(104, 43, 5,5,);//BONANZA TILE
+        $addTile(19, 13, 5,5, 1);
 
         return $boardTiles;
     }
@@ -71,23 +86,31 @@ final class AutomaAuctionCardTest extends TestCase
     {
         $boardTiles = new Collection();
             
-        $addTile = function ($id,$type, $row, $col,) use (&$boardTiles) {
-            $boardTiles[$id] = new MarketTile([
+        $addTile = function ($id,$type, $row, $col, $state = 0,) use (&$boardTiles) {
+            $className = MarketTile::class;
+            $data = Tiles::getMarketTilesTypes()[$type];
+            if($data['isBonanza']) $className = BonanzaTile::class;
+            $boardTiles[$id] = new $className([
                 'location'=> TILE_LOCATION_BOARD_MARKET,
                 'tile_start_location' => 'test',
                 'type' => $type,
                 'subtype' => TILE_SUBTTYPE_MARKET,
-                'nbr' => 1,
-                'tile_id'=>$id, 'tile_row'=> $row, 'tile_col'=> $col,'row'=> $row, 'col'=> $col],Tiles::getMarketTilesTypes()[$type]);
+                'tile_id'=>$id, 
+                'tile_row'=> $row, 
+                'tile_col'=> $col,
+                'state' => $state,
+                ],$data);
         };
         // Real use case taken from DB
         // SELECT tile_id,type, tile_row, tile_col FROM `tiles` where tile_location='market' ORDER BY `tiles`.`tile_row` ASC, `tile_col` ASC;
         // Call debug function DebugTrait.debug_UnitTestTiles() to see it in Interface
-        $addTile(1,  27, 1, 1);
+        $addTile(101, 42, 1,1,);//BONANZA TILE
+        $addTile(1,  27, 1, 1, 1);
         $addTile(2,  27, 1, 2);
         $addTile(3,  20, 1, 3);
         $addTile(4,  23, 1, 4);
-        $addTile(5,  19, 1, 5);
+        $addTile(102,43, 1, 5,);//BONANZA TILE
+        $addTile(5,  19, 1, 5, 1);
         $addTile(6,  33, 2, 1);
         $addTile(7 , 24, 2, 2);
         $addTile(8 , 31, 2, 3);
@@ -100,10 +123,12 @@ final class AutomaAuctionCardTest extends TestCase
         $addTile(15, 32, 3, 5);
         $addTile(16, 17, 4, 4);
         $addTile(17, 18, 4, 5);
-        $addTile(18, 35, 5, 1);
+        $addTile(103,44, 5, 1,);//BONANZA TILE
+        $addTile(18, 35, 5, 1, 1);
         $addTile(19, 12, 5, 3);
         $addTile(20, 36, 5, 4);
-        $addTile(21, 25, 5, 5);
+        $addTile(104,45, 5, 5,);//BONANZA TILE
+        $addTile(21, 39, 5, 5, 1);
 
         return $boardTiles;
     }
@@ -186,7 +211,7 @@ final class AutomaAuctionCardTest extends TestCase
         $boardTiles = $this->prepareBoardTiles();
         $boardTokens = $this->prepareBoardTokens();
         $card = new AutomaAuctionCard([],AutomaCards::getAutomaAuctionCardsTypes()[4]);
-        $expectedSpot = ['row'=> 5, 'col'=>0];
+        $expectedSpot = ['row'=> 4, 'col'=>0];
         
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
 
@@ -240,7 +265,7 @@ final class AutomaAuctionCardTest extends TestCase
         $boardTiles = $this->prepareBoardTiles();
         $boardTokens = $this->prepareBoardTokens();
         $card = new AutomaAuctionCard([],AutomaCards::getAutomaAuctionCardsTypes()[7]);
-        $expectedSpot = ['row'=> 6, 'col'=>2];
+        $expectedSpot = ['row'=> 6, 'col'=>1];
         
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
         self::assertSame( $expectedSpot, $result, );
@@ -274,10 +299,8 @@ final class AutomaAuctionCardTest extends TestCase
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
         self::assertSame( $expectedSpot, $result, );
         
-        //Test 4 without the teal tile 10, now we can reach Blue tile
-        //$expectedSpot = ['row'=> 4, 'col'=>1];
-        //Change rule : only edges, we cannot reach Blue tile
-        $expectedSpot = ['row'=> 5, 'col'=>0];
+        //Test 4 without the teal tile 10, 
+        $expectedSpot = ['row'=> 6, 'col'=>3];
         logForTests(__CLASS__.".".__FUNCTION__);
         unset($boardTiles[10]);
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
@@ -286,7 +309,7 @@ final class AutomaAuctionCardTest extends TestCase
         //Test 5 without the blue tile 11
         logForTests(__CLASS__.".".__FUNCTION__);
         unset($boardTiles[11]);
-        $expectedSpot = ['row'=> 5, 'col'=>0];
+        $expectedSpot = ['row'=> 6, 'col'=>3];
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
         self::assertSame( $expectedSpot, $result, );
         
@@ -762,12 +785,9 @@ final class AutomaAuctionCardTest extends TestCase
         $boardTokens = $this->prepareBoardTokens(0,false);
         $cardType = 23;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
-        $expectedSpot = ['row'=> 4, 'col'=>3];
-        //Change rule : only edges, we cannot reach scoring tile
-        $expectedSpot = ['row'=> 2, 'col'=>0];
         
+        $expectedSpot = ['row'=> 6, 'col'=>5];
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
-
         self::assertSame( $expectedSpot, $result, );
     }
     public function test_TilePriority_Card24(): void
@@ -780,12 +800,9 @@ final class AutomaAuctionCardTest extends TestCase
         $boardTokens = $this->prepareBoardTokens(0,false);
         $cardType = 24;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
-        $expectedSpot = ['row'=> 4, 'col'=>3];
-        //Change rule : only edges, we cannot reach scoring tile
-        $expectedSpot = ['row'=> 4, 'col'=>6];
         
+        $expectedSpot = ['row'=> 5, 'col'=>6];
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
-
         self::assertSame( $expectedSpot, $result, );
     }
     public function test_TilePriority_Card25(): void
@@ -975,7 +992,7 @@ final class AutomaAuctionCardTest extends TestCase
         $boardTokens = $this->prepareBoardTokens(2,false);
         $cardType = 32;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
-        $expectedSpot = ['row'=> 3, 'col'=>3];
+        $expectedSpot = ['row'=> 5, 'col'=>5];
         
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
 

@@ -138,13 +138,18 @@ class AutomaAuctionCard extends Card
             })->count() == 0;
         };
 
+        //Filter Bonanza Tiles because they reuse technically the same play type as Teal Tiles, but they are not targeted by Automa
+        $boardTilesExceptBonanza = $boardTiles->filter(function ($tile){
+                        return !( $tile instanceof BonanzaTile );
+                    });
+
         foreach($this->getTile_priority() as $marketPlayType){
             //RULE 1 LOOP: If no valid placement is possible for that tile type, proceed to the next tile type in the listed order and repeat until a valid placement is found.
             Game::get()->trace(__CLASS__.'.'.__FUNCTION__."() : auction card ".json_encode($this->getType())." search play type ".json_encode($marketPlayType));
             foreach($pAuctionableSpots as $auctionableSpot){
                 $tmp_row = $auctionableSpot['row'];
                 $tmp_col = $auctionableSpot['col'];
-                $matchNearTileOnSpot = $boardTiles->filter(function ($tile) use($tmp_row,$tmp_col, $marketPlayType){
+                $matchNearTileOnSpot = $boardTilesExceptBonanza->filter(function ($tile) use($tmp_row,$tmp_col, $marketPlayType){
                     if( GridUtils::isAdjacentCoord($tmp_row ,$tmp_col, $tile->getRow(), $tile->getCol())){
                         if(is_array($marketPlayType)) {
                             $expectedPlayTypes = array_map(function ($v){return $v->value;},$marketPlayType);
@@ -154,7 +159,7 @@ class AutomaAuctionCard extends Card
                     }
                     return false;
                 })->first();
-                $matchTileOnSpot = $boardTiles->filter(function ($tile) use($tmp_row,$tmp_col, $marketPlayType){
+                $matchTileOnSpot = $boardTilesExceptBonanza->filter(function ($tile) use($tmp_row,$tmp_col, $marketPlayType){
                     if($tmp_row == $tile->getRow() && $tmp_col == $tile->getCol()){
                         //Game::get()->trace(__CLASS__.'.'.__FUNCTION__."() : [{$tile->getRow()},{$tile->getCol()}] found play type ".json_encode($tile->getPlay_type()));
                         if(is_array($marketPlayType)) {
