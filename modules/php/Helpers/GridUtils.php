@@ -439,7 +439,7 @@ abstract class GridUtils
         int $radius = 1,
     ): array
     {
-        Game::get()->trace(__CLASS__.".".__FUNCTION__."($rowA, $colA, $startSpot->value, $dir->value, $radius)");
+        //Game::get()->trace(__CLASS__.".".__FUNCTION__."($rowA, $colA, $startSpot->value, $dir->value, $radius)");
         
         $orderedSpots = [];
         
