@@ -93,27 +93,29 @@ class AutomaAuctionCard extends Card
             case TOKEN_TYPE_AUCTION_MARKER_1:
                 //$orderedSpots = GridUtils::listOrderedSpots_SnailAroundBoard($startSpot, $dir);
                 $orderedSpots = GridUtils::listOrderedSpotsOnEdges_From($startSpot, $dir);
-                break;
-            case TOKEN_TYPE_AUCTION_MARKER_2:
-            case TOKEN_TYPE_AUCTION_MARKER_3:
-                //RULE : For Levels and , start adjacent to the position where the previous marker was placed.
-                $previousMarker = Tokens::findPreviousAuctionMarker($auctionType, $boardTokens);
-                $orderedSpots = GridUtils::listOrderedSpotsAround($previousMarker->getRow(), $previousMarker->getCol(), $startSpot, $dir);
                 foreach($orderedSpots as $spot){
                     if(in_array($spot,$pAuctionableSpots)){
                         $auctionableSpots[] = $spot;
                     }
                 }
-                if(count($auctionableSpots) == 0 ){
-                    //if no possible spot around, do default list
-                    $orderedSpots = GridUtils::listOrderedSpots_SnailAroundBoard($startSpot, $dir);
-                }
                 break;
-        }
-        foreach($orderedSpots as $spot){
-            if(in_array($spot,$pAuctionableSpots)){
-                $auctionableSpots[] = $spot;
-            }
+            case TOKEN_TYPE_AUCTION_MARKER_2:
+            case TOKEN_TYPE_AUCTION_MARKER_3:
+                //RULE : For Levels and , start adjacent to the position where the previous marker was placed.
+                $previousMarker = Tokens::findPreviousAuctionMarker($auctionType, $boardTokens);
+                $radius = 1;
+                while(count($auctionableSpots) == 0 && $radius <= MARKET_GRID_SIZE-1){
+                    //if no possible spot around, look farther
+                    $orderedSpots = GridUtils::listOrderedSpotsAround($previousMarker->getRow(), $previousMarker->getCol(), $startSpot, $dir, $radius);
+                    foreach($orderedSpots as $spot){
+                        if(in_array($spot,$pAuctionableSpots)){
+                            $auctionableSpots[] = $spot;
+                        }
+                    }
+                    $radius++;
+                }
+                //Game::get()->trace(__CLASS__.".".__FUNCTION__."($auctionType, ".count($pAuctionableSpots)." possible spots ".json_encode($pAuctionableSpots).") ".count($auctionableSpots)." auctionableSpots found for radius $radius =".json_encode($auctionableSpots));
+                break;
         }
 
         //Game::get()->trace(__CLASS__.".".__FUNCTION__.": sorted auctionableSpots =".json_encode($auctionableSpots));

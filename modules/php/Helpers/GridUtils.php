@@ -2,6 +2,7 @@
 namespace Bga\Games\Goa\Helpers;
 
 use Bga\Games\Goa\Core\Notifications;
+use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Managers\Tiles;
 use Bga\Games\Goa\Managers\Tokens;
 use Bga\Games\Goa\Models\AuctionMarker;
@@ -422,24 +423,120 @@ abstract class GridUtils
     }
     
     /**
+     * 
+     * @param int $rowA : row of the origin point A
+     * @param int $colA : column of the origin point A
+     * 
+     * @param AutomaAuctionStartType $startSpot
+     * @param AutomaAuctionDirectionType $dir
+     * @param int $radius : The distance between the point A and the spots to look at
+     * 
      * @return array of 8 ordered spots according to start and direction around the specified position [row,col]. They may be out of  the grid and must be checked according to tiles/tokens placed
      */
     public static function listOrderedSpotsAround(
         int $rowA, int $colA,
-        AutomaAuctionStartType $startSpot, AutomaAuctionDirectionType $dir
+        AutomaAuctionStartType $startSpot, AutomaAuctionDirectionType $dir,
+        int $radius = 1,
     ): array
     {
+        Game::get()->trace(__CLASS__.".".__FUNCTION__."($rowA, $colA, $startSpot->value, $dir->value, $radius)");
+        
         $orderedSpots = [];
         
         //Base is TOP LEFT - CLOCKWISE
-        $orderedSpots[] = ['row'=>$rowA - 1 ,'col'=>$colA - 1];
-        $orderedSpots[] = ['row'=>$rowA - 1 ,'col'=>$colA    ];
-        $orderedSpots[] = ['row'=>$rowA - 1 ,'col'=>$colA + 1];
-        $orderedSpots[] = ['row'=>$rowA     ,'col'=>$colA + 1];
-        $orderedSpots[] = ['row'=>$rowA + 1 ,'col'=>$colA + 1];
-        $orderedSpots[] = ['row'=>$rowA + 1 ,'col'=>$colA ];
-        $orderedSpots[] = ['row'=>$rowA + 1 ,'col'=>$colA - 1];
-        $orderedSpots[] = ['row'=>$rowA     ,'col'=>$colA - 1];
+        switch($radius){
+            case 1 : // 8 spots
+                $orderedSpots[] = ['row'=>$rowA - 1 ,'col'=>$colA - 1];
+                $orderedSpots[] = ['row'=>$rowA - 1 ,'col'=>$colA    ];
+                $orderedSpots[] = ['row'=>$rowA - 1 ,'col'=>$colA + 1];
+                $orderedSpots[] = ['row'=>$rowA     ,'col'=>$colA + 1];
+                $orderedSpots[] = ['row'=>$rowA + 1 ,'col'=>$colA + 1];
+                $orderedSpots[] = ['row'=>$rowA + 1 ,'col'=>$colA ];
+                $orderedSpots[] = ['row'=>$rowA + 1 ,'col'=>$colA - 1];
+                $orderedSpots[] = ['row'=>$rowA     ,'col'=>$colA - 1];
+                break;
+            case 2: //16 spots
+                $orderedSpots[] = ['row'=>$rowA - 2 ,'col'=>$colA - 2];
+                $orderedSpots[] = ['row'=>$rowA - 2 ,'col'=>$colA - 1];
+                $orderedSpots[] = ['row'=>$rowA - 2 ,'col'=>$colA    ];
+                $orderedSpots[] = ['row'=>$rowA - 2 ,'col'=>$colA + 1];
+                $orderedSpots[] = ['row'=>$rowA - 2 ,'col'=>$colA + 2];
+                $orderedSpots[] = ['row'=>$rowA - 1 ,'col'=>$colA + 2];
+                $orderedSpots[] = ['row'=>$rowA     ,'col'=>$colA + 2];
+                $orderedSpots[] = ['row'=>$rowA + 1 ,'col'=>$colA + 2];
+                $orderedSpots[] = ['row'=>$rowA + 2 ,'col'=>$colA + 2];
+                $orderedSpots[] = ['row'=>$rowA + 2 ,'col'=>$colA + 1];
+                $orderedSpots[] = ['row'=>$rowA + 2 ,'col'=>$colA ];
+                $orderedSpots[] = ['row'=>$rowA + 2 ,'col'=>$colA - 1];
+                $orderedSpots[] = ['row'=>$rowA + 2 ,'col'=>$colA - 2];
+                $orderedSpots[] = ['row'=>$rowA + 1 ,'col'=>$colA - 2];
+                $orderedSpots[] = ['row'=>$rowA     ,'col'=>$colA - 2];
+                $orderedSpots[] = ['row'=>$rowA - 1 ,'col'=>$colA - 2];
+                break;
+            case 3: //24 spots
+                $orderedSpots[] = ['row'=>$rowA - 3 ,'col'=>$colA - 3];
+                $orderedSpots[] = ['row'=>$rowA - 3 ,'col'=>$colA - 2];
+                $orderedSpots[] = ['row'=>$rowA - 3 ,'col'=>$colA - 1];
+                $orderedSpots[] = ['row'=>$rowA - 3 ,'col'=>$colA    ];
+                $orderedSpots[] = ['row'=>$rowA - 3 ,'col'=>$colA + 1];
+                $orderedSpots[] = ['row'=>$rowA - 3 ,'col'=>$colA + 2];
+                $orderedSpots[] = ['row'=>$rowA - 3 ,'col'=>$colA + 3];
+                $orderedSpots[] = ['row'=>$rowA - 2 ,'col'=>$colA + 3];
+                $orderedSpots[] = ['row'=>$rowA - 1 ,'col'=>$colA + 3];
+                $orderedSpots[] = ['row'=>$rowA     ,'col'=>$colA + 3];
+                $orderedSpots[] = ['row'=>$rowA + 1 ,'col'=>$colA + 3];
+                $orderedSpots[] = ['row'=>$rowA + 2 ,'col'=>$colA + 3];
+                $orderedSpots[] = ['row'=>$rowA + 3 ,'col'=>$colA + 3];
+                $orderedSpots[] = ['row'=>$rowA + 3 ,'col'=>$colA + 2];
+                $orderedSpots[] = ['row'=>$rowA + 3 ,'col'=>$colA + 1];
+                $orderedSpots[] = ['row'=>$rowA + 3 ,'col'=>$colA ];
+                $orderedSpots[] = ['row'=>$rowA + 3 ,'col'=>$colA - 1];
+                $orderedSpots[] = ['row'=>$rowA + 3 ,'col'=>$colA - 2];
+                $orderedSpots[] = ['row'=>$rowA + 3 ,'col'=>$colA - 3];
+                $orderedSpots[] = ['row'=>$rowA + 2 ,'col'=>$colA - 3];
+                $orderedSpots[] = ['row'=>$rowA + 1 ,'col'=>$colA - 3];
+                $orderedSpots[] = ['row'=>$rowA     ,'col'=>$colA - 3];
+                $orderedSpots[] = ['row'=>$rowA - 1 ,'col'=>$colA - 3];
+                $orderedSpots[] = ['row'=>$rowA - 2 ,'col'=>$colA - 3];
+                break;
+            case 4: //32 spots
+                $orderedSpots[] = ['row'=>$rowA - 4 ,'col'=>$colA - 4];
+                $orderedSpots[] = ['row'=>$rowA - 4 ,'col'=>$colA - 3];
+                $orderedSpots[] = ['row'=>$rowA - 4 ,'col'=>$colA - 2];
+                $orderedSpots[] = ['row'=>$rowA - 4 ,'col'=>$colA - 1];
+                $orderedSpots[] = ['row'=>$rowA - 4 ,'col'=>$colA    ];
+                $orderedSpots[] = ['row'=>$rowA - 4 ,'col'=>$colA + 1];
+                $orderedSpots[] = ['row'=>$rowA - 4 ,'col'=>$colA + 2];
+                $orderedSpots[] = ['row'=>$rowA - 4 ,'col'=>$colA + 3];
+                $orderedSpots[] = ['row'=>$rowA - 4 ,'col'=>$colA + 4];
+                $orderedSpots[] = ['row'=>$rowA - 3 ,'col'=>$colA + 4];
+                $orderedSpots[] = ['row'=>$rowA - 2 ,'col'=>$colA + 4];
+                $orderedSpots[] = ['row'=>$rowA - 1 ,'col'=>$colA + 4];
+                $orderedSpots[] = ['row'=>$rowA     ,'col'=>$colA + 4];
+                $orderedSpots[] = ['row'=>$rowA + 1 ,'col'=>$colA + 4];
+                $orderedSpots[] = ['row'=>$rowA + 2 ,'col'=>$colA + 4];
+                $orderedSpots[] = ['row'=>$rowA + 3 ,'col'=>$colA + 4];
+                $orderedSpots[] = ['row'=>$rowA + 4 ,'col'=>$colA + 4];
+                $orderedSpots[] = ['row'=>$rowA + 4 ,'col'=>$colA + 3];
+                $orderedSpots[] = ['row'=>$rowA + 4 ,'col'=>$colA + 2];
+                $orderedSpots[] = ['row'=>$rowA + 4 ,'col'=>$colA + 1];
+                $orderedSpots[] = ['row'=>$rowA + 4 ,'col'=>$colA ];
+                $orderedSpots[] = ['row'=>$rowA + 4 ,'col'=>$colA - 1];
+                $orderedSpots[] = ['row'=>$rowA + 4 ,'col'=>$colA - 2];
+                $orderedSpots[] = ['row'=>$rowA + 4 ,'col'=>$colA - 3];
+                $orderedSpots[] = ['row'=>$rowA + 4 ,'col'=>$colA - 4];
+                $orderedSpots[] = ['row'=>$rowA + 3 ,'col'=>$colA - 4];
+                $orderedSpots[] = ['row'=>$rowA + 2 ,'col'=>$colA - 4];
+                $orderedSpots[] = ['row'=>$rowA + 1 ,'col'=>$colA - 4];
+                $orderedSpots[] = ['row'=>$rowA     ,'col'=>$colA - 4];
+                $orderedSpots[] = ['row'=>$rowA - 1 ,'col'=>$colA - 4];
+                $orderedSpots[] = ['row'=>$rowA - 2 ,'col'=>$colA - 4];
+                $orderedSpots[] = ['row'=>$rowA - 3 ,'col'=>$colA - 4];
+                break;
+            //don't look for more than MARKET_GRID_SIZE-1
+            default:
+                break;
+        }
 
         switch($startSpot){
             case AutomaAuctionStartType::TOP_LEFT:

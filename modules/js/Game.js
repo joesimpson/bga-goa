@@ -1414,7 +1414,7 @@ export class Game {
      * idea from bennygui (see Earth) to keep a fixed page title even with many buttons
      */
     customAdaptStatusBar() {
-        this.customDebug("customAdaptStatusBar");
+        //this.customDebug("customAdaptStatusBar");
 
         if (this.alwaysFixTopActions) {
             const afterTitleElem = document.getElementById('after-page-title');

@@ -24,6 +24,16 @@ final class AutomaAuctionCardTest extends TestCase
         return $mock;
     }
 
+    
+    private function changeTestTileType(Collection &$boardTiles, int $index, int $type)
+    {
+        $source = $boardTiles[$index];
+        $boardTiles[$index] = new MarketTile([
+            'tile_id'=>$source->getId(), 
+            'tile_row'=> $source->getRow(), 
+            'tile_col'=> $source->getCol(),
+            ],Tiles::getMarketTilesTypes()[$type]);
+    }
     private function prepareBoardTiles() : Collection
     {
         $boardTiles = new Collection();
@@ -46,12 +56,12 @@ final class AutomaAuctionCardTest extends TestCase
         $addTile(10, 27, 4,1);
         $addTile(11, 8, 4,2);
         $addTile(12, 14, 4,3);
-        $addTile(13, 15, 4,4);
-        $addTile(14, 2, 4,5);
+        //$addTile(13, 15, 4,4);
+        //$addTile(14, 2, 4,5);
         $addTile(15, 24, 5,1);
         $addTile(16, 4, 5,2);
         $addTile(17, 25, 5,3);
-        $addTile(18, 5, 5,4);
+        //$addTile(18, 5, 5,4);
         $addTile(19, 13, 5,5);
 
         return $boardTiles;
@@ -98,7 +108,7 @@ final class AutomaAuctionCardTest extends TestCase
         return $boardTiles;
     }
     
-    private function prepareBoardTokens(int $nb = 0) : Collection
+    private function prepareBoardTokens(int $nb = 0, bool $day = true) : Collection
     {
         $boardTokens = new Collection();
             
@@ -108,9 +118,14 @@ final class AutomaAuctionCardTest extends TestCase
                 'token_id'=> $id, 'token_row'=> $row, 'token_col'=> $col,'row'=> $row, 'col'=> $col],
                 Tokens::getTokensTypes()[$type]);
         };
-        if($nb>=1) $addToken(1, TOKEN_TYPE_AUCTION_MARKER_1, 2,2);
-        if($nb>=2) $addToken(2, TOKEN_TYPE_AUCTION_MARKER_2, 3,3);
-
+        if($day){
+            if($nb>=1) $addToken(1, TOKEN_TYPE_AUCTION_MARKER_1, 5,5);//to test lonely tile
+            if($nb>=2) $addToken(2, TOKEN_TYPE_AUCTION_MARKER_2, 3,3);
+        }
+        else {
+            if($nb>=1) $addToken(1, TOKEN_TYPE_AUCTION_MARKER_1, 5,1);//to test lonely tile
+            if($nb>=2) $addToken(2, TOKEN_TYPE_AUCTION_MARKER_2, 4,4);
+        }
         return $boardTokens;
     }
 
@@ -309,7 +324,7 @@ final class AutomaAuctionCardTest extends TestCase
         $boardTokens = $this->prepareBoardTokens(1);
         $cardType = 9;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
-        $expectedSpot = ['row'=> 2, 'col'=>3];
+        $expectedSpot = ['row'=> 3, 'col'=>3];
         
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
 
@@ -338,9 +353,33 @@ final class AutomaAuctionCardTest extends TestCase
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
         self::assertSame( $expectedSpot, $result, );
         
-        //TEST 3 if there is 0 possible spot around previous marker : look elsewhere !
+        //TEST 3 if there is 0 possible spot around previous marker : look elsewhere ! Radius 2
         unset($boardTiles[3]);
         $expectedSpot = ['row'=> 3, 'col'=>5];
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+        self::assertSame( $expectedSpot, $result, );
+        
+        //TEST 4 
+        unset($boardTiles[9]);
+        $expectedSpot = ['row'=> 3, 'col'=>4];
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+        self::assertSame( $expectedSpot, $result, );
+
+        //TEST 5 
+        unset($boardTiles[8]);
+        $expectedSpot = ['row'=> 3, 'col'=>3];
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+        self::assertSame( $expectedSpot, $result, );
+        
+        //TEST 6
+        unset($boardTiles[7]);
+        $expectedSpot = ['row'=> 3, 'col'=>2];
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+        self::assertSame( $expectedSpot, $result, );
+        
+        //TEST 7 : radius 3
+        unset($boardTiles[6]);
+        $expectedSpot = ['row'=> 4, 'col'=>3];
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
         self::assertSame( $expectedSpot, $result, );
     }
@@ -355,7 +394,7 @@ final class AutomaAuctionCardTest extends TestCase
         $boardTokens = $this->prepareBoardTokens(1);
         $cardType = 10;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
-        $expectedSpot = ['row'=> 3, 'col'=>1];
+        $expectedSpot = ['row'=> 5, 'col'=>3];
         
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
 
@@ -371,10 +410,45 @@ final class AutomaAuctionCardTest extends TestCase
         $boardTokens = $this->prepareBoardTokens(2);
         $cardType = 10;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
-        $expectedSpot = ['row'=> 2, 'col'=>4];
         
+        $expectedSpot = ['row'=> 2, 'col'=>4];
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+        self::assertSame( $expectedSpot, $result, );
+        
+        //TEST 2
+        unset($boardTiles[4]);
+        $expectedSpot = ['row'=> 3, 'col'=>4];
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+        self::assertSame( $expectedSpot, $result, );
+        
+        //TEST 
+        unset($boardTiles[8]);
+        $expectedSpot = ['row'=> 4, 'col'=>3];
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+        self::assertSame( $expectedSpot, $result, );
 
+        //TEST 
+        unset($boardTiles[12]);
+        $expectedSpot = ['row'=> 3, 'col'=>2];
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+        self::assertSame( $expectedSpot, $result, );
+
+        //TEST 
+        unset($boardTiles[6]);
+        $expectedSpot = ['row'=> 2, 'col'=>3];
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+        self::assertSame( $expectedSpot, $result, );
+        
+        //TEST 
+        unset($boardTiles[3]);
+        $expectedSpot = ['row'=> 4, 'col'=>2];
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+        self::assertSame( $expectedSpot, $result, );
+
+        //TEST 
+        unset($boardTiles[11]);
+        $expectedSpot = ['row'=> 5, 'col'=>3];
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
         self::assertSame( $expectedSpot, $result, );
     }
     
@@ -388,7 +462,7 @@ final class AutomaAuctionCardTest extends TestCase
         $boardTokens = $this->prepareBoardTokens(1);
         $cardType = 11;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
-        $expectedSpot = ['row'=> 3, 'col'=>3];
+        $expectedSpot = ['row'=> 4, 'col'=>3];
         
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
 
@@ -404,10 +478,15 @@ final class AutomaAuctionCardTest extends TestCase
         $boardTokens = $this->prepareBoardTokens(2);
         $cardType = 11;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
-        $expectedSpot = ['row'=> 4, 'col'=>3];
         
+        $expectedSpot = ['row'=> 4, 'col'=>3];
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
-
+        self::assertSame( $expectedSpot, $result, );
+        
+        //TEST 
+        unset($boardTiles[12]);
+        $expectedSpot = ['row'=> 3, 'col'=>2];
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
         self::assertSame( $expectedSpot, $result, );
     }
     
@@ -421,7 +500,7 @@ final class AutomaAuctionCardTest extends TestCase
         $boardTokens = $this->prepareBoardTokens(1);
         $cardType = 12;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
-        $expectedSpot = ['row'=> 3, 'col'=>1];
+        $expectedSpot = ['row'=> 5, 'col'=>3];
         
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
 
@@ -454,7 +533,7 @@ final class AutomaAuctionCardTest extends TestCase
         $boardTokens = $this->prepareBoardTokens(1);
         $cardType = 13;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
-        $expectedSpot = ['row'=> 2, 'col'=>1];
+        $expectedSpot = ['row'=> 3, 'col'=>5];
         
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
 
@@ -487,10 +566,27 @@ final class AutomaAuctionCardTest extends TestCase
         $boardTokens = $this->prepareBoardTokens(1);
         $cardType = 14;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
-        $expectedSpot = ['row'=> 3, 'col'=>1];
-        
-        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
 
+        $expectedSpot = ['row'=> 5, 'col'=>3];
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+        self::assertSame( $expectedSpot, $result, );
+        
+        //TEST 
+        unset($boardTiles[17]);
+        $expectedSpot = ['row'=> 3, 'col'=>5];
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+        self::assertSame( $expectedSpot, $result, );
+        
+        //TEST with scoring tile
+        $this->changeTestTileType($boardTiles, 12, MARKET_TYPE_DUTY);
+        $expectedSpot = ['row'=> 4, 'col'=>3];
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+        self::assertSame( $expectedSpot, $result, );
+        
+        //TEST with Blue tile
+        $this->changeTestTileType($boardTiles, 12, 8);
+        $expectedSpot = ['row'=> 3, 'col'=>5];
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
         self::assertSame( $expectedSpot, $result, );
     }
     public function test_TilePriority_Card14_Auction3(): void
@@ -520,10 +616,46 @@ final class AutomaAuctionCardTest extends TestCase
         $boardTokens = $this->prepareBoardTokens(1);
         $cardType = 15;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
-        $expectedSpot = ['row'=> 3, 'col'=>2];
         
+        $expectedSpot = ['row'=> 3, 'col'=>5];
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+        self::assertSame( $expectedSpot, $result, );
+        
+        //TEST with Blue tile instead -> continue to depot
+        $this->changeTestTileType($boardTiles, 9, 8);
+        $expectedSpot = ['row'=> 3, 'col'=>4];
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+        self::assertSame( $expectedSpot, $result, );
+        
+        //TEST with Blue tile instead -> continue to depot
+        $this->changeTestTileType($boardTiles, 8, 8);
+        $expectedSpot = ['row'=> 3, 'col'=>3];
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+        self::assertSame( $expectedSpot, $result, );
+        
+        //TEST with Blue tile instead -> continue to depot
+        $this->changeTestTileType($boardTiles,7, 8);
+        $expectedSpot = ['row'=> 4, 'col'=>3];
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+        self::assertSame( $expectedSpot, $result, );
+        
+        //TEST with Score tile instead ->return
+        $this->changeTestTileType($boardTiles,12, 40);
+        $expectedSpot = ['row'=> 3, 'col'=>5];
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+        self::assertSame( $expectedSpot, $result, );
+        
+        //TEST with Score tile instead 
+        $this->changeTestTileType($boardTiles,9, 40);
+        $this->changeTestTileType($boardTiles,8, 40);
+        $expectedSpot = ['row'=> 3, 'col'=>3];
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+        self::assertSame( $expectedSpot, $result, );
 
+        //TEST
+        $this->changeTestTileType($boardTiles,7, 40);
+        $expectedSpot = ['row'=> 3, 'col'=>5];
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
         self::assertSame( $expectedSpot, $result, );
     }
     public function test_TilePriority_Card15_Auction3(): void
@@ -553,10 +685,21 @@ final class AutomaAuctionCardTest extends TestCase
         $boardTokens = $this->prepareBoardTokens(1);
         $cardType = 16;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
-        $expectedSpot = ['row'=> 3, 'col'=>1];
-        
-        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
 
+        $expectedSpot = ['row'=> 5, 'col'=>3];
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+        self::assertSame( $expectedSpot, $result, );
+        
+        //TEST
+        $this->changeTestTileType($boardTiles,8, 40);
+        $expectedSpot = ['row'=> 3, 'col'=>4];
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
+        self::assertSame( $expectedSpot, $result, );
+
+        //TEST
+        $this->changeTestTileType($boardTiles,12, 40);
+        $expectedSpot = ['row'=> 4, 'col'=>3];
+        $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
         self::assertSame( $expectedSpot, $result, );
     }
     public function test_TilePriority_Card16_Auction3(): void
@@ -584,7 +727,7 @@ final class AutomaAuctionCardTest extends TestCase
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_1;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
         $boardTiles = $this->prepareBoardTilesNight();
-        $boardTokens = $this->prepareBoardTokens();
+        $boardTokens = $this->prepareBoardTokens(0,false);
         $cardType = 21;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
         $expectedSpot = ['row'=> 6, 'col'=>1];
@@ -600,7 +743,7 @@ final class AutomaAuctionCardTest extends TestCase
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_1;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
         $boardTiles = $this->prepareBoardTilesNight();
-        $boardTokens = $this->prepareBoardTokens();
+        $boardTokens = $this->prepareBoardTokens(0,false);
         $cardType = 22;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
         $expectedSpot = ['row'=> 2, 'col'=>0];
@@ -616,7 +759,7 @@ final class AutomaAuctionCardTest extends TestCase
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_1;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
         $boardTiles = $this->prepareBoardTilesNight();
-        $boardTokens = $this->prepareBoardTokens();
+        $boardTokens = $this->prepareBoardTokens(0,false);
         $cardType = 23;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
         $expectedSpot = ['row'=> 4, 'col'=>3];
@@ -634,7 +777,7 @@ final class AutomaAuctionCardTest extends TestCase
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_1;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
         $boardTiles = $this->prepareBoardTilesNight();
-        $boardTokens = $this->prepareBoardTokens();
+        $boardTokens = $this->prepareBoardTokens(0,false);
         $cardType = 24;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
         $expectedSpot = ['row'=> 4, 'col'=>3];
@@ -652,7 +795,7 @@ final class AutomaAuctionCardTest extends TestCase
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_1;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
         $boardTiles = $this->prepareBoardTilesNight();
-        $boardTokens = $this->prepareBoardTokens();
+        $boardTokens = $this->prepareBoardTokens(0,false);
         $cardType = 25;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
         $expectedSpot = ['row'=> 6, 'col'=>4];
@@ -668,7 +811,7 @@ final class AutomaAuctionCardTest extends TestCase
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_1;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
         $boardTiles = $this->prepareBoardTilesNight();
-        $boardTokens = $this->prepareBoardTokens();
+        $boardTokens = $this->prepareBoardTokens(0,false);
         $cardType = 26;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
         $expectedSpot = ['row'=> 5, 'col'=>0];
@@ -684,7 +827,7 @@ final class AutomaAuctionCardTest extends TestCase
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_1;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
         $boardTiles = $this->prepareBoardTilesNight();
-        $boardTokens = $this->prepareBoardTokens();
+        $boardTokens = $this->prepareBoardTokens(0,false);
         $cardType = 27;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
         $expectedSpot = ['row'=> 0, 'col'=>1];
@@ -700,7 +843,7 @@ final class AutomaAuctionCardTest extends TestCase
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_1;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
         $boardTiles = $this->prepareBoardTilesNight();
-        $boardTokens = $this->prepareBoardTokens();
+        $boardTokens = $this->prepareBoardTokens(0,false);
         $cardType = 28;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
         $expectedSpot = ['row'=> 1, 'col'=>6];
@@ -716,10 +859,10 @@ final class AutomaAuctionCardTest extends TestCase
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_2;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
         $boardTiles = $this->prepareBoardTilesNight();
-        $boardTokens = $this->prepareBoardTokens(1);
+        $boardTokens = $this->prepareBoardTokens(1,false);
         $cardType = 29;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
-        $expectedSpot = ['row'=> 2, 'col'=>3];
+        $expectedSpot = ['row'=> 3, 'col'=>3];
         
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
 
@@ -732,10 +875,10 @@ final class AutomaAuctionCardTest extends TestCase
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_3;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
         $boardTiles = $this->prepareBoardTilesNight();
-        $boardTokens = $this->prepareBoardTokens(2);
+        $boardTokens = $this->prepareBoardTokens(2,false);
         $cardType = 29;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
-        $expectedSpot = ['row'=> 2, 'col'=>3];
+        $expectedSpot = ['row'=> 5, 'col'=>4];
         
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
 
@@ -749,10 +892,10 @@ final class AutomaAuctionCardTest extends TestCase
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_2;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
         $boardTiles = $this->prepareBoardTilesNight();
-        $boardTokens = $this->prepareBoardTokens(1);
+        $boardTokens = $this->prepareBoardTokens(1,false);
         $cardType = 30;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
-        $expectedSpot = ['row'=> 2, 'col'=>1];
+        $expectedSpot = ['row'=> 5, 'col'=>3];
         
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
 
@@ -765,10 +908,10 @@ final class AutomaAuctionCardTest extends TestCase
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_3;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
         $boardTiles = $this->prepareBoardTilesNight();
-        $boardTokens = $this->prepareBoardTokens(2);
+        $boardTokens = $this->prepareBoardTokens(2,false);
         $cardType = 30;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
-        $expectedSpot = ['row'=> 2, 'col'=>3];
+        $expectedSpot = ['row'=> 5, 'col'=>4];
         
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
 
@@ -781,7 +924,7 @@ final class AutomaAuctionCardTest extends TestCase
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_2;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
         $boardTiles = $this->prepareBoardTilesNight();
-        $boardTokens = $this->prepareBoardTokens(1);
+        $boardTokens = $this->prepareBoardTokens(1,false);
         $cardType = 31;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
         $expectedSpot = ['row'=> 3, 'col'=>3];
@@ -797,10 +940,10 @@ final class AutomaAuctionCardTest extends TestCase
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_3;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
         $boardTiles = $this->prepareBoardTilesNight();
-        $boardTokens = $this->prepareBoardTokens(2);
+        $boardTokens = $this->prepareBoardTokens(2,false);
         $cardType = 31;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
-        $expectedSpot = ['row'=> 2, 'col'=>3];
+        $expectedSpot = ['row'=> 3, 'col'=>3];
         
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
 
@@ -813,7 +956,7 @@ final class AutomaAuctionCardTest extends TestCase
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_2;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
         $boardTiles = $this->prepareBoardTilesNight();
-        $boardTokens = $this->prepareBoardTokens(1);
+        $boardTokens = $this->prepareBoardTokens(1,false);
         $cardType = 32;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
         $expectedSpot = ['row'=> 3, 'col'=>3];
@@ -829,10 +972,10 @@ final class AutomaAuctionCardTest extends TestCase
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_3;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
         $boardTiles = $this->prepareBoardTilesNight();
-        $boardTokens = $this->prepareBoardTokens(2);
+        $boardTokens = $this->prepareBoardTokens(2,false);
         $cardType = 32;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
-        $expectedSpot = ['row'=> 4, 'col'=>4];
+        $expectedSpot = ['row'=> 3, 'col'=>3];
         
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
 
@@ -846,10 +989,10 @@ final class AutomaAuctionCardTest extends TestCase
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_2;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
         $boardTiles = $this->prepareBoardTilesNight();
-        $boardTokens = $this->prepareBoardTokens(1);
+        $boardTokens = $this->prepareBoardTokens(1,false);
         $cardType = 33;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
-        $expectedSpot = ['row'=> 2, 'col'=>1];
+        $expectedSpot = ['row'=> 3, 'col'=>1];
         
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
 
@@ -862,10 +1005,10 @@ final class AutomaAuctionCardTest extends TestCase
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_3;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
         $boardTiles = $this->prepareBoardTilesNight();
-        $boardTokens = $this->prepareBoardTokens(2);
+        $boardTokens = $this->prepareBoardTokens(2,false);
         $cardType = 33;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
-        $expectedSpot = ['row'=> 2, 'col'=>3];
+        $expectedSpot = ['row'=> 5, 'col'=>4];
         
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
 
@@ -879,10 +1022,10 @@ final class AutomaAuctionCardTest extends TestCase
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_2;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
         $boardTiles = $this->prepareBoardTilesNight();
-        $boardTokens = $this->prepareBoardTokens(1);
+        $boardTokens = $this->prepareBoardTokens(1,false);
         $cardType = 34;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
-        $expectedSpot = ['row'=> 2, 'col'=>1];
+        $expectedSpot = ['row'=> 5, 'col'=>3];
         
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
 
@@ -895,10 +1038,10 @@ final class AutomaAuctionCardTest extends TestCase
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_3;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
         $boardTiles = $this->prepareBoardTilesNight();
-        $boardTokens = $this->prepareBoardTokens(2);
+        $boardTokens = $this->prepareBoardTokens(2,false);
         $cardType = 34;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
-        $expectedSpot = ['row'=> 2, 'col'=>3];
+        $expectedSpot = ['row'=> 3, 'col'=>5];
         
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
 
@@ -911,10 +1054,10 @@ final class AutomaAuctionCardTest extends TestCase
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_2;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
         $boardTiles = $this->prepareBoardTilesNight();
-        $boardTokens = $this->prepareBoardTokens(1);
+        $boardTokens = $this->prepareBoardTokens(1,false);
         $cardType = 35;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
-        $expectedSpot = ['row'=> 1, 'col'=>1];
+        $expectedSpot = ['row'=> 3, 'col'=>1];
         
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
 
@@ -927,7 +1070,7 @@ final class AutomaAuctionCardTest extends TestCase
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_3;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
         $boardTiles = $this->prepareBoardTilesNight();
-        $boardTokens = $this->prepareBoardTokens(2);
+        $boardTokens = $this->prepareBoardTokens(2,false);
         $cardType = 35;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
         $expectedSpot = ['row'=> 3, 'col'=>4];
@@ -943,10 +1086,10 @@ final class AutomaAuctionCardTest extends TestCase
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_2;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
         $boardTiles = $this->prepareBoardTilesNight();
-        $boardTokens = $this->prepareBoardTokens(1);
+        $boardTokens = $this->prepareBoardTokens(1,false);
         $cardType = 36;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
-        $expectedSpot = ['row'=> 1, 'col'=>3];
+        $expectedSpot = ['row'=> 5, 'col'=>3];
         
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
 
@@ -959,10 +1102,10 @@ final class AutomaAuctionCardTest extends TestCase
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_3;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
         $boardTiles = $this->prepareBoardTilesNight();
-        $boardTokens = $this->prepareBoardTokens(2);
+        $boardTokens = $this->prepareBoardTokens(2,false);
         $cardType = 36;
         $card = new AutomaAuctionCard(['type'=>$cardType],AutomaCards::getAutomaAuctionCardsTypes()[$cardType]);
-        $expectedSpot = ['row'=> 2, 'col'=>4];
+        $expectedSpot = ['row'=> 4, 'col'=>5];
         
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
 

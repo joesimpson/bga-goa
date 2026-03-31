@@ -654,12 +654,12 @@ trait DebugTrait
             $addTile(10, 27, 4,1);
             $addTile(11, 8, 4,2);
             $addTile(12, 14, 4,3);
-            $addTile(13, 15, 4,4);
-            $addTile(14, 2, 4,5);
+            //$addTile(13, 15, 4,4);
+            //$addTile(14, 2, 4,5);
             $addTile(15, 24, 5,1);
             $addTile(16, 4, 5,2);
             $addTile(17, 25, 5,3);
-            $addTile(18, 5, 5,4);
+            //$addTile(18, 5, 5,4);
             $addTile(19, 13, 5,5);
         }
         else {
