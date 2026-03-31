@@ -1215,10 +1215,11 @@ class PlayerTurn extends GameState
                     } catch(UnexpectedException $exc){
                         //If we fall in an edge case where that random choice is not really possible
                         $badChoice = true;
-                        Game::get()->trace(__FUNCTION__."($playerId) : UnexpectedException, continue zombie choices. ", json_encode($exc));
+                        Game::get()->trace(__CLASS__.".".__FUNCTION__."($playerId) : UnexpectedException, continue zombie choices. ", json_encode($exc));
                     }
                 }
                 //DEFAULT ACTION if we don't know ...
+                Game::get()->trace(__CLASS__.".".__FUNCTION__."($playerId) : Default zombie action turn : collect taxes ");
                 return $this->actTaxes( $gameVersion, $playerId, $args,);
             default: break;
         }

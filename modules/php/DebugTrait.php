@@ -421,7 +421,17 @@ trait DebugTrait
         $token->setRow($found);
 
         $this->debug_refreshUI();
-        $this->refresh_state();;
+        $this->refresh_state();
+    }
+    
+    function debug_removeAllSpices(){
+        $player = Players::getCurrent();
+        $player_id = $player->getId();
+        Log::addStep();
+
+        Tokens::removeSpicesOnAllTiles();
+        $this->debug_refreshUI();
+        $this->refresh_state();
     }
 
     function debug_playerTiles(){
@@ -532,7 +542,7 @@ trait DebugTrait
         $player = Players::get($pid);
         Log::addStep();
         Tiles::fillPlayerTileWithSpices($player,$tile);
-        $this->refresh_state();;
+        $this->refresh_state();
     }
     function debug_removeSpicesOnTile(int $tile_id){
         $tile = Tiles::get($tile_id);
@@ -540,7 +550,7 @@ trait DebugTrait
         $player = Players::get($pid);
         Log::addStep();
         Tokens::removeSpicesOnTile($tile,$player);
-        $this->refresh_state();;
+        $this->refresh_state();
     }
     
     function debug_discardTile(int $tile_id){
