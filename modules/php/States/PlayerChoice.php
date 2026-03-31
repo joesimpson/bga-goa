@@ -559,7 +559,7 @@ class PlayerChoice extends GameState
             if(in_array('actDiscard',$actions)){
                 $possibleDiscards = $args['possibleDiscards'];
                 $card_id = $this->getRandomZombieChoice($possibleDiscards);
-                return $this->actDiscard($card_id,$playerId, $args, $gameVersion);
+                return $this->actDiscard([$card_id],$playerId, $args, $gameVersion);
             }
         }
     }
