@@ -90,7 +90,7 @@ class MoneyCards extends Cards
         return $card;
     }
     
-    public static function automaGiveToPlayer(int $token_type, Player $automata,Player $player,) : MoneyCard
+    public static function automaGiveToPlayer(int $token_type, Player $automata,Player $player,) : MoneyCard |null
     {
 
         $fromLocation = self::getAutomaLocationForToken($token_type)->value;
@@ -98,8 +98,13 @@ class MoneyCards extends Cards
             ->where( 'subType', CARD_SUBTTYPE_MONEY)
             ->where(static::$prefix . 'location', $fromLocation)
             ->get()->first();
-        //For now, we don't use money cards model for players money,     
+        if(!isset($card)){
+            Notifications::winsAuctionWithCard($automata, 0,null,$player,);
+            return null;
+        }
+        
         $cardMoney = $card->getValue();
+        //For now, we don't use money cards model for players money,    
         Players::giveMoney($player, $cardMoney , false );
         Notifications::winsAuctionWithCard($automata, $cardMoney,$card,$player,);
         self::DB()->delete($card->getId());
