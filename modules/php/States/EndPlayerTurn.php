@@ -79,8 +79,8 @@ class EndPlayerTurn extends \Bga\GameFramework\States\GameState
                         //AUCTIONEER PAYS THE BANK
                         if($highBidPlayerId == AUTOMA_PLAYER_ID){
                             $moneyCard = MoneyCards::bankAutomaAuction($auctionToken->getType());
-                            
-                            Notifications::winsAuctionWithCard($currentAuctioneer, $highBid, $moneyCard);
+                            $cardMoney = isset($moneyCard) ? $moneyCard->getValue() : 0;
+                            Notifications::winsAuctionWithCard($currentAuctioneer, $cardMoney, $moneyCard);
                             Stats::inc( "automaAuctionsWon");
                         } else {
                             if($highBid>0){
