@@ -58,6 +58,11 @@ class GameMock extends Game {
                     "name": "Score",
                     "type": "int"
                 },
+                "merchantRank": {
+                    "id": 12,
+                    "name": "Merchant rank",
+                    "type": "int"
+                },
                 "turnOrder": {
                     "id": 13,
                     "name": "Turn order",
