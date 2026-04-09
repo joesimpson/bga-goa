@@ -418,11 +418,12 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
                 }
                 return $map;
               })
-            ->filter(function ($tokenDatas) use ($playerMoney , $onlyHighest, &$minRow ) {
+            ->filter(function ($tokenDatas) use ($playerMoney , $onlyHighest, &$minRow, $maxRow ) {
                 if($playerMoney < $tokenDatas['costMoney'] ){
                   return false;
                 }
                 if($onlyHighest && $tokenDatas['row'] > $minRow) return false;
+                if($tokenDatas['row'] >= $maxRow) return false;
 
                 return true;
             }) 
