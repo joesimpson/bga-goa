@@ -2,8 +2,10 @@
 
 namespace Bga\Games\Goa\Core;
 
+use Bga\GameFramework\Table;
 use Bga\Games\Goa\Managers\Players;
 use Bga\Games\Goa\Game;
+use Bga\Games\Goa\Helpers\Utils;
 use Bga\Games\Goa\Models\Player;
 
 /*
@@ -204,6 +206,9 @@ class Stats extends \Bga\Games\Goa\Helpers\DB_Manager
   {
     Stats::checkExistence();
     
+    if(! Utils::isGameWithAutoma()) {
+      Stats::unsetAutomatonStats();
+    }
   }
 
   
@@ -227,6 +232,12 @@ class Stats extends \Bga\Games\Goa\Helpers\DB_Manager
         Stats::setProgressStat($pId, $type, $value);
       }
     }
+  }
+  
+  /** TO BE USED ON games with no automaton but after call to checkExistence which create useless stat */
+  public static function unsetAutomatonStats(){
+    //automaAuctionsWon
+    Table::DbQuery("DELETE FROM `stats` where stats_type = 10 and stats_player_id is NULL");
   }
 
   
