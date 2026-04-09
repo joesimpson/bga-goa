@@ -2849,11 +2849,11 @@ export class Game {
             </div>`; 
     }
     
-    tplTileFromType(tileType, prefix ='') {
+    tplTileFromType(tileType, prefix ='', subtype = this.const.TILE_SUBTTYPE_MARKET) {
         let tileDatas = {};
         tileDatas.type = parseInt(tileType);
         //SUPPOSE ALL this.const.TILE_SUBTTYPE_MARKET
-        let material = this.gamedatas.material.tiles[this.const.TILE_SUBTTYPE_MARKET][tileDatas.type];
+        let material = this.gamedatas.material.tiles[subtype][tileDatas.type];
         tileDatas = material;
 
         return this.tplTile(tileDatas, prefix);

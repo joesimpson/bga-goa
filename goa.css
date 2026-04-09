@@ -3593,6 +3593,10 @@ button .goa_tile {
   width: 54px;
   height: 54px;
 }
+button .goa_tile.goa_tile_with_button_text {
+  display: inline-block;
+  vertical-align: middle;
+}
 
 .player_board_inner #player_name_-123,
 .player_board_inner > .player-name > a {

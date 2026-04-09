@@ -54,8 +54,13 @@ export class ClientFoundOutpost {
                 if(button) this.game.destroy(button);
                 this.bga.statusBar.addActionButton( 
                     this.bga.gameui.format_string( 
-                        _('Establish ${name} : requires ${n} ${icon_contracts}'), 
-                        {'name': colonyName, 'n':outpostMinContractsNeeded, 'icon_contracts':this.game.formatIcon('contracts',_('Contracts')), }),
+                        _('${name} ${tile_icon} : requires ${n} ${icon_contracts}'), 
+                        {
+                            'name': colonyName, 
+                            'n':outpostMinContractsNeeded, 
+                            'icon_contracts':this.game.formatIcon('contracts',_('Contracts')), 
+                            'tile_icon' : this.game.tplTileFromType(outpostDiv.dataset.type, '_with_button_text', this.game.const.TILE_SUBTTYPE_OUTPOST),
+                        }),
                     () => { 
                         if(fromTileChoice){
                             actionArgs.arr1 = outpostId;

@@ -325,4 +325,10 @@ body.notouch-device{
 button .goa_tile{
     width: 54px;
     height: 54px;
+
+    &.goa_tile_with_button_text {
+        //when tile is displayed with text in the button
+        display: inline-block;
+        vertical-align: middle;
+    }
 }
