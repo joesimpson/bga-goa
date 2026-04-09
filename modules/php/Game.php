@@ -134,6 +134,18 @@ class Game extends \Bga\GameFramework\Table
             $sql = "UPDATE `DBPREFIX_log` SET `table` = 'my_global_variables' WHERE `table` = 'bga_globals'" ;
             $this->applyDbUpgradeToAllDB( $sql );
         }
+
+        if ($from_version <= 2604012321)
+        {
+            //Add a new stat 12, computed at end game
+            $sql = "INSERT INTO `DBPREFIX_stats` ( stats_type , stats_player_id, stats_value) 
+                    SELECT 12, `DBPREFIX_player`.player_id, 0 FROM `DBPREFIX_player`
+                    WHERE NOT EXISTS (
+                        SELECT 1 FROM `DBPREFIX_stats` where `DBPREFIX_stats`.stats_type = 12 AND stats_player_id = `DBPREFIX_player`.player_id LIMIT 1
+                    )" ;
+            $this->applyDbUpgradeToAllDB( $sql );
+
+        }
     }
 
     /*

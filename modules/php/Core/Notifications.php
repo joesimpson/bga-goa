@@ -826,6 +826,7 @@ class Notifications
     } else {
       $rank_name = clienttranslate("Poor");
     }
+    Stats::set("merchantRank", $player, $rank);
     self::notifyAll("scoreRank", clienttranslate('${player_name} merchant rank is ${n} ${rank_icon}: ${rank_name}'), [
       'n' => $rank,
       "player" => $player,
