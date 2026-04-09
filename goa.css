@@ -547,9 +547,6 @@ Icon extract in sprite with differents layers size (so % is not useful).
   left: 10%;
   z-index: 1;
 }
-#goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_grid .goa_grid_space .goa_tile :nth-child(2) {
-  top: -60%;
-}
 #goa_resizable_board #goa_board_container #goa_board #goa_board_components #goa_board_market #goa_board_market_grid .goa_tile {
   left: 8px;
   top: 8px;

@@ -82,6 +82,7 @@ namespace Bga\GameFramework\Actions\Types {
             ?string $name = null,
             public ?bool $associative = true,
             public ?bool $alphanum = true, 
+            public ?string $class = null,
         ) {}
     
         public function getValue(string $paramName): mixed { return []; }    
@@ -302,6 +303,7 @@ namespace Bga\GameFramework {
     abstract class Bga {
         public Db\Globals $globals;
         public Notify $notify;
+        public Logs $logs;
         public Legacy $legacy;
         public Tournament $tournament;
         public TableOptions $tableOptions;
@@ -324,7 +326,7 @@ namespace Bga\GameFramework {
          * @param callable $fn The decorator function. Expected signature: `function(string $message, array $args): array`
          * @return void
          */
-        public function addDecorator(callable $fn) {
+        public function addDecorator(callable $fn): void {
            //
         }
 
@@ -350,7 +352,32 @@ namespace Bga\GameFramework {
         public function all(string $notifName, string | NotificationMessage $message = '', array $args = []): void {
             //
         }
+
+        /**
+         * If called, all _private informations sent to the front will be merged to the args (if not called, they will stay into args._private).
+         * If you want to only merge some _private, add `_merge_private => true` to the relevant args instead.
+         */
+        public function alwaysMergePrivate(): void {}
     }
+
+    abstract class Logs {
+        /**
+         * Returns the current move id, when doing an action, that should be stored along informations to undo.
+         * 
+         * @return int the current move id
+         */
+        function getCurrentMoveId(): int {
+            return 0;
+        }
+
+        /**
+         * Remove all logs from a move id that was stored during an action using `getCurrentMoveId()`.
+         * The game should be in the exact same point as it was before the stored action.
+         */
+        function remove(int $startMoveId): void {
+        }
+    }
+
 
     abstract class Legacy {
         /**
@@ -2176,7 +2203,7 @@ namespace Bga\GameFramework {
          *
          * @param array<int, array{ player_name: string, player_colors: array<string> }> $players
          * @param array $options
-         * @return void
+         * @return mixed the first state (id or class)
          */
         abstract protected function setupNewGame($players, $options = []);
 
@@ -2596,7 +2623,16 @@ namespace Bga\GameFramework\Components {
 
 }
 
-namespace Bga\GameFramework\Components\Counters {        
+namespace Bga\GameFramework\Components\Counters { 
+
+    enum CounterVisibility: string
+    {
+        CASE VISIBLE = 'visible';
+        CASE SELF = 'self';
+        case HIDDEN = 'hidden';
+    }
+
+
     /**
      * Factory to create counters.
      */
@@ -2607,9 +2643,10 @@ namespace Bga\GameFramework\Components\Counters {
          * @param string $name the name of the counter, used to link it to the JS counter
          * @param ?int $min the minimum value of the counter (null = no minimum)
          * @param ?int $max the maximum value of the counter (null = no maximum)
+         * @param CounterVisibility $visibility define the visibility of the counter
          * @return PlayerCounter a new PlayerCounter object
          */
-        public function createPlayerCounter(string $name, ?int $min = 0, ?int $max = null): PlayerCounter {
+        public function createPlayerCounter(string $name, ?int $min = 0, ?int $max = null, CounterVisibility $visibility = CounterVisibility::VISIBLE,): PlayerCounter {
             return new class extends PlayerCounter {}();
         }
 
@@ -2626,11 +2663,11 @@ namespace Bga\GameFramework\Components\Counters {
         }
     }
 
-    abstract class OutOfRangeCounterException extends \BgaSystemException
+    abstract class OutOfRangeCounterException extends \Bga\GameFramework\SystemException
     {
     }
     
-    abstract class UnknownPlayerException extends \BgaSystemException
+    abstract class UnknownPlayerException extends \Bga\GameFramework\SystemException
     {
     }
 
@@ -2639,11 +2676,38 @@ namespace Bga\GameFramework\Components\Counters {
      */
     abstract class PlayerCounter {
         /**
+         * Return if the counter is visible by anyone.
+         */
+        public function isVisible(): bool {
+            return false;
+        }
+
+        /**
+         * Return if the counter is invisible.
+         */
+        public function isHidden(): bool {
+            return false;
+        }
+
+        /**
+         * Return if the counter is visible by the current player only.
+         */
+        public function isSelf(): bool {
+            return false;
+        }
+
+        /**
+         * Set the counter visibility.
+         */
+        public function setVisibility(CounterVisibility $visibility): void {
+        }
+
+        /**
          * Initialize the DB elements. Must be called during game `setupNewGame`.
          * 
          * @param int $initialValue, if different than 0
          */
-        public function initDb(array $playerIds, int $initialValue = 0) {
+        public function initDb(array $playerIds, int $initialValue = 0): void {
         }
 
         /**
@@ -2732,8 +2796,9 @@ namespace Bga\GameFramework\Components\Counters {
          * 
          * @param array $result the object to update.
          * @param ?string $fieldName the field name to set in $result["players"], if different than the counter name.
+         * @param ?int $currentPlayerId the current player id, needed if the counter has self visibility
          */
-        public function fillResult(array &$result, ?string $fieldName = null) {
+        public function fillResult(array &$result, ?string $fieldName = null, ?int $currentPlayerId = null) {
         }
     }
 
