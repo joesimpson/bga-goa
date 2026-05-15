@@ -186,7 +186,10 @@ class Tiles extends \Bga\Games\Goa\Helpers\Pieces
           Stats::inc("playedPlantations", $player->getId());
           break;
         case MARKET_TYPE_ACTION_DIRECT:
-          $updateTileDatas($player,$tile, false);
+          if(!($tile instanceof BonanzaTile)) {
+            //keep coordinates until Bonanza discard animation
+            $updateTileDatas($player,$tile, false);
+          }
           Tiles::discardTileFromPlayer($player, $tile);
           Stats::inc("playedTiles", $player->getId());
           $gains = $tile->getActions();
