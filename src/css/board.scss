@@ -403,7 +403,7 @@ $playerboard_img_height: calc(1 * 777px);
         margin-right: 5px;
         margin-bottom: 5px;
         &[data-state="1"]{ //TILE_STATE_PLAYED
-            filter: grayscale(1);
+            filter: grayscale(1) !important;;
         }
         &[data-play_type="1"]{ //MARKET_TYPE_PLANTATION
             order: 1;
@@ -421,7 +421,7 @@ $playerboard_img_height: calc(1 * 777px);
             order: 6;
             &[data-state="1"]{ //TILE_STATE_PLAYED
                 //no grey here, because played means active for endgame
-                filter: unset;
+                filter: unset !important;
                 .goa_icon_container_greenCheck{
                     visibility: visible;
                 }

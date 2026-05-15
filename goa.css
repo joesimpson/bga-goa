@@ -693,7 +693,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
   margin-bottom: 5px;
 }
 .goa_player_tiles .goa_tile[data-state="1"] {
-  filter: grayscale(1);
+  filter: grayscale(1) !important;
 }
 .goa_player_tiles .goa_tile[data-play_type="1"] {
   order: 1;
@@ -711,7 +711,7 @@ Icon extract in sprite with differents layers size (so % is not useful).
   order: 6;
 }
 .goa_player_tiles .goa_tile[data-play_type="6"][data-state="1"] {
-  filter: unset;
+  filter: unset !important;
 }
 .goa_player_tiles .goa_tile[data-play_type="6"][data-state="1"] .goa_icon_container_greenCheck {
   visibility: visible;
