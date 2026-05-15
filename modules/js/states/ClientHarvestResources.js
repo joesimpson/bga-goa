@@ -264,6 +264,9 @@ export class ClientHarvestResources {
                     [...document.getElementsByClassName('goa_token_tmp_for_harvest')].forEach((node) => {
                         this.game.destroy(node);
                     });
+                    [...document.querySelectorAll('.goa_tile_spot.selected_for_client_state')].forEach((node) => {
+                        $(node).classList.remove('selected_for_client_state');
+                    });
                     updateStatus();
                 }, { id:'btnCancelChoice', 'title':_('Clear selection'), 'color':'secondary',destination: document.getElementById('customSecondary')},);
             }
