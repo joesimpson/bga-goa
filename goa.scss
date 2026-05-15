@@ -439,4 +439,26 @@ body.lockedInterface{
 #pagesection_howtoplay li, .midSizeDialog li, .standard_popin li{ margin-left: 2em; } 
 #pagesection_howtoplay ol li, .midSizeDialog ol li, .standard_popin ol li { list-style: decimal; } /* BEFORE ul in case there are ul under ol */ 
 #pagesection_howtoplay ul li, .midSizeDialog ul li, .standard_popin ul li { list-style: disc; }
+
+// ------------------------------------------------------------------------------
+/* Override table style over BGA common CSS, only for game WIKI (directly copied from wiki' css) */ 
+#pagesection_howtoplay .wikitable {
+    background-color: #f8f9fa;
+    color: #202122;
+    margin: 1em 0;
+    border: 1px solid #a2a9b1;
+    border-collapse: collapse;
+    width: auto;
+}
+#pagesection_howtoplay :is(.wikitable > tr > th,.wikitable > tr > td,.wikitable > * > tr > th,.wikitable > * > tr > td ){
+    border: 1px solid #a2a9b1;
+    padding: 0.2em 0.4em;
+}
+#pagesection_howtoplay :is(.wikitable > tr > th,.wikitable > * > tr > th) {
+    background-color: #eaecf0;
+    text-align: center;
+}
+#pagesection_howtoplay .wikitable > caption {
+    font-weight: bold;
+}
 // ------------------------------------------------------------------------------
