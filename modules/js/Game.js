@@ -565,6 +565,12 @@ export class Game {
         return callbackOnClose;
     }
     
+    closeTooltip(id) {
+        if (this.bga.gameui.tooltips[id]) {
+            clearTimeout(this.bga.gameui.tooltips[id].showTimeout);
+            this.bga.gameui.tooltips[id].close();
+        }
+    }
     destroyTooltip(elem) {
         /* 
         if (this.tooltips[elem.id]) {

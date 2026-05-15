@@ -338,6 +338,8 @@ export class ClientHarvestResources {
                         harvestResourcesZone = harvestTopZone.getElementsByClassName('goa_harvest_resources')[0]; 
                     }
                     this.game.autoScrollTo(harvestResourcesZone.id);
+                    //auto close tooltip because we cannot view the selection behind
+                    this.game.closeTooltip(`goa_tile-${tile_id}`);
 
                     let possibleSpices = this.game.const.SPICES_ALL;
                     possibleSpices = harvestSpots[id]['spices'];
