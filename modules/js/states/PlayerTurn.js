@@ -31,6 +31,7 @@ export class PlayerTurn {
             case this.game.const.ROUND_STEP_TILE_AUCTIONS: 
                 let currentBid = args.bid;
                 let auctionToken = args.token;
+                let auctioneer = auctionToken.pId;
                 let auctionTokenDiv =  document.getElementById(`goa_token-${auctionToken.id}`);
                 if(auctionTokenDiv) {
                     //HIGHLIGHT ZONE on grid
@@ -45,6 +46,14 @@ export class PlayerTurn {
                     this.bga.statusBar.setTitle(isCurrentPlayerActive ? 
                         _('Auction ${token_icon} : ${you} must either place a bid or pass').replace('${token_icon}', token_icon) :
                         _('Auction ${token_icon} : ${actplayer} must either place a bid or pass').replace('${token_icon}', token_icon)
+                    );
+                }
+                this.auctioneerActive = false;   
+                if(auctioneer == activePlayer){
+                    this.auctioneerActive = true;
+                    this.bga.statusBar.setTitle(isCurrentPlayerActive ? 
+                        _('Auction ${token_icon} : ${you} may pay ${bid} ${icon_money} to win the bid or pass').replace('${bid}', currentBid + args.minBid).replace('${icon_money}', icon_money).replace('${token_icon}', token_icon) :
+                        _('Auction ${token_icon} : ${actplayer} may pay ${bid} ${icon_money} to win the bid or pass').replace('${bid}', currentBid + args.minBid).replace('${icon_money}', icon_money).replace('${token_icon}', token_icon)
                     );
                 }
 
@@ -251,7 +260,21 @@ export class PlayerTurn {
             this.game.updateHandSelectable(args);
 
             if(possibleActions.includes('actPassBid')){
-                this.bga.statusBar.addActionButton(_('Pass'), () => this.game.customPerformAction("actPassBid"), { 'id':'goa_button_pass_bid', 'title':_('Pass the bid'),'destination': document.getElementById('customSecondary') }); 
+                let passBidMsg = _('Pass');
+                if(this.auctioneerActive){
+                    passBidMsg =  this.bga.gameui.format_string( _('Pass and gain ${n} ${icon_money}'), 
+                        { 
+                            'n': args.bid, 
+                            'icon_money': icon_money,
+                        } 
+                    );
+                }
+                this.bga.statusBar.addActionButton(
+                    passBidMsg,
+                    () => this.game.customPerformAction("actPassBid"),
+                    { 'id':'goa_button_pass_bid', 'title':_('Pass the bid'),'destination': document.getElementById('customSecondary'),
+                    },
+                ); 
             }
             
             if(possibleActions.includes('actPassAction')){
@@ -367,13 +390,22 @@ export class PlayerTurn {
         let icon_money = this.game.formatIcon('money',null);
         let icon_arrow = '<i class="fa6 fa6-arrow-right goa_icon_arrow"></i>';
 
-        this.bga.statusBar.addActionButton(this.bga.gameui.format_string(  _('Overbid ${n} ${icon_money} ${icon_arrow} ${m} ${icon_money}') ,
+        let bidConfirmMsg = this.bga.gameui.format_string(  _('Overbid ${n} ${icon_money} ${icon_arrow} ${m} ${icon_money}') ,
                     { 
                         //... It could be improved for translation ...
                         'n': this.selectedBid > 0 ? '+' + this.selectedBid : this.selectedBid, 
                         'm': (this.currentBid + this.selectedBid), 
                         'icon_money': icon_money,icon_arrow
-                    }), 
+                    });
+        if(this.auctioneerActive){
+            bidConfirmMsg =  this.bga.gameui.format_string(_('Pay ${m} ${icon_money}') ,
+                    { 
+                        'm': (this.currentBid + this.selectedBid), 
+                        'icon_money': icon_money,
+                        'icon_arrow': icon_arrow,
+                    });
+        }
+        this.bga.statusBar.addActionButton( bidConfirmMsg,
                 () => this.onBid(this.selectedBid) 
             , {'id':'goa_button_bid', 'title':_('Confirm the bid'),destination: document.getElementById('customPrimary')}
             );
