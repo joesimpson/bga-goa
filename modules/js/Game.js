@@ -2363,6 +2363,7 @@ export class Game {
     async notif_computeScoring(notif) {
         this.customDebug('notif_computeScoring', notif);
         this.displayFinalScoringTable(true,);
+        this.autoScrollTo(`goa_end_score_recap`);
     }
     async notif_addPoints (notif) {
         this.customDebug( 'notif_addPoints' , notif);
