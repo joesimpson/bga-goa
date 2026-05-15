@@ -306,6 +306,7 @@ export class ClientHarvestResources {
             };
             let clickAction = () => {
                 this.game.customDebug("onSelectNSpiceSpots...CLICK",id);
+                if(this.waitForSlide) return;
                 let harvestResourcesZone = harvestTopZone.getElementsByClassName('goa_harvest_resources')[0]; 
                 if(harvestResourcesZone) this.game.empty(harvestResourcesZone);
 
@@ -345,7 +346,7 @@ export class ClientHarvestResources {
                     possibleSpices = harvestSpots[id]['spices'];
                     possibleSpices.forEach((spice) => {
                         let spice_icon = this.game.formatSpiceIcon(spice);
-                        let clickSpiceAction = () => {
+                        let clickSpiceAction = async () => {
                             elt.classList.remove('selected_for_client_state');
                             selectedResources.set(parseInt(id),spice);
                             let tmpTokenDiv = this.game.addToken(
@@ -359,8 +360,11 @@ export class ClientHarvestResources {
                                 , `goa_tile_spot-${tile_id}-${tile_spot}`
                                 , '_tmp_for_harvest'
                             );
-                            this.game.animationManager.slideIn(tmpTokenDiv, document.getElementById('btnHarvestSelect'+spice), {duration: 800});
-                             
+                            [...harvestResourcesZone.getElementsByClassName('bgabutton')].forEach((div) => { div.classList.add('disabled');});
+                            this.waitForSlide = true;
+                            await this.game.animationManager.slideIn(tmpTokenDiv, document.getElementById('btnHarvestSelect'+spice), {duration: 400});
+                            this.waitForSlide = false; 
+
                             selectedTiles[tile_id] ++;
                             updateStatus();
                         };
