@@ -112,7 +112,7 @@ export class ClientHarvestResources {
         
         let activePlayer = this.bga.players.getActivePlayerId();
         let selectedResources = new Map();
-        let selectedTiles = [];
+        let selectedTiles = new Map();
         let selectedShips = 0;
         let selectedContracts = 0;
         let confirmText = '';
@@ -123,7 +123,7 @@ export class ClientHarvestResources {
                 let tileId = datas.tile_id;
                 let index = datas.index;
                 elements[datas.id] = $(`goa_tile_spot-${tileId}-${index}`);
-            selectedTiles[tileId] = 0;
+            selectedTiles.set(parseInt(tileId),0);
         });
      
         let harvestTopZone = document.getElementById(`goa_playerboard_top_zone-${activePlayer}`);
@@ -212,7 +212,7 @@ export class ClientHarvestResources {
                 selectedResources.clear();
                 selectedShips = 0;
                 selectedContracts = 0;
-                Object.values(selectedTiles).forEach((t) => {t = 0  });
+                selectedTiles.forEach((value, key, map) => { map.set(key, 0); });
                 updateStatus();
             }
         }
@@ -221,10 +221,12 @@ export class ClientHarvestResources {
             let selectionGood = selectedResources.size == maxElements || selectedResources.size >= minElements && selectedResources.size <=maxElements;
 
             let nbTiles = 0;
-            Object.values(selectedTiles).forEach((t) => {
-                if(t>0) nbTiles++;
+            this.game.customDebug("updateStatus()...", selectedTiles,selectedResources);
+            selectedTiles.forEach((value, key, map) => {
+                if(value>0) nbTiles++;
             });
             if(maxTiles){
+                this.game.customDebug("updateStatus()...nbTiles=",nbTiles);
                 selectionGood = (nbTiles <= maxTiles);
             }
 
@@ -256,7 +258,7 @@ export class ClientHarvestResources {
             if (selectedResources.size  > 0 || selectedShips > 0 || selectedContracts > 0 ) {
                 this.bga.statusBar.addActionButton( _('Clear selection'), () => {
                     selectedResources.clear();
-                    Object.values(selectedTiles).forEach((t) => {t = 0  });
+                    selectedTiles.forEach((value, key, map) => { map.set(key, 0); });
                     selectedShips = 0;
                     selectedContracts = 0;
                     [...document.getElementsByClassName('goa_token_tmp_for_harvest')].forEach((node) => {
@@ -266,19 +268,11 @@ export class ClientHarvestResources {
                 }, { id:'btnCancelChoice', 'title':_('Clear selection'), 'color':'secondary',destination: document.getElementById('customSecondary')},);
             }
 
-            if(maxTiles){
-                let nbTiles = 0;
-                Object.values(selectedTiles).forEach((t) => {
-                    if(t>0) nbTiles++;
-                });
-                selectionGood = (nbTiles <= maxTiles);
-            }
-
             Object.keys(elements).forEach((id) => {
                 let elt = elements[id];
                 let selected = selectedResources.has(parseInt(id));
                 let tile_id = harvestSpots[id]['tile_id'];
-                let selectedTile = (selectedTiles[tile_id] > 0);
+                let selectedTile = (selectedTiles.get(parseInt(tile_id)) > 0);
                 elt.classList.toggle('selected', selected);
                 elt.classList.toggle('selectable', selected || selectedResources.size < maxElements  || maxTiles && (nbTiles < maxTiles || selectedTile) );
             });
@@ -300,8 +294,10 @@ export class ClientHarvestResources {
                 if(tmpTokenDiv) this.game.destroy(tmpTokenDiv);
                 this.game.empty(elt);
                 elt.classList.remove('selected_for_client_state');
-                selectedResources.delete(parseInt(id));
-                selectedTiles[tile_id] --;
+                if (selectedResources.has(parseInt(id))) {
+                    selectedResources.delete(parseInt(id));
+                    selectedTiles.set(parseInt(tile_id), selectedTiles.get(parseInt(tile_id)) - 1 );
+                }
                 updateStatus();
             };
             let clickAction = () => {
@@ -365,7 +361,7 @@ export class ClientHarvestResources {
                             await this.game.animationManager.slideIn(tmpTokenDiv, document.getElementById('btnHarvestSelect'+spice), {duration: 400});
                             this.waitForSlide = false; 
 
-                            selectedTiles[tile_id] ++;
+                            selectedTiles.set(parseInt(tile_id), selectedTiles.get(parseInt(tile_id)) + 1 );
                             updateStatus();
                         };
                         this.bga.statusBar.addActionButton( spice_icon, clickSpiceAction, { 'id': 'btnHarvestSelect'+spice, 'destination': harvestResourcesZone,  }); 
