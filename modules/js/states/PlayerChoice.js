@@ -300,8 +300,8 @@ export class ClientSelectTileEffect {
                 case this.game.const.EFFECT_TYPE_FOUND_TILE:
                     let missingContracts = tile_choice.quantity;
                     this.bga.statusBar.setTitle(isCurrentPlayerActive ? 
-                        _('${you} must establish the outpost by spending ${n} ${icon_contracts} OR abandon to receive ${x} ${icon_contracts}').replaceAll('${icon_contracts}', icon_contracts).replace('${n}', missingContracts).replace('${x}', 1): 
-                        _('${actplayer} must establish the outpost by spending ${n} ${icon_contracts} OR abandon to receive ${x} ${icon_contracts}').replaceAll('${icon_contracts}', icon_contracts).replace('${n}', missingContracts).replace('${x}', 1)
+                        _('${you} must establish the outpost by spending ${n} ${icon_contracts} OR abandon to receive ${x} ${icon_contracts}').replace(/\${icon_contracts}/g, icon_contracts).replace('${n}', missingContracts).replace('${x}', 1): 
+                        _('${actplayer} must establish the outpost by spending ${n} ${icon_contracts} OR abandon to receive ${x} ${icon_contracts}').replace(/\${icon_contracts}/g, icon_contracts).replace('${n}', missingContracts).replace('${x}', 1)
                     );
                     this.game.autoScrollTo(`goa_board_outposts_1`);
                     let tileToFound= document.getElementById(`goa_outpost-${tile_id}-front`);
