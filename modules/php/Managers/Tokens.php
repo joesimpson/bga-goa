@@ -430,6 +430,9 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
           ->toArray();
   }
 
+  /**
+   * @deprecated see countProgressMarkersInColumnBelowRow
+   */
   public static function countProgressMarkersBelowRow( int $row) : int
   {
     $maxProgress = count(PROGRESS_GAINS_SHIPS);
@@ -440,6 +443,20 @@ class Tokens extends \Bga\Games\Goa\Helpers\Pieces
     return self::DB()
       ->where('subtype', TOKEN_SUBTTYPE_PROGRESS_MARKER)
       ->whereIn('token_row', $rowsBelow)
+      ->count();
+  }
+  
+  public static function countProgressMarkersInColumnBelowRow( int $row, int $col) : int
+  {
+    $maxProgress = count(PROGRESS_GAINS_SHIPS);
+    $rowsBelow = [];
+    for($k =$row;$k<=$maxProgress ;$k++){
+      $rowsBelow[] = $k;
+    }
+    return self::DB()
+      ->where('subtype', TOKEN_SUBTTYPE_PROGRESS_MARKER)
+      ->whereIn('token_row', $rowsBelow)
+      ->where('token_col', $col)
       ->count();
   }
   

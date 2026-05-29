@@ -480,7 +480,7 @@ class PlayerTurn extends GameState
 
         //BONUSES the first time of the FIRST PLAYER ON LINE 4 or 5 : draw 1 exploration card 
         if($upgradedToken->getRow() >=4 ){
-            $nbTokensBelowRow = Tokens::countProgressMarkersBelowRow($upgradedToken->getRow());
+            $nbTokensBelowRow = Tokens::countProgressMarkersInColumnBelowRow($upgradedToken->getRow(),$upgradedToken->getCol());
             if($nbTokensBelowRow == 1) //consider =1 because the token has already moved down
             {
                 Notifications::progressBonusFirst($player, $upgradedToken->getRow());

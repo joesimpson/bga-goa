@@ -688,8 +688,8 @@ final class PlayerTurnTest extends TestCase
 
         self::assertSame(PlayerTurn::class, $newState );
         self::assertSame(4,TestDatas::$tokens[11]['token_row']);
-        //manual check in logs and coverage we DON T have notif "progressBonusFirst", then check cards
-        self::assertSame(1, Cards::getExplorationHand(1)->count());
+        //manual check in logs and coverage we have notif "progressBonusFirst", then check cards
+        self::assertSame(2, Cards::getExplorationHand(1)->count());
     }
 
     public function testPlayerTurn_ActionProgress_Track1_BonusForFirstOnRow5(): void
@@ -771,8 +771,8 @@ final class PlayerTurnTest extends TestCase
 
         self::assertSame(PlayerTurn::class, $newState );
         self::assertSame(5,TestDatas::$tokens[11]['token_row']);
-        //manual check in logs and coverage we DON T have notif "progressBonusFirst", then check cards
-        self::assertSame(1, Cards::getExplorationHand(1)->count());
+        //manual check in logs and coverage we have notif "progressBonusFirst", then check cards
+        self::assertSame(2, Cards::getExplorationHand(1)->count());
     }
 
     public function testPlayerTurn_ActionProgress_Track2_Pass(): void

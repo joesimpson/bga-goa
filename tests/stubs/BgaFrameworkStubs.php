@@ -270,6 +270,14 @@ abstract class Table
             logForTests("getUniqueValueFromDb: count tokens is $count for subtype $subtype and rows ".json_encode($token_rows));
             return $count;
         }
+        if (preg_match("/^SELECT COUNT\(\*\) FROM `tokens` WHERE `subtype` = (?P<subtype>.*) AND \(`token_row` IN \((?P<token_rows>.*)\)\) AND `token_col` = (?P<token_col>.*)$/", $sql, $matches) == 1) {
+            $token_rows = explode(',', str_replace("'","",$matches['token_rows']) );
+            $subtype = $matches['subtype'];
+            $token_col = intval($matches['token_col']);
+            $count = count(array_filter(TestDatas::$tokens,function ($token) use($subtype, $token_rows, $token_col ) {return $token['subtype'] == $subtype && $token['token_col'] == $token_col && in_array($token['token_row'], $token_rows );}));
+            logForTests("getUniqueValueFromDb: count tokens is $count for subtype $subtype and rows ".json_encode($token_rows));
+            return $count;
+        }
         if (preg_match("/^SELECT COUNT\(\*\) FROM `cards` WHERE `subType` = (?P<subtype>.*) AND `card_location` = '(?P<card_location>.*)'$/", $sql, $matches) == 1) {
             $subtype = $matches['subtype'];
             $card_location = $matches['card_location'];
