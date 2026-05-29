@@ -25,7 +25,7 @@ final class TokensTest extends TestCase
     //---------------------------------------------------------------------
     public function testUpgradableProgressMarkers_Player1(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $this->createGameMock();
         $player = Players::get(1);
         $progressTracks = Tokens::getUpgradableProgressMarkers($player);
@@ -114,7 +114,7 @@ final class TokensTest extends TestCase
     }
     public function testUpgradableProgressMarkers_Player2(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $this->createGameMock();
         //$player = Players::getAll()->first();
         $player = Players::get(2);

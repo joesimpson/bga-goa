@@ -12,12 +12,13 @@ use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\States\EndPlayerTurn;
 use Bga\Games\Goa\States\NextPlayer;
 use PHPUnit\Framework\TestCase;
+use Tests\Utils\TestDatas;
 
 final class NextPlayerTest extends TestCase
 {
     public function testEnteringState_step1(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $roundStep = ROUND_STEP_PLACE_AUCTIONS;
         $game = $this->createGameMock();
         Globals::setRoundStep($roundStep);
@@ -30,7 +31,7 @@ final class NextPlayerTest extends TestCase
     
     public function testEnteringState_step2(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $roundStep = ROUND_STEP_TILE_AUCTIONS;
         $game = $this->createGameMock();
         Globals::setRoundStep($roundStep);
@@ -43,7 +44,7 @@ final class NextPlayerTest extends TestCase
 
     public function testEnteringState_step3(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $roundStep = ROUND_STEP_PLAYER_ACTIONS;
         $game = $this->createGameMock();
         Globals::setRoundStep($roundStep);
@@ -56,7 +57,7 @@ final class NextPlayerTest extends TestCase
     
     public function testEnteringState_step2_Automa(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $roundStep = ROUND_STEP_TILE_AUCTIONS;
         $game = $this->createGameMock();
         Globals::setRoundStep($roundStep);

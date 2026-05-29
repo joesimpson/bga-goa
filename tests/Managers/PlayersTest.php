@@ -28,7 +28,7 @@ final class PlayersTest extends TestCase
 
     public function test_getNextPlayerWithActions_automa(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $this->createGameMock();
         Globals::setAutomaColor("aaa");
         $playerId = 2;
@@ -40,7 +40,7 @@ final class PlayersTest extends TestCase
     
     public function test_getNextPlayerWithActions_afterAutoma(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $this->createGameMock();
         Globals::setAutomaColor("aaa");
         $playerId = AUTOMA_PLAYER_ID;
@@ -52,7 +52,7 @@ final class PlayersTest extends TestCase
     
     public function test_getNextPlayerWithActions_after1(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $this->createGameMock();
         Globals::setAutomaColor("aaa");
         $playerId = 1;

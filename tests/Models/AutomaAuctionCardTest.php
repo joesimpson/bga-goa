@@ -156,7 +156,7 @@ final class AutomaAuctionCardTest extends TestCase
 
     public function test_TilePriority_Card1(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_1;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -172,7 +172,7 @@ final class AutomaAuctionCardTest extends TestCase
     
     public function test_TilePriority_Card2(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_1;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -188,7 +188,7 @@ final class AutomaAuctionCardTest extends TestCase
     
     public function test_TilePriority_Card3(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_1;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -204,7 +204,7 @@ final class AutomaAuctionCardTest extends TestCase
     
     public function test_TilePriority_Card4(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_1;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -220,7 +220,7 @@ final class AutomaAuctionCardTest extends TestCase
     
     public function test_TilePriority_Card5(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_1;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -237,7 +237,7 @@ final class AutomaAuctionCardTest extends TestCase
     
     public function test_TilePriority_Card6(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_1;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -258,7 +258,7 @@ final class AutomaAuctionCardTest extends TestCase
     }
     public function test_TilePriority_Card7(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_1;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -272,7 +272,7 @@ final class AutomaAuctionCardTest extends TestCase
     }
     public function test_TilePriority_Card8(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_1;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -286,14 +286,14 @@ final class AutomaAuctionCardTest extends TestCase
         self::assertSame( $expectedSpot, $result, );
 
         //Test 2 without the scoring tile
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         unset($boardTiles[1]);
         $expectedSpot = ['row'=> 3, 'col'=>0];
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
         self::assertSame( $expectedSpot, $result, );
         
         //Test 3 without the teal tile 5
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         unset($boardTiles[5]);
         $expectedSpot = ['row'=> 4, 'col'=>0];
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
@@ -301,27 +301,27 @@ final class AutomaAuctionCardTest extends TestCase
         
         //Test 4 without the teal tile 10, 
         $expectedSpot = ['row'=> 6, 'col'=>3];
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         unset($boardTiles[10]);
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
         self::assertSame( $expectedSpot, $result, );
         
         //Test 5 without the blue tile 11
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         unset($boardTiles[11]);
         $expectedSpot = ['row'=> 6, 'col'=>3];
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
         self::assertSame( $expectedSpot, $result, );
         
         //Test 6 without the teal tile 15
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         unset($boardTiles[15]);
         $expectedSpot = ['row'=> 6, 'col'=>3];
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
         self::assertSame( $expectedSpot, $result, );
         
         //Test 7 without the teal tile 17
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         unset($boardTiles[17]);
         //$expectedSpot = ['row'=> 2, 'col'=>5];
         //Change rule : only edges, we cannot reach last Teal tile
@@ -330,7 +330,7 @@ final class AutomaAuctionCardTest extends TestCase
         self::assertSame( $expectedSpot, $result, );
         
         //Test 8 without the last teal tile, we can use depot
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         unset($boardTiles[4]);
         $expectedSpot = ['row'=> 2, 'col'=>0];
         $result = $card->findAuctionSpotByPriority($token,$boardTiles, $boardTokens);
@@ -339,7 +339,7 @@ final class AutomaAuctionCardTest extends TestCase
     
     public function test_TilePriority_Card9_Auction2(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_2;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -356,7 +356,7 @@ final class AutomaAuctionCardTest extends TestCase
     
     public function test_TilePriority_Card9_Auction3(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_3;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -409,7 +409,7 @@ final class AutomaAuctionCardTest extends TestCase
     
     public function test_TilePriority_Card10_Auction2(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_2;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -425,7 +425,7 @@ final class AutomaAuctionCardTest extends TestCase
     }
     public function test_TilePriority_Card10_Auction3(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_3;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -477,7 +477,7 @@ final class AutomaAuctionCardTest extends TestCase
     
     public function test_TilePriority_Card11_Auction2(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_2;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -493,7 +493,7 @@ final class AutomaAuctionCardTest extends TestCase
     }
     public function test_TilePriority_Card11_Auction3(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_3;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -515,7 +515,7 @@ final class AutomaAuctionCardTest extends TestCase
     
     public function test_TilePriority_Card12_Auction2(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_2;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -531,7 +531,7 @@ final class AutomaAuctionCardTest extends TestCase
     }
     public function test_TilePriority_Card12_Auction3(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_3;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -548,7 +548,7 @@ final class AutomaAuctionCardTest extends TestCase
     
     public function test_TilePriority_Card13_Auction2(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_2;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -564,7 +564,7 @@ final class AutomaAuctionCardTest extends TestCase
     }
     public function test_TilePriority_Card13_Auction3(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_3;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -581,7 +581,7 @@ final class AutomaAuctionCardTest extends TestCase
     
     public function test_TilePriority_Card14_Auction2(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_2;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -614,7 +614,7 @@ final class AutomaAuctionCardTest extends TestCase
     }
     public function test_TilePriority_Card14_Auction3(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_3;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -631,7 +631,7 @@ final class AutomaAuctionCardTest extends TestCase
     
     public function test_TilePriority_Card15_Auction2(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_2;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -683,7 +683,7 @@ final class AutomaAuctionCardTest extends TestCase
     }
     public function test_TilePriority_Card15_Auction3(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_3;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -700,7 +700,7 @@ final class AutomaAuctionCardTest extends TestCase
     
     public function test_TilePriority_Card16_Auction2(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_2;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -727,7 +727,7 @@ final class AutomaAuctionCardTest extends TestCase
     }
     public function test_TilePriority_Card16_Auction3(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_3;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -745,7 +745,7 @@ final class AutomaAuctionCardTest extends TestCase
     // ---------------- NIGHT -----------------------------
     public function test_TilePriority_Card21(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_1;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -761,7 +761,7 @@ final class AutomaAuctionCardTest extends TestCase
     }
     public function test_TilePriority_Card22(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_1;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -777,7 +777,7 @@ final class AutomaAuctionCardTest extends TestCase
     }
     public function test_TilePriority_Card23(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_1;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -792,7 +792,7 @@ final class AutomaAuctionCardTest extends TestCase
     }
     public function test_TilePriority_Card24(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_1;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -807,7 +807,7 @@ final class AutomaAuctionCardTest extends TestCase
     }
     public function test_TilePriority_Card25(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_1;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -823,7 +823,7 @@ final class AutomaAuctionCardTest extends TestCase
     }
     public function test_TilePriority_Card26(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_1;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -839,7 +839,7 @@ final class AutomaAuctionCardTest extends TestCase
     }
     public function test_TilePriority_Card27(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_1;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -855,7 +855,7 @@ final class AutomaAuctionCardTest extends TestCase
     }
     public function test_TilePriority_Card28(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_1;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -871,7 +871,7 @@ final class AutomaAuctionCardTest extends TestCase
     }
     public function test_TilePriority_Card29_Auction2(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_2;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -887,7 +887,7 @@ final class AutomaAuctionCardTest extends TestCase
     }
     public function test_TilePriority_Card29_Auction3(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_3;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -904,7 +904,7 @@ final class AutomaAuctionCardTest extends TestCase
     
     public function test_TilePriority_Card30_Auction2(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_2;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -920,7 +920,7 @@ final class AutomaAuctionCardTest extends TestCase
     }
     public function test_TilePriority_Card30_Auction3(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_3;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -936,7 +936,7 @@ final class AutomaAuctionCardTest extends TestCase
     }
     public function test_TilePriority_Card31_Auction2(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_2;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -952,7 +952,7 @@ final class AutomaAuctionCardTest extends TestCase
     }
     public function test_TilePriority_Card31_Auction3(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_3;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -968,7 +968,7 @@ final class AutomaAuctionCardTest extends TestCase
     }
     public function test_TilePriority_Card32_Auction2(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_2;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -984,7 +984,7 @@ final class AutomaAuctionCardTest extends TestCase
     }
     public function test_TilePriority_Card32_Auction3(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_3;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -1001,7 +1001,7 @@ final class AutomaAuctionCardTest extends TestCase
     
     public function test_TilePriority_Card33_Auction2(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_2;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -1017,7 +1017,7 @@ final class AutomaAuctionCardTest extends TestCase
     }
     public function test_TilePriority_Card33_Auction3(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_3;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -1034,7 +1034,7 @@ final class AutomaAuctionCardTest extends TestCase
     
     public function test_TilePriority_Card34_Auction2(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_2;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -1050,7 +1050,7 @@ final class AutomaAuctionCardTest extends TestCase
     }
     public function test_TilePriority_Card34_Auction3(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_3;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -1066,7 +1066,7 @@ final class AutomaAuctionCardTest extends TestCase
     }
     public function test_TilePriority_Card35_Auction2(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_2;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -1082,7 +1082,7 @@ final class AutomaAuctionCardTest extends TestCase
     }
     public function test_TilePriority_Card35_Auction3(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_3;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -1098,7 +1098,7 @@ final class AutomaAuctionCardTest extends TestCase
     }
     public function test_TilePriority_Card36_Auction2(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_2;
         $token = new AuctionMarker(['type'=>$auctionType],[]);
@@ -1114,7 +1114,7 @@ final class AutomaAuctionCardTest extends TestCase
     }
     public function test_TilePriority_Card36_Auction3(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $auctionType = TOKEN_TYPE_AUCTION_MARKER_3;
         $token = new AuctionMarker(['type'=>$auctionType],[]);

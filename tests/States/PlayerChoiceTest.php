@@ -14,6 +14,7 @@ use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Exceptions\UnexpectedException;
 use Bga\Games\Goa\States\PlayerChoice;
 use PHPUnit\Framework\TestCase;
+use Tests\Utils\TestDatas;
 
 final class PlayerChoiceTest extends TestCase
 {
@@ -22,7 +23,7 @@ final class PlayerChoiceTest extends TestCase
      */
     public function setupTest(): void
     {
-        Table::$test_activePlayerId = 1;
+        TestDatas::$test_activePlayerId = 1;
     }
     
     private function createGameMock()
@@ -34,7 +35,7 @@ final class PlayerChoiceTest extends TestCase
     }
     public function testPlayerChoice_ActionDiscard_Exception_With_Wrong_Version(): void
     {
-         logForTests(__CLASS__.".".__FUNCTION__);
+         logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $state = new PlayerChoice($game);
         $activePlayerId = 1;
@@ -47,11 +48,11 @@ final class PlayerChoiceTest extends TestCase
 
     public function testPlayerChoice_ActionDiscard_NotPossible(): void
     {
-         logForTests(__CLASS__.".".__FUNCTION__);
+         logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $state = new PlayerChoice($game);
         $activePlayerId = 2;
-        Table::$test_activePlayerId = $activePlayerId;
+        TestDatas::$test_activePlayerId = $activePlayerId;
         $gameVersion = 999999;
         $cardId = 2;
         $args = [
@@ -66,11 +67,11 @@ final class PlayerChoiceTest extends TestCase
     
     public function testPlayerChoice_ActionDiscard_WrongArgs(): void
     {
-         logForTests(__CLASS__.".".__FUNCTION__);
+         logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $state = new PlayerChoice($game);
         $activePlayerId = 2;
-        Table::$test_activePlayerId = $activePlayerId;
+        TestDatas::$test_activePlayerId = $activePlayerId;
         $gameVersion = 999999;
         $cardId = 999;
         $args = [
@@ -85,11 +86,11 @@ final class PlayerChoiceTest extends TestCase
     
     public function testPlayerChoice_ActionDiscard_Pass(): void
     {
-         logForTests(__CLASS__.".".__FUNCTION__);
+         logTestRun(__CLASS__.".".__FUNCTION__);
         $game = $this->createGameMock();
         $state = new PlayerChoice($game);
         $activePlayerId = 2;
-        Table::$test_activePlayerId = $activePlayerId;
+        TestDatas::$test_activePlayerId = $activePlayerId;
         $gameVersion = 999999;
         $cardIds = [2];
 

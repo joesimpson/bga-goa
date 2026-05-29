@@ -13,6 +13,7 @@ use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Helpers\DB_Manager;
 use Bga\Games\Goa\States\EndSession;
 use PHPUnit\Framework\TestCase;
+use Tests\Utils\TestDatas;
 
 final class EndSessionTest extends TestCase
 {
@@ -30,22 +31,15 @@ final class EndSessionTest extends TestCase
         $player1 = 1;
         $player2 = 2;
         
-        Table::$test_players[$player1]['money'] = 3;
-        Table::$test_players[$player2]['money'] = 87;
+        TestDatas::$test_players[$player1]['money'] = 3;
+        TestDatas::$test_players[$player2]['money'] = 87;
         $expected = [ 
             $session => [
                 $player1 => [
                     SCORING_PROGRESS     => 8,
                     SCORING_OUTPOSTS     => 0,
                     SCORING_EXPLORATION  => [
-                        /*
-                        CARD_SYMBOL_ELEPHANT => 0,
-                        CARD_SYMBOL_TIGER    => 0,
-                        CARD_SYMBOL_URN      => 0,
-                        CARD_SYMBOL_PALMTREE => 0,
-                        CARD_SYMBOL_SHELL    => 0,
-                        CARD_SYMBOL_STATUE   => 0,
-                        */
+                        CARD_SYMBOL_SHELL    => 1,//1 CARD
                     ],
                     SCORING_COINS        => 0,
                     SCORING_TILES        => 0,
@@ -54,14 +48,7 @@ final class EndSessionTest extends TestCase
                     SCORING_PROGRESS     => 1,
                     SCORING_OUTPOSTS     => 0,
                     SCORING_EXPLORATION  => [
-                        /*
-                        CARD_SYMBOL_ELEPHANT => 0,
-                        CARD_SYMBOL_TIGER    => 0,
-                        CARD_SYMBOL_URN      => 0,
-                        CARD_SYMBOL_PALMTREE => 0,
-                        CARD_SYMBOL_SHELL    => 0,
-                        CARD_SYMBOL_STATUE   => 0,
-                        */
+                        CARD_SYMBOL_SHELL    => 3,//2 CARDs
                     ],
                     SCORING_COINS        => 3,
                     SCORING_TILES        => 0,

@@ -4,6 +4,15 @@ declare(strict_types=1);
 
 namespace {
 
+    /**
+     * to be used at the start of each test for better readability of test logs
+     */
+    function logTestRun(string $message){
+        logForTests('------------------------------------------------------------------','-----');
+        logForTests($message, 'TEST_RUN');
+        logForTests('------------------------------------------------------------------','-----');
+    }
+
     function logForTests(string $message, string $level = 'TEST'){
         date_default_timezone_set('Europe/Brussels');
         $date = new DateTime();

@@ -14,7 +14,7 @@ final class GridUtilsTest extends TestCase
     
     public function test_orderedSpots_TopLeft_ClockWise(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $expectedArray = [
             ['row'=> 0, 'col'=>1],
             ['row'=> 0, 'col'=>2],
@@ -47,7 +47,7 @@ final class GridUtilsTest extends TestCase
     
     public function test_orderedSpots_TopLeft_CounterClockWise(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $expectedArray = [
             ['row'=> 1, 'col'=>0],
             ['row'=> 2, 'col'=>0],
@@ -81,7 +81,7 @@ final class GridUtilsTest extends TestCase
     
     public function test_orderedSpots_TopRight_ClockWise(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $expectedArray = [
 
             ['row'=> 1, 'col'=>6],
@@ -115,7 +115,7 @@ final class GridUtilsTest extends TestCase
     
     public function test_orderedSpots_BottomRight_ClockWise(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $expectedArray = [
             
             ['row'=> 6, 'col'=>5],
@@ -149,7 +149,7 @@ final class GridUtilsTest extends TestCase
     
     public function test_orderedSpots_BottomLeft_ClockWise(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $expectedArray = [
             
             ['row'=> 5, 'col'=>0],
@@ -183,7 +183,7 @@ final class GridUtilsTest extends TestCase
 
     public function test_orderedSpots_TopRight_CounterClockWise(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $expectedArray = [
             ['row'=> 0, 'col'=>5],
             ['row'=> 0, 'col'=>4],
@@ -217,7 +217,7 @@ final class GridUtilsTest extends TestCase
     
     public function test_orderedSpots_BottomRight_CounterClockWise(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $expectedArray = [
             ['row'=> 5, 'col'=>6],
             ['row'=> 4, 'col'=>6],
@@ -250,7 +250,7 @@ final class GridUtilsTest extends TestCase
     
     public function test_orderedSpots_BottomLeft_CounterClockWise(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $expectedArray = [
             ['row'=> 6, 'col'=>1],
             ['row'=> 6, 'col'=>2],
@@ -286,7 +286,7 @@ final class GridUtilsTest extends TestCase
     
     public function test_orderedSpotsMidddle_TopLeft_Clockwise(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $expectedArray = [
             ['row'=> 2, 'col'=>2],
             ['row'=> 2, 'col'=>3],
@@ -303,7 +303,7 @@ final class GridUtilsTest extends TestCase
 
     public function test_orderedSpotsMidddle_TopRight_Clockwise(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $expectedArray = [
             ['row'=> 2, 'col'=>4],
             ['row'=> 3, 'col'=>4],
@@ -320,7 +320,7 @@ final class GridUtilsTest extends TestCase
     
     public function test_orderedSpotsMidddle_BottomRight_Clockwise(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $expectedArray = [
             ['row'=> 4, 'col'=>4],
             ['row'=> 4, 'col'=>3],
@@ -337,7 +337,7 @@ final class GridUtilsTest extends TestCase
     
     public function test_orderedSpotsMidddle_BottomLeft_Clockwise(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $expectedArray = [
             ['row'=> 4, 'col'=>2],
             ['row'=> 3, 'col'=>2],
@@ -354,7 +354,7 @@ final class GridUtilsTest extends TestCase
     
     public function test_orderedSpotsMidddle_TopLeft_CounterClockwise(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $expectedArray = [
             ['row'=> 2, 'col'=>2],
             ['row'=> 3, 'col'=>2],
@@ -371,7 +371,7 @@ final class GridUtilsTest extends TestCase
     
     public function test_orderedSpotsMidddle_TopRight_CounterClockwise(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $expectedArray = [
             ['row'=> 2, 'col'=>4],
             ['row'=> 2, 'col'=>3],
@@ -388,7 +388,7 @@ final class GridUtilsTest extends TestCase
     
     public function test_orderedSpotsMidddle_BottomRight_CounterClockwise(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $expectedArray = [
             ['row'=> 4, 'col'=>4],
             ['row'=> 3, 'col'=>4],
@@ -404,7 +404,7 @@ final class GridUtilsTest extends TestCase
     }
     public function test_orderedSpotsMidddle_BottomLeft_CounterClockwise(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $expectedArray = [
             ['row'=> 4, 'col'=>2],
             ['row'=> 4, 'col'=>3],
@@ -422,7 +422,7 @@ final class GridUtilsTest extends TestCase
     
     public function test_orderedSpotsAround_TopLeft_Clockwise(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $ref = ['row'=> 3, 'col'=>3];
         $start = AutomaAuctionStartType::TOP_LEFT;
         $dir = AutomaAuctionDirectionType::CLOCKWISE;
@@ -441,7 +441,7 @@ final class GridUtilsTest extends TestCase
     }
     public function test_orderedSpotsAround_TopLeft_CounterClockwise(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $ref = ['row'=> 3, 'col'=>3];
         $start = AutomaAuctionStartType::TOP_LEFT;
         $dir = AutomaAuctionDirectionType::COUNTER_CLOCKWISE;
@@ -461,7 +461,7 @@ final class GridUtilsTest extends TestCase
     
     public function test_orderedSpotsAround_TopRight_Clockwise(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $ref = ['row'=> 3, 'col'=>3];
         $start = AutomaAuctionStartType::TOP_RIGHT;
         $dir = AutomaAuctionDirectionType::CLOCKWISE;
@@ -480,7 +480,7 @@ final class GridUtilsTest extends TestCase
     }
     public function test_orderedSpotsAround_TopRight_CounterClockwise(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $ref = ['row'=> 3, 'col'=>3];
         $start = AutomaAuctionStartType::TOP_RIGHT;
         $dir = AutomaAuctionDirectionType::COUNTER_CLOCKWISE;
@@ -499,7 +499,7 @@ final class GridUtilsTest extends TestCase
     }
     public function test_orderedSpotsAround_BottomRight_Clockwise(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $ref = ['row'=> 3, 'col'=>3];
         $start = AutomaAuctionStartType::BOTTOM_RIGHT;
         $dir = AutomaAuctionDirectionType::CLOCKWISE;
@@ -518,7 +518,7 @@ final class GridUtilsTest extends TestCase
     }
     public function test_orderedSpotsAround_BottomRight_Counterclockwise(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $ref = ['row'=> 3, 'col'=>3];
         $start = AutomaAuctionStartType::BOTTOM_RIGHT;
         $dir = AutomaAuctionDirectionType::COUNTER_CLOCKWISE;
@@ -537,7 +537,7 @@ final class GridUtilsTest extends TestCase
     }
     public function test_orderedSpotsAround_BottomLeft_Clockwise(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $ref = ['row'=> 3, 'col'=>3];
         $start = AutomaAuctionStartType::BOTTOM_LEFT;
         $dir = AutomaAuctionDirectionType::CLOCKWISE;
@@ -556,7 +556,7 @@ final class GridUtilsTest extends TestCase
     }
     public function test_orderedSpotsAround_BottomLeft_Counterclockwise(): void
     {
-        logForTests(__CLASS__.".".__FUNCTION__);
+        logTestRun(__CLASS__.".".__FUNCTION__);
         $ref = ['row'=> 3, 'col'=>3];
         $start = AutomaAuctionStartType::BOTTOM_LEFT;
         $dir = AutomaAuctionDirectionType::COUNTER_CLOCKWISE;

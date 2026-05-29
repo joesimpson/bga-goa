@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Bga\GameFramework;
 
+use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Models\CardLocation;
 use Exception;
+use Tests\Utils\TestDatas;
 
 class UserException extends \Exception
 {
@@ -45,6 +47,15 @@ class GameMock extends Game {
         $this->notify = new Notify($this);
         $this->bga = new Bga($this);
         //DB_Manager::startLog();
+        
+        TestDatas::resetPlayers();
+        TestDatas::resetCards();
+        TestDatas::resetTiles();
+        TestDatas::resetTokens();
+        TestDatas::resetEffects();
+        TestDatas::resetStats();
+        TestDatas::resetLogs();
+        
     }
 
     public function getStatTypes(){
@@ -201,13 +212,6 @@ class GamestateMachineMock extends \Bga\GameFramework\GamestateMachine
 
 abstract class Table
 {
-    //added for tests
-    static $test_activePlayerId = 1;
-    static $test_players = [
-           1 => ['player_id' => 1, 'money' => 87 ,'ships' => 12 ,'player_name' => 'Player_1', 'player_score' => 19, 'contracts' => 1, 'compasses' => 0, 'nbActions' => 0, 'passed' => 0, 'actionPlayed' => 0, 'cardsPlayed' => '[]','result_associative_index' => 1, ],
-           2 => ['player_id' => 2, 'money' => 88 ,'ships' => 15 ,'player_name' => 'Player_2', 'player_score' => 27, 'contracts' => 1, 'compasses' => 0, 'nbActions' => 0, 'passed' => 0, 'actionPlayed' => 0, 'cardsPlayed' => '[]','result_associative_index' => 2, ],
-        ];
-
     public function __construct()
     {
     }
@@ -243,8 +247,8 @@ abstract class Table
 
     public function activeNextPlayer(): int|string
     {
-        static::$test_activePlayerId = 2;
-        return static::$test_activePlayerId;
+        TestDatas::$test_activePlayerId = 2;
+        return TestDatas::$test_activePlayerId;
     }
 
     public function getPlayerAfter(int $playerId): int
@@ -259,72 +263,39 @@ abstract class Table
     public static function getUniqueValueFromDb(string $sql): mixed
     {
         logForTests("getUniqueValueFromDb: $sql");
+        if (preg_match("/^SELECT COUNT\(\*\) FROM `tokens` WHERE `subtype` = (?P<subtype>.*) AND \(`token_row` IN \((?P<token_rows>.*)\)\)$/", $sql, $matches) == 1) {
+            $token_rows = explode(',', str_replace("'","",$matches['token_rows']) );
+            $subtype = $matches['subtype'];
+            $count = count(array_filter(TestDatas::$tokens,function ($token) use($subtype, $token_rows ) {return $token['subtype'] == $subtype && in_array($token['token_row'], $token_rows );}));
+            logForTests("getUniqueValueFromDb: count tokens is $count for subtype $subtype and rows ".json_encode($token_rows));
+            return $count;
+        }
+        if (preg_match("/^SELECT COUNT\(\*\) FROM `cards` WHERE `subType` = (?P<subtype>.*) AND `card_location` = '(?P<card_location>.*)'$/", $sql, $matches) == 1) {
+            $subtype = $matches['subtype'];
+            $card_location = $matches['card_location'];
+            $count = count(array_filter(TestDatas::$cards,function ($card) use( $card_location, $subtype ) {return $card['card_location'] == $card_location && $card['subtype'] == $subtype ;}));
+            logForTests("getUniqueValueFromDb: count is $count  ");
+            return $count;
+        }
+        logForTests("getUniqueValueFromDb: /?\ ");
         return null;
     }
 
     public function getCollectionFromDb(string $sql, bool $singleColumn = false): array
     {
         logForTests("getCollectionFromDb: $sql");
+        logForTests(" /?\ __ don't know what to return for this request __ /?\ [$sql] ");
         return [];
     }
     public static function getObjectListFromDB(string $sql, bool $bUniqueValue = false): array
     {
         logForTests("getObjectListFromDB: $sql");
-        $tokens = [
-            1 => ['token_id' => 1, 'token_state' => 0, 'token_location'=>TOKEN_LOCATION_BOARD,'type' => TOKEN_TYPE_FIRSTAUCTION_MARKER, 'subtype' => TOKEN_SUBTTYPE_FIRSTAUCTION_MARKER,'token_row' => 3, 'token_col' => 1,  'player_id' => 1,  'result_associative_index' => 1,  ],
-            2 => ['token_id' => 2, 'token_state' => 0, 'token_location'=>TOKEN_LOCATION_BOARD,'type' => TOKEN_TYPE_AUCTION_MARKER_1, 'subtype' => TOKEN_SUBTTYPE_AUCTION_MARKER,'token_row' => 2, 'token_col' => 1,  'player_id' => 1,  'result_associative_index' => 2,  ],
-            3 => ['token_id' => 3, 'token_state' => 0, 'token_location'=>TOKEN_LOCATION_BOARD,'type' => TOKEN_TYPE_AUCTION_MARKER_2, 'subtype' => TOKEN_SUBTTYPE_AUCTION_MARKER,'token_row' => 2, 'token_col' => 3,  'player_id' => 1,  'result_associative_index' => 3,  ],
-            4 => ['token_id' => 4, 'token_state' => 0, 'token_location'=>TOKEN_LOCATION_BOARD,'type' => TOKEN_TYPE_AUCTION_MARKER_3, 'subtype' => TOKEN_SUBTTYPE_AUCTION_MARKER,'token_row' => 2, 'token_col' => 4,  'player_id' => 1,  'result_associative_index' => 4,  ],
-
-            5 => ['token_id' => 5, 'token_state' => 0, 'token_location'=>TOKEN_LOCATION_AUTOMA_BOARD,'type' => TOKEN_TYPE_AUCTION_MARKER_1, 'subtype' => TOKEN_SUBTTYPE_AUCTION_MARKER,'token_row' => 2, 'token_col' => 4,  'player_id' => AUTOMA_PLAYER_ID,  'result_associative_index' => 5,  ],
-            6 => ['token_id' => 6, 'token_state' => 0, 'token_location'=>TOKEN_LOCATION_BOARD,'type' => TOKEN_TYPE_AUCTION_MARKER_2, 'subtype' => TOKEN_SUBTTYPE_AUCTION_MARKER,'token_row' => 1, 'token_col' => 1,  'player_id' => AUTOMA_PLAYER_ID,  'result_associative_index' => 6,  ],
-            7 => ['token_id' => 7, 'token_state' => 0, 'token_location'=>TOKEN_LOCATION_AUTOMA_BOARD,'type' => TOKEN_TYPE_AUCTION_MARKER_3, 'subtype' => TOKEN_SUBTTYPE_AUCTION_MARKER,'token_row' => 2, 'token_col' => 4,  'player_id' => AUTOMA_PLAYER_ID,  'result_associative_index' => 7,  ],
-
-            11 => ['token_id' => 11, 'token_state' => 0, 'token_location'=>TOKEN_LOCATION_PLAYER_BOARD,'type' => TOKEN_TYPE_PROGRESS_MARKER_SHIPS, 'subtype' => TOKEN_SUBTTYPE_PROGRESS_MARKER,'token_row' => 4, 'token_col' => 1,  'player_id' => 1,  'result_associative_index' => 11,  ],
-            12 => ['token_id' => 12, 'token_state' => 0, 'token_location'=>TOKEN_LOCATION_PLAYER_BOARD,'type' => TOKEN_TYPE_PROGRESS_MARKER_HARVEST, 'subtype' => TOKEN_SUBTTYPE_PROGRESS_MARKER,'token_row' => 2, 'token_col' => 2,  'player_id' => 1,  'result_associative_index' => 12,  ],
-            13 => ['token_id' => 13, 'token_state' => 0, 'token_location'=>TOKEN_LOCATION_PLAYER_BOARD,'type' => TOKEN_TYPE_PROGRESS_MARKER_TAXES, 'subtype' => TOKEN_SUBTTYPE_PROGRESS_MARKER,'token_row' => 1, 'token_col' => 3,  'player_id' => 1,  'result_associative_index' => 13,  ],
-            14 => ['token_id' => 14, 'token_state' => 0, 'token_location'=>TOKEN_LOCATION_PLAYER_BOARD,'type' => TOKEN_TYPE_PROGRESS_MARKER_EXP, 'subtype' => TOKEN_SUBTTYPE_PROGRESS_MARKER,'token_row' => 2, 'token_col' => 4,  'player_id' => 1,  'result_associative_index' => 14,  ],
-            15 => ['token_id' => 15, 'token_state' => 0, 'token_location'=>TOKEN_LOCATION_PLAYER_BOARD,'type' => TOKEN_TYPE_PROGRESS_MARKER_OUTPOST, 'subtype' => TOKEN_SUBTTYPE_PROGRESS_MARKER,'token_row' => 1, 'token_col' => 5,  'player_id' => 1,  'result_associative_index' => 15,  ],
-                
-            16 =>   ['token_id' => 16, 'token_state' => 0, 'token_location'=>TOKEN_LOCATION_PLAYER_BOARD,'type' => TOKEN_TYPE_PROGRESS_MARKER_SHIPS, 'subtype' => TOKEN_SUBTTYPE_PROGRESS_MARKER,'token_row' => 1, 'token_col' => 1,  'player_id' => 2,  'result_associative_index' => 16,  ],
-            17 =>   ['token_id' => 17, 'token_state' => 0, 'token_location'=>TOKEN_LOCATION_PLAYER_BOARD,'type' => TOKEN_TYPE_PROGRESS_MARKER_HARVEST, 'subtype' => TOKEN_SUBTTYPE_PROGRESS_MARKER,'token_row' => 1, 'token_col' => 2,  'player_id' => 2,  'result_associative_index' => 17,  ],
-            18 =>   ['token_id' => 18, 'token_state' => 0, 'token_location'=>TOKEN_LOCATION_PLAYER_BOARD,'type' => TOKEN_TYPE_PROGRESS_MARKER_TAXES, 'subtype' => TOKEN_SUBTTYPE_PROGRESS_MARKER,'token_row' => 1, 'token_col' => 3,  'player_id' => 2,  'result_associative_index' => 18,  ],
-            19 =>   ['token_id' => 19, 'token_state' => 0, 'token_location'=>TOKEN_LOCATION_PLAYER_BOARD,'type' => TOKEN_TYPE_PROGRESS_MARKER_EXP, 'subtype' => TOKEN_SUBTTYPE_PROGRESS_MARKER,'token_row' => 2, 'token_col' => 4,  'player_id' => 2,  'result_associative_index' => 19,  ],
-            20 =>   ['token_id' => 20, 'token_state' => 0, 'token_location'=>TOKEN_LOCATION_PLAYER_BOARD,'type' => TOKEN_TYPE_PROGRESS_MARKER_OUTPOST, 'subtype' => TOKEN_SUBTTYPE_PROGRESS_MARKER,'token_row' => 1, 'token_col' => 5,  'player_id' => 2,  'result_associative_index' => 20,  ],
-
-            21 =>   ['token_id' => 21, 'token_state' => 1, 'token_location'=> TOKEN_LOCATION_TILE.'1' ,'type' => TOKEN_TYPE_SPICE_GREEN, 'subtype' => TOKEN_SUBTTYPE_SPICE,'token_row' => 1, 'token_col' => 1,  'player_id' => 2,  'result_associative_index' => 21,  ],
-            22 =>   ['token_id' => 22, 'token_state' => 2, 'token_location'=> TOKEN_LOCATION_TILE.'2' ,'type' => TOKEN_TYPE_SPICE_GREEN, 'subtype' => TOKEN_SUBTTYPE_SPICE,'token_row' => 1, 'token_col' => 2,  'player_id' => 2,  'result_associative_index' => 22,  ],
-            23 =>   ['token_id' => 23, 'token_state' => 1, 'token_location'=> TOKEN_LOCATION_TILE.'3' ,'type' => TOKEN_TYPE_SPICE_PINK, 'subtype' => TOKEN_SUBTTYPE_SPICE,'token_row' => 1, 'token_col' => 1,  'player_id' => 2,  'result_associative_index' => 23,  ],
-            
-            24 =>   ['token_id' => 24, 'token_state' => 1, 'token_location'=> TOKEN_LOCATION_TILE.'4' ,'type' => TOKEN_TYPE_SPICE_GREEN, 'subtype' => TOKEN_SUBTTYPE_SPICE,'token_row' => 1, 'token_col' => 1,  'player_id' => 1,  'result_associative_index' => 24,  ],
-            25 =>   ['token_id' => 25, 'token_state' => 2, 'token_location'=> TOKEN_LOCATION_TILE.'5' ,'type' => TOKEN_TYPE_SPICE_GREEN, 'subtype' => TOKEN_SUBTTYPE_SPICE,'token_row' => 1, 'token_col' => 1,  'player_id' => 1,  'result_associative_index' => 25,  ],
-            26 =>   ['token_id' => 26, 'token_state' => 1, 'token_location'=> TOKEN_LOCATION_TILE.'6' ,'type' => TOKEN_TYPE_SPICE_PINK, 'subtype' => TOKEN_SUBTTYPE_SPICE,'token_row' => 1, 'token_col' => 1,  'player_id' => 1,  'result_associative_index' =>  26,  ],
-            27 =>   ['token_id' => 27, 'token_state' => 1, 'token_location'=> TOKEN_LOCATION_TILE.'6' ,'type' => TOKEN_TYPE_SPICE_WHITE, 'subtype' => TOKEN_SUBTTYPE_SPICE,'token_row' => 1, 'token_col' => 1,  'player_id' => 1,  'result_associative_index' =>  27,  ],
-            28 =>   ['token_id' => 28, 'token_state' => 1, 'token_location'=> TOKEN_LOCATION_TILE.'6' ,'type' => TOKEN_TYPE_SPICE_WHITE, 'subtype' => TOKEN_SUBTTYPE_SPICE,'token_row' => 1, 'token_col' => 1,  'player_id' => 1,  'result_associative_index' =>  28,  ],
-            29 =>   ['token_id' => 29, 'token_state' => 1, 'token_location'=> TOKEN_LOCATION_TILE.'6' ,'type' => TOKEN_TYPE_SPICE_YELLOW, 'subtype' => TOKEN_SUBTTYPE_SPICE,'token_row' => 1, 'token_col' => 1,  'player_id' => 1,  'result_associative_index' =>  29,  ],
-            30 =>   ['token_id' => 30, 'token_state' => 1, 'token_location'=> TOKEN_LOCATION_TILE.'6' ,'type' => TOKEN_TYPE_SPICE_BLACK, 'subtype' => TOKEN_SUBTTYPE_SPICE,'token_row' => 1, 'token_col' => 1,  'player_id' => 1,  'result_associative_index' =>  30,  ],
-            31 =>   ['token_id' => 31, 'token_state' => 1, 'token_location'=> TOKEN_LOCATION_TILE.'6' ,'type' => TOKEN_TYPE_SPICE_BLACK, 'subtype' => TOKEN_SUBTTYPE_SPICE,'token_row' => 1, 'token_col' => 1,  'player_id' => 1,  'result_associative_index' =>  31,  ],
-            32 =>   ['token_id' => 32, 'token_state' => 1, 'token_location'=> TOKEN_LOCATION_TILE.'6' ,'type' => TOKEN_TYPE_SPICE_WHITE, 'subtype' => TOKEN_SUBTTYPE_SPICE,'token_row' => 1, 'token_col' => 1,  'player_id' => 1,  'result_associative_index' =>  32,  ],
-                
-        ];
-        $cards = [
-           1 => ['result_associative_index' => 1,'card_id' => 1, 'card_location' => CARD_LOCATION_HAND, 'card_state' => 0, 'player_id' => 1, 'type' => 10, 'subtype' => CARD_SUBTTYPE_EXPLORATION,],
-           2 => ['result_associative_index' => 2,'card_id' => 2, 'card_location' => CARD_LOCATION_HAND, 'card_state' => 0, 'player_id' => 2, 'type' => 11, 'subtype' => CARD_SUBTTYPE_EXPLORATION,],
-           3 => ['result_associative_index' => 3,'card_id' => 3, 'card_location' => CARD_LOCATION_HAND, 'card_state' => 0, 'player_id' => 2, 'type' => 11, 'subtype' => CARD_SUBTTYPE_EXPLORATION,],
-
-           100 => ['result_associative_index' => 100,'card_id' => 100, 'card_location' => CARD_LOCATION_AUTOMA_AUCTION_DAY_1_DECK, 'card_state' => 0, 'player_id' => AUTOMA_PLAYER_ID, 'type' => 1, 'subtype' => CARD_SUBTTYPE_AUTOMA_AUCTION,],
-
-           200 => ['result_associative_index' => 200,'card_id' => 200, 'card_location' => CARD_LOCATION_AUTOMA_MONEY_DECK, 'card_state' => 0, 'player_id' => AUTOMA_PLAYER_ID, 'type' => 1, 'subtype' => CARD_SUBTTYPE_MONEY,],
-        ];
-        $tiles = [
-           1 => ['result_associative_index' => 1,'tile_id' => 1, 'tile_location' => TILE_LOCATION_BOARD_OUTPOSTS[COLONY_KOLLAM], 'tile_state' => 0, 'player_id' => null, 'type' => 1, 'subtype' => TILE_SUBTTYPE_OUTPOST, 'tile_start_location' => null , 'tile_row' => 1 , 'tile_col' => 1],
-        ];
+        $tokens = TestDatas::$tokens;
+        $cards = TestDatas::$cards;
+        $tiles = TestDatas::$tiles;
         
-        $effects = [//SELECT effect_id AS `result_associative_index` , `effect_id` , `effect_location` , `effect_state` , `player_id` , `effect_parent_id` , `effect_type` , `effect_qty` , `effect_source_tile` , `effect_source_action` , `effect_result` FROM `effects` WHERE (`effect_id` IN ('1'))
-           1 => ['result_associative_index' => 1,'effect_id' => 1, 'effect_location' => EFFECT_LOCATION_TO_RESOLVE, 'effect_state' => 0, 'player_id' => null, 'effect_parent_id' => null, 'effect_type' => 1, 'effect_qty' => 1, 'effect_source_tile' => null , 'effect_source_action' => null , 'effect_result' => '[]'],
-        ];
+        $effects = TestDatas::$effects;
         
-
         switch($sql){
             case 'SELECT name AS `result_associative_index` , `value` , `name` FROM `my_global_variables`':
                 logForTests("MOCK select globals");
@@ -363,14 +334,15 @@ abstract class Table
             case "SELECT *, token_id AS `result_associative_index` FROM `tokens` WHERE `type` = 5 AND `subtype` = 1 AND `player_id` = 1":
                 return [ $tokens[15] ];
             case "SELECT *, token_id AS `result_associative_index` FROM `tokens` WHERE `subtype` = 1 AND `player_id` = 1":
-                logForTests("MOCK select player 1 progress tokens ");
-                return [
+                $result = [
                     $tokens[11],
                     $tokens[12],
                     $tokens[13],
                     $tokens[14],
                     $tokens[15],
                 ];
+                logForTests("MOCK select player 1 progress tokens ".json_encode($result));
+                return $result;
             case "SELECT *, token_id AS `result_associative_index` FROM `tokens` WHERE `type` = 1 AND `subtype` = 1 AND `player_id` = 2":
                 return [ $tokens[16] ];
             case "SELECT *, token_id AS `result_associative_index` FROM `tokens` WHERE `type` = 2 AND `subtype` = 1 AND `player_id` = 2":
@@ -413,17 +385,17 @@ abstract class Table
             case 'SELECT *, player_id AS `result_associative_index` FROM `player` WHERE  `player_id` = 1 LIMIT 1': 
                 logForTests("MOCK select  player one ");
                 return [
-                    Table::$test_players[1],
+                    TestDatas::$test_players[1],
                     ];
             case "SELECT *, player_id AS `result_associative_index` FROM `player` WHERE  `player_id` = '0' LIMIT 1":
             case 'SELECT *, player_id AS `result_associative_index` FROM `player` WHERE  `player_id` = 2 LIMIT 1': 
                 logForTests("MOCK select  player two ");
                 return [
-                    Table::$test_players[2],
+                    TestDatas::$test_players[2],
                     ];
             case 'SELECT player_score,player_id FROM `player` WHERE `player_id` = 2':
                 return [
-                    Table::$test_players[2],
+                    TestDatas::$test_players[2],
                 ];
             case 'SELECT stats_value,stats_id FROM `stats` WHERE `stats_type` = 11 AND `stats_player_id` = 2':
                 return [
@@ -452,12 +424,12 @@ abstract class Table
             case "SELECT player_score,player_id FROM `player` WHERE `player_id` = 1":
             case "SELECT player_id AS `result_associative_index` , `player_score` FROM `player` WHERE `player_id` = 1":
                 return[
-                    Table::$test_players[1],
+                    TestDatas::$test_players[1],
                 ];
             case "SELECT player_score,player_id FROM `player` WHERE `player_id` = 2":
             case "SELECT player_id AS `result_associative_index` , `player_score` FROM `player` WHERE `player_id` = 2":
                 return[
-                    Table::$test_players[2],
+                    TestDatas::$test_players[2],
                 ];
             case "SELECT tile_id AS `result_associative_index` , `tile_id` , `tile_location` , `tile_state` , `player_id` , `type` , `subtype` , `tile_start_location` , `tile_row` , `tile_col` FROM `tiles` WHERE (`tile_id` IN ('1'))":
                 return [
@@ -467,12 +439,54 @@ abstract class Table
                 return [
                         $effects[1],
                     ];
+            //case "SELECT *, card_id AS `result_associative_index` FROM `cards` WHERE `subType` = 1 AND //`card_location` = 'hand' AND `player_id` = 1":
+            //    $subType = 1;
+            //    $card_location = 'hand';
+            //    $player_id = 1;
+            //    $filtered = array_filter(TestDatas::$cards,function ($card) use ($card_location, $subType,//$player_id   ){return $card['card_location'] == $card_location && $card['subtype'] == //$subType && $card['player_id'] == $player_id ;});
+            //    $ncards = count($filtered);
+            //    logForTests("MOCK direct filtered cards $ncards : ".json_encode($filtered));
+            //    return $filtered;
+        }
+        if (preg_match("/^SELECT .* FROM `cards` WHERE `subType` = (?P<subtype>.*) AND `card_location` = '(?P<card_location>.*)' AND `player_id` = (?P<player_id>.*)$/", $sql, $matches) == 1) {
+            $subType = intval($matches['subtype']);
+            $card_location = $matches['card_location'];
+            $player_id = intval($matches['player_id']);
+            $filtered = array_filter(TestDatas::$cards,function ($card) use ($card_location, $subType,$player_id   ){return $card['card_location'] == $card_location && $card['subtype'] == $subType && $card['player_id'] == $player_id ;});
+            $ncards = count($filtered);
+            logForTests("MOCK select filtered cards $ncards : ".json_encode($filtered));
+            return $filtered;
+        }
+        if (preg_match("/^SELECT .* FROM `cards` WHERE \(`card_location` = '(?P<card_location>.*)'\)$/", $sql, $matches) == 1) {
+            $card_location = $matches['card_location'];
+            $filtered = array_filter(TestDatas::$cards,function ($card) use ($card_location, ){return $card['card_location'] == $card_location ;});
+            return $filtered;
+        }
+        
+        if (preg_match("/^SELECT .* FROM `cards` WHERE \(`card_location` = '(?P<card_location>.*)'\)( ORDER BY card_state (ASC|DESC))?( LIMIT (?P<limit>\d+))?$/", $sql, $matches) == 1) {
+            //TODO SORT card_state
+            $card_location = $matches['card_location'];
+            $limit = array_key_exists('limit',$matches) ? intval($matches['limit']) : null;
+            $filtered = array_filter(TestDatas::$cards,function ($card) use ($card_location,){return  $card['card_location'] == $card_location;});
+            if(isset($limit)) $filtered = array_slice($filtered, 0, $limit, true);
+            return $filtered;
+        }
+        if (preg_match("/^SELECT (.*) FROM `cards` WHERE \(`card_id` IN \((?P<card_ids>.*)\)\)$/", $sql, $matches) == 1) {
+            $filtered = [];
+            $card_ids = explode(',',str_replace("'","",$matches['card_ids']));
+            foreach($card_ids as $cardIdString){
+                $card_id = intval($cardIdString);
+                if(!array_key_exists($card_id,TestDatas::$cards)) continue;
+                $filtered[] = TestDatas::$cards[$card_id];
+            }
+            logForTests("MOCK select cards with ids ".json_encode($card_ids).": ".json_encode($filtered));
+            return $filtered;
         }
         if( str_starts_with( $sql, 'SELECT *, player_id AS `result_associative_index` FROM `player`' )){
             logForTests("MOCK select players");
             return [
-                Table::$test_players[1],
-                Table::$test_players[2],
+                TestDatas::$test_players[1],
+                TestDatas::$test_players[2],
             ];
         }
         if( str_starts_with( $sql,'SELECT *, token_id AS `result_associative_index` FROM `tokens` WHERE `subType` = '.TOKEN_SUBTTYPE_AUCTION_MARKER)){
@@ -489,17 +503,18 @@ abstract class Table
         //        ];
         //}
 
-        logForTests(" /!\ __ don't know what to return for this request __ /!\ ");
+        logForTests(" /?\ __ don't know what to return for this request __ /?\ ");
         return [];
     }
 
     public function getCurrentPlayerId(bool $bReturnNullIfNotLogged = false): string|int
     {
-        return static::$test_activePlayerId; 
+        return TestDatas::$test_activePlayerId; 
     }
     public function getDoubleKeyCollectionFromDB(string $sql, bool $nullIfEmpty = false): array
     {
         logForTests("getDoubleKeyCollectionFromDB: $sql");
+        logForTests(" /?\ __ don't know what to return for this request __ /?\ [$sql] ");
         return [];
     }
     public static function DbAffectedRow(): int
@@ -513,6 +528,46 @@ abstract class Table
     public static function DbQuery(string $sql): null|\mysqli_result|bool
     {
         logForTests("DbQuery: $sql");
+        if (preg_match("/^UPDATE `tokens` SET `token_row` = '(?P<token_row>\d+)' WHERE  `token_id` = (?P<token_id>\d+)$/", $sql, $matches) == 1) {
+            $token_row = intval($matches['token_row']);
+            $token_id = $matches['token_id'];
+            logForTests("DbQuery --- updated row for token $token_id : $token_row");
+            TestDatas::$tokens[$token_id]['token_row'] = ($token_row);
+            return true;
+        }
+        if (preg_match("/^UPDATE `cards` SET `card_location` = '(?P<card_location>.*)',`card_state` = '(?P<card_state>.*)' WHERE \(`card_id` IN \((?P<card_ids>.*)\)\)$/", $sql, $matches) == 1) {
+            $card_location = $matches['card_location'];
+            $card_state = $matches['card_state'];
+            $card_ids = explode(',', str_replace("'","",$matches['card_ids']));
+            foreach($card_ids as $cardIdString){
+                $card_id = intval($cardIdString);
+                if(!array_key_exists($card_id,TestDatas::$cards)) continue;
+                logForTests("DbQuery --- updated card_location, card_state for card $card_id : $card_location, $card_state");
+                TestDatas::$cards[$card_id]['card_location'] = $card_location;
+                TestDatas::$cards[$card_id]['card_state'] = intval($card_state);
+            }
+            return true;
+        }
+        if (preg_match("/^UPDATE `cards` SET `card_location` = '(?P<card_location>.*)',`card_state` = '(?P<card_state>.*)' WHERE \(`card_location` = '(?P<from_location>.*)'\)$/", $sql, $matches) == 1) {
+            $card_location = $matches['card_location'];
+            $from_location = $matches['from_location'];
+            $card_state = $matches['card_state'];
+            foreach(TestDatas::$cards as $card_id => &$card){
+                if($card['card_location'] != $from_location) continue;
+                logForTests("DbQuery --- updated card_location, card_state for card $card_id : $card_location, $card_state");
+                $card['card_location'] = $card_location;
+                $card['card_state'] = intval($card_state);
+            }
+            return true;
+        }
+        if (preg_match("/^UPDATE `cards` SET `player_id` = '(?P<player_id>.*)' WHERE  `card_id` = (?P<card_id>\d+)$/", $sql, $matches) == 1) {
+            $player_id = $matches['player_id'];
+            $card_id = $matches['card_id'];
+            logForTests("DbQuery --- updated player_id for card $card_id : $player_id");
+            TestDatas::$cards[$card_id]['player_id'] = intval($player_id);
+            return true;
+        }
+        logForTests("DbQuery --- nothing done");
         return null;
     }
     public function getNextPlayerTable(): array
@@ -521,7 +576,7 @@ abstract class Table
     }
     public function getActivePlayerId(): string|int
     {
-        return static::$test_activePlayerId; 
+        return TestDatas::$test_activePlayerId; 
     }
 }
  class TableOptions {
@@ -563,10 +618,10 @@ class Bga {
     }
 class Notify {
     public function player(int $playerId, string $notifName, string $message = '', array $args = []): void {
-        logForTests("Notify_player $playerId $notifName : $message, with args ".json_encode($args)."");
+        logForTests("Notify_player $playerId $notifName : $message, with args ".json_encode($args)."","NOTIF");
     }
     public function all(string $notifName, string $message = '', array $args = []): void {
-        logForTests("Notify_ALL $notifName : $message, with args ".json_encode($args)."");
+        logForTests("Notify_ALL $notifName : $message, with args ".json_encode($args)."","NOTIF");
     }
     public function __construct(
         $game,
