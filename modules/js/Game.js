@@ -2189,6 +2189,7 @@ export class Game {
         });
         let voidDiv = document.getElementById('goa_top_zone');
         let animationsCleanTile = tokenDivs.map(tokenDiv => (() => {
+            if(!tokenDiv) return;
             let spice_type = tokenDiv.dataset.spice;
             this._counters[notif.player_id]['spices_'+spice_type ].incValue(-1);
             this.animationManager.slideOutAndDestroy(tokenDiv, voidDiv, {duration: 1000});
