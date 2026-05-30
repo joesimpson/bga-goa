@@ -99,9 +99,9 @@ class PlayerTurn extends GameState
                         //auctioneer may pay N-1 to win the auction
                         $args['bidRebate'] = 1;
                         $minMoneyForAuctioneer = $currentBid - $args['bidRebate'];
+                        $args['minBid'] = $minMoneyForAuctioneer - $currentBid;
+                        $args['maxBid'] = $args['minBid'];
                         if($args['currentMoney'] >= $minMoneyForAuctioneer) {
-                            $args['minBid'] = $minMoneyForAuctioneer - $currentBid;
-                            $args['maxBid'] = $args['minBid'];
                             $canBid = true;
                         }
                     }

@@ -128,8 +128,8 @@ final class PlayerTurnTest extends TestCase
             'token' => $auctionTokenData,
             'bid' => 5,
             'currentMoney' => 3,
-            'minBid' => 1,
-            'maxBid' => 1,
+            'minBid' => -1,
+            'maxBid' => -1,
             'bidRebate' => 1,
             'undo' => [ 'previousSteps' => [], 'previousChoices' => 0, ],
         ];
