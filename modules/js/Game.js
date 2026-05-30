@@ -1345,6 +1345,11 @@ export class Game {
             for (const property in player) {
                 this.gamedatas.players[pid][property] = player[property];
             }
+            if(pid == this.bga.players.getCurrentPlayerId()){
+                if(this.gamedatas._private && this.gamedatas._private.money){
+                    this.gamedatas.players[pid].money = this.gamedatas._private.money;
+                }
+            }
         });
     }
     
@@ -1744,11 +1749,11 @@ export class Game {
 
     async notif_refreshUI(notif){
         this.customDebug("notif_refreshUI",notif);
+        this.gamedatas._private = notif._private;
         this.refreshPlayersDatas(notif.datas['players']);
         ['cards', 'tiles', 'tokens'].forEach((value) => {
             this.gamedatas[value] = notif.datas[value];
         });
-        this.gamedatas._private = notif._private;
 
         this.clearSelection(true);
 

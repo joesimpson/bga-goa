@@ -64,13 +64,19 @@ final class PlayerTurnTest extends TestCase
         Globals::setCurrentBid(1);
         $expectedArgs = [
             'roundStep' => $roundStep,
-            'possibleActions' => [ 'actBid', 'actPassBid'],
+            'possibleActions' => [ 'actPassBid'],
             'token' => $auctionTokenData,
             'bid' => 1,
-            'currentMoney' => 3,
             'minBid' => -1,
-            'maxBid' => -1,
             'bidRebate' => 1,
+            '_private' => [//will appear as merged 
+                TestDatas::$test_activePlayerId => [
+                    'possibleActions' => [ 'actBid', 'actPassBid'],
+                    'currentMoney' => 3,
+                    'maxBid' => -1,
+                ],
+            ],
+            '_merge_private' => true,
             'undo' => [ 'previousSteps' => [], 'previousChoices' => 0, ],
         ];
         self::assertSame($expectedArgs, $state->getArgs() );
@@ -79,13 +85,19 @@ final class PlayerTurnTest extends TestCase
         Globals::setCurrentBid(3);
         $expectedArgs = [
             'roundStep' => $roundStep,
-            'possibleActions' => [ 'actBid', 'actPassBid'],
+            'possibleActions' => [ 'actPassBid'],
             'token' => $auctionTokenData,
             'bid' => 3,
-            'currentMoney' => 3,
             'minBid' => -1,
-            'maxBid' => -1,
             'bidRebate' => 1,
+            '_private' => [//will appear as merged 
+                TestDatas::$test_activePlayerId => [
+                    'possibleActions' => [ 'actBid', 'actPassBid'],
+                    'currentMoney' => 3,
+                    'maxBid' => -1,
+                ],
+            ],
+            '_merge_private' => true,
             'undo' => [ 'previousSteps' => [], 'previousChoices' => 0, ],
         ];
         self::assertSame($expectedArgs, $state->getArgs() );
@@ -94,13 +106,19 @@ final class PlayerTurnTest extends TestCase
         Globals::setCurrentBid(0);
         $expectedArgs = [
             'roundStep' => $roundStep,
-            'possibleActions' => [ 'actBid',],
+            'possibleActions' => [ ],
             'token' => $auctionTokenData,
             'bid' => 0,
-            'currentMoney' => 3,
             'minBid' => 0,
-            'maxBid' => 0,
             'bidRebate' => 0,
+            '_private' => [//will appear as merged 
+                TestDatas::$test_activePlayerId => [
+                    'possibleActions' => [ 'actBid',],
+                    'currentMoney' => 3,
+                    'maxBid' => 0,
+                ],
+            ],
+            '_merge_private' => true,
             'undo' => [ 'previousSteps' => [], 'previousChoices' => 0, ],
         ];
         self::assertSame($expectedArgs, $state->getArgs() );
@@ -109,13 +127,19 @@ final class PlayerTurnTest extends TestCase
         Globals::setCurrentBid(4);
         $expectedArgs = [
             'roundStep' => $roundStep,
-            'possibleActions' => [ 'actBid', 'actPassBid'],
+            'possibleActions' => [  'actPassBid'],
             'token' => $auctionTokenData,
             'bid' => 4,
-            'currentMoney' => 3,
             'minBid' => -1,
-            'maxBid' => -1,
             'bidRebate' => 1,
+            '_private' => [//will appear as merged 
+                TestDatas::$test_activePlayerId => [
+                    'possibleActions' => [ 'actBid', 'actPassBid'],
+                    'currentMoney' => 3,
+                    'maxBid' => -1,
+                ],
+            ],
+            '_merge_private' => true,
             'undo' => [ 'previousSteps' => [], 'previousChoices' => 0, ],
         ];
         self::assertSame($expectedArgs, $state->getArgs() );
@@ -127,10 +151,16 @@ final class PlayerTurnTest extends TestCase
             'possibleActions' => [ 'actPassBid'],
             'token' => $auctionTokenData,
             'bid' => 5,
-            'currentMoney' => 3,
             'minBid' => -1,
-            'maxBid' => -1,
             'bidRebate' => 1,
+            '_private' => [//will appear as merged 
+                TestDatas::$test_activePlayerId => [
+                    'possibleActions' => [ 'actPassBid'],
+                    'currentMoney' => 3,
+                    'maxBid' => -1,
+                ],
+            ],
+            '_merge_private' => true,
             'undo' => [ 'previousSteps' => [], 'previousChoices' => 0, ],
         ];
         self::assertSame($expectedArgs, $state->getArgs() );
@@ -162,13 +192,19 @@ final class PlayerTurnTest extends TestCase
         TestDatas::$test_players[TestDatas::$test_activePlayerId]['money'] = 3;
         $expectedArgs = [
             'roundStep' => $roundStep,
-            'possibleActions' => [ 'actBid', 'actPassBid'],
+            'possibleActions' => [ 'actPassBid'],
             'token' => $auctionTokenData,
             'bid' => 0,
-            'currentMoney' => 3,
             'minBid' => 1,
-            'maxBid' => 3,
             'bidRebate' => 0,
+            '_private' => [//will appear as merged 
+                TestDatas::$test_activePlayerId => [
+                    'possibleActions' => [ 'actBid', 'actPassBid'],
+                    'currentMoney' => 3,
+                    'maxBid' => 3,
+                ],
+            ],
+            '_merge_private' => true,
             'undo' => [ 'previousSteps' => [], 'previousChoices' => 0, ],
         ];
         self::assertSame($expectedArgs, $state->getArgs() );
@@ -178,13 +214,19 @@ final class PlayerTurnTest extends TestCase
         TestDatas::$test_players[TestDatas::$test_activePlayerId]['money'] = 3;
         $expectedArgs = [
             'roundStep' => $roundStep,
-            'possibleActions' => [ 'actBid', 'actPassBid'],
+            'possibleActions' => [ 'actPassBid'],
             'token' => $auctionTokenData,
             'bid' => 2,
-            'currentMoney' => 3,
             'minBid' => 1,
-            'maxBid' => 1,
             'bidRebate' => 0,
+            '_private' => [//will appear as merged 
+                TestDatas::$test_activePlayerId => [
+                    'possibleActions' => [ 'actBid', 'actPassBid'],
+                    'currentMoney' => 3,
+                    'maxBid' => 1,
+                ],
+            ],
+            '_merge_private' => true,
             'undo' => [ 'previousSteps' => [], 'previousChoices' => 0, ],
         ];
         self::assertSame($expectedArgs, $state->getArgs() );
@@ -194,13 +236,19 @@ final class PlayerTurnTest extends TestCase
         TestDatas::$test_players[TestDatas::$test_activePlayerId]['money'] = 4;
         $expectedArgs = [
             'roundStep' => $roundStep,
-            'possibleActions' => [ 'actBid', 'actPassBid'],
+            'possibleActions' => [  'actPassBid'],
             'token' => $auctionTokenData,
             'bid' => 2,
-            'currentMoney' => 4,
             'minBid' => 1,
-            'maxBid' => 2,
             'bidRebate' => 0,
+            '_private' => [//will appear as merged 
+                TestDatas::$test_activePlayerId => [
+                    'possibleActions' => [ 'actBid', 'actPassBid'],
+                    'currentMoney' => 4,
+                    'maxBid' => 2,
+                ],
+            ],
+            '_merge_private' => true,
             'undo' => [ 'previousSteps' => [], 'previousChoices' => 0, ],
         ];
         self::assertSame($expectedArgs, $state->getArgs() );
@@ -210,13 +258,19 @@ final class PlayerTurnTest extends TestCase
         TestDatas::$test_players[TestDatas::$test_activePlayerId]['money'] = 5;
         $expectedArgs = [
             'roundStep' => $roundStep,
-            'possibleActions' => [ 'actBid', 'actPassBid'],
+            'possibleActions' => [  'actPassBid'],
             'token' => $auctionTokenData,
             'bid' => 2,
-            'currentMoney' => 5,
             'minBid' => 1,
-            'maxBid' => 3,
             'bidRebate' => 0,
+            '_private' => [//will appear as merged 
+                TestDatas::$test_activePlayerId => [
+                    'possibleActions' => [ 'actBid', 'actPassBid'],
+                    'currentMoney' => 5,
+                    'maxBid' => 3,
+                ],
+            ],
+            '_merge_private' => true,
             'undo' => [ 'previousSteps' => [], 'previousChoices' => 0, ],
         ];
         self::assertSame($expectedArgs, $state->getArgs() );
@@ -251,10 +305,16 @@ final class PlayerTurnTest extends TestCase
             'possibleActions' => [ 'actPassBid'],
             'token' => $auctionTokenData,
             'bid' => 2,
-            'currentMoney' => 1,
             'minBid' => 1,
-            'maxBid' => 1,
             'bidRebate' => 0,
+            '_private' => [//will appear as merged 
+                TestDatas::$test_activePlayerId => [
+                    'possibleActions' => [  'actPassBid'],
+                    'currentMoney' => 1,
+                    'maxBid' => 1,
+                ],
+            ],
+            '_merge_private' => true,
             'undo' => [ 'previousSteps' => [], 'previousChoices' => 0, ],
         ];
         self::assertSame($expectedArgs, $state->getArgs() );
@@ -267,10 +327,16 @@ final class PlayerTurnTest extends TestCase
             'possibleActions' => [ 'actPassBid'],
             'token' => $auctionTokenData,
             'bid' => 2,
-            'currentMoney' => 0,
             'minBid' => 1,
-            'maxBid' => 1,
             'bidRebate' => 0,
+            '_private' => [//will appear as merged 
+                TestDatas::$test_activePlayerId => [
+                    'possibleActions' => [  'actPassBid'],
+                    'currentMoney' => 0,
+                    'maxBid' => 1,
+                ],
+            ],
+            '_merge_private' => true,
             'undo' => [ 'previousSteps' => [], 'previousChoices' => 0, ],
         ];
         self::assertSame($expectedArgs, $state->getArgs() );
@@ -305,10 +371,16 @@ final class PlayerTurnTest extends TestCase
             'possibleActions' => [ 'actPassBid'],
             'token' => $auctionTokenData,
             'bid' => 3,
-            'currentMoney' => 3,
             'minBid' => 1,
-            'maxBid' => 1,
             'bidRebate' => 0,
+            '_private' => [//will appear as merged 
+                TestDatas::$test_activePlayerId => [
+                    'possibleActions' => [  'actPassBid'],
+                    'currentMoney' => 3,
+                    'maxBid' => 1,
+                ],
+            ],
+            '_merge_private' => true,
             'undo' => [ 'previousSteps' => [], 'previousChoices' => 0, ],
         ];
 
@@ -327,10 +399,15 @@ final class PlayerTurnTest extends TestCase
             'roundStep' => ROUND_STEP_TILE_AUCTIONS,
             'possibleActions' => [],
             'bid' => 3,
-            'currentMoney' => 3,
             'minBid' => 0,
-            'maxBid' => 0,
             'bidRebate' => 0,
+            '_private' => [//will appear as merged 
+                TestDatas::$test_activePlayerId => [
+                    'currentMoney' => 3,
+                    'maxBid' => 0,
+                ],
+            ],
+            '_merge_private' => true,
         ];
 
         //Invalid action actBid
@@ -351,14 +428,19 @@ final class PlayerTurnTest extends TestCase
             'roundStep' => ROUND_STEP_TILE_AUCTIONS,
             'possibleActions' => [],
             'bid' => 3,
-            'currentMoney' => 3,
             'minBid' => 0,
-            'maxBid' => 0,
             'bidRebate' => 0,
+            '_private' => [//will appear as merged 
+                TestDatas::$test_activePlayerId => [
+                    'possibleActions' => [ 'actBid',],
+                    'currentMoney' => 3,
+                    'maxBid' => 0,
+                ],
+            ],
+            '_merge_private' => true,
         ];
         $amount = 0;
 
-        Utils::addPossibleActionInArgs('actBid', $args);
         $newState = $state->actBid( $amount, $activePlayerId, $args, $gameVersion );
         self::assertSame(ConfirmTurn::class, $newState );
     }
@@ -372,12 +454,17 @@ final class PlayerTurnTest extends TestCase
         $gameVersion = 999999;
         $args = [
             'bid' => 3,
-            'currentMoney' => 3,
             'minBid' => 0,
-            'maxBid' => 10,
             'bidRebate' => 0,
+            '_private' => [//will appear as merged 
+                TestDatas::$test_activePlayerId => [
+                    'possibleActions' => [ 'actBid',],
+                    'currentMoney' => 3,
+                    'maxBid' => 10,
+                ],
+            ],
+            '_merge_private' => true,
         ];
-        Utils::addPossibleActionInArgs('actBid', $args);
 
         $amount = -1;
         
@@ -395,12 +482,17 @@ final class PlayerTurnTest extends TestCase
         $gameVersion = 999999;
         $args = [
             'bid' => 3,
-            'currentMoney' => 3,
             'minBid' => 0,
-            'maxBid' => 12,
             'bidRebate' => 0,
+            '_private' => [//will appear as merged 
+                TestDatas::$test_activePlayerId => [
+                    'possibleActions' => [ 'actBid',],
+                    'currentMoney' => 3,
+                    'maxBid' => 12,
+                ],
+            ],
+            '_merge_private' => true,
         ];
-        Utils::addPossibleActionInArgs('actBid', $args);
 
         $amount = 13;
         

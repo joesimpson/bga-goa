@@ -42,6 +42,10 @@ class Player extends \Bga\Games\Goa\Helpers\DB_Model
   public function getUiData($currentPlayerId = null)
   {
     $data = parent::getUiData();
+    if($currentPlayerId != $this->getId()){
+      //HIDE PRIVATE DATAS
+      unset($data['money']);
+    }
 
     $data['exploration_hand_size'] = Cards::countInExplorationHand($this->getId());
 

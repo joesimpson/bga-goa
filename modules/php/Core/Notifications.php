@@ -1157,9 +1157,15 @@ class Notifications
 
     $privateDatas = [];
     foreach ($players as $pid => $player) {
-      $privateDatas[$pid] = new NotificationMessage('', [
+      $messageArgs = [
             'private' => Cards::getPrivateDatas($pid),
-          ]);
+      ];
+      if(isset($gameDatas['players'][$pid]['money'])){
+        $messageArgs['money'] = $gameDatas['players'][$pid]['money'];
+        //TODO JSA in future versions (to avoid sync problems with client) unset this private data
+        //unset($gameDatas['players'][$pid]['money']);
+      }
+      $privateDatas[$pid] = new NotificationMessage('', $messageArgs); 
     }
 
     self::notifyAll('refreshUI', '', [

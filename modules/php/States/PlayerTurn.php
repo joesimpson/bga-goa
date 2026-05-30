@@ -47,6 +47,10 @@ class PlayerTurn extends GameState
 
         $roundStep = Globals::getRoundStep();
         $player = Players::getActive();
+        
+        $privateDatas = [];
+        //Beware that some datas should not be known by opponents
+        $privateDatas[$player->getId()] = [ ];
 
         $args = [
             'roundStep' => $roundStep,
@@ -109,11 +113,17 @@ class PlayerTurn extends GameState
 
 
                 if($canBid){
-                    Utils::addPossibleActionInArgs('actBid', $args);
+                    Utils::addPossibleActionInArgs('actBid', $privateDatas[$player->getId()]);
                 }
                 if($canPass){
                     Utils::addPossibleActionInArgs('actPassBid', $args);
+                    Utils::addPossibleActionInArgs('actPassBid', $privateDatas[$player->getId()]);
                 }
+                $privateDatas[$player->getId()]['currentMoney'] = $args['currentMoney'];
+                $privateDatas[$player->getId()]['maxBid'] = $args['maxBid'];
+                //unset wrongly public datas :
+                unset($args['currentMoney']);
+                unset($args['maxBid']);
                 break;
             case ROUND_STEP_PLAYER_ACTIONS:
                 $actionPlayed = $player->isActionPlayed();
@@ -150,6 +160,8 @@ class PlayerTurn extends GameState
         }
         self::addArgsForCardPlay($player,$args);
         self::addArgsForTilePlay($player,$args);
+        $args['_private'] = $privateDatas;
+        $args['_merge_private'] = true;
         ConfirmTurn::addArgsForUndo($args);
         return $args;
     }    
@@ -161,6 +173,8 @@ class PlayerTurn extends GameState
         $player = Players::get($activePlayerId);
         $actionPlayed = $player->isActionPlayed();
         $possibleActions = $args['possibleActions'];
+        $privateArgs = $args['_private'][$activePlayerId];
+        if(isset($privateArgs['possibleActions'])) $possibleActions = $privateArgs['possibleActions'];
         if($player->isPassed() 
             || 
             count($possibleActions)==1 && in_array('actPassAction',$possibleActions) && $player->getCompasses() == 0
@@ -179,7 +193,7 @@ class PlayerTurn extends GameState
             }
         }
         if(in_array('actBid',$possibleActions) && !in_array('actPassBid',$possibleActions)){
-            if($args['minBid'] == $args['maxBid'] && $args['maxBid'] == 0){
+            if($args['minBid'] == $privateArgs['maxBid'] && $privateArgs['maxBid'] == 0){
                 //AUTO BID MIN BID if we cannot pass (because it is linked to "auto win tile")
                 $this->game->trace(__CLASS__.'.'.__FUNCTION__."() : AUTOMATIC bid 0");
                 return $this->actBid($args['minBid'], $activePlayerId, $args, Utils::gameVersion(),true);
@@ -236,8 +250,9 @@ class PlayerTurn extends GameState
         Utils::checkVersion($v);
         $this->game->trace("actBid($n,$activePlayerId)");
         // check input values
+        $privateArgs = $args['_private'][$activePlayerId];
         $minBid = $args['minBid'];
-        $maxBid = $args['maxBid'];
+        $maxBid = $privateArgs['maxBid'];
         if ( $n < $minBid) {
             throw new UnexpectedException(102,"Invalid bid $n, min is $minBid");
         }
@@ -245,6 +260,7 @@ class PlayerTurn extends GameState
             throw new UnexpectedException(102,"Invalid bid $n, max is $maxBid");
         }
         $possibleActions = $args['possibleActions'];
+        if(isset($privateArgs['possibleActions'])) $possibleActions = $privateArgs['possibleActions'];
         if(!in_array('actBid',$possibleActions)){
             throw new UnexpectedException(110,"Invalid action actBid");
         }
@@ -1140,8 +1156,9 @@ class PlayerTurn extends GameState
                 }
                 break;
             case ROUND_STEP_TILE_AUCTIONS:
+                $privateArgs = $args['_private'][$playerId];
                 if(in_array('actBid',$actions)){
-                    $possibleBids = range($args['minBid'],$args['maxBid']);
+                    $possibleBids = range($args['minBid'],$privateArgs['maxBid']);
                     $zombieChoice = $possibleBids[array_rand($possibleBids)];
                     return $this->actBid($zombieChoice, $playerId, $args, $gameVersion,true);
                 }
