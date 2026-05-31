@@ -158,10 +158,10 @@ class PlayerTurn extends GameState
                 break;
             default : break;
         }
-        self::addArgsForCardPlay($player,$args);
-        self::addArgsForTilePlay($player,$args);
         $args['_private'] = $privateDatas;
         $args['_merge_private'] = true;
+        self::addArgsForCardPlay($player,$args);
+        self::addArgsForTilePlay($player,$args);
         ConfirmTurn::addArgsForUndo($args);
         return $args;
     }    
@@ -389,7 +389,8 @@ class PlayerTurn extends GameState
         $selectedTrack = null;
         $countAsAPlayerAction = true;
         if(isset($card_id)){
-            $possibleCards = $args['possiblePlayCards'];
+            $privateArgs = $args['_private'][$activePlayerId];
+            $possibleCards = $privateArgs['possiblePlayCards'];
             if(!in_array($card_id,$possibleCards->getIds())){
                 throw new UnexpectedException(111,"Invalid card $card_id to progress on ($track) ");
             }
@@ -618,7 +619,8 @@ class PlayerTurn extends GameState
         if(isset($args['playerBaseHarvest'])) $max = $args['playerBaseHarvest'];
         if(isset($args['playersBaseHarvest'])) $max = $args['playersBaseHarvest'][$progressRefPlayerId];
         if(isset($card_id)){
-            $possibleCards = $args['possiblePlayCards'];
+            $privateArgs = $args['_private'][$activePlayerId];
+            $possibleCards = $privateArgs['possiblePlayCards'];
             if(!in_array($card_id,$possibleCards->getIds())){
                 throw new UnexpectedException(111,"Invalid card $card_id to play");
             }
@@ -814,7 +816,8 @@ class PlayerTurn extends GameState
         $nbCardsToDraw = 2;
         $outpostsToFound =  $args['outpostsToFound'];
         if(isset($card_id)){
-            $possibleCards = $args['possiblePlayCards'];
+            $privateArgs = $args['_private'][$player->getId()];
+            $possibleCards = $privateArgs['possiblePlayCards'];
             if(!in_array($card_id,$possibleCards->getIds())){
                 throw new UnexpectedException(111,"Invalid card $card_id to play now ");
             }
@@ -890,7 +893,8 @@ class PlayerTurn extends GameState
         if(!in_array('actDiscard',$possibleActions) && !in_array('actAnytimeDiscard',$possibleActions)){
             throw new UnexpectedException(110,"Invalid action actDiscard, see ".json_encode($possibleActions));
         }
-        $possibleDiscards = $args['possibleDiscards'];
+        $privateArgs = $args['_private'][$activePlayerId];
+        $possibleDiscards = $privateArgs['possibleDiscards'];
         if(!in_array($card_id,$possibleDiscards)){
             throw new UnexpectedException(130,"Invalid card $card_id, see ".json_encode($possibleDiscards));
         }
@@ -925,7 +929,8 @@ class PlayerTurn extends GameState
         if(!in_array('actPlayCard',$possibleActions)){
             throw new UnexpectedException(110,"Invalid action actPlayCard, see ".json_encode($possibleActions));
         }
-        $possibleCards = $args['possiblePlayCards'];
+        $privateArgs = $args['_private'][$activePlayerId];
+        $possibleCards = $privateArgs['possiblePlayCards'];
         $possibleCardsIds = $possibleCards->getIds();
         if(!in_array($card_id,$possibleCardsIds)){
             throw new UnexpectedException(130,"Invalid card $card_id, see ".json_encode($possibleCardsIds));
@@ -1043,7 +1048,8 @@ class PlayerTurn extends GameState
         $forCoins = false;
         $forScore = 0;
         if(isset($card_id)){
-            $possibleCards = $args['possiblePlayCards'];
+            $privateArgs = $args['_private'][$activePlayerId];
+            $possibleCards = $privateArgs['possiblePlayCards'];
             if(!in_array($card_id,$possibleCards->getIds())){
                 throw new UnexpectedException(111,"Invalid card $card_id to play");
             }
@@ -1257,9 +1263,9 @@ class PlayerTurn extends GameState
         switch($roundStep){
             case ROUND_STEP_PLAYER_ACTIONS:
                 $discardableCards = Cards::getPossibleToDiscard($player);
-                $args['possibleDiscards'] = $discardableCards->getIds();
+                $args['_private'][$player->getId()]['possibleDiscards'] = $discardableCards->getIds();
                 $playableCards = Cards::getPossibleToPlay($player, $args,$actionsWhiteList);
-                $args['possiblePlayCards'] = $playableCards;
+                $args['_private'][$player->getId()]['possiblePlayCards'] = $playableCards;
                 if( $discardableCards->count()>0){
                     if($withDiscard){
                         Utils::addPossibleActionInArgs('actDiscard', $args);

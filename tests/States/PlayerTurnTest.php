@@ -1125,7 +1125,12 @@ final class PlayerTurnTest extends TestCase
         $cardId = 2;
         $args = [
             'possibleActions' => ['actPlayCard'],
-            'possibleDiscards' => [$cardId],
+            '_private' => [//will appear as merged 
+                TestDatas::$test_activePlayerId => [
+                    'possibleDiscards' => [$cardId],
+                ],
+            ],
+            '_merge_private' => true,
         ];
 
         $this->expectException(UnexpectedException::class);
@@ -1144,7 +1149,12 @@ final class PlayerTurnTest extends TestCase
         $cardId = 999;
         $args = [
             'possibleActions' => ['actDiscard'],
-            'possibleDiscards' => [1,2,3],
+            '_private' => [//will appear as merged 
+                TestDatas::$test_activePlayerId => [
+                    'possibleDiscards' => [1,2,3],
+                ],
+            ],
+            '_merge_private' => true,
         ];
 
         $this->expectException(UnexpectedException::class);
@@ -1164,14 +1174,24 @@ final class PlayerTurnTest extends TestCase
         
         $args = [
             'possibleActions' => ['actDiscard'],
-            'possibleDiscards' => $cardIds,
+            '_private' => [//will appear as merged 
+                TestDatas::$test_activePlayerId => [
+                    'possibleDiscards' => $cardIds,
+                ],
+            ],
+            '_merge_private' => true,
         ];
         $newState = $state->actDiscard($cardIds, $gameVersion, $activePlayerId, $args, );
         self::assertSame(PlayerTurn::class, $newState );
         
         $args = [
             'possibleActions' => ['actAnytimeDiscard'],
-            'possibleDiscards' => $cardIds,
+            '_private' => [//will appear as merged 
+                TestDatas::$test_activePlayerId => [
+                    'possibleDiscards' => $cardIds,
+                ],
+            ],
+            '_merge_private' => true,
         ];
         $newState = $state->actDiscard($cardIds, $gameVersion, $activePlayerId, $args, );
         self::assertSame(PlayerTurn::class, $newState );

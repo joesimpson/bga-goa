@@ -49,6 +49,10 @@ class PlayerChoice extends GameState
             'tiles' => [],
         ];
         $player = Players::getActive();
+        
+        $privateDatas = [];
+        //Beware that some datas should not be known by opponents
+        $privateDatas[$player->getId()] = [ ];
 
         //Use a whitelist of possible card actions, because we don't want complex actions to interfere with multiple steps
         $actionsWhiteList = [];
@@ -109,6 +113,8 @@ class PlayerChoice extends GameState
             $args['effects'] = $effects->uiAssoc();
             Utils::addPossibleActionInArgs('actResolveEffect', $args);
         }
+        $args['_private'] = $privateDatas;
+        $args['_merge_private'] = true;
         //Allow to play any card/tile during any effect, it may add new effects to the list
         PlayerTurn::addArgsForCardPlay($player,$args, null,$lookForDiscardCards);
         PlayerTurn::addArgsForTilePlay($player,$args);
@@ -557,7 +563,8 @@ class PlayerChoice extends GameState
             }
             
             if(in_array('actDiscard',$actions)){
-                $possibleDiscards = $args['possibleDiscards'];
+                $privateArgs = $args['_private'][$playerId];
+                $possibleDiscards = $privateArgs['possibleDiscards'];
                 $card_id = $this->getRandomZombieChoice($possibleDiscards);
                 return $this->actDiscard([$card_id],$playerId, $args, $gameVersion);
             }
