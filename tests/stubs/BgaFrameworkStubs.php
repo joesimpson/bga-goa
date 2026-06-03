@@ -575,6 +575,34 @@ abstract class Table
             TestDatas::$cards[$card_id]['player_id'] = intval($player_id);
             return true;
         }
+        if (preg_match("/^UPDATE `player` SET `contracts` = '+(?P<contracts>.*)'+ WHERE (\s*)`player_id` = (?P<pid>[\d|\-]+)$/", $sql, $matches) == 1) {
+            $contracts = intval($matches['contracts']);
+            $pid = $matches['pid'];
+            logForTests("DbQuery --- set contracts for player $pid ... $contracts");
+            TestDatas::$test_players[$pid]['contracts'] = ($contracts);
+            return true;
+        }
+        if (preg_match("/^UPDATE `player` SET `ships` = '+(?P<ships>.*)'+ WHERE (\s*)`player_id` = (?P<pid>[\d|\-]+)$/", $sql, $matches) == 1) {
+            $ships = intval($matches['ships']);
+            $pid = $matches['pid'];
+            logForTests("DbQuery --- set ships for player $pid ... $ships");
+            TestDatas::$test_players[$pid]['ships'] = ($ships);
+            return true;
+        }
+        if (preg_match("/^UPDATE `player` SET `player_score` = '+(?P<player_score>.*)'+ WHERE (\s*)`player_id` = (?P<pid>[\d|\-]+)$/", $sql, $matches) == 1) {
+            $player_score = intval($matches['player_score']);
+            $pid = $matches['pid'];
+            logForTests("DbQuery --- set player_score for player $pid ... $player_score");
+            TestDatas::$test_players[$pid]['player_score'] = ($player_score);
+            return true;
+        }
+        if (preg_match("/^UPDATE `player` SET `player_score` = `player_score` \+ (?P<player_score>.*) WHERE (\s*)`player_id` = (?P<pid>[\d|\-]+)$/", $sql, $matches) == 1) {
+            $player_score = $matches['player_score'];
+            $pid = $matches['pid'];
+            logForTests("DbQuery --- INC player_score for player $pid ... '$player_score'");
+            TestDatas::$test_players[$pid]['player_score'] += intval($player_score);
+            return true;
+        }
         logForTests("DbQuery --- nothing done");
         return null;
     }

@@ -1197,6 +1197,36 @@ final class PlayerTurnTest extends TestCase
         self::assertSame(PlayerTurn::class, $newState );
     }
 
+    // --------------------------------------------------------------------- 
+    public function testPlayerTurn_ActionHarvest_CardC_WithNoEmptyDepot(): void
+    {
+        logTestRun(__CLASS__.".".__FUNCTION__);
+        $game = $this->createGameMock();
+        $state = new PlayerTurn($game);
+        $gameVersion = 999999;
+        $cardid = 1;
+        TestDatas::$cards[ $cardid]['type'] = 13;
+        $ships = 1;
+        $contracts = 1;
+        $args = $state->getArgs();
+
+        $newState = $state->actHarvest(
+            [], 
+            [], 
+            $cardid, 
+            null, 
+            $ships, 
+            $contracts, 
+            TestDatas::$test_activePlayerId, 
+            $args,
+            $gameVersion
+        );
+
+        self::assertSame(PlayerTurn::class, $newState );
+        self::assertSame(2, TestDatas::$test_players[TestDatas::$test_activePlayerId]['contracts'] );//+1
+        self::assertSame(13, TestDatas::$test_players[TestDatas::$test_activePlayerId]['ships'] );//+1
+    }
+    // --------------------------------------------------------------------- 
     public function testPlayerTurn_ActionFound_Pass(): void
     {
         logTestRun(__CLASS__.".".__FUNCTION__);
@@ -1245,6 +1275,7 @@ final class PlayerTurnTest extends TestCase
         );
         self::assertSame(PlayerChoice::class, $newState );
     }
+    // --------------------------------------------------------------------- 
     public function testPlayerTurn_Zombie_Random(): void
     {
         logTestRun(__CLASS__.".".__FUNCTION__);

@@ -195,7 +195,10 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
           if($actionPlayed) $possiblePlay = false;
           else if(isset($args['harvestSpots'])){
             $possiblePlay = (count($args['harvestSpots']) > 0);
+             // FIX : WE ALWAYS may want to pick ships/contracts
+            $possiblePlay = true;
             if($possiblePlay){
+              Utils::addPossibleActionInArgs('actHarvest', $args);
               $playerBaseHarvest = Players::getHarvestBaseGain($player);
               $playDatas['harvest'] = [
                 'countAction' => true,
