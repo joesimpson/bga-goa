@@ -453,6 +453,16 @@ class Players extends \Bga\Games\Goa\Helpers\DB_Manager
     if($nb > 0) Stats::inc( "totalCompasses", $player->getId(), $nb);
     Notifications::getCompass($player,$nb);
   }
+  
+  public static function getMoney(int $playerId) : int
+  {
+    return self::DB()
+        ->select(['money'])
+        ->wherePlayer($playerId)
+        ->get()
+        ->map(function($p) { return $p->getMoney();})
+        ->first() ?? 0;
+  }
 
   /**
    * */

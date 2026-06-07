@@ -7,6 +7,7 @@ use Bga\Games\Goa\Game;
 use Bga\Games\Goa\Helpers\Collection;
 use Bga\Games\Goa\Helpers\Utils;
 use Bga\Games\Goa\Managers\Cards;
+use Bga\Games\Goa\Managers\Players;
 use Bga\Games\Goa\Models\AuctionMarker;
 use Bga\Games\Goa\Models\AutomaActionCard;
 use Bga\Games\Goa\Models\AutomaAuctionCard;
@@ -1160,10 +1161,9 @@ class Notifications
       $messageArgs = [
             'private' => Cards::getPrivateDatas($pid),
       ];
+      $messageArgs['money'] = Players::getMoney($pid);
       if(isset($gameDatas['players'][$pid]['money'])){
-        $messageArgs['money'] = $gameDatas['players'][$pid]['money'];
-        //TODO JSA in future versions (to avoid sync problems with client) unset this private data
-        //unset($gameDatas['players'][$pid]['money']);
+        unset($gameDatas['players'][$pid]['money']);
       }
       $privateDatas[$pid] = new NotificationMessage('', $messageArgs); 
     }
