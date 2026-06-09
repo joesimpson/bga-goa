@@ -59,9 +59,12 @@ final class NextPlayerTest extends TestCase
     {
         logTestRun(__CLASS__.".".__FUNCTION__);
         $roundStep = ROUND_STEP_TILE_AUCTIONS;
+        unset(TestDatas::$test_players[2]);
         $game = $this->createGameMock();
         Globals::setRoundStep($roundStep);
         Globals::setAutomaColor("123");
+        Globals::setAutomaActive(false);
+        Globals::setBidTurns(2);
 
         $activePlayerId = 2;
         $state = new NextPlayer($game);

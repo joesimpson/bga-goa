@@ -10,6 +10,7 @@ class TestDatas {
     static array $test_players = [
     ];
     public static function resetPlayers(){
+        TestDatas::$test_activePlayerId = 1;
         TestDatas::$test_players = [
            1 => ['player_id' => 1, 'money' => 87 ,'ships' => 12 ,'player_name' => 'Player_1', 'player_score' => 19, 'contracts' => 1, 'compasses' => 0, 'nbActions' => 0, 'passed' => 0, 'actionPlayed' => 0, 'cardsPlayed' => '[]','result_associative_index' => 1, ],
            2 => ['player_id' => 2, 'money' => 88 ,'ships' => 15 ,'player_name' => 'Player_2', 'player_score' => 27, 'contracts' => 1, 'compasses' => 0, 'nbActions' => 0, 'passed' => 0, 'actionPlayed' => 0, 'cardsPlayed' => '[]','result_associative_index' => 2, ],

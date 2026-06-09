@@ -55,6 +55,7 @@ class GameMock extends Game {
         TestDatas::resetEffects();
         TestDatas::resetStats();
         TestDatas::resetLogs();
+        Globals::setupNewGame(TestDatas::$test_players,[]);
         
     }
 
@@ -490,6 +491,9 @@ abstract class Table
             logForTests("MOCK select cards with ids ".json_encode($card_ids).": ".json_encode($filtered));
             return $filtered;
         }
+        if (preg_match("/^SELECT .* FROM `log`(.*)$/", $sql, $matches) == 1) {
+            return [];
+        }
         if( str_starts_with( $sql, 'SELECT *, player_id AS `result_associative_index` FROM `player`' )){
             logForTests("MOCK select players");
             return [
@@ -602,6 +606,14 @@ abstract class Table
             logForTests("DbQuery --- INC player_score for player $pid ... '$player_score'");
             TestDatas::$test_players[$pid]['player_score'] += intval($player_score);
             return true;
+        }
+        if( str_starts_with( $sql, 'UPDATE `my_global_variables`' ) || str_starts_with( $sql, 'REPLACE INTO `my_global_variables`' )){
+            //Nothing needed for globals because they also are in saved memory
+            return null;
+        }
+        if( str_starts_with( $sql, 'INSERT INTO `log`' )){
+            //Nothing needed until we want to test the log module
+            return null;
         }
         logForTests("DbQuery --- nothing done");
         return null;

@@ -9,6 +9,7 @@ use Bga\GameFramework\Table;
 use Bga\GameFramework\UserException;
 use Bga\Games\Goa\Core\Globals;
 use Bga\Games\Goa\Exceptions\UnexpectedException;
+use Bga\Games\Goa\Helpers\Collection;
 use Bga\Games\Goa\Helpers\Log;
 use Bga\Games\Goa\Helpers\Utils;
 use Bga\Games\Goa\Managers\Cards;
@@ -18,6 +19,10 @@ use Bga\Games\Goa\States\PlayerChoice;
 use Bga\Games\Goa\States\PlayerTurn;
 use PHPUnit\Framework\TestCase;
 use Tests\Utils\TestDatas;
+
+use function PHPUnit\Framework\assertFalse;
+use function PHPUnit\Framework\assertSame;
+use function PHPUnit\Framework\assertTrue;
 
 final class PlayerTurnTest extends TestCase
 {
@@ -386,6 +391,214 @@ final class PlayerTurnTest extends TestCase
 
         self::assertSame($expectedArgs, $state->getArgs() );
     }
+    
+    public function testPlayerTurn_getArgs_StepPlayerActions(): void
+    {
+        logTestRun(__CLASS__.".".__FUNCTION__);
+        $game = $this->createGameMock();
+        $roundStep = ROUND_STEP_PLAYER_ACTIONS;
+        Globals::setRoundStep($roundStep);
+        $state = new PlayerTurn($game);
+        $expectedPlayCards = new Collection([
+                        //1 => [
+                        //    'action' => 'f',
+                        //    'id'=>1,
+                        //    'possiblePlay' => false,
+                        //    'play_datas' => [],
+                        //],
+                    ]);
+        $expectedArgs = [
+            'roundStep' => $roundStep,
+            'possibleActions' => [ 
+                'actProgress', 'actBuildShips','actTaxes','actFoundOutpost','actExploration',
+                'actAnytimeDiscard',
+            ],
+            'actionPlayed' => false,
+            'nbActions' => 0,
+            'minActions' => 3,
+            'progressTracks' => [
+                [
+                    'track' => 1,
+                    'row' => 4,
+                    'withSpices' => true,
+                    'withShips' => true,
+                    'withCoins' => false,
+                    'costShips' => 4,
+                    'costSpices' =>  [
+                        1 =>  [
+                            'n' => 2,
+                            'from' =>  [ 27,28,32,],
+                        ],
+                        2 =>  [
+                            'n' => 1,
+                            'from' =>  [ 29, ],
+                        ],
+                        3 =>  [
+                            'n' => 1,
+                            'from' =>  [ 30, 31, ],
+                        ],
+                    ],
+                    'spicesSets' =>  [],
+                ],
+                [
+                    'track' => 2,
+                    'row' => 2,
+                    'withSpices' => true,
+                    'withShips' => true,
+                    'withCoins' => false,
+                    'costShips' => 2,
+                    'costSpices' =>  [
+                        2 =>  [
+                            'n' => 1,
+                            'from' =>  [ 29, ],
+                        ],
+                        3 =>  [
+                            'n' => 1,
+                            'from' =>  [ 30, 31, ],
+                        ],
+                    ],
+                    'spicesSets' =>  [],
+                ],
+                [
+                    'track' => 3,
+                    'row' => 1,
+                    'withSpices' => true,
+                    'withShips' => true,
+                    'withCoins' => false,
+                    'costShips' => 1,
+                    'costSpices' =>  [
+                        3 =>  [
+                            'n' => 1,
+                            'from' =>  [ 30, 31, ],
+                        ],
+                    ],
+                    'spicesSets' =>  [],
+                ],
+                [
+                    'track' => 4,
+                    'row' => 2,
+                    'withSpices' => true,
+                    'withShips' => true,
+                    'withCoins' => false,
+                    'costShips' => 2,
+                    'costSpices' =>  [
+                        4 =>  [
+                            'n' => 1,
+                            'from' =>  [ 26, ],
+                        ],
+                        5 =>  [
+                            'n' => 1,
+                            'from' =>  [ 24, 25, ],
+                        ],
+                    ],
+                    'spicesSets' =>  [],
+                ],
+                [
+                    'track' => 5,
+                    'row' => 1,
+                    'withSpices' => true,
+                    'withShips' => true,
+                    'withCoins' => false,
+                    'costShips' => 1,
+                    'costSpices' =>  [
+                        5 =>  [
+                            'n' => 1,
+                            'from' =>  [ 24, 25, ],
+                        ],
+                    ],
+                    'spicesSets' =>  [],
+                ],
+            ],
+            'harvestSpots' => [],
+            'playerBaseContracts' => 0,
+            'outpostsToFound' => [],
+            'nbCardsExploration' => 1,
+            '_private' => [
+                TestDatas::$test_activePlayerId => [ 
+                    'possibleDiscards' => [1],
+                    'possiblePlayCards' => $expectedPlayCards,
+                ],
+            ],
+            '_merge_private' => true,
+            'possiblePlayTiles' => new Collection([]),
+            'undo' => [ 'previousSteps' => [], 'previousChoices' => 0, ],
+        ];
+
+        $actualArgs = $state->getArgs();
+
+        //Cannot assertSame on 2 Collection objects -> manual compare
+        assertSame($expectedArgs['_private'][1]['possiblePlayCards']->toArray(), $actualArgs['_private'][1]['possiblePlayCards']->toArray() );
+        assertSame($expectedArgs['possiblePlayTiles']->toArray(), $actualArgs['possiblePlayTiles']->toArray() );
+        unset($actualArgs['possiblePlayTiles']);
+        unset($expectedArgs['possiblePlayTiles']);
+        unset($actualArgs['_private'][1]['possiblePlayCards']);
+        unset($expectedArgs['_private'][1]['possiblePlayCards']);
+        assertSame($expectedArgs, $actualArgs );
+    }
+    
+    public function testPlayerTurn_getArgs_StepPlayerActions_MayPassWithCompass(): void
+    {
+        logTestRun(__CLASS__.".".__FUNCTION__);
+        $game = $this->createGameMock();
+        $roundStep = ROUND_STEP_PLAYER_ACTIONS;
+        Globals::setRoundStep($roundStep);
+        $state = new PlayerTurn($game);
+        TestDatas::$test_players[1]['compasses'] = 1;
+        TestDatas::$test_players[1]['nbActions'] = 3;
+
+        $actualArgs = $state->getArgs();
+
+        assertTrue(in_array('actPassAction',$actualArgs['possibleActions'] ) );
+    }
+    
+    /**
+     * Linked to bug report https://boardgamearena.com/bug?id=224756 "It shouldn't be possible to play an exploration card without taking an action"
+     */
+    public function testPlayerTurn_getArgs_StepPlayerActions_MayNOTPassWithCompassAndPlayedCard(): void
+    {
+        logTestRun(__CLASS__.".".__FUNCTION__);
+        $game = $this->createGameMock();
+        $roundStep = ROUND_STEP_PLAYER_ACTIONS;
+        Globals::setRoundStep($roundStep);
+        $state = new PlayerTurn($game);
+        TestDatas::$test_players[1]['compasses'] = 1;
+        TestDatas::$test_players[1]['nbActions'] = 3;
+        TestDatas::$test_players[1]['cardsPlayed'] = '[11]';
+
+        $actualArgs = $state->getArgs();
+
+        assertFalse(in_array('actPassAction',$actualArgs['possibleActions'] ) );
+    }
+    
+    public function testPlayerTurn_getArgs_StepPlayerActions_MayNOTPassBeforeLastAction(): void
+    {
+        logTestRun(__CLASS__.".".__FUNCTION__);
+        $game = $this->createGameMock();
+        $roundStep = ROUND_STEP_PLAYER_ACTIONS;
+        Globals::setRoundStep($roundStep);
+        $state = new PlayerTurn($game);
+        TestDatas::$test_players[1]['compasses'] = 0;
+        TestDatas::$test_players[1]['nbActions'] = 2;
+
+        $actualArgs = $state->getArgs();
+
+        assertFalse(in_array('actPassAction',$actualArgs['possibleActions'] ) );
+    }
+    
+    public function testPlayerTurn_getArgs_StepPlayerActions_MayNOTPassTooManyCompasses(): void
+    {
+        logTestRun(__CLASS__.".".__FUNCTION__);
+        $game = $this->createGameMock();
+        $roundStep = ROUND_STEP_PLAYER_ACTIONS;
+        Globals::setRoundStep($roundStep);
+        $state = new PlayerTurn($game);
+        TestDatas::$test_players[1]['compasses'] = 4;
+        TestDatas::$test_players[1]['nbActions'] = 3;
+
+        $actualArgs = $state->getArgs();
+
+        assertFalse(in_array('actPassAction',$actualArgs['possibleActions'] ) );
+    }
     // ---------------------------------------------------------------------------------------------
     
     public function testPlayerTurn_actBid_0_KO_whenNotPossible(): void
@@ -501,6 +714,7 @@ final class PlayerTurnTest extends TestCase
         $newState = $state->actBid( $amount, $activePlayerId, $args, $gameVersion );
     }
 
+    // ---------------------------------------------------------------------------------------------
     public function testPlayerTurn_actPassBid(): void
     {
         logTestRun(__CLASS__.".".__FUNCTION__);
@@ -511,6 +725,34 @@ final class PlayerTurnTest extends TestCase
 
         $newState = $state->actPassBid( $gameVersion, $activePlayerId,);
         self::assertSame(ConfirmTurn::class, $newState );
+    }
+    // ---------------------------------------------------------------------------------------------
+    public function testPlayerTurn_actPassAction_OK(): void
+    {
+        logTestRun(__CLASS__.".".__FUNCTION__);
+        $game = $this->createGameMock();
+        $state = new PlayerTurn($game);
+        $activePlayerId = 1;
+        $gameVersion = 999999;
+        $args = $state->getArgs();
+        $args['possibleActions'][] = 'actPassAction';
+
+        $newState = $state->actPassAction( $gameVersion, $activePlayerId, $args);
+
+        self::assertSame(ConfirmTurn::class, $newState );
+    }
+    public function testPlayerTurn_actPassAction_KO_InvalidAction(): void
+    {
+        logTestRun(__CLASS__.".".__FUNCTION__);
+        $game = $this->createGameMock();
+        $state = new PlayerTurn($game);
+        $activePlayerId = 1;
+        $gameVersion = 999999;
+        $args = $state->getArgs();
+
+        $this->expectException(UnexpectedException::class);
+        $this->expectExceptionMessage('Invalid action actPassAction');
+        $newState = $state->actPassAction( $gameVersion, $activePlayerId, $args);
     }
 
     // ---------------------------------------------------------------------------------------------
