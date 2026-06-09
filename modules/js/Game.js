@@ -3218,7 +3218,9 @@ export class Game {
                             + '<li>' + action_gains_desc + '</li>' 
                             ;
                 if(!this.gamedatas.planned_expansion) action_desc += '<li>' + this.bga.gameui.format_string( _("Draw ${n} Exploration Cards and add together the Contracts shown in the bottom-left corner of those cards."),{ n: 2 } ) + '</li>'
-                action_desc += '<li>' + this.bga.gameui.format_string( _("You may add any number of contracts from your hand."),{  } ) + '</li>'
+                action_desc += '<li>' 
+                                + this.bga.gameui.format_string( _("You may add any number of contracts from your hand."),{  } ) 
+                                + this.bga.gameui.format_string( _("You cannot play Exploration Cards from your hand to gain the bottom-left corner contracts."),{  } ) + '</li>'
                             + '<li>' + this.bga.gameui.format_string( _("If you successfully meet the requirement of the chosen outpost, take it and place it on your board, filling the Goods fields on it; If you cannot (or choose not to) provide enough Contracts, the attempt fails : Take ${n} ${icon_contracts}"),{ 'n':1, 'icon_contracts': this.formatIcon('contracts',_('Contracts')) } ) + '</li>'
                         + '</ul>'
                         ;
@@ -3591,6 +3593,9 @@ export class Game {
                 _('When revealing and discarding this card to establish an outpost, this gives ${n} ${resource_name} : ${icon_resource}'),
                 {'n': cardMaterial.contracts , resource_name: _('Contracts'), icon_resource: iconsContracts}
             );
+            textLine1 += '<br/><b><i>';
+            textLine1 += this.bga.gameui.format_string( _("You cannot play Exploration Cards from your hand to gain the bottom-left corner contracts."),{  } );
+            textLine1 += '</b></i>';
             title = _('Exploration card');
             textSymbols = this.bga.gameui.format_string( 
                 _('Gives the Island Symbol ${s_icon} (${s_name})'),
