@@ -392,6 +392,33 @@ final class PlayerTurnTest extends TestCase
         self::assertSame($expectedArgs, $state->getArgs() );
     }
     
+    public function testPlayerTurn_getArgs_tileAuctions_MayPassBid(): void
+    {
+        logTestRun(__CLASS__.".".__FUNCTION__);
+        $game = $this->createGameMock();
+        $roundStep = ROUND_STEP_TILE_AUCTIONS;
+        Globals::setRoundStep($roundStep);
+        $state = new PlayerTurn($game);
+
+        $actualArgs = $state->getArgs();
+
+        assertTrue(in_array('actPassBid',$actualArgs['possibleActions'] ) );
+    }
+    
+    
+    public function testPlayerTurn_getArgs_StepPlayerActions_MayNotPassBid(): void
+    {
+        logTestRun(__CLASS__.".".__FUNCTION__);
+        $game = $this->createGameMock();
+        $roundStep = ROUND_STEP_PLAYER_ACTIONS;
+        Globals::setRoundStep($roundStep);
+        $state = new PlayerTurn($game);
+
+        $actualArgs = $state->getArgs();
+
+        assertFalse(in_array('actPassBid',$actualArgs['possibleActions'] ) );
+    }
+
     public function testPlayerTurn_getArgs_StepPlayerActions(): void
     {
         logTestRun(__CLASS__.".".__FUNCTION__);
@@ -722,8 +749,11 @@ final class PlayerTurnTest extends TestCase
         $state = new PlayerTurn($game);
         $activePlayerId = 1;
         $gameVersion = 999999;
+        $roundStep = ROUND_STEP_TILE_AUCTIONS;
+        Globals::setRoundStep($roundStep);
+        $args = $state->getArgs();
 
-        $newState = $state->actPassBid( $gameVersion, $activePlayerId,);
+        $newState = $state->actPassBid( $gameVersion, $activePlayerId, $args);
         self::assertSame(ConfirmTurn::class, $newState );
     }
     // ---------------------------------------------------------------------------------------------

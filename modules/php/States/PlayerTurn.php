@@ -286,11 +286,15 @@ class PlayerTurn extends GameState
      * Player action : pass the bid
      */
     #[PossibleAction]
-    public function actPassBid(int $v,int $activePlayerId)
+    public function actPassBid(int $v,int $activePlayerId, array $args)
     {
         Utils::checkVersion($v);
         $this->game->trace("actPassBid($activePlayerId)");
         Log::addStep();
+        $possibleActions = $args['possibleActions'];
+        if(!in_array('actPassBid',$possibleActions)){
+            throw new UnexpectedException(110,"Invalid action actPassBid, see ".json_encode($possibleActions));
+        }
         $player = Players::get($activePlayerId);
         $player->setPassed(true);
         $auctionToken = Tokens::getCurrentAuctionToken();
@@ -1172,7 +1176,7 @@ class PlayerTurn extends GameState
                     return $this->actBid($zombieChoice, $playerId, $args, $gameVersion,true);
                 }
                 else {
-                    return $this->actPassBid($gameVersion, $playerId);
+                    return $this->actPassBid($gameVersion, $playerId,$args);
                 }
             case ROUND_STEP_PLAYER_ACTIONS:
                 if(in_array('actStopAction',$actions)){
