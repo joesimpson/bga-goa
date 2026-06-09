@@ -102,6 +102,23 @@ export class PlayerTurn {
                 this.selectedBid = args.minBid; // - args.bidRebate;
                 
                 let auctionToken = args.token;
+                let spaceToBid = document.getElementById('goa_board_market_grid').querySelector('.goa_grid_space.selected');
+                let hintTiles = '';
+                let tilesTooltipsToAdd = new Map();
+                if(spaceToBid){
+                    [...spaceToBid.querySelectorAll('.goa_tile')].forEach( (tileDiv) => {
+                        let tileType = parseInt(tileDiv.dataset.type);
+                        let tileDatas = {
+                            id : 0,
+                            state : 0,
+                            type : tileType,
+                            subtype : this.game.const.TILE_SUBTTYPE_MARKET,
+                        };
+                        hintTiles += this.game.tplTileFromType(tileType, `_${tileDiv.dataset.id}_to_bid`) ;
+                        //this.game.addCustomTooltip(`goa_tile_${tileDiv.dataset.id}_to_bid-0`, this.game.getTileTooltip(tileDatas), 0);
+                        tilesTooltipsToAdd.set(`goa_tile_${tileDiv.dataset.id}_to_bid-0`, this.game.getTileTooltip(tileDatas));
+                    });
+                }
 
                 let hintLine1 = '';
                 if(auctionToken.type == this.game.const.TOKEN_TYPE_AUCTION_MARKER_1){
@@ -117,7 +134,10 @@ export class PlayerTurn {
                 this.game.empty(document.getElementById('goa_top_zone_content'));
                 document.getElementById('goa_top_zone_content').insertAdjacentHTML('beforeend', `
                         <div id="goa_bid_hints">
-                            <span class="goa_bid_hint_text">${hintLine1 }</span>
+                            <div id="goa_bid_hint_line1_container">
+                                <span class="goa_bid_hint_text">${hintLine1 }</span>
+                                <div class="goa_bid_hint_tiles">${hintTiles }</div>
+                            </div>
                             <div>
                                 <div id='goa_bid_reset_min'></div>
                                 <div id='goa_bid_inc' class='goa_bid'></div>
@@ -126,6 +146,7 @@ export class PlayerTurn {
                             <span class="goa_bid_hint_text" id="goa_bid_remaining" data-start="${args.currentMoney}"></span>
                         </div>
                     `);
+                tilesTooltipsToAdd.forEach((tooltip, tile_id, map) => { this.game.addCustomTooltip(tile_id, tooltip); });
 
                 this.bga.statusBar.addActionButton(this.bga.gameui.format_string(  hintLineMin ,{ n:args.minBid, m: (this.currentBid + args.minBid) , icon_money: icon_money}), 
                         () => {

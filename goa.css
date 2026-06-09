@@ -3934,6 +3934,15 @@ html.goa_pref_background_none #goa_overall_background {
 #goa_top_zone #goa_bid_hints span {
   align-self: center;
 }
+#goa_top_zone #goa_bid_hints .goa_bid_hint_tiles {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+}
+#goa_top_zone #goa_bid_hints .goa_bid_hint_tiles .goa_tile {
+  margin: 5px;
+}
 #goa_top_zone #goa_bid_hints > div {
   display: flex;
   flex-wrap: wrap;

@@ -112,6 +112,15 @@ html {
         span{
             align-self: center;
         }
+        .goa_bid_hint_tiles{
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: row;
+            justify-content: center;
+            .goa_tile{
+                margin: 5px;
+            }
+        }
         >div{
             display: flex;
             flex-wrap: wrap;
