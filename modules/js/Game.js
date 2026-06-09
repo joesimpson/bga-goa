@@ -372,7 +372,10 @@ export class Game {
         });
 
         if(this.gamedatas.automa_color){
-            this.bga.playerPanels.addAutomataPlayerPanel(this.gamedatas.automa_id, this.gamedatas.automa_name, {
+            this.bga.playerPanels.addAutomataPlayerPanel(
+                this.gamedatas.automa_id, 
+                _(this.gamedatas.automa_name), 
+                {
                 'color' : this.gamedatas.automa_color,
                 'iconClass': 'goa_avatar_automa',
             });
