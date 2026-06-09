@@ -148,7 +148,10 @@ class PlayerTurn extends GameState
                         Utils::addPossibleActionInArgs('actExploration', $args);
                     }
                     //if($player->getNbActions() >= $args['minActions'] ) {
-                    if($player->getNbActions() >= $player->getMinRoundActions() && $player->getCompasses()<=1){
+                    if($player->getNbActions() >= $player->getMinRoundActions() 
+                        && $player->getCompasses()<=1
+                        && empty($player->getCardsPlayed()) // 1 Card / action, thus playing a card BEFORE action means action cannot be passed
+                    ){
                         //Game rule : player must keep max 1 compass card
                         Utils::addPossibleActionInArgs('actPassAction', $args);
                     }
