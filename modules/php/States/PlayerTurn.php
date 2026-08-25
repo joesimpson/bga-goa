@@ -854,9 +854,9 @@ class PlayerTurn extends GameState
             $sum = $base;
             Notifications::planFoundOutpost($player, $sum);
         } else {
-            $cards = Cards::drawAndDiscardExploration($player, $nbCardsToDraw);
+            $cards = Cards::drawAndDiscardExplorationWithDuplicates($player, $nbCardsToDraw);
             //CHECKPOINT because draw cards
-            $doCheckpoint = $cards->count() >0;
+            $doCheckpoint = count( $cards) >0;
             $sum = 0;
             foreach($cards as $card){
                 $sum += $card->getContracts();

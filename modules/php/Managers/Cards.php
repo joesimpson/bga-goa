@@ -346,6 +346,23 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
     return $cards;
   }
   
+  /** Same function as drawAndDiscardExploration() but may return duplicates of the same card if a card is drawn BEFORE and AFTER a reshuffle */
+  public static function drawAndDiscardExplorationWithDuplicates(Player $player,int $nb) : array
+  {
+    $cards = [];
+    $count = 0;
+
+    while($count < $nb){
+      $card = Cards::drawAndDiscardExploration($player, 1)->first();
+      if(isset($card)){
+        $cards[] = $card;
+      }
+      
+      $count++;
+    }
+    return $cards;
+  }
+  
   public static function discardExploration(Player $player,int $cardId): ExplorationCard
   {
     self::insertOnTop($cardId,CARD_LOCATION_EXP_DISCARD);
@@ -390,13 +407,13 @@ class Cards extends \Bga\Games\Goa\Helpers\Pieces
       case CARD_ACTION_HARVEST_AND_CARDS: //done in actHarvest
         break;
       case CARD_ACTION_OUTPOST_EXTRA_CONTRACTS:
-        $cards = Cards::drawAndDiscardExploration($player, 1);
+        $cards = Cards::drawAndDiscardExplorationWithDuplicates($player, 1);
+        $doCheckpoint = count( $cards) >0;
         $sum = 0;
         foreach($cards as $card){
           $sum += $card->getContracts();
         }
         Notifications::resultFoundOutpost($player, $sum);
-        $doCheckpoint = $cards->count() >0;
         Utils::refreshFoundTileEffectWithContracts($player->getId(), $sum, null);
         break;
       case CARD_ACTION_RESSOURCES_TO_COINS: //done in actSpendSpices
