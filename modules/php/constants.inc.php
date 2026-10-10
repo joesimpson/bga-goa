@@ -1,7 +1,5 @@
 <?php
 
-const BGA_GAMESTATE_GAMEVERSION = 300;
-
 /*
  * Game Constants
  */

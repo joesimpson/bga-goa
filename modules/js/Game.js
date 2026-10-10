@@ -1414,7 +1414,7 @@ export class Game {
             .catch(({message, finalArgs})=>{ 
                 console.error('Error when calling customPerformAction()',action, message, args, options );
                 if (message == "!!!checkVersion") {
-                    this.bga.gameui.infoDialog(  _("A new version of this game is now available"),_("Reload Required"), () => {window.location.reload(true);},true);
+                    this.bga.gameui.infoDialog(  _("A new version of this game is now available"),_("Reload Required"), () => {window.location.reload(true);},false);
                 }
                 else reject(message);
             });
